@@ -7,7 +7,8 @@ import android.os.Bundle;
 
 public class MyNativeActivity extends NativeActivity {
   static {
-    System.loadLibrary("openal"); 
+	System.loadLibrary("torque2d");
+    System.loadLibrary("openal");
   }
 
   @Override
