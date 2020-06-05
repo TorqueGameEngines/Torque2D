@@ -369,6 +369,39 @@ ConsoleMethodWithDocs( AssetManager, releaseAsset, ConsoleBool, 3, 3, (assetId))
 
 //-----------------------------------------------------------------------------
 
+/*! Ensures an asset is loaded even if it has no references.
+	The asset is also set to not auto unload to prevent it from unloading. Use purgeAssets to unload the asset.
+	@param assetId The selected asset Id.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(AssetManager, preloadAsset, ConsoleVoid, 3, 3, (assetId))
+{
+	// Fetch asset Id.
+	const char* pAssetId = argv[2];
+
+	// Reset asset reference.
+	AssetBase* pAssetBase = NULL;
+
+	// Acquire public asset.
+	pAssetBase = object->acquireAsset<AssetBase>(pAssetId);
+
+	// Did we find the asset?
+	if (pAssetBase == NULL)
+	{
+		// No, so warn
+		Con::warnf("AssetManager::preloadAsset() - Could not find the assetId '%s'.", argv[2]);
+		return;
+	}
+
+	// Set the asset to auto-unload false
+	pAssetBase->setAssetAutoUnload(false);
+
+	// Release asset.
+	object->releaseAsset(argv[2]);
+}
+
+//-----------------------------------------------------------------------------
+
 /*! Purge all assets that are not referenced even if they are set to not auto-unload.
     Assets can be in this state because they are either set to not auto-unload or the asset manager has/is disabling auto-unload.
     @return No return value.
