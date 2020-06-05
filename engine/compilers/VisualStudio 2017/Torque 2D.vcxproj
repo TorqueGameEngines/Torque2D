@@ -413,7 +413,6 @@
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTickCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTypes.cc" />
     <ClCompile Include="..\..\source\gui\language\lang.cc" />
@@ -920,7 +919,6 @@
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextListCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTickCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTypes.h" />
     <ClInclude Include="..\..\source\gui\language\lang.h" />
