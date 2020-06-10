@@ -30,11 +30,11 @@ function BaseTheme::init(%this)
 		%this.fontSize = 18;
 	}
 
-	%this.color1 = "10 10 10 255";
-	%this.color2 = "70 70 70 255";
-	%this.color3 = "120 120 120 255";
-	%this.color4 = "255 255 255 255";
-	%this.color5 = "255 133 0 255";
+	%this.color1 = "10 10 10 255";//Most commonly used for backgrounds
+	%this.color2 = "70 70 70 255";//Normally used for things that stand off the background but are still background
+	%this.color3 = "120 120 120 255";//Text set on background
+	%this.color4 = "255 255 255 255";//Similar to color 3 but with more contrast
+	%this.color5 = "255 133 0 255";//Flavor color that mostly is used on objects during interaction
 
 	%this.borderSize = 3;
 }
@@ -244,10 +244,10 @@ function BaseTheme::makeTabProfile(%this)
 		borderSL = 2;
 		borderNA = 2;
 
-		padding = 1;
-		paddingHL = 2;
-		paddingSL = 3;
-		paddingNA = 0;
+		padding = 5;
+		paddingHL = 6;
+		paddingSL = 7;
+		paddingNA = 5;
 
 		borderColor = "255 255 255 90";
 		borderColorHL = "255 255 255 90";
@@ -267,10 +267,10 @@ function BaseTheme::makeTabProfile(%this)
 		borderSL = 2;
 		borderNA = 2;
 
-		padding = 1;
-		paddingHL = 2;
-		paddingSL = 3;
-		paddingNA = 0;
+		padding = 5;
+		paddingHL = 6;
+		paddingSL = 7;
+		paddingNA = 5;
 
 		borderColor = "0 0 0 90";
 		borderColorHL = "0 0 0 90";
@@ -281,8 +281,8 @@ function BaseTheme::makeTabProfile(%this)
 	%tabBorderLeft = new GuiBorderProfile()
 	{
 		margin = 2;
-		marginHL = 1;
-		marginSL = 0;
+		marginHL = 2;
+		marginSL = 2;
 		marginNA = 2;
 
 		border = 2;
@@ -291,8 +291,8 @@ function BaseTheme::makeTabProfile(%this)
 		borderNA = 2;
 
 		padding = 10;
-		paddingHL = 11;
-		paddingSL = 12;
+		paddingHL = 10;
+		paddingSL = 10;
 		paddingNA = 10;
 
 		borderColor = "255 255 255 90";
@@ -304,8 +304,8 @@ function BaseTheme::makeTabProfile(%this)
 	%tabBorderRight = new GuiBorderProfile()
 	{
 		margin = 2;
-		marginHL = 1;
-		marginSL = 0;
+		marginHL = 2;
+		marginSL = 2;
 		marginNA = 2;
 
 		border = 2;
@@ -314,8 +314,8 @@ function BaseTheme::makeTabProfile(%this)
 		borderNA = 2;
 
 		padding = 10;
-		paddingHL = 11;
-		paddingSL = 12;
+		paddingHL = 10;
+		paddingSL = 10;
 		paddingNA = 10;
 
 		borderColor = "0 0 0 90";
@@ -326,10 +326,10 @@ function BaseTheme::makeTabProfile(%this)
 
 	%tabBorderBottom = new GuiBorderProfile()
 	{
-		padding = 2;
-		paddingHL = 2;
-		paddingSL = 2;
-		paddingNA = 2;
+		padding = 5;
+		paddingHL = 5;
+		paddingSL = 5;
+		paddingNA = 5;
 	};
 
 	%this.tabProfileTop = new GuiControlProfile ()
@@ -426,7 +426,7 @@ function BaseTheme::makeTabProfile(%this)
 
 	%bookBorderDefault = new GuiBorderProfile()
 	{
-		padding = 10;
+		padding = 5;
 	};
 
 	%this.tabBookProfileTop = new GuiControlProfile ()
@@ -637,6 +637,7 @@ function BaseTheme::makeConsoleProfile(%this)
 	};
 }
 
+//Positive values are brighter, negative are darker
 function BaseTheme::adjustValue(%this, %color, %percent)
 {
 	%red = getWord(%color, 0);

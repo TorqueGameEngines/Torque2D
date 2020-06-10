@@ -41,9 +41,16 @@ function ThemeManager::onAdd(%this)
 		class = "ForestRobeTheme";
 	};
 
+	%torqueSuit = new ScriptObject()
+	{
+		superclass = "BaseTheme";
+		class = "TorqueSuitTheme";
+	};
+
 	%this.registerTheme(%constructionVest);
 	%this.registerTheme(%labCoat);
 	%this.registerTheme(%forestRobe);
+	%this.registerTheme(%torqueSuit);
 	%this.setTheme(0);
 }
 

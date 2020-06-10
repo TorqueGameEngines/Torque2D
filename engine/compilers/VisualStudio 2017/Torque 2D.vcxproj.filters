@@ -3153,6 +3153,7 @@
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
@@ -3170,5 +3171,8 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Torque 2D.ico" />
   </ItemGroup>
 </Project>

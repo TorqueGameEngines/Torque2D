@@ -1234,6 +1234,7 @@
     <ClInclude Include="..\..\source\testing\unitTesting.h" />
     <ClInclude Include="..\..\source\testing\unitTesting_ScriptBinding.h" />
     <ClInclude Include="..\..\source\torqueConfig.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
@@ -1298,6 +1299,9 @@
       <Project>{86cb2525-0cf3-40d3-bf42-a0a95035ee8c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Torque 2D.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

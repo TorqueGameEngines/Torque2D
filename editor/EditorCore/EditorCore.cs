@@ -26,6 +26,7 @@ function EditorCore::create( %this )
 	exec("./Themes/BaseTheme.cs");
 	exec("./Themes/LabCoatTheme.cs");
 	exec("./Themes/ForestRobeTheme.cs");
+	exec("./Themes/TorqueSuitTheme.cs");
 
 	%this.themes = new ScriptObject()
 	{
