@@ -1,5 +1,6 @@
 /*
 * Copyright (c) 2006-2009 Erin Catto http://www.box2d.org
+* Copyright (c) 2013 Google, Inc.
 *
 * This software is provided 'as-is', without any express or implied
 * warranty.  In no event will the authors be held liable for any damages
@@ -128,11 +129,36 @@ void b2PolygonShape::Set(const b2Vec2* vertices, int32 count)
 	
 	int32 n = b2Min(count, b2_maxPolygonVertices);
 
-	// Copy vertices into local buffer
+	// Perform welding and copy vertices into local buffer.
 	b2Vec2 ps[b2_maxPolygonVertices];
+	int32 tempCount = 0;
 	for (int32 i = 0; i < n; ++i)
 	{
-		ps[i] = vertices[i];
+		b2Vec2 v = vertices[i];
+
+		bool unique = true;
+		for (int32 j = 0; j < tempCount; ++j)
+		{
+			if (b2DistanceSquared(v, ps[j]) < 0.5f * b2_linearSlop)
+			{
+				unique = false;
+				break;
+			}
+		}
+
+		if (unique)
+		{
+			ps[tempCount++] = v;
+		}
+	}
+
+	n = tempCount;
+	if (n < 3)
+	{
+		// Polygon is degenerate.
+		b2Assert(false);
+		SetAsBox(1.0f, 1.0f);
+		return;
 	}
 
 	// Create the convex hull using the Gift wrapping algorithm
@@ -141,7 +167,7 @@ void b2PolygonShape::Set(const b2Vec2* vertices, int32 count)
 	// Find the right most point on the hull
 	int32 i0 = 0;
 	float32 x0 = ps[0].x;
-	for (int32 i = 1; i < count; ++i)
+	for (int32 i = 1; i < n; ++i)
 	{
 		float32 x = ps[i].x;
 		if (x > x0 || (x == x0 && ps[i].y < ps[i0].y))
@@ -229,6 +255,50 @@ bool b2PolygonShape::TestPoint(const b2Transform& xf, const b2Vec2& p) const
 	}
 
 	return true;
+}
+
+void b2PolygonShape::ComputeDistance(const b2Transform& xf, const b2Vec2& p, float32* distance, b2Vec2* normal, int32 childIndex) const
+{
+	B2_NOT_USED(childIndex);
+
+	b2Vec2 pLocal = b2MulT(xf.q, p - xf.p);
+	float32 maxDistance = -FLT_MAX;
+	b2Vec2 normalForMaxDistance = pLocal;
+
+	for (int32 i = 0; i < m_count; ++i)
+	{
+		float32 dot = b2Dot(m_normals[i], pLocal - m_vertices[i]);
+		if (dot > maxDistance)
+		{
+			maxDistance = dot;
+			normalForMaxDistance = m_normals[i];
+		}
+	}
+
+	if (maxDistance > 0)
+	{
+		b2Vec2 minDistance = normalForMaxDistance;
+		float32 minDistance2 = maxDistance * maxDistance;
+		for (int32 i = 0; i < m_count; ++i)
+		{
+			b2Vec2 distance = pLocal - m_vertices[i];
+			float32 distance2 = distance.LengthSquared();
+			if (minDistance2 > distance2)
+			{
+				minDistance = distance;
+				minDistance2 = distance2;
+			}
+		}
+
+		*distance = b2Sqrt(minDistance2);
+		*normal = b2Mul(xf.q, minDistance);
+		normal->Normalize();
+	}
+	else
+	{
+		*distance = maxDistance;
+		*normal = b2Mul(xf.q, normalForMaxDistance);
+	}
 }
 
 bool b2PolygonShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input,

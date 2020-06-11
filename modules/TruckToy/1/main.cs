@@ -59,6 +59,11 @@ function TruckToy::create( %this )
     addFlagOption("Rear Wheel Drive", "setRearWheelDrive", TruckToy.RearWheelDrive, false, "Whether the motor on the rear wheel is active or not." );
     addFlagOption("Rotate Camera", "setRotateCamera", TruckToy.RotateCamera, true, "Whether the rotate the camera that is mounted to the truck or not." );
     
+	%pos1 = "1 2";
+	%pos2 = "2 1";
+	
+	echo(Vector2AreaNormalize(%pos1,pos2));
+	
     // Reset the toy.
     %this.reset();
 }
