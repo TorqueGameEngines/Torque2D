@@ -71,6 +71,26 @@ public:
         TORUS_EMITTER,
     };
 
+    enum PhysicsParticleType
+    {
+       INVALID_PHYSICS_PARTICLE_TYPE,
+
+       b2_barrierParticle,
+       b2_colorMixingParticle,
+       b2_destructionListenerParticle,
+       b2_elasticParticle,
+       b2_powderParticle,
+       b2_reactiveParticle,
+       b2_repulsiveParticle,
+       b2_springParticle,
+       b2_staticPressureParticle,
+       b2_tensileParticle,
+       b2_viscousParticle,
+       b2_wallParticle,
+       b2_waterParticle,
+       b2_zombieParticle
+    };
+
 private:
     typedef SimObject Parent;
 
@@ -91,6 +111,10 @@ private:
     F32                                     mRandomArc;
     F32                                     mFixedAngleOffset;
     Vector2                                 mPivotPoint;
+    //Physics Particles
+    PhysicsParticleType                     mPhysicsParticleType;
+    bool                                    mPhysicsParticles;
+    //Physics Particles end---
 
     bool                                    mLinkEmissionRotation;
     bool                                    mIntenseParticles;
@@ -157,6 +181,12 @@ public:
     inline const Vector2& getFixedForceDirection( void ) const { return mFixedForceDirection; }
     inline void setOrientationType( const ParticleOrientationType particleOrientationType ) { mOrientationType = particleOrientationType; refreshAsset(); }
     inline ParticleOrientationType getOrientationType( void ) const { return mOrientationType; }
+    //Physics particles
+    inline void setPhysicsParticleType(const PhysicsParticleType physicsParticleType) { mPhysicsParticleType = physicsParticleType; refreshAsset(); }
+    inline PhysicsParticleType getPhysicsParticleType(void) const { return mPhysicsParticleType; }
+    inline void setPhysicsParticles(const bool physicsPaticle) { mPhysicsParticles = physicsPaticle; refreshAsset(); }
+    inline bool getPhysicsParticles(void) const { return mPhysicsParticles; }
+    //Phyiscs particles end---
     inline void setKeepAligned( const bool keepAligned ) { mKeepAligned = keepAligned; refreshAsset(); }
     inline bool getKeepAligned( void ) const { return mKeepAligned; }
     inline void setAlignedAngleOffset( const F32 angleOffset ) { mAlignedAngleOffset = angleOffset; refreshAsset(); }
@@ -250,6 +280,10 @@ public:
 
     static EmitterType getEmitterTypeEnum(const char* label);
     static const char* getEmitterTypeDescription( const EmitterType emitterType );
+    //phyiscs particles
+    static PhysicsParticleType getPhysicsParticleType(const char * label);
+    static const char* getPhysicsParticleTypeDescription(const PhysicsParticleType particleType);
+    //physics particles end----
     static ParticleOrientationType getOrientationTypeEnum(const char* label);
     static const char* getOrientationTypeDescription( const ParticleOrientationType orientationType );
 

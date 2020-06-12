@@ -81,6 +81,56 @@ const char* ParticleAssetEmitter::getEmitterTypeDescription( const EmitterType e
     return StringTable->EmptyString;
 }
 
+//-----------------------------------------------------------------------------
+
+static EnumTable::Enums physicsParticleType[] =
+{
+   {b2ParticleFlag::b2_barrierParticle,            "BarrierPartice"},
+   {b2ParticleFlag::b2_colorMixingParticle,        "ColorMixingParticle"},
+   {b2ParticleFlag::b2_destructionListenerParticle,"DesctructionListenerParticle"},
+   {b2ParticleFlag::b2_elasticParticle,            "ElasticParticle"},
+   {b2ParticleFlag::b2_powderParticle,             "PowderParticle"},
+   {b2ParticleFlag::b2_reactiveParticle,           "ReactiveParticle"},
+   {b2ParticleFlag::b2_repulsiveParticle,          "RepulsiveParticle"},
+   {b2ParticleFlag::b2_springParticle,             "SpringParticle"},
+   {b2ParticleFlag::b2_staticPressureParticle,     "StaticPressureParticle"},
+   {b2ParticleFlag::b2_tensileParticle,            "TensileParticle"},
+   {b2ParticleFlag::b2_viscousParticle,            "ViscousParticle"},
+   {b2ParticleFlag::b2_wallParticle,               "WallParticle"},
+   {b2ParticleFlag::b2_waterParticle,              "WaterParticle"},
+   {b2ParticleFlag::b2_zombieParticle,             "ZombieParticle"}
+};
+
+
+static EnumTable  PhysicsParticleTypeTable(sizeof(physicsParticleType) / sizeof(EnumTable::Enums), &physicsParticleType[0]);
+
+ParticleAssetEmitter::PhysicsParticleType ParticleAssetEmitter::getPhysicsParticleType(const char* label)
+{
+   for (U32 i = 0; i < (sizeof(physicsParticleType) / sizeof(EnumTable::Enums)); i++)
+      if (dStricmp(physicsParticleType[i].label, label) == 0)
+         return((ParticleAssetEmitter::PhysicsParticleType)physicsParticleType[i].index);
+
+   // Warn.
+   Con::warnf("ParticleAssetEmitter::getPhysicsParticleType() - Invalid physics particle type '%s'.", label);
+
+   return PhysicsParticleType::INVALID_PHYSICS_PARTICLE_TYPE;
+}
+
+const char* ParticleAssetEmitter::getPhysicsParticleTypeDescription(const PhysicsParticleType particleType)
+{
+   // Search for Mnemonic.
+   for (U32 i = 0; i < (sizeof(physicsParticleType) / sizeof(EnumTable::Enums)); i++)
+   {
+      if (physicsParticleType[i].index == (S32)particleType)
+         return physicsParticleType[i].label;
+   }
+
+   // Warn.
+   Con::warnf("ParticleAssetEmitter::getPhysicsParticleTypeDescription() - Invalid physics particle-type");
+
+   return StringTable->EmptyString;
+}
+
 //------------------------------------------------------------------------------
 
 static EnumTable::Enums particleOrientationTypeLookup[] =
