@@ -115,7 +115,10 @@ private:
     PhysicsParticleType                     mPhysicsParticleType;
     bool                                    mPhysicsParticles;
     //Physics Particles end---
-
+    //Particle Target
+    bool                                    mTargetParticle;
+    Vector2                                 mTargetPosition;
+    //Particle Target end---
     bool                                    mLinkEmissionRotation;
     bool                                    mIntenseParticles;
     bool                                    mSingleParticle;
@@ -187,6 +190,12 @@ public:
     inline void setPhysicsParticles(const bool physicsPaticle) { mPhysicsParticles = physicsPaticle; refreshAsset(); }
     inline bool getPhysicsParticles(void) const { return mPhysicsParticles; }
     //Phyiscs particles end---
+    //Particle Target
+    inline void setTargetPosition(const Vector2& targetPos) { mTargetPosition = targetPos; }
+    inline const Vector2& getTargetPosition(void) const { return mTargetPosition; }
+    inline void setTargetParticle(const bool targetParticle) { mTargetParticle = targetParticle; refreshAsset(); }
+    inline bool getTargetParticle(void) const { return mTargetParticle; }
+    //Particle Target end---
     inline void setKeepAligned( const bool keepAligned ) { mKeepAligned = keepAligned; refreshAsset(); }
     inline bool getKeepAligned( void ) const { return mKeepAligned; }
     inline void setAlignedAngleOffset( const F32 angleOffset ) { mAlignedAngleOffset = angleOffset; refreshAsset(); }
@@ -304,6 +313,12 @@ protected:
     static bool     writeEmitterType( void* obj, StringTableEntry pFieldName )          { return static_cast<ParticleAssetEmitter*>(obj)->getEmitterType() != POINT_EMITTER; }
     static bool     setEmitterOffset(void* obj, const char* data)                       { static_cast<ParticleAssetEmitter*>(obj)->setEmitterOffset(Vector2(data)); return false; }
     static bool     writeEmitterOffset( void* obj, StringTableEntry pFieldName )        { return static_cast<ParticleAssetEmitter*>(obj)->getEmitterOffset().notZero(); }
+
+    static bool     setTargetParticle(void* obj, const char* data)                      { static_cast<ParticleAssetEmitter*>(obj)->setTargetParticle(dAtob(data)); return false; }
+    static bool     writeTargetParticle(void* obj, StringTableEntry pFieldName)         { return static_cast<ParticleAssetEmitter*>(obj)->getTargetParticle() == false; }
+    static bool     setTargetPosition(void* obj, const char* data)                      { static_cast<ParticleAssetEmitter*>(obj)->setTargetPosition(Vector2(data)); return false; }
+    static bool     writeTargetPosition(void* obj, StringTableEntry pFieldName)         { return static_cast<ParticleAssetEmitter*>(obj)->getTargetPosition().notZero(); }
+
     static bool     setEmitterAngle(void* obj, const char* data)                        { static_cast<ParticleAssetEmitter*>(obj)->setEmitterAngle(dAtof(data)); return false; }
     static bool     writeEmitterAngle( void* obj, StringTableEntry pFieldName )         { return mNotZero(static_cast<ParticleAssetEmitter*>(obj)->getEmitterAngle()); }
     static bool     setEmitterSize(void* obj, const char* data)                         { static_cast<ParticleAssetEmitter*>(obj)->setEmitterSize(Vector2(data)); return false; }

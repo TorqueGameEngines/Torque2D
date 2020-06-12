@@ -130,6 +130,11 @@ function AngleToy::createTargets( %this )
     
     %emitter = %effect.createEmitter();
     AngleToy.EmitterParameters = %emitter;
+	%emitter.setEmitterType("ELLIPSE");
+	//%emitter.setAttachPositionToEmitter(false);
+	%emitter.setEmitterSize("40 40");
+	%emitter.TargetParticle = true;
+	%emitter.setTargetPosition("0.0 0.0");
     %emitter.EmitterName = "AngledParticles";
     %emitter.setKeepAligned( true );
     %emitter.setOrientationType( ALIGNED );
@@ -140,13 +145,12 @@ function AngleToy::createTargets( %this )
     %emitter.addDataKey( 0, 250 );
     %emitter.selectField( "Speed" );
     %emitter.addDataKey( 0, 4 );
-    %emitter.selectField( "EmissionAngle" );
-    %emitter.addDataKey( 0, 0 );
     %emitter.selectField( "EmissionArc" );
     %emitter.addDataKey( 0, 0 );
     %emitter.selectField( "EmissionForceVariation" );
     %emitter.addDataKey( 0, 0 );
     %emitter.deselectField();
+	%emitter.dump();
     
     %assetId = AssetDatabase.addPrivateAsset( %effect );
     
@@ -221,9 +225,7 @@ function AngleToy::onTouchDown(%this, %touchID, %worldPosition)
     %angle = mAtan( %worldPosition );
     
     // "Point" particles towards cursor
-    AngleToy.EmitterParameters.selectField( "EmissionAngle" );
-    AngleToy.EmitterParameters.addDataKey( 0, %angle );
-    AngleToy.EmitterParameters.deselectField();
+    AngleToy.EmitterParameters.setTargetPosition(%worldPosition);
     
     // Show Sin, Cos, Tan
     %sin = mSin( %angle );
@@ -266,9 +268,10 @@ function AngleToy::onTouchDragged(%this, %touchID, %worldPosition)
     %angle = mAtan( %worldPosition );
     
     // "Point" particles towards cursor
-    AngleToy.EmitterParameters.selectField( "EmissionAngle" );
-    AngleToy.EmitterParameters.addDataKey( 0, %angle );
-    AngleToy.EmitterParameters.deselectField();
+    //AngleToy.EmitterParameters.selectField( "EmissionAngle" );
+    //AngleToy.EmitterParameters.addDataKey( 0, %angle );
+    //AngleToy.EmitterParameters.deselectField();
+	AngleToy.EmitterParameters.setTargetPosition(%worldPosition);
     
     // Show Sin, Cos, Tan
     %sin = mSin( %angle );

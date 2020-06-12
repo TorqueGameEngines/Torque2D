@@ -123,6 +123,56 @@ ConsoleMethodWithDocs(ParticleAssetEmitter, getEmitterOffset, ConsoleString, 2, 
     return object->getEmitterOffset().scriptThis();
 }
 
+ConsoleMethodWithDocs(ParticleAssetEmitter, setTargetParticle, ConsoleVoid, 3, 3, (targetParticle))
+{
+   object->setTargetParticle(dAtob(argv[2]));
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Gets whether the emitter targets a point.
+    @return Whether the emitter uses a target for particles.
+*/
+ConsoleMethodWithDocs(ParticleAssetEmitter, getTargetParticle, ConsoleBool, 2, 2, ())
+{
+   return object->getTargetParticle();
+}
+
+
+ConsoleMethodWithDocs(ParticleAssetEmitter, setTargetPosition, ConsoleVoid, 3, 4, (float X / float Y))
+{
+   // Grab the element count.
+   U32 elementCount = Utility::mGetStringElementCount(argv[2]);
+
+   // ("positionX positionY")
+   if ((elementCount == 2) && (argc < 4))
+   {
+      object->setTargetPosition(Vector2(argv[2]));
+      return;
+   }
+
+   // (positionX, positionY)
+   if ((elementCount == 1) && (argc > 3))
+   {
+      object->setTargetPosition(Vector2(dAtof(argv[2]), dAtof(argv[3])));
+      return;
+   }
+
+   // Warn.
+   Con::warnf("ParticleAssetEmitter::setTargetPosition() - Invalid number of parameters!");
+}
+
+//------------------------------------------------------------------------------
+
+/*! Gets the emitter target position.
+    @return (float x/float y) The position of the target of the emitter.
+*/
+ConsoleMethodWithDocs(ParticleAssetEmitter, getTargetPosition, ConsoleString, 2, 2, ())
+{
+   return object->getTargetPosition().scriptThis();
+}
+
+
 //------------------------------------------------------------------------------
 
 /*! Sets the emitter size.
