@@ -1459,9 +1459,6 @@
     <ClCompile Include="..\..\source\Box2D\Common\b2TrackedBlock.cpp">
       <Filter>Box2D\Common</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\2d\sceneobject\LiquidFunObject.cc">
-      <Filter>2d\sceneobject</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -3245,12 +3242,6 @@
     </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Common\b2TrackedBlock.h">
       <Filter>Box2D\Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\sceneobject\LiquidFunObject.h">
-      <Filter>2d\sceneobject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\sceneobject\LiquidFunObject_ScriptBinding.h">
-      <Filter>2d\sceneobject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
