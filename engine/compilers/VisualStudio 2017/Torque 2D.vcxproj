@@ -276,6 +276,7 @@
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectList.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectSet.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\Scroller.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\ShadowMap.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\ShapeVector.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SkeletonObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\Sprite.cc" />
@@ -727,6 +728,8 @@
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Scroller.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Scroller_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\ShadowMap.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\ShadowMap_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ShapeVector.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ShapeVector_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SkeletonObject.h" />

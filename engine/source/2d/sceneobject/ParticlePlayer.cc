@@ -1152,7 +1152,6 @@ void ParticlePlayer::configureParticle( EmitterNode* pEmitterNode, ParticleSyste
            Vector2 tPos = pParticleAssetEmitter->getTargetPosition();
            Vector2 pPos = pParticleNode->mPosition;
            Vector2 subVec = tPos - pPos;
-           //Vector2 subVecF = subVec.getUnitDirection();
            F32 vecN = mAtan(subVec.x, subVec.y);
            F32 vecDeg = mRadToDeg(vecN);
            emissionAngle = vecDeg;
