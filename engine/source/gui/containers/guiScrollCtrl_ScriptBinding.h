@@ -41,7 +41,7 @@ ConsoleMethodWithDocs(GuiScrollCtrl, scrollToTop, void, 2, 2, "()")
 	@sa scrollToRight
 	@sa scrollToPosition
 */
-ConsoleMethod(GuiScrollCtrl, scrollToBottom, void, 2, 2, "()")
+ConsoleMethodWithDocs(GuiScrollCtrl, scrollToBottom, void, 2, 2, "()")
 {
 	object->scrollTo(object->mScrollOffset.x, 0x7FFFFFFF);
 }
@@ -65,7 +65,7 @@ ConsoleMethodWithDocs(GuiScrollCtrl, scrollToLeft, void, 2, 2, "()")
 	@sa scrollToLeft
 	@sa scrollToPosition
 */
-ConsoleMethod(GuiScrollCtrl, scrollToRight, void, 2, 2, "()")
+ConsoleMethodWithDocs(GuiScrollCtrl, scrollToRight, void, 2, 2, "()")
 {
 	object->scrollTo(0x7FFFFFFF, object->mScrollOffset.x);
 }
@@ -75,7 +75,7 @@ ConsoleMethod(GuiScrollCtrl, scrollToRight, void, 2, 2, "()")
 	@param y The vertical target position.
 	@return No return value.
 */
-ConsoleMethod(GuiScrollCtrl, setScrollPosition, void, 4, 4, "(x, y)")
+ConsoleMethodWithDocs(GuiScrollCtrl, setScrollPosition, void, 4, 4, "(x, y)")
 {
 	object->scrollTo(dAtoi(argv[2]), dAtoi(argv[3]));
 }
@@ -83,7 +83,7 @@ ConsoleMethod(GuiScrollCtrl, setScrollPosition, void, 4, 4, "(x, y)")
 /*! Gets the current horizontal scroll position.
 	@return The position of the content in the horizontal direction.
 */
-ConsoleMethod(GuiScrollCtrl, getScrollPositionX, S32, 2, 2, "()")
+ConsoleMethodWithDocs(GuiScrollCtrl, getScrollPositionX, S32, 2, 2, "()")
 {
 	return object->mScrollOffset.x;
 }
@@ -91,7 +91,7 @@ ConsoleMethod(GuiScrollCtrl, getScrollPositionX, S32, 2, 2, "()")
 /*! Gets the current vertical scroll position.
 	@return The position of the content in the vertical direction.
 */
-ConsoleMethod(GuiScrollCtrl, getScrollPositionY, S32, 2, 2, "()")
+ConsoleMethodWithDocs(GuiScrollCtrl, getScrollPositionY, S32, 2, 2, "()")
 {
 	return object->mScrollOffset.y;
 }
@@ -99,7 +99,7 @@ ConsoleMethod(GuiScrollCtrl, getScrollPositionY, S32, 2, 2, "()")
 /*! Refreshes all the contents of the scroll container.
 	@return No return value.
 */
-ConsoleMethod(GuiScrollCtrl, computeSizes, void, 2, 2, "()")
+ConsoleMethodWithDocs(GuiScrollCtrl, computeSizes, void, 2, 2, "()")
 {
 	object->computeSizes();
 }
@@ -139,3 +139,5 @@ ConsoleMethodWithDocs(GuiScrollCtrl, setArrowProfile, ConsoleVoid, 3, 3, (GuiCon
 	if (Sim::findObject(argv[2], profile))
 		object->setControlArrowProfile(profile);
 }
+
+ConsoleMethodGroupEndWithDocs(GuiScrollCtrl)

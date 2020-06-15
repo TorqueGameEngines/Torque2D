@@ -30,7 +30,7 @@
 #include "gui/guiTextCtrl.h"
 #endif
 
-/// Renders a grid of cells.
+/// Renders a grid of cells. Gives common functionality to a few controls that inherit from it, but has no conObject.
 class GuiArrayCtrl : public GuiControl
 {
    typedef GuiControl Parent;

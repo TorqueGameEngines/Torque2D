@@ -462,13 +462,7 @@
     <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiCtrlArrayCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc">
@@ -1698,13 +1692,7 @@
     <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiCtrlArrayCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h">
@@ -3154,6 +3142,12 @@
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\math\mMath_ASM.asm">

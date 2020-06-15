@@ -5,51 +5,87 @@
 #include "gui/guiControl.h"
 #endif
 
+#ifndef _VECTOR2_H_
+#include "2d/core/Vector2.h"
+#endif
+
 #include "graphics/dgl.h"
 #include "console/console.h"
 #include "console/consoleTypes.h"
 
-class GuiGridControl : public GuiControl
+class GuiGridCtrl : public GuiControl
 {
 private:
-
-    struct GridItem
-	{
-		int Size;
-		bool IsPercentage;
-		bool IsRemaining;
-		bool IsAbsolute;
-	};
-
-private:
 	typedef GuiControl Parent;
-
-	Vector<StringTableEntry> mGridRows;
-	Vector<StringTableEntry> mGridCols;
-
-	Vector<S32> mRowSizes;
-	Vector<S32> mColSizes;
-	Vector<Point2I> mOrginalControlPos;
-
-	void AdjustGrid(const Point2I& newExtent);
-	void AdjustGridItems(S32 size, Vector<StringTableEntry>& strItems, Vector<S32>& items);
-	RectI GetGridRect(GuiControl* ctrl);
-	bool IsPointInGridControl(GuiControl* ctrl, const Point2I& pt);
-
+	Point2I mCalcCellExt;
+	Point2I mCalcCellSpace;
+	U16 mCalcChainLength;
 
 public:
-	GuiGridControl();
+	enum CellMode
+	{
+		Absolute,
+		Variable,
+		Percent
+	};
+	CellMode mCellModeX, mCellModeY;
+	F32 mCellSizeX, mCellSizeY;
+	F32 mCellSpacingX, mCellSpacingY;
+	S32 mMaxColCount, mMaxRowCount;
+
+	//LRTB means Left to Right, Top to Bottom (the normal way we read english)
+	enum OrderMode
+	{
+		LRTB,
+		RLTB,
+		TBLR,
+		TBRL,
+		LRBT,
+		RLBT,
+		BTLR,
+		BTRL
+	};
+	OrderMode mOrderMode;
+	bool mIsExtentDynamic;
+
+private:
+	void AdjustGrid(const Point2I& innerExtent);
+	Point2F GetGridItemWidth(const S32 totalArea, const S32 maxChainLength, const F32 itemSize, const F32 spaceSize, const CellMode cellMode);
+	Point2F GetGridItemHeight(const S32 totalArea, const S32 maxChainLength, const F32 itemSize, const F32 spaceSize, const CellMode cellMode);
+	Point2I getCellPosition(U16 num, const Point2I &innerExtent);
+
+public:
+	GuiGridCtrl();
 
 	void resize(const Point2I &newPosition, const Point2I &newExtent);
+	//void childResized(GuiControl *child);
 	void inspectPostApply();
-
-	void addObject(SimObject *obj);
-	void removeObject(SimObject *obj);
 	bool onWake();
 	void onSleep();
+	void onChildAdded(GuiControl *child);
+	void onChildRemoved(SimObject *child);
+
+	void setCellSize(F32 width, F32 height);
+	inline Vector2 getCellSize(void) const { return Vector2(mCellSizeX, mCellSizeY); }
+	void setCellSpacing(F32 x, F32 y);
+	inline Vector2 getCellSpacing(void) const { return Vector2(mCellSpacingX, mCellSpacingY); }
+
+	void setCellModeX(const CellMode mode);
+	void setCellModeY(const CellMode mode);
+	inline CellMode getCellModeX(void) const { return mCellModeX; }
+	inline CellMode getCellModeY(void) const { return mCellModeY; }
+	static CellMode getCellModeEnum(const char* label);
+	static const char* getCellModeDescription(const CellMode mode);
+	inline void setMaxColCount(S32 max) { mMaxColCount = max; resize(getPosition(), getExtent()); }
+	inline void setMaxRowCount(S32 max) { mMaxRowCount = max; resize(getPosition(), getExtent()); }
+	inline S32 getMaxColCount(void) const { return mMaxColCount; }
+	inline S32 getMaxRowCount(void) const { return mMaxRowCount; }
+	inline OrderMode getOrderMode(void) const { return mOrderMode; }
+	static const char* getOrderModeDescription(const OrderMode mode);
+	inline bool getIsExtentDynamic(void) { return mIsExtentDynamic; }
 
 	static void initPersistFields();
-	DECLARE_CONOBJECT(GuiGridControl);
+	DECLARE_CONOBJECT(GuiGridCtrl);
 };
 
 #endif // _GUIGRIDCTRL_H_

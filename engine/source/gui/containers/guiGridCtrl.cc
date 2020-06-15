@@ -20,32 +20,76 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#include "console/consoleTypes.h"
+#include "console/console.h"
 #include "gui/containers/guiGridCtrl.h"
 
+#include "guiGridCtrl_ScriptBinding.h"
+
+static EnumTable::Enums cellModeEnums[] = 
+{
+	{ GuiGridCtrl::Absolute, "absolute" },
+	{ GuiGridCtrl::Variable, "variable" },
+	{ GuiGridCtrl::Percent, "percent" }
+};
+static EnumTable gCellModeTable(3, &cellModeEnums[0]);
+
+
+static EnumTable::Enums orderModeEnums[] =
+{
+	{ GuiGridCtrl::LRTB, "lrtb" },
+	{ GuiGridCtrl::RLTB, "rltb" },
+	{ GuiGridCtrl::TBLR, "tblr" },
+	{ GuiGridCtrl::TBRL, "tbrl" },
+	{ GuiGridCtrl::LRBT, "lrbt" },
+	{ GuiGridCtrl::RLBT, "rlbt" },
+	{ GuiGridCtrl::BTLR, "btlr" },
+	{ GuiGridCtrl::BTRL, "btrl" }
+};
+static EnumTable gOrderModeTable(8, &orderModeEnums[0]);
+
 //------------------------------------------------------------------------------
 
-IMPLEMENT_CONOBJECT(GuiGridControl);
+IMPLEMENT_CONOBJECT(GuiGridCtrl);
 
 //------------------------------------------------------------------------------
 
-GuiGridControl::GuiGridControl()
+GuiGridCtrl::GuiGridCtrl()
 {
 	mIsContainer = true;
+	mCellModeX = CellMode::Absolute;
+	mCellModeY = CellMode::Absolute;
+	mCellSizeX = 20;
+	mCellSizeY = 20;
+	mCellSpacingX = 0;
+	mCellSpacingY = 0;
+	mMaxColCount = 0;
+	mMaxRowCount = 0;
+	mOrderMode = OrderMode::LRTB;
+	mIsExtentDynamic = true;
 }
 
 //------------------------------------------------------------------------------
 
-void GuiGridControl::initPersistFields()
+void GuiGridCtrl::initPersistFields()
 {
 	Parent::initPersistFields();
 
-	addField("Rows",		TypeStringTableEntryVector, Offset(mGridRows, GuiGridControl), "Number of rows in the grid");
-	addField("Columns",     TypeStringTableEntryVector, Offset(mGridCols, GuiGridControl), "Number of columns in the grid");
+	addField("CellModeX", TypeEnum, Offset(mCellModeX, GuiGridCtrl), 1, &gCellModeTable);
+	addField("CellModeY", TypeEnum, Offset(mCellModeY, GuiGridCtrl), 1, &gCellModeTable);
+	addField("CellSizeX", TypeF32, Offset(mCellSizeX, GuiGridCtrl));
+	addField("CellSizeY", TypeF32, Offset(mCellSizeY, GuiGridCtrl));
+	addField("CellSpacingX", TypeF32, Offset(mCellSpacingX, GuiGridCtrl));
+	addField("CellSpacingY", TypeF32, Offset(mCellSpacingY, GuiGridCtrl));
+	addField("MaxColCount", TypeS32, Offset(mMaxColCount, GuiGridCtrl));
+	addField("MaxRowCount", TypeS32, Offset(mMaxRowCount, GuiGridCtrl));
+	addField("OrderMode", TypeEnum, Offset(mOrderMode, GuiGridCtrl), 1, &gOrderModeTable);
+	addField("IsExtentDynamic", TypeBool, Offset(mIsExtentDynamic, GuiGridCtrl));
 }
 
 //------------------------------------------------------------------------------
 
-bool GuiGridControl::onWake()
+bool GuiGridCtrl::onWake()
 {
 	if (!Parent::onWake())
         return false;
@@ -55,299 +99,297 @@ bool GuiGridControl::onWake()
 
 //------------------------------------------------------------------------------
 
-void GuiGridControl::onSleep()
+void GuiGridCtrl::onSleep()
 {
 	Parent::onSleep();
 }
 
 //------------------------------------------------------------------------------
 
-void GuiGridControl::inspectPostApply()
+void GuiGridCtrl::inspectPostApply()
 {
     resize(getPosition(), getExtent());
+	Parent::inspectPostApply();
 }
 
 //------------------------------------------------------------------------------
 
-bool GuiGridControl::IsPointInGridControl(GuiControl* ctrl, const Point2I& pt)
+void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 {
-	if (mRowSizes.size() > 0 && mColSizes.size() > 0)
-	{
-		RectI gridRect = GetGridRect(ctrl);
-		RectI ctrlRect = ctrl->getBounds();
+	Point2I actualNewExtent = Point2I(getMax(mMinExtent.x, newExtent.x),
+		getMax(mMinExtent.y, newExtent.y));
 
-		Point2I chkPt = gridRect.point + ctrlRect.point;
-		Point2I chkBound = chkPt + ctrlRect.extent;
-
-		if (pt.x >= chkPt.x && pt.x <= chkBound.x && pt.y >= chkPt.y && pt.y <= chkBound.y)
-			return true;
-		else
-			return false;
-	}
-	else
-    {
-		return false;
-    }
-
-}
-
-//------------------------------------------------------------------------------
-
-void GuiGridControl::addObject(SimObject *obj)
-{
-	if (mRowSizes.size() <= 0 && mRowSizes.size() <= 0)
-		AdjustGrid(mBounds.extent);
-
-	GuiControl *ctrl = static_cast<GuiControl *>(obj);
-	
-    if (ctrl)
-	{
-		RectI ctrlRect = GetGridRect(ctrl);
-		if (ctrl->getExtent().isZero())
-		{
-			ctrl->setExtent(ctrlRect.extent);
-		}
-		else
-		{
-			if (ctrl->mBounds.extent.x > ctrlRect.extent.x)
-				ctrl->mBounds.extent.x = ctrlRect.extent.x;
-			if (ctrl->mBounds.extent.y > ctrlRect.extent.y)
-				ctrl->mBounds.extent.y = ctrlRect.extent.y;
-		}
-
-		Point2I pt = ctrl->getPosition();
-		mOrginalControlPos.push_back(pt);
-		pt += ctrlRect.point;
-		ctrl->setPosition(pt);
-	}
-
-	Parent::addObject(obj);
-}
-
-//------------------------------------------------------------------------------
-
-void GuiGridControl::removeObject(SimObject *obj)
-{
-	for(int idx =0; idx < objectList.size();idx++)
-	{
-		if ( objectList[idx] == obj )
-		{
-			mOrginalControlPos.erase(idx);
-			break;
-		}
-	}
-
-	Parent::removeObject(obj);
-}
-
-//------------------------------------------------------------------------------
-
-void GuiGridControl::resize(const Point2I &newPosition, const Point2I &newExtent)
-{
+	//call set update both before and after
 	setUpdate();
 
-	Point2I actualNewExtent = Point2I(  getMax(mMinExtent.x, newExtent.x), getMax(mMinExtent.y, newExtent.y));
-	mBounds.set(newPosition, actualNewExtent);
+	RectI innerRect = getInnerRect(mBounds.point.Zero, actualNewExtent, NormalState, mProfile);
+	if (!innerRect.isValidRect() && !mIsExtentDynamic)
+	{
+		return;
+	}
+		
+	AdjustGrid(innerRect.extent);
 
-	bool bFirstResize = false;
 	iterator i;
-	Vector<Point2I> oldCtrlExtent;
-	
-	if (mRowSizes.size() == 0 && mColSizes.size() == 0)
-	{
-		bFirstResize = true;
-	}
-	else
-	{
-		for(i = begin(); i != end(); i++)
-		{
-			GuiControl *ctrl = static_cast<GuiControl *>(*i);
-			if (ctrl)
-			{
-				RectI newRect = GetGridRect(ctrl);		
-				oldCtrlExtent.push_back(newRect.extent);
-			}
-		}
-
-	}
-
-	AdjustGrid(mBounds.extent);
-
-	//resize and position all child controls.
-	int idx = 0;
-	for(i = begin(); i != end(); i++)
+	U16 num = 0;
+	for (i = begin(); i != end(); i++, num++)
 	{
 		GuiControl *ctrl = static_cast<GuiControl *>(*i);
-		if (ctrl)
-		{
-			RectI newRect = GetGridRect(ctrl);		
-			
-			if (ctrl->getExtent().x == 0 && ctrl->getExtent().y == 0)
-				ctrl->setExtent(newRect.extent);
-
-			ctrl->setPosition(mOrginalControlPos[idx] + newRect.point);
-
-			if (bFirstResize)
-			{
-				ctrl->parentResized(newRect.extent, newRect.extent);
-			}
-			else
-			{
-				ctrl->parentResized(oldCtrlExtent[idx++], newRect.extent);
-			}
-		}
+		ctrl->resize(getCellPosition(num, innerRect.extent), mCalcCellExt);
 	}
 
-	GuiControl *parent = getParent();
+	Point2I actualNewPosition = Point2I(newPosition);
+	if(mIsExtentDynamic)
+	{
+		F32 h = mCeil((F32)size() / (F32)mCalcChainLength);
+		if (mOrderMode == LRTB || mOrderMode == RLTB)
+		{
+			h = (h * mCalcCellExt.y) + ((h-1) * mCalcCellSpace.y);
+			innerRect.extent.y = h;
+		}
+		else if (mOrderMode == TBLR || mOrderMode == BTLR)
+		{
+			h = (h * mCalcCellExt.x) + ((h - 1) * mCalcCellSpace.x);
+			innerRect.extent.x = h;
+		}
+		else if (mOrderMode == LRBT || mOrderMode == RLBT)
+		{
+			h = (h * mCalcCellExt.y) + ((h - 1) * mCalcCellSpace.y);
+			actualNewPosition.y += innerRect.extent.y - h;
+			innerRect.extent.y = h;
+		}
+		else if (mOrderMode == TBRL || mOrderMode == BTRL)
+		{
+			h = (h * mCalcCellExt.x) + ((h - 1) * mCalcCellSpace.x);
+			actualNewPosition.x += innerRect.extent.x - h;
+			innerRect.extent.x = h;
+		}
+		actualNewExtent = getOuterExtent(innerRect.extent, NormalState, mProfile);
+	}
 
+	mBounds.set(actualNewPosition, actualNewExtent);
+
+	GuiControl *parent = getParent();
 	if (parent)
 		parent->childResized(this);
-
 	setUpdate();
 }
 
 //------------------------------------------------------------------------------
 
-RectI GuiGridControl::GetGridRect(GuiControl* ctrl)
+Point2I GuiGridCtrl::getCellPosition(const U16 num, const Point2I &innerExtent)
 {
-	S32 col = dAtoi(ctrl->getDataField( StringTable->insert("Col"), NULL));
-	S32 row = dAtoi(ctrl->getDataField( StringTable->insert("Row"), NULL));
-	S32 colSpan = dAtoi(ctrl->getDataField( StringTable->insert("ColSpan"), NULL));
-	S32 rowSpan = dAtoi(ctrl->getDataField( StringTable->insert("RowSpan"), NULL));
+	Point2I result(0,0);
+	U16 y = (U16)mFloor(num / mCalcChainLength);
+	U16 x = (U16)(num % mCalcChainLength);
+	F32 ChainCount = mCeil((F32)size() / (F32)mCalcChainLength);
 
-	AssertFatal (col < mColSizes.size(), "Col is out of bounds");
-	AssertFatal (row < mRowSizes.size(), "Row is out of bounds");
-
-	if (colSpan < 1)
-        colSpan = 1;
-
-	if (rowSpan < 1)
-        rowSpan = 1;
-
-	RectI newRect(0,0,0,0);
-
-	for(int i = 0; i < col; i++)
+	if (mOrderMode == LRTB)
 	{
-		newRect.point.x += mColSizes[i];
+		result.set(x * (mCalcCellExt.x + mCalcCellSpace.x), y * (mCalcCellExt.y + mCalcCellSpace.y));
+	}
+	else if (mOrderMode == RLTB)
+	{
+		x = (mCalcChainLength - 1) - x;
+		S32 delta = innerExtent.x - ((mCalcChainLength * mCalcCellExt.x) + ((mCalcChainLength - 1) * mCalcCellSpace.x));
+		result.set((x * (mCalcCellExt.x + mCalcCellSpace.x)) + delta, y * (mCalcCellExt.y + mCalcCellSpace.y));
+	}
+	else if (mOrderMode == TBLR)
+	{
+		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), x * (mCalcCellExt.y + mCalcCellSpace.y));
+	}
+	else if (mOrderMode == BTLR)
+	{
+		x = (mCalcChainLength - 1) - x;
+		S32 delta = innerExtent.y - ((mCalcChainLength * mCalcCellExt.y) + ((mCalcChainLength - 1) * mCalcCellSpace.y));
+		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), (x * (mCalcCellExt.y + mCalcCellSpace.y)) + delta);
+	}
+	else if (mOrderMode == LRBT)
+	{
+		y = (ChainCount - 1) - y;
+		result.set(x * (mCalcCellExt.x + mCalcCellSpace.x), y * (mCalcCellExt.y + mCalcCellSpace.y));
+	}
+	else if (mOrderMode == RLBT)
+	{
+		y = (ChainCount - 1) - y;
+		x = (mCalcChainLength - 1) - x;
+		S32 delta = innerExtent.x - ((mCalcChainLength * mCalcCellExt.x) + ((mCalcChainLength - 1) * mCalcCellSpace.x));
+		result.set((x * (mCalcCellExt.x + mCalcCellSpace.x)) + delta, y * (mCalcCellExt.y + mCalcCellSpace.y));
+	}
+	else if (mOrderMode == TBRL)
+	{
+		y = (ChainCount - 1) - y;
+		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), x * (mCalcCellExt.y + mCalcCellSpace.y));
+	}
+	else if (mOrderMode == BTRL)
+	{
+		y = (ChainCount - 1) - y;
+		x = (mCalcChainLength - 1) - x;
+		S32 delta = innerExtent.y - ((mCalcChainLength * mCalcCellExt.y) + ((mCalcChainLength - 1) * mCalcCellSpace.y));
+		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), (x * (mCalcCellExt.y + mCalcCellSpace.y)) + delta);
 	}
 
-	for(int i =col; i < col+colSpan; i++)
-	{
-		newRect.extent.x += mColSizes[i];
-	}
-	
-	for(int i = 0; i < row; i++)
-	{
-		newRect.point.y += mRowSizes[i];
-	}
-
-	for(int i =row; i < row+rowSpan; i++)
-	{
-		newRect.extent.y += mRowSizes[i];
-	}
-
-	return newRect;
+	return result;
 }
 
 //------------------------------------------------------------------------------
 
-void GuiGridControl::AdjustGrid(const Point2I& newExtent)
+void GuiGridCtrl::AdjustGrid(const Point2I& innerExtent)
 {
-	mColSizes.clear();
-	mRowSizes.clear();
-	AdjustGridItems(newExtent.x, mGridCols, mColSizes);
-	AdjustGridItems(newExtent.y, mGridRows, mRowSizes);
+	Point2F cellExtX, cellExtY;
+	if (mOrderMode == LRTB || mOrderMode == LRBT || mOrderMode == RLTB || mOrderMode == RLBT)
+	{
+		cellExtX = GetGridItemWidth(innerExtent.x, mMaxColCount, mCellSizeX, mCellSpacingX, mCellModeX);
+		cellExtY = GetGridItemHeight(innerExtent.y, mMaxRowCount, mCellSizeY, mCellSpacingY, mCellModeY);
+	}
+	else
+	{
+		cellExtY = GetGridItemWidth(innerExtent.y, mMaxRowCount, mCellSizeY, mCellSpacingY, mCellModeY);
+		cellExtX = GetGridItemHeight(innerExtent.x, mMaxColCount, mCellSizeX, mCellSpacingX, mCellModeX);
+	}
+	mCalcCellExt.set(cellExtX.x, cellExtY.x);
+	mCalcCellSpace.set(cellExtX.y, cellExtY.y);
 }
 
-//------------------------------------------------------------------------------
-
-void GuiGridControl::AdjustGridItems(S32 size, Vector<StringTableEntry>& strItems, Vector<S32>& items)
+Point2F GuiGridCtrl::GetGridItemWidth(const S32 totalArea, const S32 maxChainLength, const F32 itemSize, const F32 spaceSize, const CellMode cellMode)
 {
-	Vector<GridItem> GridItems;
-    S32 bFoundStar;
-	bFoundStar = false;
-	S32 IndexRemaining = -1;
-	S32 totalSize = 0;
-	S32 idx =0;
-
-	//First step : Convert the string based column data into a GridItem vector.
-	for(Vector<char const*>::iterator col = strItems.begin(); col != strItems.end(); ++col, idx++)
+	//The two values returned are the extent and spacing held in the x and y respectively
+	if (cellMode == GuiGridCtrl::Percent)
 	{
-		StringTableEntry str = *col;
-
-		int len = dStrlen(str);
-		AssertFatal(len >= 1, "Item can not be blank.");
-		
-		//we support three types of values (absolute size in pixels, percentage based, and remaining size in pixels).
-		if (str[0] == '*') // use the remaining space left in the columns.
-		{
-			AssertFatal(!bFoundStar, "Can only use one * item field");
-			GridItem gi;
-			gi.IsAbsolute = false;
-			gi.IsPercentage = false;
-			gi.IsRemaining = true;
-			gi.Size = 0;
-			GridItems.push_back(gi);
-		}
-		else if ( len > 1 && str[len-1] == '%' ) //percentage based
-		{
-			char* tmp = new char[len-1];
-			dStrncpy(tmp, str, len-1);
-			int perc = dAtoi(tmp);
-			delete[] tmp;
-
-			GridItem gi;
-			gi.IsAbsolute = false;
-			gi.IsPercentage = true;
-			gi.IsRemaining = false;
-			gi.Size = perc;
-			GridItems.push_back(gi);
-
-		}
-		else //standard absolute pixel based
-		{
-			int px = dAtoi(str);
-
-			GridItem gi;
-			gi.IsAbsolute = true;
-			gi.IsPercentage = false;
-			gi.IsRemaining = false;
-			gi.Size = px;
-			GridItems.push_back(gi);
-
-			totalSize += px;
-		}
+		mCalcChainLength = (U16)getMax((100 + spaceSize) / (itemSize + spaceSize), 1.f);
+	}
+	else
+	{
+		mCalcChainLength = (U16)getMax((totalArea + spaceSize) / (itemSize + spaceSize), 1.f);
 	}
 
-    //step two: iterate the grid columns again, and fill in any percentage based sizing, and setup the correct grid array.
-	int remainingSize = size - totalSize;
-	int sizeForPerc = remainingSize;
-	for(int i = 0; i < GridItems.size(); ++i)
+	if (maxChainLength > 0)
 	{
-		GridItem gi = GridItems[i];
-
-		if (gi.IsAbsolute)
-		{
-			items.push_back(gi.Size);
-		}
-		else if (gi.IsPercentage)
-		{
-			F32 perc = gi.Size / 100.0f;
-			S32 realSize = sizeForPerc * (S32)perc;
-			remainingSize -= realSize;
-			items.push_back(realSize);
-		}
-		else if(gi.IsRemaining)
-		{
-			//place holder for the moment.
-			items.push_back(0);
-			IndexRemaining = i;
-		}			
+		mCalcChainLength = (U16)getMin((S32)mCalcChainLength, maxChainLength);
 	}
 
-	if (IndexRemaining >= 0)
+	if (cellMode == GuiGridCtrl::Absolute)
 	{
-		items[IndexRemaining] = remainingSize;
-		remainingSize = 0;
+		return Point2F(mFloor(itemSize), mFloor(spaceSize));
 	}
+	else if (cellMode == GuiGridCtrl::Variable)
+	{
+		F32 remainder = totalArea - ((mCalcChainLength * itemSize) + ((mCalcChainLength - 1) * spaceSize));
+		return Point2F(mFloor(itemSize + (remainder / mCalcChainLength)), mFloor(spaceSize));
+	}
+	else if (cellMode == GuiGridCtrl::Percent)
+	{
+		F32 calcCellSize = mFloor(getMin((F32)(totalArea * (itemSize / 100)), (F32)(totalArea)));
+		F32 calcSpaceSize = mFloor(getMin((F32)(totalArea * (spaceSize / 100)), (F32)(totalArea)));
+		return Point2F(calcCellSize, calcSpaceSize);
+	}
+	return Point2F(1,1);
+}
+
+Point2F GuiGridCtrl::GetGridItemHeight(const S32 totalArea, const S32 maxChainLength, const F32 itemSize, const F32 spaceSize, const CellMode cellMode)
+{
+	if (mIsExtentDynamic || cellMode == CellMode::Absolute)
+	{
+		return Point2F(mFloor(itemSize), mFloor(spaceSize));
+	}
+	else if (cellMode == CellMode::Variable)
+	{
+		U16 length = (U16)mClamp((totalArea + spaceSize) / (itemSize + spaceSize), 1, maxChainLength);
+		F32 remainder = totalArea - ((length * itemSize) + ((length - 1) * spaceSize));
+		return Point2F(mFloor(itemSize + (remainder / mCalcChainLength)), mFloor(spaceSize));
+	}
+	else if (cellMode == CellMode::Percent)
+	{
+		F32 calcCellSize = mFloor(getMin((F32)(totalArea * (itemSize / 100)), (F32)(totalArea)));
+		F32 calcSpaceSize = mFloor(getMin((F32)(totalArea * (spaceSize / 100)), (F32)(totalArea)));
+		return Point2F(calcCellSize, calcSpaceSize);
+	}
+	return Point2F(1, 1);
+}
+
+void GuiGridCtrl::onChildAdded(GuiControl *child)
+{
+	resize(getPosition(), getExtent());
+}
+
+void GuiGridCtrl::onChildRemoved(SimObject *child)
+{
+	resize(getPosition(), getExtent());
+}
+
+void GuiGridCtrl::setCellSize(F32 width, F32 height)
+{
+	mCellSizeX = mAbs(width);
+	mCellSizeY = mAbs(height);
+	resize(getPosition(), getExtent());
+}
+
+void GuiGridCtrl::setCellSpacing(F32 x, F32 y)
+{
+	mCellSpacingX = mAbs(x);
+	mCellSpacingY = mAbs(y);
+	resize(getPosition(), getExtent());
+}
+
+void GuiGridCtrl::setCellModeX(const CellMode mode)
+{
+	// Sanity!
+	AssertFatal(mode == Percent || mode == Variable || mode == Absolute, "Invalid cell mode.");
+
+	mCellModeX = mode;
+	resize(getPosition(), getExtent());
+}
+
+void GuiGridCtrl::setCellModeY(const CellMode mode)
+{
+	// Sanity!
+	AssertFatal(mode == Percent || mode == Variable || mode == Absolute, "Invalid cell mode.");
+
+	mCellModeY = mode;
+	resize(getPosition(), getExtent());
+}
+
+GuiGridCtrl::CellMode GuiGridCtrl::getCellModeEnum(const char* label)
+{
+	// Search for Mnemonic.
+	for (U32 i = 0; i < (sizeof(cellModeEnums) / sizeof(EnumTable::Enums)); i++)
+	{
+		if (dStricmp(cellModeEnums[i].label, label) == 0)
+			return (CellMode)cellModeEnums[i].index;
+	}
+
+	// Warn.
+	Con::warnf("GuiGridCtrl::getCellModeEnum() - Invalid cell mode of '%s'", label);
+
+	return (CellMode)-1;
+}
+
+const char* GuiGridCtrl::getCellModeDescription(const GuiGridCtrl::CellMode mode)
+{
+	// Search for Mnemonic.
+	for (U32 i = 0; i < (sizeof(cellModeEnums) / sizeof(EnumTable::Enums)); i++)
+	{
+		if (cellModeEnums[i].index == mode)
+			return cellModeEnums[i].label;
+	}
+
+	// Warn.
+	Con::warnf("GuiGridCtrl::getCellModeDescription() - Invalid cell mode.");
+
+	return StringTable->EmptyString;
+}
+
+const char* GuiGridCtrl::getOrderModeDescription(const GuiGridCtrl::OrderMode mode)
+{
+	// Search for Mnemonic.
+	for (U32 i = 0; i < (sizeof(orderModeEnums) / sizeof(EnumTable::Enums)); i++)
+	{
+		if (orderModeEnums[i].index == mode)
+			return orderModeEnums[i].label;
+	}
+
+	// Warn.
+	Con::warnf("GuiGridCtrl::getOrderModeDescription() - Invalid order mode.");
+
+	return StringTable->EmptyString;
 }

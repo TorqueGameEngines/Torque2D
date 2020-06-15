@@ -622,9 +622,7 @@
     <ClCompile Include="..\..\source\gui\buttons\guiCheckBoxCtrl.cc" />
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiCtrlArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiPaneCtrl.cc" />
@@ -889,6 +887,8 @@
     <ClInclude Include="..\..\source\graphics\TextureObject.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiBackgroundCtrl.h" />
@@ -1211,9 +1211,7 @@
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiCtrlArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPaneCtrl.h" />

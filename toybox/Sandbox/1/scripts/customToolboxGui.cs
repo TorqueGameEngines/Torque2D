@@ -40,7 +40,7 @@ function resetCustomControls()
 {
     Sandbox.lastControlBottom = "0";
     Sandbox.customControlCount = 0;
-    
+
     %customControlExtent = ToyCustomControls.Extent;
     %newExtent = getWord(ToyCustomControls.Extent, 0) SPC 705;
     ToyCustomControls.Extent = %newExtent;
@@ -138,15 +138,15 @@ function addFlagOption( %label, %callback, %startingValue, %shouldReset, %toolti
     ToyCustomControls.add(%container);
 
     Sandbox.lastControlBottom = getWord(%container.position, 1) + getWord(%container.extent, 1);
-    
+
     if (Sandbox.lastControlBottom > getWord(ToyCustomControls.Extent, 1))
     {
         %rootContainerExtent = getWord(ToyCustomControls.Extent, 0) SPC Sandbox.lastControlBottom + 20;
-    
+
         ToyCustomControls.Extent = %rootContainerExtent;
         CustomControlsScroller.computeSizes();
     }
-    
+
     Sandbox.customControlCount++;
 }
 
@@ -156,14 +156,14 @@ function FlagController::updateToy(%this)
 {
     if (%this.toy $= "")
         return;
-        
+
     if (%this.callback !$= "")
     {
         %setter = "%this.toy." @ %this.callback @ "(" @ %this.getStateOn() @ ");";
 
         eval(%setter);
     }
-    
+
     if (%this.shouldResetToy && %this.toy.isMethod("reset"))
         %this.toy.reset();
 }
@@ -223,11 +223,11 @@ function addButtonOption( %label, %callback, %shouldReset, %tooltipText)
     if (Sandbox.lastControlBottom > getWord(ToyCustomControls.Extent, 1))
     {
         %rootContainerExtent = getWord(ToyCustomControls.Extent, 0) SPC Sandbox.lastControlBottom + 20;
-    
+
         ToyCustomControls.Extent = %rootContainerExtent;
         CustomControlsScroller.computeSizes();
     }
-    
+
     Sandbox.customControlCount++;
 }
 
@@ -370,11 +370,11 @@ function addNumericOption( %label, %min, %max, %step, %callback, %startingValue,
     if (Sandbox.lastControlBottom > getWord(ToyCustomControls.Extent, 1))
     {
         %rootContainerExtent = getWord(ToyCustomControls.Extent, 0) SPC Sandbox.lastControlBottom + 20;
-    
+
         ToyCustomControls.Extent = %rootContainerExtent;
         CustomControlsScroller.computeSizes();
     }
-    
+
     Sandbox.customControlCount++;
 }
 
@@ -388,20 +388,20 @@ function SpinnerController::updateTarget(%this)
     {
         %value = %target.getText();
         %value += %this.step;
-        
+
         if (%value > %target.max)
             %value = %target.max;
-        
+
         %target.setText(%value);
     }
     else if (%this.action $= "decrease")
     {
         %value = %target.getText();
         %value -= %this.step;
-        
+
         if (%value < %target.min)
             %value = %target.min;
-            
+
         %target.setText(%value);
     }
 
@@ -414,18 +414,18 @@ function TextEditController::updateToy(%this)
 {
     if (%this.toy $= "")
         return;
-    
+
     if (%this.getText() > %this.max)
         %this.setText(%this.max);
     else if (%this.getText() < %this.min)
         %this.setText(%this.min);
-    
+
     if (%this.callback !$= "" && %this.getValue() !$= "")
     {
         %setter = "%this.toy." @ %this.callback @ "(" @ %this.getValue() @ ");";
         eval(%setter);
     }
-    
+
     if (%this.shouldResetToy && %this.toy.isMethod("reset"))
         %this.toy.reset();
 }
@@ -436,47 +436,47 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
 {
     // Combined Y extent of the up/down buttons
     %buttonExtentAddition = 46;
-    
+
     // Extra padding
-    %buffer = 15;  
-    
-    // Size of each button added to the list  
+    %buffer = 15;
+
+    // Size of each button added to the list
     %buttonSize = 50;
     %buttonSpacing = %maxDisplay;// * 8;
-    
-    // Starting location of the main container    
+
+    // Starting location of the main container
     %containerPosition = nextCustomControlPosition(Sandbox.customControlCount);
-    
+
     // Main container base width
     %containerWidth = getWord(Sandbox.customContainerExtent, 0);
-    
+
     // Main container base height
     %containerHeight = getWord(Sandbox.customContainerExtent, 1) + getWord(Sandbox.listOptionExtent, 1) + Sandbox.customLabelHeight;
-    
+
     // Main container buffer (accounts for size of list, up/down buttons, and buffer)
     %containerHeight += ((%maxDisplay+1) * %buttonSize) + %buttonExtentAddition + %buffer;
-    
+
     // X position of buttons
     %buttonX = "90";
-    
-    // Y position for up button 
+
+    // Y position for up button
     %upButtonY = Sandbox.customLabelSpacing;
-    
+
     // List container
     %listContainerPosition = "0" SPC %upButtonY + 22;
     %listContainerWidth = %containerWidth;
     %listContainerHeight = ((%maxDisplay+1) * %buttonSize) + %buttonSpacing;
-    
+
     %scrollContainerWidth = %listContainerWidth - 5;
     %scrollContainerHeight = %listContainerHeight;
-    
+
     // Array control
     %arrayListWidth = %scrollContainerWidth - 25;
     %arrayListHeight = 0;
-    
+
     // Y position for the down button
     %downButtonY = getWord(%listContainerPosition, 1) + %listContainerHeight;
-    
+
     // Create the base container
     %container = new GuiControl()
     {
@@ -487,11 +487,11 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         extent = %containerWidth SPC %containerHeight;
         Profile = GuiTransparentProfile;
     };
-    
+
     // Create and add the text label
     %customLabel = createCustomLabel(%label);
     %container.add(%customLabel);
-    
+
     %listContainer = new GuiControl()
     {
         isContainer = 1;
@@ -501,7 +501,7 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         extent = %listContainerWidth SPC %listContainerHeight;
         Profile = GuiSunkenContainerProfile;
     };
-    
+
     %scrollControl = new GuiScrollCtrl()
     {
         canSaveDynamicFields = "1";
@@ -523,10 +523,10 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         constantThumbHeight = "0";
         childMargin = "2 3";
         toolTipProfile = "GuiToolTipProfile";
-        toolTip = %tooltipText;        
+        toolTip = %tooltipText;
     };
-    
-    %arrayList = new GuiDynamicCtrlArrayControl()
+
+    %arrayList = new GuiGridCtrl()
     {
         canSaveDynamicFields = "0";
         isContainer = "1";
@@ -542,23 +542,24 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         Active = "1";
         tooltipprofile = "GuiToolTipProfile";
         hovertime = "1000";
-        colCount = "1";
-        colSize = %arrayListWidth-10;
-        rowSize = "50";
-        rowSpacing = "8";
-        colSpacing = "8";
+        MaxColCount = "1";
+        CellSizeX = %arrayListWidth-10;
+        CellSizeY = "50";
+        CellSpacingX = "8";
+        CellSpacingY = "8";
+		CellModeX = "variable";
         toolTipProfile = "GuiToolTipProfile";
-        toolTip = %tooltipText;       
+        toolTip = %tooltipText;
     };
-    
+
     %scrollControl.add(%arrayList);
-    
+
     %listContainer.add(%scrollControl);
-        
+
     %container.add(%listContainer);
-    
+
     // Populate the list
-    
+
     for (%i = 0; %i < getUnitCount(%entries, ","); %i++)
     {
         %button = new GuiButtonCtrl()
@@ -582,14 +583,14 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
             buttonType = "ToggleButton";
             useMouseEvents = "0";
             toolTipProfile = "GuiToolTipProfile";
-            toolTip = %tooltipText;            
+            toolTip = %tooltipText;
         };
-        
+
         %button.command = %arrayList @ ".clearSelections();" @ %button @ ".updateToy();";
-        
+
         %arrayList.add(%button);
     }
-    
+
     // Create and add the up button
     %upButton = new GuiImageButtonCtrl()
     {
@@ -611,11 +612,11 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         HoverImage = "Sandbox:northArrowHover";
         DownImage = "Sandbox:northArrowDown";
         toolTipProfile = "GuiToolTipProfile";
-        toolTip = %tooltipText;       
+        toolTip = %tooltipText;
     };
-    
+
     %upButton.command = %scrollControl @ ".scrollToPrevious();";
-    
+
     // Create and add the down button
     %downButton = new GuiImageButtonCtrl()
     {
@@ -637,26 +638,26 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         HoverImage = "Sandbox:southArrowHover";
         DownImage = "Sandbox:southArrowDown";
         toolTipProfile = "GuiToolTipProfile";
-        toolTip = %tooltipText;        
+        toolTip = %tooltipText;
     };
-    
+
     %downButton.command = %scrollControl @ ".scrollToNext();";
-    
-    %container.add(%upButton);    
+
+    %container.add(%upButton);
     %container.add(%downButton);
-    
+
     ToyCustomControls.add(%container);
-        
+
     Sandbox.lastControlBottom = getWord(%container.position, 1) + getWord(%container.extent, 1);
-    
+
     if (Sandbox.lastControlBottom > getWord(ToyCustomControls.Extent, 1))
     {
         %rootContainerExtent = getWord(ToyCustomControls.Extent, 0) SPC Sandbox.lastControlBottom + 20;
-    
+
         ToyCustomControls.Extent = %rootContainerExtent;
         CustomControlsScroller.computeSizes();
     }
-    
+
     Sandbox.customControlCount++;
 }
 
@@ -667,7 +668,7 @@ function CustomOptionArrayClass::clearSelections(%this)
     for (%i = 0; %i < %count; %i++)
     {
         %button = %this.getObject(%i);
-        
+
         %button.setStateOn(false);
     }
 }
@@ -697,7 +698,7 @@ function SelectionController::updateToy(%this)
         return;
 
     %this.setStateOn(true);
-    
+
     if (%this.callback !$= "")
     {
         %value = %this.getText();
