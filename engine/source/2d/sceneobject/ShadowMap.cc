@@ -50,27 +50,156 @@ void ShadowMap::safeDelete(void)
 void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const SceneRenderRequest * sceneRenderRequest, BatchRender * batchRender)
 {
    Vector2 worldPos = getPosition();
+   Vector<Vector2> verts;
+   Vector<Vector2> bound;
+   Vector<RayList> bList;
+
+
    F32 radius = getSize().x * 0.5f;
+   Scene* scene = getScene();
+   b2World* mWorld = scene->getWorld();
+
+   glEnable(GL_BLEND);
    glDisable(GL_TEXTURE_2D);
    glPushMatrix();
    glTranslatef(worldPos.x, worldPos.y, 0);
    glPolygonMode(GL_FRONT, GL_FILL);
 
-   glBlendFunc(GL_DST_COLOR, GL_ZERO);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
    // Creates the fading dark region.
    glBegin(GL_TRIANGLE_FAN);
-   glColor4f(1, 1, 1, 1);
+   glColor4f(1, 1, 1, 0.5);
    glVertex2f(0, 0);
-   glColor4f(0, 0, 0, 1);
-   glEnd();
+   
 
-   glBegin(GL_TRIANGLE_STRIP);
-   glColor4f(0, 0, 0, 1);
-   glVertex2f(10, 10);
-   glEnd();
-   Scene* scene = getScene();
+   //glVertex2f(0, 0);
+   
 
    U32 objCount = scene->getSceneObjectCount();
+   for (U32 i = 0; i < objCount; i++)
+   {
+      SceneObject *tObj = scene->getSceneObject(i);
+      Vector2 dist = worldPos - tObj->getPosition();
+      const F32 distSqr = dist.LengthSquared();
+      const F32 radSqr = radius * radius;
+      if (distSqr < radSqr || distSqr == radSqr)
+      {
+         U32 shapeCount = tObj->getCollisionShapeCount();
+         for (U32 j = 0; j < shapeCount; j++)
+         {
+            if (tObj->getCollisionShapeType(j) == b2Shape::e_polygon)
+            {
+               U32 pCount = tObj->getPolygonCollisionShapePointCount(j);
+
+               for (U32 k = 0; k < pCount; k++)
+               {
+                  Vector2 locPoint = tObj->getPolygonCollisionShapeLocalPoint(j, k);
+                  Vector2 wPoint = tObj->getWorldPoint(locPoint);
+                  verts.push_back(wPoint);
+               }
+            }
+         }
+      }
+   }
+
+   for (S32 l = 0; l < verts.size(); l++)
+   {
+      F32 rayLength = radius;
+      Vector2 p1 = worldPos;
+      Vector2 p2 = verts[l];
+      F32 baseAng = mAtan(p2.x, p2.y);
+      F32 cAng = 0;
+      for (int m = 0; m < 3; m++)
+      {
+         if (m == 0)cAng = baseAng - 0.0001f;
+         if (m == 1)cAng = baseAng;
+         if (m == 2)cAng = baseAng + 0.0001f;
+
+         p2.x = rayLength * mCos(cAng);
+         p2.y = rayLength * mSin(cAng);
+
+         RaysCastCallback callback;
+         mWorld->RayCast(&callback, p1, p2);
+         if (callback.m_fixture)
+         {
+
+            F32 ang = mAtan(callback.m_point.x - p1.x, callback.m_point.y - p1.y);
+            Vector2 intersection = p1 + callback.m_fraction * (p2 - p1);
+            //Point3F intersectionPoint(intersection.x, intersection.y, callback.m_fraction);
+            RayList intersectionPoint;
+            intersectionPoint.ang = ang;
+            intersectionPoint.x = intersection.x;
+            intersectionPoint.y = intersection.y;
+            intersectionPoint.l = callback.m_fraction;
+
+            bList.push_back(intersectionPoint);
+
+         }
+      }
+   }
+
+   for (U32 n = 0; n < 36; n++)
+   {
+      F32 rayLength = radius;
+      b2Vec2 p1 = worldPos;
+      b2Vec2 p2 = p1 + rayLength * b2Vec2(mCos(mDegToRad((F32)10 * n)), mSin(mDegToRad((F32)10*n)));
+      b2RayCastInput input;
+      input.p1 = p1;
+      input.p2 = p2;
+      input.maxFraction = 1;
+      F32 closestFraction = 1;
+      RaysCastCallback callback;
+      mWorld->RayCast(&callback, p1, p2);
+      if (callback.m_fixture)
+      {
+         b2RayCastOutput output;
+         if (output.fraction < closestFraction)
+         {
+            closestFraction = output.fraction;
+         }
+         F32 ang = mAtan(callback.m_point.x - p1.x, callback.m_point.y - p1.y);
+         Vector2 intersection = p1 + callback.m_fraction * (p2 - p1);
+         //Point3F intersectionPoint(intersection.x, intersection.y, callback.m_fraction);
+         RayList intersectionPoint;
+         intersectionPoint.ang = ang;
+         intersectionPoint.x = intersection.x;
+         intersectionPoint.y = intersection.y;
+         intersectionPoint.l = callback.m_fraction;
+
+         bList.push_back(intersectionPoint);
+         //glVertex2f(p1.x, p1.y);
+         //glVertex2f(intersectionPoint.x, intersectionPoint.y);
+      }
+      else
+      {
+         F32 ang = mAtan(p2.x - p1.x, p2.y - p1.y);
+
+         RayList intersectionPoint;
+         intersectionPoint.ang = ang;
+         intersectionPoint.x = p2.x;
+         intersectionPoint.y = p2.y;
+         intersectionPoint.l = 1.0;
+
+         bList.push_back(intersectionPoint);
+      }
+   }
+
+   if (bList.size() > 1)
+   {
+      dQsort(bList.address(), bList.size(), sizeof(RayList), sortRays);
+   }
+
+   for (S32 m = 0; m < bList.size(); m++)
+   {
+      glColor4f(1.0 - bList[m].l , 1.0 - bList[m].l , 1.0 - bList[m].l , 0.5);
+      glVertex2f(bList[m].x, bList[m].y);
+
+   }
+
+   glEnd();
+
+
+   /*U32 objCount = scene->getSceneObjectCount();
    for (U32 i = 0; i < objCount; i++)
    {
       SceneObject *tObj = scene->getSceneObject(i);
@@ -80,10 +209,9 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
       const F32 radiusSqr = radius * radius;
       if (distanceSqr < radiusSqr || distanceSqr == radiusSqr)
       {
-         Con::printf("Found object to shadow");
          processObject(tObj);
       }
-   }
+   }*/
 
    glPopMatrix();
 
@@ -92,7 +220,6 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
 void ShadowMap::OnRegisterScene(Scene* mScene)
 {
    Parent::OnRegisterScene(mScene);
-   Con::printf("we are atleast here");
    mScene->getWorldQuery()->addAlwaysInScope(this);
 
 }
@@ -112,7 +239,6 @@ void ShadowMap::processObject(SceneObject *obj)
    {
       if (obj->getCollisionShapeType(i) == b2Shape::e_polygon)
       {
-         Con::printf("We have a polygonshape on this sceneobject");
          U32 pointCount = obj->getPolygonCollisionShapePointCount(i);
          for (U32 n = 0; n < pointCount; n++)
          {
@@ -129,47 +255,23 @@ void ShadowMap::processObject(SceneObject *obj)
 
 void ShadowMap::renderShadow(const Vector<Vector2>& verts, const Vector2& lightPos)
 {
-   Con::printf("renderShadow");
-   Con::printf("glBegin in rendershadow");
-   S32 startVert = 0;
-   S32 endVert = 0;
-   for(S32 i = 1; i < verts.size() + 1; i++)
+
+}
+
+S32 QSORT_CALLBACK sortRays(const void* a, const void* b)
+{
+   RayList* ang_a = (RayList*) a;
+   RayList* ang_b = (RayList*) b;
+
+   if (ang_a->ang < ang_b->ang)
    {
-      S32 vert0 = (i - 1) % verts.size();
-      S32 vert1 = (i) % verts.size();
-      S32 vert2 = (i + 1) % verts.size();
-      Vector2 normal0(verts[vert0] - verts[vert1]);
-      normal0.perp();
-      Vector2 normal1(verts[vert1] - verts[vert2]);
-      normal1.perp();
-      Vector2 ray(verts[vert1] - lightPos);
-      F32 n0 = ray.dot(normal0);
-      F32 n1 = ray.dot(normal1);
-      if (n0 <= 0 && n1 > 0)
-      {
-         startVert = vert1;
-      }
-      if (n0 > 0 && n1 <= 0)
-      {
-         endVert = vert1;
-      }
+      return -1;
    }
-   glEnable(GL_BLEND);
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-   //glDisable(GL_TEXTURE_2D);
-   glColor4f(0, 0, 0, 1);
-   glBegin(GL_TRIANGLE_STRIP);
-   for (S32 i = 0; i < verts.size(); i++)
+   else if (ang_a->ang > ang_b->ang)
    {
-      S32 vert = (startVert + i) % verts.size();
-      Vector2 ray(verts[vert] - lightPos); ray.Normalize(600.0f);
-      glVertex2f(verts[vert].x, verts[vert].y);
-      glVertex2f(verts[vert].x + ray.x, verts[vert].y + ray.y);
-      if (vert == endVert) break;
+      return 1;
    }
-   //glVertex2f(verts[0].x, verts[0].y);
-   //glVertex2f(verts[1].x, verts[1].y);
-   //glVertex2f(lightPos.x, lightPos.y);
-   //glVertex2f(verts[3].x, verts[3].y);
-   glEnd();
+  
+   return 0;
+
 }

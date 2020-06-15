@@ -5,6 +5,35 @@
 #include "2d/sceneobject/SceneObject.h"
 #endif
 
+struct RayList
+{
+   F32 ang;
+   F32 x;
+   F32 y;
+   F32 l;
+};
+
+class RaysCastCallback : public b2RayCastCallback
+{
+public:
+   RaysCastCallback() : m_fixture(NULL) {
+   }
+
+   float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction) {
+      m_fixture = fixture;
+      m_point = point;
+      m_normal = normal;
+      m_fraction = fraction;
+      return fraction;
+   }
+
+   b2Fixture* m_fixture;
+   b2Vec2 m_point;
+   b2Vec2 m_normal;
+   float32 m_fraction;
+
+};
+
 class ShadowMap : public SceneObject
 
 {
@@ -41,8 +70,11 @@ public:
       virtual void OnUnregisterScene(Scene* mScene);
 
 private:
-
+   F32 theSinTable[361];
+   F32 theCosTable[361];
 };
 
 
 #endif //_SHADOWMAP_H_
+
+S32 QSORT_CALLBACK sortRays(const void * a, const void * b);

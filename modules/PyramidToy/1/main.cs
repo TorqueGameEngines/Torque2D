@@ -126,7 +126,7 @@ function PyramidToy::createGround( %this )
     %ground.setSize(PyramidToy.GroundWidth, 6);
     %ground.setRepeatX(PyramidToy.GroundWidth / 60);   
     %ground.createEdgeCollisionShape(PyramidToy.GroundWidth/-2, 3, PyramidToy.GroundWidth/2, 3);
-	%ground.SceneLayer = 10;
+	//%ground.SceneLayer = 10;
     SandboxScene.add(%ground);  
     
     // Create the grass.
@@ -193,5 +193,6 @@ function PyramidToy::createPyramid( %this )
 	%map = new ShadowMap();
 	%map.setSize("15 15");
 	%map.setBodyType(Static);
+	//%map.SceneLayer = 16;
 	SandboxScene.add(%map);
 }
