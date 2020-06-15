@@ -51,7 +51,6 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
 {
    Vector2 worldPos = getPosition();
    Vector<Vector2> verts;
-   Vector<Vector2> bound;
    Vector<RayList> bList;
 
 
@@ -70,11 +69,7 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
    glBegin(GL_TRIANGLE_FAN);
    glColor4f(1, 1, 1, 0.5);
    glVertex2f(0, 0);
-   
-
-   //glVertex2f(0, 0);
-   
-
+   //check scene objects
    U32 objCount = scene->getSceneObjectCount();
    for (U32 i = 0; i < objCount; i++)
    {
@@ -82,11 +77,13 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
       Vector2 dist = worldPos - tObj->getPosition();
       const F32 distSqr = dist.LengthSquared();
       const F32 radSqr = radius * radius;
+      //within radius?
       if (distSqr < radSqr || distSqr == radSqr)
       {
          U32 shapeCount = tObj->getCollisionShapeCount();
          for (U32 j = 0; j < shapeCount; j++)
          {
+            //All vertices from collision shape
             if (tObj->getCollisionShapeType(j) == b2Shape::e_polygon)
             {
                U32 pCount = tObj->getPolygonCollisionShapePointCount(j);
@@ -102,6 +99,7 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
       }
    }
 
+   //cast ray to vertices
    for (S32 l = 0; l < verts.size(); l++)
    {
       F32 rayLength = radius;
@@ -137,26 +135,17 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
          }
       }
    }
-
-   for (U32 n = 0; n < 36; n++)
+   //create a list of arrays for ordinary circle
+   //these need to stop at a collision.
+   for (U32 n = 0; n <= 36; n++)
    {
       F32 rayLength = radius;
       b2Vec2 p1 = worldPos;
       b2Vec2 p2 = p1 + rayLength * b2Vec2(mCos(mDegToRad((F32)10 * n)), mSin(mDegToRad((F32)10*n)));
-      b2RayCastInput input;
-      input.p1 = p1;
-      input.p2 = p2;
-      input.maxFraction = 1;
-      F32 closestFraction = 1;
       RaysCastCallback callback;
       mWorld->RayCast(&callback, p1, p2);
       if (callback.m_fixture)
       {
-         b2RayCastOutput output;
-         if (output.fraction < closestFraction)
-         {
-            closestFraction = output.fraction;
-         }
          F32 ang = mAtan(callback.m_point.x - p1.x, callback.m_point.y - p1.y);
          Vector2 intersection = p1 + callback.m_fraction * (p2 - p1);
          //Point3F intersectionPoint(intersection.x, intersection.y, callback.m_fraction);
@@ -167,8 +156,6 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
          intersectionPoint.l = callback.m_fraction;
 
          bList.push_back(intersectionPoint);
-         //glVertex2f(p1.x, p1.y);
-         //glVertex2f(intersectionPoint.x, intersectionPoint.y);
       }
       else
       {
@@ -183,18 +170,21 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
          bList.push_back(intersectionPoint);
       }
    }
-
+   //sort the list
    if (bList.size() > 1)
    {
       dQsort(bList.address(), bList.size(), sizeof(RayList), sortRays);
    }
-
+   //triangle fan
    for (S32 m = 0; m < bList.size(); m++)
    {
       glColor4f(1.0 - bList[m].l , 1.0 - bList[m].l , 1.0 - bList[m].l , 0.5);
       glVertex2f(bList[m].x, bList[m].y);
 
    }
+   //close off the circle
+   glColor4f(1.0 - bList[0].l, 1.0 - bList[0].l, 1.0 - bList[0].l, 0.5);
+   glVertex2f(bList[0].x, bList[0].y);
 
    glEnd();
 
