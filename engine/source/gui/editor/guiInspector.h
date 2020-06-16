@@ -34,10 +34,6 @@
 #include "gui/guiCanvas.h"
 #endif
 
-#ifndef _GUISTACKCTRL_H_
-#include "gui/containers/guiStackCtrl.h"
-#endif
-
 #ifndef _H_GUIDEFAULTCONTROLRENDER_
 #include "gui/guiDefaultControlRender.h"
 #endif
@@ -58,6 +54,10 @@
 #include "gui/guiPopUpCtrl.h"
 #endif
 
+#ifndef _GUIGRIDCTRL_H_
+#include "gui/containers/guiGridCtrl.h"
+#endif
+
 #include "gui/containers/guiRolloutCtrl.h"
 
 
@@ -68,10 +68,10 @@ class GuiInspectorField;
 // Forward Declare GuiInspectorDatablockField
 class GuiInspectorDatablockField;
 
-class GuiInspector : public GuiStackControl
+class GuiInspector : public GuiGridCtrl
 {
 private:
-   typedef GuiStackControl Parent;
+   typedef GuiGridCtrl Parent;
 public:
    // Members
    Vector<GuiInspectorGroup*>    mGroups;
@@ -140,7 +140,7 @@ public:
    SimObjectPtr<SimObject>             mTarget;
    SimObjectPtr<GuiInspector>          mParent;
    Vector<GuiInspectorField*>          mChildren;
-   GuiStackControl*                    mStack;
+   GuiGridCtrl*						   mStack;
 
    // Constructor/Destructor/Conobject Declaration
    GuiInspectorGroup();

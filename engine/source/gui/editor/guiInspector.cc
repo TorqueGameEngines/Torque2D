@@ -37,7 +37,6 @@ GuiInspector::GuiInspector()
 {
    mGroups.clear();
    mTarget = NULL;
-   mPadding = 1;
 }
 
 GuiInspector::~GuiInspector()
@@ -177,7 +176,7 @@ void GuiInspector::inspectObject( SimObject *object )
       {
          mGroups.erase(i);
          general->deleteObject();
-         updatePanes();
+         resize(getPosition(), getExtent());
       }
    }
 
@@ -553,7 +552,7 @@ bool GuiInspectorGroup::onAdd()
 bool GuiInspectorGroup::createContent()
 {
    // Create our field stack control
-   mStack = new GuiStackControl();
+   mStack = new GuiGridCtrl();
    if( !mStack )
       return false;
 
@@ -639,7 +638,7 @@ bool GuiInspectorGroup::inspectGroup()
       return false;
 
    // to prevent crazy resizing, we'll just freeze our stack for a sec..
-   mStack->freeze(true);
+   //mStack->freeze(true);
 
    bool bNoGroup = false;
 
@@ -756,8 +755,8 @@ bool GuiInspectorGroup::inspectGroup()
          }       
       }
    }
-   mStack->freeze(false);
-   mStack->updatePanes();
+   //mStack->freeze(false);
+   //mStack->updatePanes();
 
    // If we've no new items, there's no need to resize anything!
    if( bNewItems == false && !mChildren.empty() )
