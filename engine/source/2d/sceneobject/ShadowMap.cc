@@ -59,15 +59,18 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
    b2World* mWorld = scene->getWorld();
 
    glEnable(GL_BLEND);
-   glDisable(GL_TEXTURE_2D);
+   //glDisable(GL_TEXTURE_2D);
    glPushMatrix();
    glTranslatef(worldPos.x, worldPos.y, 0);
    glPolygonMode(GL_FRONT, GL_FILL);
 
-   glBlendFunc(GL_SRC_ALPHA, GL_ONE);
+   //additive blending
+   //glBlendFunc(GL_ONE,GL_ONE);
+
+   glBlendFunc(GL_DST_COLOR, GL_ONE);
    // Creates the fading dark region.
    glBegin(GL_TRIANGLE_FAN);
-   glColor4f(1, 1, 1, 0.5);
+   glColor4f(1, 1, 1, 1);
    glVertex2f(0, 0);
    //check scene objects
    U32 objCount = scene->getSceneObjectCount();
@@ -98,6 +101,16 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
          }
       }
    }
+   //  \ | /
+   // -  +  -
+   //  / | \
+
+   for (U32 i = 0; i <= 12; i++)
+   {
+      b2Vec2 segStrt = worldPos;
+      b2Vec2 segEnd = segStrt + radius * b2Vec2(mCos(mDegToRad((F32)30 * i)), mSin(mDegToRad((F32)30 * i)));
+      verts.push_back(segEnd);
+   }
 
    //cast ray to vertices
    for (S32 l = 0; l < verts.size(); l++)
@@ -123,7 +136,7 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
 
             F32 ang = mAtan(callback.m_point.x - p1.x, callback.m_point.y - p1.y);
             Vector2 intersection = p1 + callback.m_fraction * (p2 - p1);
-            //Point3F intersectionPoint(intersection.x, intersection.y, callback.m_fraction);
+            
             RayList intersectionPoint;
             intersectionPoint.ang = ang;
             intersectionPoint.x = intersection.x;
@@ -133,43 +146,21 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
             bList.push_back(intersectionPoint);
 
          }
+         else
+         {
+            F32 ang = mAtan(p2.x - p1.x, p2.y - p1.y);
+
+            RayList intersectionPoint;
+            intersectionPoint.ang = ang;
+            intersectionPoint.x = p2.x;
+            intersectionPoint.y = p2.y;
+            intersectionPoint.l = 1.0;
+
+            bList.push_back(intersectionPoint);
+         }
       }
    }
-   //create a list of arrays for ordinary circle
-   //these need to stop at a collision.
-   for (U32 n = 0; n <= 36; n++)
-   {
-      F32 rayLength = radius;
-      b2Vec2 p1 = worldPos;
-      b2Vec2 p2 = p1 + rayLength * b2Vec2(mCos(mDegToRad((F32)10 * n)), mSin(mDegToRad((F32)10*n)));
-      RaysCastCallback callback;
-      mWorld->RayCast(&callback, p1, p2);
-      if (callback.m_fixture)
-      {
-         F32 ang = mAtan(callback.m_point.x - p1.x, callback.m_point.y - p1.y);
-         Vector2 intersection = p1 + callback.m_fraction * (p2 - p1);
-         //Point3F intersectionPoint(intersection.x, intersection.y, callback.m_fraction);
-         RayList intersectionPoint;
-         intersectionPoint.ang = ang;
-         intersectionPoint.x = intersection.x;
-         intersectionPoint.y = intersection.y;
-         intersectionPoint.l = callback.m_fraction;
-
-         bList.push_back(intersectionPoint);
-      }
-      else
-      {
-         F32 ang = mAtan(p2.x - p1.x, p2.y - p1.y);
-
-         RayList intersectionPoint;
-         intersectionPoint.ang = ang;
-         intersectionPoint.x = p2.x;
-         intersectionPoint.y = p2.y;
-         intersectionPoint.l = 1.0;
-
-         bList.push_back(intersectionPoint);
-      }
-   }
+   
    //sort the list
    if (bList.size() > 1)
    {
@@ -178,28 +169,28 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
    //triangle fan
    for (S32 m = 0; m < bList.size(); m++)
    {
-      glColor4f(1.0 - bList[m].l , 1.0 - bList[m].l , 1.0 - bList[m].l , 0.5);
+      glColor4f(1.0 - bList[m].l , 1.0 - bList[m].l , 1.0 - bList[m].l , 1.0 - bList[m].l);
       glVertex2f(bList[m].x, bList[m].y);
 
    }
    //close off the circle
-   glColor4f(1.0 - bList[0].l, 1.0 - bList[0].l, 1.0 - bList[0].l, 0.5);
+   glColor4f(1.0 - bList[0].l, 1.0 - bList[0].l, 1.0 - bList[0].l, 1.0 - bList[0].l);
    glVertex2f(bList[0].x, bList[0].y);
 
    glEnd();
 
 
-   /*U32 objCount = scene->getSceneObjectCount();
-   for (U32 i = 0; i < objCount; i++)
+   /*U32 shadObj = scene->getSceneObjectCount();
+   for (U32 i = 0; i < shadObj; i++)
    {
-      SceneObject *tObj = scene->getSceneObject(i);
-      Vector2 distancePos = worldPos - tObj->getPosition();
+      SceneObject *sObj = scene->getSceneObject(i);
+      Vector2 distancePos = worldPos - sObj->getPosition();
 
       const F32 distanceSqr = distancePos.LengthSquared();
       const F32 radiusSqr = radius * radius;
       if (distanceSqr < radiusSqr || distanceSqr == radiusSqr)
       {
-         processObject(tObj);
+         processObject(sObj);
       }
    }*/
 
@@ -245,7 +236,48 @@ void ShadowMap::processObject(SceneObject *obj)
 
 void ShadowMap::renderShadow(const Vector<Vector2>& verts, const Vector2& lightPos)
 {
-
+   S32 startVert = 0;
+   S32 endVert = 0;
+   for (S32 i = 1; i < verts.size() + 1; i++)
+   {
+      S32 vert0 = (i - 1) % verts.size();
+      S32 vert1 = (i) % verts.size();
+      S32 vert2 = (i + 1) % verts.size();
+      Vector2 normal0(verts[vert0] - verts[vert1]);
+      normal0.perp();
+      Vector2 normal1(verts[vert1] - verts[vert2]);
+      normal1.perp();
+      Vector2 ray(verts[vert1] - lightPos);
+      F32 n0 = ray.dot(normal0);
+      F32 n1 = ray.dot(normal1);
+      if (n0 <= 0 && n1 > 0)
+      {
+         startVert = vert1;
+      }
+      if (n0 > 0 && n1 <= 0)
+      {
+         endVert = vert1;
+      }
+   }
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   //glDisable(GL_TEXTURE_2D);
+   glColor4f(0, 0, 0, 0.5);
+   glBegin(GL_TRIANGLE_STRIP);
+   for (S32 i = 0; i < verts.size(); i++)
+   {
+      S32 vert = (startVert + i) % verts.size();
+      Vector2 ray(verts[vert] - lightPos); ray.Normalize(600.0f);
+      glVertex2f(verts[vert].x, verts[vert].y);
+      glColor4f(0, 0, 0, 0.1);
+      glVertex2f(verts[vert].x + ray.x, verts[vert].y + ray.y);
+      if (vert == endVert) break;
+   }
+   //glVertex2f(verts[0].x, verts[0].y);
+   //glVertex2f(verts[1].x, verts[1].y);
+   //glVertex2f(lightPos.x, lightPos.y);
+   //glVertex2f(verts[3].x, verts[3].y);
+   glEnd();
 }
 
 S32 QSORT_CALLBACK sortRays(const void* a, const void* b)
