@@ -193,6 +193,7 @@ function PyramidToy::createPyramid( %this )
 	%map = new ShadowMap();
 	%map.setSize("15 15");
 	%map.setBodyType(Static);
-	%map.SceneLayer = 14;
+	%map.SceneLayer = 13;
+	%map.setBlendColor(0.5,0.5,1.0,1.0);
 	SandboxScene.add(%map);
 }

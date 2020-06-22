@@ -5,14 +5,16 @@
 #include "2d/sceneobject/SceneObject.h"
 #endif
 
-struct RayList
+class RayList
 {
-   F32 ang;
+public:
+
    F32 x;
    F32 y;
    F32 l;
+   F32 ang;
+   bool operator == (const RayList& t) const { return ((mFabs(t.x - x) < 0.01) && (mFabs(t.y - y) < 0.01)); }
 };
-
 class RaysCastCallback : public b2RayCastCallback
 {
 public:
@@ -40,7 +42,8 @@ class ShadowMap : public SceneObject
    typedef SceneObject Parent;
 
 protected:
-   F32            mLightRadius;
+   F32                     mLightRadius;
+   U32                     mLightSegments;
 
 public:
    ShadowMap();
@@ -48,8 +51,7 @@ public:
 
    static void initPersistFields();
 
-   inline void setLightRadius(const F32 lightRadius) { mLightRadius = lightRadius; }
-   inline F32 getLightRadius(void) const { return mLightRadius; }
+   
 
    virtual bool onAdd();
    virtual void onRemove();
@@ -60,21 +62,34 @@ public:
    virtual bool shouldRender(void) const { return true; }
 
    void processObject(SceneObject *obj);
-   void renderShadow(const Vector<Vector2>& verts, const Vector2& lightPos);
+   void renderShadow(const Vector<RayList>& verts, const Vector2& lightPos);
+
+   /// Light segments.
+   inline void             setLightSegments(const U32 lightSegments) { mLightSegments = lightSegments; };
+   inline U32              getLightSegments(void) const { return mLightSegments; }
+
+   /// Light Radius.
+   inline void setLightRadius(const F32 lightRadius) { mLightRadius = lightRadius; }
+   inline F32 getLightRadius(void) const { return mLightRadius; }
 
    DECLARE_CONOBJECT(ShadowMap);
 
 
-   protected:
+protected:
       virtual void OnRegisterScene(Scene* mScene);
       virtual void OnUnregisterScene(Scene* mScene);
 
-private:
-   F32 theSinTable[361];
-   F32 theCosTable[361];
+protected:
+   static bool setLightRadius(void* obj, const char* data) { static_cast<ShadowMap*>(obj)->setLightRadius(dAtof(data)); return false; }
+   static bool writeLightRadius(void* obj, StringTableEntry pFieldName) { return static_cast<ShadowMap*>(obj)->getLightRadius() > 0.0f; }
+
+   static bool setLightSegments(void* obj, const char* data) { static_cast<ShadowMap*>(obj)->setLightSegments(dAtoi(data)); return false; }
+   static bool writeLightSegments(void* obj, StringTableEntry pFieldName) { return static_cast<ShadowMap*>(obj)->getLightSegments() > 0; }
+
 };
 
 
 #endif //_SHADOWMAP_H_
 
 S32 QSORT_CALLBACK sortRays(const void * a, const void * b);
+S32 QSORT_CALLBACK uniqueRays(const void * a, const void * b);
