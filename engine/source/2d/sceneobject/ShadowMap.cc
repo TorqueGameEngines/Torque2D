@@ -181,13 +181,6 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
    }
 
    //Con::printf("Rays cast: %i", bList.size());
-   //unique the list
-   /*if (bList.size() > 1)
-   {
-      dQsort(bList.address(), bList.size(), sizeof(RayList), uniqueRays);
-   }*/
-
-   //Con::printf("Rays cast: %i", bList.size());
    //sort the list
    if (bList.size() > 1)
    {

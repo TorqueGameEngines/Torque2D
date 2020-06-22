@@ -92,4 +92,3 @@ protected:
 #endif //_SHADOWMAP_H_
 
 S32 QSORT_CALLBACK sortRays(const void * a, const void * b);
-S32 QSORT_CALLBACK uniqueRays(const void * a, const void * b);
