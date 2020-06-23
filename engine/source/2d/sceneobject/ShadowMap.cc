@@ -220,16 +220,6 @@ void ShadowMap::OnUnregisterScene(Scene* mScene)
    Parent::OnUnregisterScene(mScene);
 }
 
-void ShadowMap::processObject(SceneObject *obj)
-{
-
-}
-
-void ShadowMap::renderShadow(const Vector<RayList>& verts, const Vector2& lightPos)
-{
-
-}
-
 S32 QSORT_CALLBACK sortRays(const void* a, const void* b)
 {
    RayList* ray_a = (RayList*) a;

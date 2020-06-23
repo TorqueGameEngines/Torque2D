@@ -14,12 +14,14 @@ public:
    F32 l;
    F32 ang;
    bool operator == (const RayList& t) const { return ((mFabs(t.x - x) < 0.01) && (mFabs(t.y - y) < 0.01)); }
+
 };
+
 class RaysCastCallback : public b2RayCastCallback
 {
 public:
-   RaysCastCallback() : m_fixture(NULL) {
-   }
+
+   RaysCastCallback() : m_fixture(NULL) {}
 
    float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point, const b2Vec2& normal, float32 fraction) {
       m_fixture = fixture;
@@ -42,10 +44,12 @@ class ShadowMap : public SceneObject
    typedef SceneObject Parent;
 
 protected:
+
    F32                     mLightRadius;
    U32                     mLightSegments;
 
 public:
+
    ShadowMap();
    ~ShadowMap();
 
@@ -61,12 +65,9 @@ public:
    //virtual bool validRender(void) const {}
    virtual bool shouldRender(void) const { return true; }
 
-   void processObject(SceneObject *obj);
-   void renderShadow(const Vector<RayList>& verts, const Vector2& lightPos);
-
    /// Light segments.
-   inline void             setLightSegments(const U32 lightSegments) { mLightSegments = lightSegments; };
-   inline U32              getLightSegments(void) const { return mLightSegments; }
+   inline void setLightSegments(const U32 lightSegments) { mLightSegments = lightSegments; };
+   inline U32 getLightSegments(void) const { return mLightSegments; }
 
    /// Light Radius.
    inline void setLightRadius(const F32 lightRadius) { mLightRadius = lightRadius; }
@@ -76,10 +77,12 @@ public:
 
 
 protected:
-      virtual void OnRegisterScene(Scene* mScene);
-      virtual void OnUnregisterScene(Scene* mScene);
+
+   virtual void OnRegisterScene(Scene* mScene);
+   virtual void OnUnregisterScene(Scene* mScene);
 
 protected:
+
    static bool setLightRadius(void* obj, const char* data) { static_cast<ShadowMap*>(obj)->setLightRadius(dAtof(data)); return false; }
    static bool writeLightRadius(void* obj, StringTableEntry pFieldName) { return static_cast<ShadowMap*>(obj)->getLightRadius() > 0.0f; }
 
@@ -87,7 +90,6 @@ protected:
    static bool writeLightSegments(void* obj, StringTableEntry pFieldName) { return static_cast<ShadowMap*>(obj)->getLightSegments() > 0; }
 
 };
-
 
 #endif //_SHADOWMAP_H_
 

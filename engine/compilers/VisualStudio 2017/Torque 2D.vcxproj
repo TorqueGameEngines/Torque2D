@@ -272,6 +272,7 @@
     <ClCompile Include="..\..\source\2d\gui\SceneWindow.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\CompositeSprite.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\ParticlePlayer.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\Path.cpp" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectList.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectSet.cc" />
@@ -719,6 +720,8 @@
     <ClInclude Include="..\..\source\2d\sceneobject\CompositeSprite_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ParticlePlayer.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ParticlePlayer_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\Path.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\Path_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObject.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObjectList.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObjectMoveToEvent.h" />

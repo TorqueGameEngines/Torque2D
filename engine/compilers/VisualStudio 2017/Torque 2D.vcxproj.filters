@@ -1462,6 +1462,9 @@
     <ClCompile Include="..\..\source\2d\sceneobject\ShadowMap.cc">
       <Filter>2d\sceneobject</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\2d\sceneobject\Path.cpp">
+      <Filter>2d\sceneobject</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -3250,6 +3253,12 @@
       <Filter>2d\sceneobject</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\2d\sceneobject\ShadowMap_ScriptBinding.h">
+      <Filter>2d\sceneobject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\sceneobject\Path.h">
+      <Filter>2d\sceneobject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\sceneobject\Path_ScriptBinding.h">
       <Filter>2d\sceneobject</Filter>
     </ClInclude>
   </ItemGroup>

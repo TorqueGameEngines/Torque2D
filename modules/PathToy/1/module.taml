@@ -1,0 +1,10 @@
+<ModuleDefinition
+	ModuleId="PathToy"
+	VersionId="1"
+	Description="Path object toy"
+	Dependencies="ToyAssets=1"
+	Type="toy"
+	ToyCategoryIndex="3"
+	ScriptFile="main.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy"/>
