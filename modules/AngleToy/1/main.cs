@@ -102,7 +102,7 @@ function AngleToy::createBackground( %this )
     {
         %object = new ImageFont();
         %object.Image = "ToyAssets:Font";
-        %object.Position = Vector2Direction( %i, 30 ); // Polar ( 30, %i° )
+        %object.Position = Vector2Direction( %i, 30 ); // Polar ( 30, %iÂ° )
         %object.Angle = %i - 90;
         %object.FontSize = "1.5 2";
         %object.TextAlignment = "Center";
@@ -133,7 +133,7 @@ function AngleToy::createTargets( %this )
 	%emitter.setEmitterType("ELLIPSE");
 	//%emitter.setAttachPositionToEmitter(false);
 	%emitter.setEmitterSize("40 40");
-	%emitter.TargetParticle = true;
+	%emitter.IsTargeting = true;
 	%emitter.setTargetPosition("0.0 0.0");
     %emitter.EmitterName = "AngledParticles";
     %emitter.setKeepAligned( true );
