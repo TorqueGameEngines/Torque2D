@@ -68,7 +68,7 @@ void Path::preIntegrate(const F32 totalTime, const F32 elapsedTime, DebugStats *
       Vector2 cDst = mNodes[pObj.mCurrNode].position;
       F32 distance = (cDst - cPos).Length();
 
-      if (distance < (pObj.mMaxSpeed * elapsedTime) || distance <= cNode.distance)
+      if (distance < (pObj.mMaxSpeed * elapsedTime) || distance < mNodes[pObj.mCurrNode].distance)
       {
          S32 nCount = mNodes.size();
          S32 end = nCount - 1;
@@ -199,9 +199,21 @@ void Path::detachObject(SceneObject * object)
 void Path::moveObject(PathObject& obj)
 {
    Vector2 cDest = mNodes[obj.mNextNode].position;
+   F32 slowRad = mNodes[obj.mNextNode].distance;
    Vector2 oPos = obj.mObj->getPosition();
    Vector2 dir = cDest - oPos;
+   Vector2 currVel = obj.mObj->getLinearVelocity();
    dir.Normalize();
+
+   Vector2 steer = seek(cDest, oPos, obj.mMaxSpeed, currVel, slowRad);
+
+   steer = truncate(steer, obj.mMaxSpeed);
+   steer = steer * 1 / 2;
+   currVel = currVel + steer;
+   currVel = truncate(currVel, obj.mMaxSpeed);
+   Vector2 pos = Vector2(oPos + currVel);
+
+   //obj.mObj->applyForce(pos);
 
    obj.mObj->setLinearVelocity(dir * obj.mMaxSpeed);
 
@@ -215,6 +227,36 @@ void Path::moveObject(PathObject& obj)
    }
 
 }
+
+Vector2 Path::truncate(Vector2 vec, F32 max)
+{
+   F32 i = max;
+   i = i < 1.0f ? 1.0f : i;
+   vec = vec * max;
+   return vec;
+}
+
+Vector2 Path::seek(Vector2 target, Vector2 objPos, F32 max, Vector2 curr, F32 slowRad)
+{
+   Vector2 des = target - objPos;
+   F32 dist = des.Length();
+   des.Normalize();
+
+   if (dist < slowRad)
+   {
+      des = des * (max * dist / slowRad);
+   }
+   else
+   {
+      des = des * max;
+   }
+
+   Vector2 force = des - curr;
+
+   return force;
+}
+
+
 
 void Path::onDeleteNotify(SimObject* object)
 {

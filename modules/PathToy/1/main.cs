@@ -50,10 +50,10 @@ function PathToy::reset( %this )
 function PathToy::createPath(%this)
 {
 	%path = new Path(SquarePath);
-	%path.addNode(10.0,10.0);
-	%path.addNode(-10.0,10.0);
-	%path.addNode(-10.0,-10.0);
-	%path.addNode(10.0,-10.0);
+	%path.addNode(10.0 , 10.0, 5.0);
+	%path.addNode(-10.0 , 10.0, 5.0);
+	%path.addNode(-10.0 , -10.0, 5.0);
+	%path.addNode(10.0 , -10.0, 5.0);
 	
 	SandboxScene.add(%path);
 }

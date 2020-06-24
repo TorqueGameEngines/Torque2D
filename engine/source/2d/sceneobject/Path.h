@@ -99,6 +99,8 @@ public:
 private:
 
    void moveObject(PathObject& obj);
+   Vector2 truncate(Vector2 vec, F32 max);
+   Vector2 seek(Vector2 target, Vector2 objPos, F32 max, Vector2 curr, F32 slowRad);
 
    Vector<PathObject*> mObjs;
    Vector<Node> mNodes;

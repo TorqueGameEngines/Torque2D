@@ -87,23 +87,7 @@ ConsoleMethodWithDocs(Path, detachObject, ConsoleVoid, 3, 3, (sceneObject))
 ConsoleMethodWithDocs(Path, addNode, ConsoleVoid, 3, 6, (float x, float y, [float distance], [float weight]))
 {
    Vector2 position;
-   // Elements in the first argument.
-   U32 elementCount = Utility::mGetStringElementCount(argv[2]);
-
-   // ("x y")
-   if ((elementCount == 2) && (argc >= 3))
-      position = Utility::mGetStringElementVector(argv[2]);
-
-   // (x, y)
-   else if ((elementCount == 1) && (argc == 4))
-      position.Set(dAtof(argv[2]), dAtof(argv[3]));
-
-   // Invalid
-   else
-   {
-      Con::warnf("Path::addNode() - Invalid number of parameters!");
-      return;
-   }
+   position.Set(dAtof(argv[2]), dAtof(argv[3]));
 
    F32 distance = 0.0f;
    if (argc > 4)
