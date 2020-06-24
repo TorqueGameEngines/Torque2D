@@ -271,7 +271,9 @@
     <ClCompile Include="..\..\source\2d\gui\guiSpriteCtrl.cc" />
     <ClCompile Include="..\..\source\2d\gui\SceneWindow.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\CompositeSprite.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\LightObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\ParticlePlayer.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\Path.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectList.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectSet.cc" />
@@ -316,10 +318,13 @@
     <ClCompile Include="..\..\source\Box2D\Collision\Shapes\b2PolygonShape.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2BlockAllocator.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Draw.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Common\b2FreeList.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Math.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Settings.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2StackAllocator.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Common\b2Stat.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Timer.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Common\b2TrackedBlock.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\b2Body.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\b2ContactManager.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\b2Fixture.cpp" />
@@ -347,6 +352,11 @@
     <ClCompile Include="..\..\source\Box2D\Dynamics\Joints\b2RopeJoint.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleAssembly.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleGroup.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleSystem.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.cpp" />
     <ClCompile Include="..\..\source\Box2D\Rope\b2Rope.cpp" />
     <ClCompile Include="..\..\source\collection\bitTables.cc" />
     <ClCompile Include="..\..\source\collection\hashTable.cc" />
@@ -692,8 +702,12 @@
     <ClInclude Include="..\..\source\2d\gui\SceneWindow_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\CompositeSprite.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\CompositeSprite_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\LightObject.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\LightObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ParticlePlayer.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ParticlePlayer_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\Path.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\Path_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObject.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObjectList.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObjectMoveToEvent.h" />
@@ -768,11 +782,17 @@
     <ClInclude Include="..\..\source\Box2D\Collision\Shapes\b2Shape.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2BlockAllocator.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Draw.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2FreeList.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2GrowableBuffer.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2GrowableStack.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2IntrusiveList.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Math.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Settings.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2SlabAllocator.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2StackAllocator.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2Stat.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Timer.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2TrackedBlock.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\b2Body.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\b2ContactManager.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\b2Fixture.h" />
@@ -801,6 +821,12 @@
     <ClInclude Include="..\..\source\Box2D\Dynamics\Joints\b2RopeJoint.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\Joints\b2WeldJoint.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\Joints\b2WheelJoint.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2Particle.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleAssembly.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleGroup.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleSystem.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2StackQueue.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h" />
     <ClInclude Include="..\..\source\Box2D\Rope\b2Rope.h" />
     <ClInclude Include="..\..\source\collection\bitMatrix.h" />
     <ClInclude Include="..\..\source\collection\bitSet.h" />
@@ -1285,6 +1311,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Torque 2D.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\source\Box2D\Particle\b2ParticleAssembly.neon.s" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

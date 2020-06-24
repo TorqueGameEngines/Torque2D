@@ -199,6 +199,9 @@
     <Filter Include="bitmapFont">
       <UniqueIdentifier>{447ecd65-a7a2-4e18-9c55-b53356c6f7a9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Box2D\Particle">
+      <UniqueIdentifier>{866cf866-a3f8-434c-a5d9-fdc7b8f055c0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\audio\audio.cc">
@@ -1383,6 +1386,36 @@
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
       <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\sceneobject\LightObject.cc">
+      <Filter>2d\sceneobject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\sceneobject\Path.cc">
+      <Filter>2d\sceneobject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp">
+      <Filter>Box2D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleAssembly.cpp">
+      <Filter>Box2D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleGroup.cpp">
+      <Filter>Box2D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleSystem.cpp">
+      <Filter>Box2D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.cpp">
+      <Filter>Box2D\Particle</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Common\b2FreeList.cpp">
+      <Filter>Box2D\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Common\b2Stat.cpp">
+      <Filter>Box2D\Common</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\Box2D\Common\b2TrackedBlock.cpp">
+      <Filter>Box2D\Common</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -3103,6 +3136,54 @@
     <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\2d\sceneobject\LightObject.h">
+      <Filter>2d\sceneobject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\sceneobject\LightObject_ScriptBinding.h">
+      <Filter>2d\sceneobject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\sceneobject\Path.h">
+      <Filter>2d\sceneobject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\sceneobject\Path_ScriptBinding.h">
+      <Filter>2d\sceneobject</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Particle\b2Particle.h">
+      <Filter>Box2D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleAssembly.h">
+      <Filter>Box2D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleGroup.h">
+      <Filter>Box2D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleSystem.h">
+      <Filter>Box2D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Particle\b2StackQueue.h">
+      <Filter>Box2D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h">
+      <Filter>Box2D\Particle</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Common\b2FreeList.h">
+      <Filter>Box2D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Common\b2GrowableBuffer.h">
+      <Filter>Box2D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Common\b2IntrusiveList.h">
+      <Filter>Box2D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Common\b2SlabAllocator.h">
+      <Filter>Box2D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Common\b2Stat.h">
+      <Filter>Box2D\Common</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\Box2D\Common\b2TrackedBlock.h">
+      <Filter>Box2D\Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
@@ -3123,5 +3204,10 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Torque 2D.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\source\Box2D\Particle\b2ParticleAssembly.neon.s">
+      <Filter>Box2D\Particle</Filter>
+    </None>
   </ItemGroup>
 </Project>
