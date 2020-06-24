@@ -1,14 +1,14 @@
 #include "graphics/dgl.h"
 #include "console/consoleTypes.h"
 #include "2d/core/Utility.h"
-#include "ShadowMap.h"
+#include "2d/sceneobject/LightObject.h"
 
 // Script bindings.
-#include "ShadowMap_ScriptBinding.h"
+#include "LightObject_ScriptBinding.h"
 
-IMPLEMENT_CONOBJECT(ShadowMap);
+IMPLEMENT_CONOBJECT(LightObject);
 
-ShadowMap::ShadowMap():
+LightObject::LightObject():
    mLightRadius(10.0f),
    mLightSegments(15)
 {
@@ -18,12 +18,12 @@ ShadowMap::ShadowMap():
    mBodyDefinition.type = b2_staticBody;
 }
 
-ShadowMap::~ShadowMap()
+LightObject::~LightObject()
 {
 
 }
 
-bool ShadowMap::onAdd()
+bool LightObject::onAdd()
 {
    // Call Parent.
    if (!Parent::onAdd())
@@ -35,28 +35,28 @@ bool ShadowMap::onAdd()
 
 //----------------------------------------------------------------------------
 
-void ShadowMap::onRemove()
+void LightObject::onRemove()
 {
    // Call Parent.
    Parent::onRemove();
 }
 
-void ShadowMap::initPersistFields()
+void LightObject::initPersistFields()
 {
    Parent::initPersistFields();
 
    /// Light settings.
-   addProtectedField("LightRadius", TypeF32, Offset(mLightRadius, ShadowMap), &setLightRadius, &defaultProtectedGetFn, &writeLightRadius, "");
-   addProtectedField("LightSegments", TypeS32, Offset(mLightSegments, ShadowMap), &setLightSegments, &defaultProtectedGetFn, &writeLightSegments, "");
+   addProtectedField("LightRadius", TypeF32, Offset(mLightRadius, LightObject), &setLightRadius, &defaultProtectedGetFn, &writeLightRadius, "");
+   addProtectedField("LightSegments", TypeS32, Offset(mLightSegments, LightObject), &setLightSegments, &defaultProtectedGetFn, &writeLightSegments, "");
 
 }
 
-void ShadowMap::safeDelete(void)
+void LightObject::safeDelete(void)
 {
    Parent::safeDelete();
 }
 
-void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const SceneRenderRequest * sceneRenderRequest, BatchRender * batchRender)
+void LightObject::sceneRender(const SceneRenderState * sceneRenderState, const SceneRenderRequest * sceneRenderRequest, BatchRender * batchRender)
 {
    Vector2 worldPos = getPosition();
    Vector<Vector2> verts;
@@ -207,14 +207,14 @@ void ShadowMap::sceneRender(const SceneRenderState * sceneRenderState, const Sce
    glPopMatrix();
 }
 
-void ShadowMap::OnRegisterScene(Scene* mScene)
+void LightObject::OnRegisterScene(Scene* mScene)
 {
    Parent::OnRegisterScene(mScene);
    mScene->getWorldQuery()->addAlwaysInScope(this);
 
 }
 
-void ShadowMap::OnUnregisterScene(Scene* mScene)
+void LightObject::OnUnregisterScene(Scene* mScene)
 {
    mScene->getWorldQuery()->removeAlwaysInScope(this);
    Parent::OnUnregisterScene(mScene);

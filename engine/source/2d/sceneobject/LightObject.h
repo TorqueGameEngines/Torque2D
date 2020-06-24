@@ -1,5 +1,5 @@
-#ifndef _SHADOWMAP_H_
-#define _SHADOWMAP_H_
+#ifndef _LIGHTOBJECT_H_
+#define _LIGHTOBJECT_H_
 
 #ifndef _SCENE_OBJECT_H_
 #include "2d/sceneobject/SceneObject.h"
@@ -38,7 +38,7 @@ public:
 
 };
 
-class ShadowMap : public SceneObject
+class LightObject : public SceneObject
 
 {
    typedef SceneObject Parent;
@@ -50,8 +50,8 @@ protected:
 
 public:
 
-   ShadowMap();
-   ~ShadowMap();
+   LightObject();
+   ~LightObject();
 
    static void initPersistFields();
 
@@ -73,7 +73,7 @@ public:
    inline void setLightRadius(const F32 lightRadius) { mLightRadius = lightRadius; }
    inline F32 getLightRadius(void) const { return mLightRadius; }
 
-   DECLARE_CONOBJECT(ShadowMap);
+   DECLARE_CONOBJECT(LightObject);
 
 
 protected:
@@ -83,14 +83,14 @@ protected:
 
 protected:
 
-   static bool setLightRadius(void* obj, const char* data) { static_cast<ShadowMap*>(obj)->setLightRadius(dAtof(data)); return false; }
-   static bool writeLightRadius(void* obj, StringTableEntry pFieldName) { return static_cast<ShadowMap*>(obj)->getLightRadius() > 0.0f; }
+   static bool setLightRadius(void* obj, const char* data) { static_cast<LightObject*>(obj)->setLightRadius(dAtof(data)); return false; }
+   static bool writeLightRadius(void* obj, StringTableEntry pFieldName) { return static_cast<LightObject*>(obj)->getLightRadius() > 0.0f; }
 
-   static bool setLightSegments(void* obj, const char* data) { static_cast<ShadowMap*>(obj)->setLightSegments(dAtoi(data)); return false; }
-   static bool writeLightSegments(void* obj, StringTableEntry pFieldName) { return static_cast<ShadowMap*>(obj)->getLightSegments() > 0; }
+   static bool setLightSegments(void* obj, const char* data) { static_cast<LightObject*>(obj)->setLightSegments(dAtoi(data)); return false; }
+   static bool writeLightSegments(void* obj, StringTableEntry pFieldName) { return static_cast<LightObject*>(obj)->getLightSegments() > 0; }
 
 };
 
-#endif //_SHADOWMAP_H_
+#endif //_LIGHTOBJECT_H_
 
 S32 QSORT_CALLBACK sortRays(const void * a, const void * b);

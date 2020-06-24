@@ -19,33 +19,33 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
-ConsoleMethodGroupBeginWithDocs(ShadowMap, SceneObject)
+ConsoleMethodGroupBeginWithDocs(LightObject, SceneObject)
 
 /*! Add the object to a scene.
     @param scene the scene you wish to add this object to.
     @return No return value.
 */
 
-ConsoleMethodWithDocs(ShadowMap, setLightRadius, ConsoleVoid, 3, 3, (float radius))
+ConsoleMethodWithDocs(LightObject, setLightRadius, ConsoleVoid, 3, 3, (float radius))
 {
    // Set Lifetime.
    object->setLightRadius(dAtof(argv[2]));
 }
 
-ConsoleMethodWithDocs(ShadowMap, getLightRadius, ConsoleFloat, 2, 2, ())
+ConsoleMethodWithDocs(LightObject, getLightRadius, ConsoleFloat, 2, 2, ())
 {
    // Return Lifetime.
    return object->getLightRadius();
 }
 
 
-ConsoleMethodWithDocs(ShadowMap, setLightSegments, ConsoleVoid, 3, 3, (integer lightSegments))
+ConsoleMethodWithDocs(LightObject, setLightSegments, ConsoleVoid, 3, 3, (integer lightSegments))
 {
    // Set Layer.
    object->setLightSegments(dAtoi(argv[2]));
 }
 
-ConsoleMethodWithDocs(ShadowMap, getLightSegments, ConsoleInt, 2, 2, ())
+ConsoleMethodWithDocs(LightObject, getLightSegments, ConsoleInt, 2, 2, ())
 {
    // Return Layer.
    return object->getLightSegments();
