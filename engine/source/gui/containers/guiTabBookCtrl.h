@@ -27,7 +27,7 @@
 #endif
 
 #ifndef _GUITABPAGECTRL_H_
-#include "gui/guiTabPageCtrl.h"
+#include "gui/containers/guiTabPageCtrl.h"
 #endif
 
 

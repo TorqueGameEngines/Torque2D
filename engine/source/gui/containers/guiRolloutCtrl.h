@@ -26,10 +26,6 @@
 #include "gui/guiControl.h"
 #endif
 
-#ifndef _GUISTACKCTRL_H_
-#include "gui/containers/guiStackCtrl.h"
-#endif
-
 #ifndef _H_GUIDEFAULTCONTROLRENDER_
 #include "gui/guiDefaultControlRender.h"
 #endif

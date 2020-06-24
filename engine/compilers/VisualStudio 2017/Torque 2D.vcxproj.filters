@@ -462,19 +462,10 @@
     <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiCtrlArrayCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiPaneCtrl.cc">
@@ -484,9 +475,6 @@
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiStackCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiTabBookCtrl.cc">
@@ -510,9 +498,6 @@
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiImageList.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
@@ -520,9 +505,6 @@
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiMenuBar.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiSeparatorCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Collision\b2BroadPhase.cpp">
@@ -759,12 +741,6 @@
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBackgroundCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBitmapBorderCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiBitmapCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -781,9 +757,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiConsoleEditCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiConsoleTextCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiControl.cc">
@@ -822,16 +795,7 @@
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiScriptNotifyControl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTabPageCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc">
@@ -841,9 +805,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTickCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc">
@@ -1417,6 +1378,12 @@
     <ClCompile Include="..\..\source\platform\platformNet.cpp" />
     <ClCompile Include="..\..\source\platform\platformNetAsync.cpp" />
     <ClCompile Include="..\..\source\platform\platformNet_ScriptBinding.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
+      <Filter>gui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -1701,19 +1668,10 @@
     <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiCtrlArrayCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiPaneCtrl.h">
@@ -1723,9 +1681,6 @@
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiStackCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl.h">
@@ -1746,9 +1701,6 @@
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiImageList.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
@@ -1756,9 +1708,6 @@
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiMenuBar.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiSeparatorCtrl.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Box2D.h">
@@ -2040,9 +1989,6 @@
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBackgroundCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -2059,9 +2005,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiConsoleEditCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiConsoleTextCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiControl.h">
@@ -2097,16 +2040,7 @@
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiScriptNotifyControl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTabPageCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl.h">
@@ -2116,9 +2050,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextListCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTickCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h">
@@ -3159,6 +3090,19 @@
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
+      <Filter>gui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
@@ -3176,5 +3120,8 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Torque 2D.ico" />
   </ItemGroup>
 </Project>

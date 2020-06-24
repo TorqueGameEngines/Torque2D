@@ -458,16 +458,16 @@ public:
     /// Do special pre-render proecessing
     virtual void onPreRender();
 
-    /// Called when this object is removed
+    /// Called when this object is removed using delete.
     virtual void onRemove();
 
-    /// Called when one of this objects children is removed
-    virtual void onChildRemoved( GuiControl *child );
+	/// Called when this object is removed using delete or parent.remove().
+	virtual void onGroupRemove();
 
     /// Called when this object is added to the scene
     bool onAdd();
 
-    /// Called when this object has a new child
+    /// Called when this object has a new child. Congratulations!
     virtual void onChildAdded( GuiControl *child );
 
     /// @}

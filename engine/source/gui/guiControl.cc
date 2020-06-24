@@ -445,10 +445,7 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
       newExtent.y = newBottom - newTop;
    }
 
-   // Resizing Re factor [9/18/2006]
-   // Only resize if our minExtent is satisfied with it.
-   //if( newExtent.x >= mMinExtent.x && newExtent.y >= mMinExtent.y )
-      resize(newPosition, newExtent);
+   resize(newPosition, newExtent);
 }
 
 //----------------------------------------------------------------
@@ -1011,21 +1008,16 @@ void GuiControl::write(Stream &stream, U32 tabStop, U32 flags)
 
 
 
+//This is only called if the control is deleted, not when the control is removed from its parent.
 void GuiControl::onRemove()
 {
-   clearFirstResponder();
-
-   Parent::onRemove();
-
-  // If we are a child, notify our parent that we've been removed
-  GuiControl *parent = getParent();
-  if( parent )
-     parent->onChildRemoved( this );
+	Parent::onRemove();
 }
 
-void GuiControl::onChildRemoved( GuiControl *child )
+//For GuiControls, this will always just before it is actually removed.
+void GuiControl::onGroupRemove()
 {
-   // Base does nothing with this
+	clearFirstResponder();
 }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- //

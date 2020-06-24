@@ -59,11 +59,11 @@ void GuiRolloutCtrl::initPersistFields()
 {
    Parent::initPersistFields();
 
-   addField("Caption", TypeCaseString, Offset(mCaption, GuiRolloutCtrl));
-   addField("Margin", TypePoint2I, Offset(mMargin, GuiRolloutCtrl));
-   addField("DefaultHeight", TypeS32, Offset(mDefaultHeight, GuiRolloutCtrl));
-   addProtectedField( "Collapsed", TypeBool, Offset( mIsExpanded, GuiRolloutCtrl), &setCollapsed, &defaultProtectedGetFn, "" );
-   addField("ClickCollapse", TypeBool, Offset(mCanCollapse, GuiRolloutCtrl));
+   //addField("Caption", TypeCaseString, Offset(mCaption, GuiRolloutCtrl));
+   //addField("Margin", TypePoint2I, Offset(mMargin, GuiRolloutCtrl));
+   //addField("DefaultHeight", TypeS32, Offset(mDefaultHeight, GuiRolloutCtrl));
+   //addProtectedField( "Collapsed", TypeBool, Offset( mIsExpanded, GuiRolloutCtrl), &setCollapsed, &defaultProtectedGetFn, "" );
+   //addField("ClickCollapse", TypeBool, Offset(mCanCollapse, GuiRolloutCtrl));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -339,7 +339,7 @@ void GuiRolloutCtrl::onRender(Point2I offset, const RectI &updateRect)
 
    if( mProfile->mBitmapArrayRects.size() >= NumBitmaps )
    {
-      dglClearBitmapModulation();
+      //dglClearBitmapModulation();
 
       // Draw Rollout From Skin
       if( !mIsExpanded )
@@ -349,11 +349,11 @@ void GuiRolloutCtrl::onRender(Point2I offset, const RectI &updateRect)
 
       // Draw Caption ( Vertically Centered )
       ColorI currColor;
-      dglGetBitmapModulation( &currColor );
+      //dglGetBitmapModulation( &currColor );
       Point2I textPosition = mHeader.point + offset + mProfile->mTextOffset;
-      dglSetBitmapModulation( mProfile->mFontColor );
+      //dglSetBitmapModulation( mProfile->mFontColor );
       renderText( textPosition, mHeader.extent, mCaption, mProfile);
-      dglSetBitmapModulation( currColor );
+      //dglSetBitmapModulation( currColor );
 
       // If we're collapsed we contain the first child as our content
       // thus we don't render it when collapsed.  but to support modified

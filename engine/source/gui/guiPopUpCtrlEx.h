@@ -50,9 +50,6 @@
 #ifndef _GUIBUTTONCTRL_H_
 #include "gui/buttons/guiButtonCtrl.h"
 #endif
-#ifndef _GUIBACKGROUNDCTRL_H_
-#include "gui/guiBackgroundCtrl.h"
-#endif
 #ifndef _GUISCROLLCTRL_H_
 #include "gui/containers/guiScrollCtrl.h"
 #endif

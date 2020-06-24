@@ -550,7 +550,7 @@ void GuiTabBookCtrl::calculatePageTabs()
    S32 currY      = 0;
    S32 tabHeight  = 0;
    RectI innerRect = getInnerRect(mBounds.point, mBounds.extent, NormalState, mProfile);
-   Point2I fontBasedBounds = getOuterExtent(Point2I(mTabProfile->mFont->getHeight(), mTabProfile->mFont->getHeight()), NormalState, mProfile);
+   Point2I fontBasedBounds = getOuterExtent(Point2I(mTabProfile->mFont->getHeight(), mTabProfile->mFont->getHeight()), NormalState, mTabProfile);
 
    if (mTabPosition == AlignTop || mTabPosition == AlignBottom)
    {

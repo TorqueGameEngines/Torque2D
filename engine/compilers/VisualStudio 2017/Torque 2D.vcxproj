@@ -384,16 +384,14 @@
     <ClCompile Include="..\..\source\graphics\TextureHandle.cc" />
     <ClCompile Include="..\..\source\graphics\TextureManager.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiBackgroundCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiBitmapBorderCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiBitmapCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiCanvas.cc" />
     <ClCompile Include="..\..\source\gui\guiColorPicker.cc" />
     <ClCompile Include="..\..\source\gui\guiConsole.cc" />
     <ClCompile Include="..\..\source\gui\guiConsoleEditCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiConsoleTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiControl.cc" />
     <ClCompile Include="..\..\source\gui\guiDefaultControlRender.cc" />
     <ClCompile Include="..\..\source\gui\guiFadeinBitmapCtrl.cc" />
@@ -406,14 +404,11 @@
     <ClCompile Include="..\..\source\gui\guiPopUpCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiPopUpCtrlEx.cc" />
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiScriptNotifyControl.cc" />
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTabPageCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTickCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTypes.cc" />
     <ClCompile Include="..\..\source\gui\language\lang.cc" />
@@ -623,15 +618,11 @@
     <ClCompile Include="..\..\source\gui\buttons\guiCheckBoxCtrl.cc" />
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiCtrlArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiPaneCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiStackCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabBookCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiControlListPopup.cc" />
@@ -639,11 +630,9 @@
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiImageList.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiMenuBar.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiSeparatorCtrl.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformFileIoTests.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformMemoryTests.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformStringTests.cc" />
@@ -890,9 +879,11 @@
     <ClInclude Include="..\..\source\graphics\TextureObject.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiBackgroundCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas.h" />
@@ -900,7 +891,6 @@
     <ClInclude Include="..\..\source\gui\guiColorPicker.h" />
     <ClInclude Include="..\..\source\gui\guiConsole.h" />
     <ClInclude Include="..\..\source\gui\guiConsoleEditCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiConsoleTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiControl.h" />
     <ClInclude Include="..\..\source\gui\guiControl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiDefaultControlRender.h" />
@@ -913,14 +903,11 @@
     <ClInclude Include="..\..\source\gui\guiPopUpCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiPopUpCtrlEx.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiScriptNotifyControl.h" />
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTabPageCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextListCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTickCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTypes.h" />
     <ClInclude Include="..\..\source\gui\language\lang.h" />
@@ -1213,29 +1200,24 @@
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiCtrlArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPaneCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiStackCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiDebugger.h" />
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiImageList.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h" />
     <ClInclude Include="..\..\source\gui\editor\guiMenuBar.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiSeparatorCtrl.h" />
     <ClInclude Include="..\..\source\testing\unitTesting.h" />
     <ClInclude Include="..\..\source\testing\unitTesting_ScriptBinding.h" />
     <ClInclude Include="..\..\source\torqueConfig.h" />
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
@@ -1300,6 +1282,9 @@
       <Project>{86cb2525-0cf3-40d3-bf42-a0a95035ee8c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Torque 2D.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -344,7 +344,7 @@
 				constantThumbHeight="0"
 				childMargin="2 3" >
 
-				<GuiDynamicCtrlArrayControl
+				<GuiGridCtrl
 					Name="ToyListArray"
 					canSaveDynamicFields="0"
 					internalName="objectList"
@@ -360,11 +360,12 @@
 					Active="1"
 					tooltipprofile="GuiToolTipProfile"
 					hovertime="1000"
-					colCount="1"
-					colSize="180"
-					rowSize="50"
-					rowSpacing="8"
-					colSpacing="8" />
+					MaxColCount="1"
+					CellSizeX="180"
+					CellSizeY="50"
+					CellSpacingX="8"
+					CellSpacingY="8"
+					CellModeX="Variable" />
 			</GuiScrollCtrl>
 		</GuiControl>
 	</GuiControl>
