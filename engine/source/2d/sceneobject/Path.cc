@@ -79,12 +79,10 @@ void Path::preIntegrate(const F32 totalTime, const F32 elapsedTime, DebugStats *
                pObj.mLoopCount++;
                if ((pObj.mMaxLoop > 0) && (pObj.mLoopCount >= pObj.mMaxLoop))
                {
-                  Con::printf("why we stopping?");
                   stop = true;
                }
                else
                {
-                  Con::printf("back to 0");
                   pObj.mPrevNode = pObj.mCurrNode;
                   pObj.mCurrNode = 0;
                   pObj.mNextNode = pObj.mCurrNode;
