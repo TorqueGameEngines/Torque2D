@@ -276,10 +276,8 @@ void ParticleAssetEmitter::initPersistFields()
     addProtectedField("EmitterName", TypeString, Offset(mEmitterName, ParticleAssetEmitter), &setEmitterName, &defaultProtectedGetFn, &defaultProtectedWriteFn, "");
     addProtectedField("EmitterType", TypeEnum, Offset(mEmitterType, ParticleAssetEmitter), &setEmitterType, &defaultProtectedGetFn, &writeEmitterType, 1, &EmitterTypeTable);
     addProtectedField("EmitterOffset", TypeVector2, Offset(mEmitterOffset, ParticleAssetEmitter), &setEmitterOffset, &defaultProtectedGetFn, &writeEmitterOffset, "");
-    //Target Particle
-    addProtectedField("TargetParticle", TypeBool, Offset(mTargetParticle, ParticleAssetEmitter), &setTargetParticle, &defaultProtectedGetFn, &writeTargetParticle, "");
+    addProtectedField("IsTargeting", TypeBool, Offset(mTargetParticle, ParticleAssetEmitter), &setIsTargeting, &defaultProtectedGetFn, &writeTargetParticle, "");
     addProtectedField("TargetPosition", TypeVector2, Offset(mTargetPosition, ParticleAssetEmitter), &setTargetPosition, &defaultProtectedGetFn, &writeTargetPosition, "");
-    //Target Particle end---
     addProtectedField("EmitterAngle", TypeF32, Offset(mEmitterAngle, ParticleAssetEmitter), &setEmitterAngle, &defaultProtectedGetFn, &writeEmitterAngle, "");
     addProtectedField("EmitterSize", TypeVector2, Offset(mEmitterSize, ParticleAssetEmitter), &setEmitterSize, &defaultProtectedGetFn, &writeEmitterSize, "");
     addProtectedField("FixedAspect", TypeBool, Offset(mFixedAspect, ParticleAssetEmitter), &setFixedAspect, &defaultProtectedGetFn, &writeFixedAspect, "");
