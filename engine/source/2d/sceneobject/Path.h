@@ -17,12 +17,15 @@ private:
    SimObjectPtr<SceneObject> mObj;
    SimObjectId mObjId;
    F32 mMaxSpeed;
+   bool mOrient;
+   F32 mMaxForce;
    F32 mAngOff;
+   
    S32 mCurrNode;
    S32 mPrevNode;
    S32 mNextNode;
    bool mLoop; 
-   bool mOrient;
+   
    bool mSnapToNode;
    S32 mLoopCount;
    S32 mMaxLoop;
@@ -76,7 +79,7 @@ public:
       if((index >= 0) && (index < mNodes.size())) return true;
    }
 
-   void attachObject(SceneObject* object, F32 speed, bool orientToPath, F32 angleOff, bool snapToNode, S32 startNode, bool loop, S32 maxLoop);
+   void attachObject(SceneObject* object, F32 speed, F32 force, bool orientToPath, F32 angleOff, bool snapToNode, S32 startNode, bool loop, S32 maxLoop);
 
    void detachObject(SceneObject* object);
 

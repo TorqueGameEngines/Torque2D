@@ -38,8 +38,6 @@ function AppCore::create( %this )
     
     // Initialize audio
     initializeOpenAL();
-    Canvas.setCursor(DefaultCursor);
-	Canvas.showCursor();
     ModuleDatabase.loadGroup("gameBase");
 }
 

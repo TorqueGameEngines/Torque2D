@@ -38,8 +38,6 @@ function Sandbox::create( %this )
 
     // Create the sandbox window.
     CreateSandboxWindow();
-	
-	Canvas.setCursor(DefaultCursor);
     
     // Load and configure the console.
     Sandbox.add( TamlRead("./gui/ConsoleDialog.gui.taml") );

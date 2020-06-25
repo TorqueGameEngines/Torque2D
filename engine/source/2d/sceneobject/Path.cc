@@ -11,13 +11,15 @@ PathObject::PathObject():
 {
    mCurrNode = 0;
    mPrevNode = 0;
-   mLoop = true;
-   mOrient = false;
-   mSnapToNode = false;
-   mLoopCount = 0;
-   mMaxLoop = -1;
+
    mMaxSpeed = 1.0f;
+   mMaxForce = 3.0f;
+   mOrient = false;
    mAngOff = 0.0f;
+   mSnapToNode = false;
+   mLoop = true;
+   mMaxLoop = -1;
+   mLoopCount = 0;
 }
 
 void PathObject::setCurrNode(S32 node)
@@ -141,7 +143,7 @@ S32 Path::addNode(Vector2 pos, F32 distance, F32 weight)
    return nodeCount;
 }
 
-void Path::attachObject(SceneObject * object, F32 speed, bool orientToPath, F32 angleOff, bool snapToNode, S32 startNode, bool loop, S32 maxLoop)
+void Path::attachObject(SceneObject * object, F32 speed, F32 force, bool orientToPath, F32 angleOff, bool snapToNode, S32 startNode, bool loop, S32 maxLoop)
 {
    if (snapToNode)
    {
@@ -156,6 +158,7 @@ void Path::attachObject(SceneObject * object, F32 speed, bool orientToPath, F32 
    PathObject *pObj  = new PathObject();
    pObj->mPath       = this;
    pObj->mObj        = object;
+   pObj->mMaxForce   = force;
    pObj->mObjId      = object->getId();
    pObj->mOrient     = orientToPath;
    pObj->mAngOff     = angleOff;
@@ -206,11 +209,11 @@ void Path::moveObject(PathObject& obj)
    dir.Normalize();
 
    F32 maxSpeed = obj.mMaxSpeed;
-   F32 maxForce = 1.2f;
+   F32 maxForce = obj.mMaxForce;
 
    Vector2 steer = seek(cDest, oPos, maxSpeed, currVel, slowRad);
    steer = truncate(steer, maxForce);
-   steer = steer.scale(0.5);
+   steer = steer.scale(0.5f);
    currVel = currVel.add(steer);
    currVel = truncate(currVel.add(steer), maxSpeed);
    Vector2 pos = oPos.add(currVel);

@@ -19,7 +19,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
-ConsoleMethodWithDocs(Path, attachObject, ConsoleVoid, 4, 10, (sceneObject, float speed, [bool orient], [float angOff], [bool snapToNode],[integer startNode],[bool loop],[integer maxLoop]))
+ConsoleMethodWithDocs(Path, attachObject, ConsoleVoid, 4, 11, (sceneObject, float speed,[float force], [bool orient], [float angOff], [bool snapToNode],[integer startNode],[bool loop],[integer maxLoop]))
 {
    // Set Group.
    SceneObject* pSceneObject = dynamic_cast<SceneObject*>(Sim::findObject(argv[2]));
@@ -33,43 +33,50 @@ ConsoleMethodWithDocs(Path, attachObject, ConsoleVoid, 4, 10, (sceneObject, floa
 
    F32 speed = dAtof(argv[3]);
 
-   bool orient = false;
+   F32 force = 3.0f;
+
    if (argc > 4)
    {
-      orient = dAtob(argv[4]);
+      force = dAtof(argv[4]);
+   }
+
+   bool orient = false;
+   if (argc > 5)
+   {
+      orient = dAtob(argv[5]);
    }
 
    F32 angleOff = 0.0f;
-   if (argc > 5)
+   if (argc > 6)
    {
-      angleOff = dAtof(argv[5]);
+      angleOff = dAtof(argv[6]);
    }
 
    bool snapToNode = false;
-   if (argc > 6)
+   if (argc > 7)
    {
-      snapToNode = dAtob(argv[6]);
+      snapToNode = dAtob(argv[7]);
    }
 
    S32 startNode = 0;
-   if (argc > 7)
+   if (argc > 8)
    {
-      startNode = dAtoi(argv[7]);
+      startNode = dAtoi(argv[8]);
    }
 
    bool loop = true;
-   if (argc > 8)
+   if (argc > 9)
    {
-      loop = dAtob(argv[8]);
+      loop = dAtob(argv[9]);
    }
 
    S32 maxLoop = 0;
-   if (argc > 9)
+   if (argc > 10)
    {
-      maxLoop = dAtoi(argv[9]);
+      maxLoop = dAtoi(argv[10]);
    }
 
-   object->attachObject(pSceneObject, speed, orient, angleOff, snapToNode, startNode, loop, maxLoop);
+   object->attachObject(pSceneObject, speed, force, orient, angleOff, snapToNode, startNode, loop, maxLoop);
 
 }
 

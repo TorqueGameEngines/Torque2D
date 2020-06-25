@@ -976,6 +976,10 @@ case WM_MOUSEMOVE:
       Game->postEvent(event);
    }
    break;
+case WM_SETCURSOR:
+   if ((LOWORD(lParam) == HTCLIENT) && !(Canvas->getUseNativeCursor()))
+      SetCursor(NULL);
+   break;
 case WM_LBUTTONDOWN:
    mouseButtonEvent(SI_MAKE, KEY_BUTTON0);
    break;

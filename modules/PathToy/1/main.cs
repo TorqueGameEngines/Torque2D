@@ -66,5 +66,5 @@ function PathToy::createTarget(%this)
     %object.setBodyType( dynamic );
     SandboxScene.add( %object );
 	
-	SquarePath.attachObject(%object, 15.5, true, 90.0);
+	SquarePath.attachObject(%object, 22.5, 3.0, true, 90.0);
 }

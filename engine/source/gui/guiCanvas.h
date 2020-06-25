@@ -109,7 +109,7 @@ protected:
    GuiCursor   *defaultCursor;
    GuiCursor   *lastCursor;
    bool        lastCursorON;
-   //bool        mUseNativeCursor;
+   bool        mUseNativeCursor;
    /// @}
 
    /// @name Mouse Input
@@ -253,8 +253,8 @@ public:
    /// @param   cursor   New cursor to use.
    virtual void setCursor(GuiCursor *cursor);
 
-   //virtual bool getUseNativeCursor(void);
-   //virtual void useNativeCursor(bool useNative);
+   virtual bool getUseNativeCursor(void);
+   virtual void useNativeCursor(bool useNative);
 
    /// Returns true if the cursor is on.
    virtual bool isCursorON() {return cursorON; }

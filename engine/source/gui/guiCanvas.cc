@@ -58,7 +58,7 @@ GuiCanvas::GuiCanvas()
 
    cursorON    = true;
    mShowCursor = false;
-   //mUseNativeCursor = true;
+   mUseNativeCursor = true;
 
    lastCursorON = false;
    rLastFrameTime = 0.0f;
@@ -137,7 +137,7 @@ void GuiCanvas::setCursorON(bool onOff)
       mMouseControl = NULL;
 }
 
-/*bool GuiCanvas::getUseNativeCursor(void)
+bool GuiCanvas::getUseNativeCursor(void)
 {
    return mUseNativeCursor;
 }
@@ -145,7 +145,7 @@ void GuiCanvas::setCursorON(bool onOff)
 void GuiCanvas::useNativeCursor(bool useNative)
 {
    mUseNativeCursor = useNative;
-}*/
+}
 
 void GuiCanvas::setCursorPos(const Point2I &pt)   
 { 
@@ -1310,7 +1310,7 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
       dglSetClipRect(updateUnion);
 
       //temp draw the mouse
-      if (cursorON && mShowCursor && !mouseCursor /*&& Canvas->getUseNativeCursor()*/)
+      if (cursorON && mShowCursor && !mouseCursor && Canvas->getUseNativeCursor())
       {
 #if defined(TORQUE_OS_IOS) || defined(TORQUE_OS_ANDROID) || defined(TORQUE_OS_EMSCRIPTEN)
          glColor4ub(255, 0, 0, 255);
