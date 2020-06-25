@@ -50,10 +50,10 @@ function PathToy::reset( %this )
 function PathToy::createPath(%this)
 {
 	%path = new Path(SquarePath);
-	%path.addNode(10.0 , 10.0, 5.0);
-	%path.addNode(-10.0 , 10.0, 5.0);
-	%path.addNode(-10.0 , -10.0, 5.0);
-	%path.addNode(10.0 , -10.0, 5.0);
+	%path.addNode(10.0 , 10.0, 3.0);
+	%path.addNode(-10.0 , 10.0, 3.0);
+	%path.addNode(-10.0 , -10.0, 3.0);
+	%path.addNode(10.0 , -10.0, 3.0);
 	
 	SandboxScene.add(%path);
 }
@@ -66,5 +66,5 @@ function PathToy::createTarget(%this)
     %object.setBodyType( dynamic );
     SandboxScene.add( %object );
 	
-	SquarePath.attachObject(%object, 20.0, true, 90.0);
+	SquarePath.attachObject(%object, 15.5, true, 90.0);
 }

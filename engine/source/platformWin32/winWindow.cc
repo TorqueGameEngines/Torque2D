@@ -953,7 +953,7 @@ case WM_NCMOUSEMOVE:
 
 case WM_MOUSEMOVE:
    // keep trying until we actually show it
-   Input::refreshCursor();
+   //Input::refreshCursor();
 
    if ( !windowLocked )
    {
@@ -973,10 +973,6 @@ case WM_MOUSEMOVE:
 
       Game->postEvent(event);
    }
-   break;
-case WM_SETCURSOR:
-   if ((LOWORD(lParam) == HTCLIENT) && !(Canvas->getUseNativeCursor()))
-      SetCursor(NULL);
    break;
 case WM_LBUTTONDOWN:
    mouseButtonEvent(SI_MAKE, KEY_BUTTON0);

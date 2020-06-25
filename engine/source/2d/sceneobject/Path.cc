@@ -68,7 +68,7 @@ void Path::preIntegrate(const F32 totalTime, const F32 elapsedTime, DebugStats *
       Vector2 cDst = mNodes[pObj.mCurrNode].position;
       F32 distance = (cDst - cPos).Length();
 
-      if (distance < (pObj.mMaxSpeed * elapsedTime) || distance < mNodes[pObj.mCurrNode].distance)
+      if (distance < (pObj.mMaxSpeed * elapsedTime) || distance < cNode.distance )
       {
          S32 nCount = mNodes.size();
          S32 end = nCount - 1;
@@ -205,17 +205,21 @@ void Path::moveObject(PathObject& obj)
    Vector2 currVel = obj.mObj->getLinearVelocity();
    dir.Normalize();
 
-   Vector2 steer = seek(cDest, oPos, obj.mMaxSpeed, currVel, slowRad);
+   F32 maxSpeed = obj.mMaxSpeed;
+   F32 maxForce = 1.2f;
 
-   steer = truncate(steer, obj.mMaxSpeed);
-   steer = steer * 1 / 2;
-   currVel = currVel + steer;
-   currVel = truncate(currVel, obj.mMaxSpeed);
-   Vector2 pos = Vector2(oPos + currVel);
+   Vector2 steer = seek(cDest, oPos, maxSpeed, currVel, slowRad);
+   steer = truncate(steer, maxForce);
+   steer = steer.scale(0.5);
+   currVel = currVel.add(steer);
+   currVel = truncate(currVel.add(steer), maxSpeed);
+   Vector2 pos = oPos.add(currVel);
 
-   //obj.mObj->applyForce(pos);
+   //Steering Behavior
+   obj.mObj->applyForce(pos, obj.mObj->getWorldCenter());
 
-   obj.mObj->setLinearVelocity(dir * obj.mMaxSpeed);
+   //Simple direct move.
+   //obj.mObj->setLinearVelocity(dir * obj.mMaxSpeed);
 
    if (obj.mOrient)
    {
@@ -232,26 +236,26 @@ Vector2 Path::truncate(Vector2 vec, F32 max)
 {
    F32 i = max;
    i = i < 1.0f ? 1.0f : i;
-   vec = vec * max;
+   vec = vec.scale(max);
    return vec;
 }
 
 Vector2 Path::seek(Vector2 target, Vector2 objPos, F32 max, Vector2 curr, F32 slowRad)
 {
-   Vector2 des = target - objPos;
+   Vector2 des = target.sub(objPos);
    F32 dist = des.Length();
    des.Normalize();
 
    if (dist < slowRad)
    {
-      des = des * (max * dist / slowRad);
+      des = des.scale(max * dist / slowRad);
    }
    else
    {
-      des = des * max;
+      des = des.scale(max);
    }
 
-   Vector2 force = des - curr;
+   Vector2 force = des.sub(curr);
 
    return force;
 }
