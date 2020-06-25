@@ -1147,7 +1147,7 @@ void ParticlePlayer::configureParticle( EmitterNode* pEmitterNode, ParticleSyste
                                                                 pParticleAssetEmitter->getEmissionForceVariationField(),
                                                                 particlePlayerAge) * getForceScale();
 
-        if (pParticleAssetEmitter->getTargetParticle())
+        if (pParticleAssetEmitter->getIsTargeting())
         {
            Vector2 tPos = pParticleAssetEmitter->getTargetPosition();
            Vector2 pPos = pParticleNode->mPosition;

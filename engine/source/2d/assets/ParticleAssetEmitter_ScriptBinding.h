@@ -139,7 +139,7 @@ ConsoleMethodWithDocs(ParticleAssetEmitter, setIsTargeting, ConsoleVoid, 3, 3, (
 */
 ConsoleMethodWithDocs(ParticleAssetEmitter, getIsTargeting, ConsoleBool, 2, 2, ())
 {
-   return object->getTargetParticle();
+   return object->getIsTargeting();
 }
 
 /* Sets the world point that the emitter will target. Targeting must be turned on with setIsTargeting().
