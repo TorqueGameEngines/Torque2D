@@ -193,7 +193,7 @@ public:
     //Particle Target
     inline void setTargetPosition(const Vector2& targetPos) { mTargetPosition = targetPos; }
     inline const Vector2& getTargetPosition(void) const { return mTargetPosition; }
-    inline void setTargetParticle(const bool targetParticle) { mTargetParticle = targetParticle; refreshAsset(); }
+    inline void setIsTargeting(const bool targetParticle) { mTargetParticle = targetParticle; refreshAsset(); }
     inline bool getTargetParticle(void) const { return mTargetParticle; }
     //Particle Target end---
     inline void setKeepAligned( const bool keepAligned ) { mKeepAligned = keepAligned; refreshAsset(); }
@@ -314,7 +314,7 @@ protected:
     static bool     setEmitterOffset(void* obj, const char* data)                       { static_cast<ParticleAssetEmitter*>(obj)->setEmitterOffset(Vector2(data)); return false; }
     static bool     writeEmitterOffset( void* obj, StringTableEntry pFieldName )        { return static_cast<ParticleAssetEmitter*>(obj)->getEmitterOffset().notZero(); }
 
-    static bool     setTargetParticle(void* obj, const char* data)                      { static_cast<ParticleAssetEmitter*>(obj)->setTargetParticle(dAtob(data)); return false; }
+    static bool     setIsTargeting(void* obj, const char* data)                      { static_cast<ParticleAssetEmitter*>(obj)->setIsTargeting(dAtob(data)); return false; }
     static bool     writeTargetParticle(void* obj, StringTableEntry pFieldName)         { return static_cast<ParticleAssetEmitter*>(obj)->getTargetParticle() == false; }
     static bool     setTargetPosition(void* obj, const char* data)                      { static_cast<ParticleAssetEmitter*>(obj)->setTargetPosition(Vector2(data)); return false; }
     static bool     writeTargetPosition(void* obj, StringTableEntry pFieldName)         { return static_cast<ParticleAssetEmitter*>(obj)->getTargetPosition().notZero(); }

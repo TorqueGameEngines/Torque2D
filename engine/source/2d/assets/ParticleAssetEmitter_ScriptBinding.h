@@ -129,7 +129,7 @@ ConsoleMethodWithDocs(ParticleAssetEmitter, getEmitterOffset, ConsoleString, 2, 
 */
 ConsoleMethodWithDocs(ParticleAssetEmitter, setIsTargeting, ConsoleVoid, 3, 3, (target))
 {
-   object->setTargetParticle(dAtob(argv[2]));
+   object->setIsTargeting(dAtob(argv[2]));
 }
 
 //-----------------------------------------------------------------------------
