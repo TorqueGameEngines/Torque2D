@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\lpng\png.c" />
+    <ClCompile Include="..\..\lib\lpng\pngerror.c" />
+    <ClCompile Include="..\..\lib\lpng\pngget.c" />
+    <ClCompile Include="..\..\lib\lpng\pngmem.c" />
+    <ClCompile Include="..\..\lib\lpng\pngpread.c" />
+    <ClCompile Include="..\..\lib\lpng\pngread.c" />
+    <ClCompile Include="..\..\lib\lpng\pngrio.c" />
+    <ClCompile Include="..\..\lib\lpng\pngrtran.c" />
+    <ClCompile Include="..\..\lib\lpng\pngrutil.c" />
+    <ClCompile Include="..\..\lib\lpng\pngset.c" />
+    <ClCompile Include="..\..\lib\lpng\pngtrans.c" />
+    <ClCompile Include="..\..\lib\lpng\pngwio.c" />
+    <ClCompile Include="..\..\lib\lpng\pngwrite.c" />
+    <ClCompile Include="..\..\lib\lpng\pngwtran.c" />
+    <ClCompile Include="..\..\lib\lpng\pngwutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\lpng\png.h" />
+    <ClInclude Include="..\..\lib\lpng\pngconf.h" />
+    <ClInclude Include="..\..\lib\lpng\pngdebug.h" />
+    <ClInclude Include="..\..\lib\lpng\pnginfo.h" />
+    <ClInclude Include="..\..\lib\lpng\pnglibconf.h" />
+    <ClInclude Include="..\..\lib\lpng\pngpriv.h" />
+    <ClInclude Include="..\..\lib\lpng\pngstruct.h" />
+  </ItemGroup>
+</Project>
