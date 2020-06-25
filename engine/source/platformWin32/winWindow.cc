@@ -948,12 +948,14 @@ case WM_IME_CHAR:
    // the cursor is *actually* going to be shown.
 case WM_NCMOUSEMOVE:
    {
+      while (ShowCursor(TRUE) < 0);
       break;
    }
 
 case WM_MOUSEMOVE:
    // keep trying until we actually show it
-   //Input::refreshCursor();
+   while (ShowCursor(FALSE) >= 0);
+   Input::refreshCursor();
 
    if ( !windowLocked )
    {

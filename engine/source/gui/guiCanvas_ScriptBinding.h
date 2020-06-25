@@ -157,7 +157,7 @@ ConsoleMethodWithDocs( GuiCanvas, setCursor, ConsoleVoid, 3, 3, ( cursorHandle )
 */
 ConsoleMethodWithDocs(GuiCanvas, resetCursor, void, 2, 2, ())
 {
-  // Canvas->useNativeCursor(true);
+   //Canvas->useNativeCursor(true);
    Canvas->showCursor(false);
    Input::refreshCursor();
 }
