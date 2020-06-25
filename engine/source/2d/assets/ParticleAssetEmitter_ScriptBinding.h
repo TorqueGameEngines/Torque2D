@@ -123,7 +123,11 @@ ConsoleMethodWithDocs(ParticleAssetEmitter, getEmitterOffset, ConsoleString, 2, 
     return object->getEmitterOffset().scriptThis();
 }
 
-ConsoleMethodWithDocs(ParticleAssetEmitter, setTargetParticle, ConsoleVoid, 3, 3, (targetParticle))
+/*! Sets if the emitter targets a point.
+    @param target The point that the emitter's particles will be drawn to.
+    @return No return value.
+*/
+ConsoleMethodWithDocs(ParticleAssetEmitter, setIsTargeting, ConsoleVoid, 3, 3, (target))
 {
    object->setTargetParticle(dAtob(argv[2]));
 }
@@ -131,14 +135,17 @@ ConsoleMethodWithDocs(ParticleAssetEmitter, setTargetParticle, ConsoleVoid, 3, 3
 //-----------------------------------------------------------------------------
 
 /*! Gets whether the emitter targets a point.
-    @return Whether the emitter uses a target for particles.
+    @return True if the emitter uses a target for particles.
 */
-ConsoleMethodWithDocs(ParticleAssetEmitter, getTargetParticle, ConsoleBool, 2, 2, ())
+ConsoleMethodWithDocs(ParticleAssetEmitter, getIsTargeting, ConsoleBool, 2, 2, ())
 {
    return object->getTargetParticle();
 }
 
-
+/* Sets the world point that the emitter will target. Targeting must be turned on with setIsTargeting().
+    @param Position The world point that will be the target.
+    @return No return value.
+*/
 ConsoleMethodWithDocs(ParticleAssetEmitter, setTargetPosition, ConsoleVoid, 3, 4, (float X / float Y))
 {
    // Grab the element count.
