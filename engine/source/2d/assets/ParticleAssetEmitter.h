@@ -290,7 +290,7 @@ public:
     static EmitterType getEmitterTypeEnum(const char* label);
     static const char* getEmitterTypeDescription( const EmitterType emitterType );
     //phyiscs particles
-    static PhysicsParticleType getPhysicsParticleType(const char * label);
+    static PhysicsParticleType getPhysicsParticleTypeEnum(const char * label);
     static const char* getPhysicsParticleTypeDescription(const PhysicsParticleType particleType);
     //physics particles end----
     static ParticleOrientationType getOrientationTypeEnum(const char* label);
@@ -327,6 +327,13 @@ protected:
     static bool     writeFixedAspect( void* obj, StringTableEntry pFieldName )          { return static_cast<ParticleAssetEmitter*>(obj)->getFixedAspect() == false; }
     static bool     setFixedForceAngle(void* obj, const char* data)                     { static_cast<ParticleAssetEmitter*>(obj)->setFixedForceAngle(dAtof(data)); return false; }
     static bool     writeFixedForceAngle( void* obj, StringTableEntry pFieldName )      { return mNotZero(static_cast<ParticleAssetEmitter*>(obj)->getFixedForceAngle() ); }
+    //Physics Particles
+    static bool     setPhysicsParticleType(void* obj, const char* data)                { static_cast<ParticleAssetEmitter*>(obj)->setPhysicsParticleType(getPhysicsParticleTypeEnum(data)); return false; }
+    static bool     writePhysicsParticleType(void* obj, StringTableEntry pFieldName)   { return static_cast<ParticleAssetEmitter*>(obj)->getPhysicsParticleType() != b2_zombieParticle; }
+    static bool     setPhysicsParticles(void* obj, const char* data)                    { static_cast<ParticleAssetEmitter*>(obj)->setPhysicsParticles(dAtob(data)); return false; }
+    static bool     writePhysicsParticles(void* obj, StringTableEntry pFieldName)       { return static_cast<ParticleAssetEmitter*>(obj)->getPhysicsParticles() == false; }
+    //Physics Particles end---
+
     static bool     setOrientationType(void* obj, const char* data)                     { static_cast<ParticleAssetEmitter*>(obj)->setOrientationType( getOrientationTypeEnum(data) ); return false; }
     static bool     writeOrientationType( void* obj, StringTableEntry pFieldName )      { return static_cast<ParticleAssetEmitter*>(obj)->getOrientationType() != FIXED_ORIENTATION; }
     static bool     setKeepAligned(void* obj, const char* data)                         { static_cast<ParticleAssetEmitter*>(obj)->setKeepAligned(dAtob(data)); return false; }

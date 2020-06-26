@@ -104,7 +104,7 @@ static EnumTable::Enums physicsParticleType[] =
 
 static EnumTable  PhysicsParticleTypeTable(sizeof(physicsParticleType) / sizeof(EnumTable::Enums), &physicsParticleType[0]);
 
-ParticleAssetEmitter::PhysicsParticleType ParticleAssetEmitter::getPhysicsParticleType(const char* label)
+ParticleAssetEmitter::PhysicsParticleType ParticleAssetEmitter::getPhysicsParticleTypeEnum(const char* label)
 {
    for (U32 i = 0; i < (sizeof(physicsParticleType) / sizeof(EnumTable::Enums)); i++)
       if (dStricmp(physicsParticleType[i].label, label) == 0)
@@ -113,7 +113,7 @@ ParticleAssetEmitter::PhysicsParticleType ParticleAssetEmitter::getPhysicsPartic
    // Warn.
    Con::warnf("ParticleAssetEmitter::getPhysicsParticleType() - Invalid physics particle type '%s'.", label);
 
-   return PhysicsParticleType::INVALID_PHYSICS_PARTICLE_TYPE;
+   return ParticleAssetEmitter::INVALID_PHYSICS_PARTICLE_TYPE;
 }
 
 const char* ParticleAssetEmitter::getPhysicsParticleTypeDescription(const PhysicsParticleType particleType)
@@ -182,6 +182,8 @@ ParticleAssetEmitter::ParticleAssetEmitter() :
                             mEmitterName( StringTable->EmptyString ),
                             mOwner( NULL ),
                             mEmitterType( POINT_EMITTER ),
+                            mPhysicsParticleType(b2_waterParticle),
+                            mPhysicsParticles(false),
                             mEmitterOffset( 0.0f, 0.0f),
                             mTargetParticle(false),
                             mTargetPosition(0.0f, 0.0f),
@@ -278,6 +280,12 @@ void ParticleAssetEmitter::initPersistFields()
     addProtectedField("EmitterOffset", TypeVector2, Offset(mEmitterOffset, ParticleAssetEmitter), &setEmitterOffset, &defaultProtectedGetFn, &writeEmitterOffset, "");
     addProtectedField("IsTargeting", TypeBool, Offset(mTargetParticle, ParticleAssetEmitter), &setIsTargeting, &defaultProtectedGetFn, &writeTargetParticle, "");
     addProtectedField("TargetPosition", TypeVector2, Offset(mTargetPosition, ParticleAssetEmitter), &setTargetPosition, &defaultProtectedGetFn, &writeTargetPosition, "");
+
+    //Physics Particles
+    addProtectedField("PhysicsParticle", TypeBool, Offset(mPhysicsParticles, ParticleAssetEmitter), &setPhysicsParticles, &defaultProtectedGetFn, &writePhysicsParticles, "");
+    addProtectedField("PhysicsParticleType", TypeEnum, Offset(mPhysicsParticleType, ParticleAssetEmitter), &setPhysicsParticleType, &defaultProtectedGetFn, &writePhysicsParticleType, 1, &PhysicsParticleTypeTable);
+    //Physics Particles end---
+
     addProtectedField("EmitterAngle", TypeF32, Offset(mEmitterAngle, ParticleAssetEmitter), &setEmitterAngle, &defaultProtectedGetFn, &writeEmitterAngle, "");
     addProtectedField("EmitterSize", TypeVector2, Offset(mEmitterSize, ParticleAssetEmitter), &setEmitterSize, &defaultProtectedGetFn, &writeEmitterSize, "");
     addProtectedField("FixedAspect", TypeBool, Offset(mFixedAspect, ParticleAssetEmitter), &setFixedAspect, &defaultProtectedGetFn, &writeFixedAspect, "");

@@ -58,7 +58,9 @@ function TruckToy::create( %this )
     addFlagOption("Front Wheel Drive", "setFrontWheelDrive", TruckToy.FrontWheelDrive, false, "Whether the motor on the front wheel is active or not." );
     addFlagOption("Rear Wheel Drive", "setRearWheelDrive", TruckToy.RearWheelDrive, false, "Whether the motor on the rear wheel is active or not." );
     addFlagOption("Rotate Camera", "setRotateCamera", TruckToy.RotateCamera, true, "Whether the rotate the camera that is mounted to the truck or not." );
-	Canvas.setCursor(DefaultMacCursor);
+
+	Canvas.setCursor(DefaultCursor);
+
     // Reset the toy.
     %this.reset();
 	
