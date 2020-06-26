@@ -42,6 +42,13 @@ new GuiCursor(DefaultCursor)
     bitmapName = "^Sandbox/gui/images/defaultCursor";
 };
 
+new GuiCursor(DefaultMacCursor)
+{
+    hotSpot = "4 4";
+    renderOffset = "0 0";
+    bitmapName = "^Sandbox/gui/images/defaultMacCursor";
+};
+
 //---------------------------------------------------------------------------------------------
 // GuiDefaultProfile is a special profile that all other profiles inherit defaults from. It
 // must exist.
