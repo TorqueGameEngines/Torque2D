@@ -3134,6 +3134,7 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
       <Filter>gui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h">
       <Filter>Box2D\Particle</Filter>
     </ClInclude>
