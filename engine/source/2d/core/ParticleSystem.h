@@ -67,6 +67,11 @@ public:
         F32                     mRandomMotion;
         ColorF                  mColor;    
 
+        /// Physics particles
+        bool                    mPhysicsParticles;
+        b2ParticleGroupDef      mParticleGroup;
+        b2ParticleSystem*       mParticleSystem;
+
         /// Interpolated Tick Position.
         Vector2                 mPreTickPosition;
         Vector2                 mPostTickPosition;

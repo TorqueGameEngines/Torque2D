@@ -581,7 +581,7 @@ void SceneObject::preIntegrate( const F32 totalTime, const F32 elapsedTime, Debu
    // Finish if nothing is dirty.
     if ( !mSpatialDirty )
         return;
-
+    
     // Reset spatial changed.
     mSpatialDirty = false;
 

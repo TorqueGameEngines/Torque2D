@@ -1,5 +1,6 @@
 /*
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org
+* Copyright (c) 2014 Google, Inc.
 *
 * This software is provided 'as-is', without any express or implied
 * warranty.  In no event will the authors be held liable for any damages
@@ -478,7 +479,6 @@ void b2ContactSolver::SolveVelocityConstraints()
 				//
 				x.x = - cp1->normalMass * b.x;
 				x.y = 0.0f;
-				vn1 = 0.0f;
 				vn2 = vc->K.ex.y * x.x + b.y;
 
 				if (x.x >= 0.0f && vn2 >= 0.0f)
@@ -521,7 +521,6 @@ void b2ContactSolver::SolveVelocityConstraints()
 				x.x = 0.0f;
 				x.y = - cp2->normalMass * b.y;
 				vn1 = vc->K.ey.x * x.y + b.x;
-				vn2 = 0.0f;
 
 				if (x.y >= 0.0f && vn1 >= 0.0f)
 				{
@@ -652,6 +651,15 @@ struct b2PositionSolverManifold
 
 				// Ensure normal points from A to B
 				normal = -normal;
+			}
+			break;
+		default:
+			{
+				// This shouldn't be executed if pc->type is valid.
+				separation = 0.0f;
+				normal = b2Vec2_zero;
+				point = b2Vec2_zero;
+				b2Assert(false);
 			}
 			break;
 		}

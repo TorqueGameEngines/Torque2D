@@ -1,4 +1,4 @@
-![Torque Logo](http://static.garagegames.com/static/pg/logokits/Torque-Logo_H.png)
+![Torque Logo](modules/Sandbox/1/assets/t2d.png)
 ## Torque 2D 3.4
 
 MIT Licensed Open Source version of Torque 2D from GarageGames. Maintained by the T2D Steering Committee and contributions from the community.
@@ -15,7 +15,7 @@ Here is an overview of the branches found in the Torque 2D repository:
 
 ### Precompiled Version
 
-If you do not wish to compile the source code yourself, precompiled binary files for Windows and OSX are available from the [Torque 2D Release Page](https://github.com/GarageGames/Torque2D/releases).
+If you do not wish to compile the source code yourself, precompiled binary files for Windows and OSX are available from the [Torque 2D Release Page](https://github.com/TorqueGameEngines/Torque2D/releases).
 
 ### Building the Source
 
@@ -28,7 +28,7 @@ After downloading a copy of the source code, the following project files for eac
 * **Android:** Android Studio
 * **Web:** Emscripten/Cmake
 
-See the [wiki](https://github.com/GarageGames/Torque2D/wiki) for available guides on platform setup and development.
+See the [wiki](https://github.com/TorqueGameEngines/Torque2D/wiki) for available guides on platform setup and development.
 
 ### Batteries Included
 
@@ -40,7 +40,7 @@ The Sandbox is also an excellent framework for rapidly prototyping your own game
 
 ### Documentation
 
-All documentation for the open source version of Torque 2D can be found on our [Github wiki page](https://github.com/GarageGames/Torque2D/wiki). It contains many tutorials, detailed technical information on engine systems, a script reference guide automatically generated from the source code, and articles on how to contribute to our open source development.
+All documentation for the open source version of Torque 2D can be found on our [Github wiki page](https://github.com/TorqueGameEngines/Torque2D/wiki). It contains many tutorials, detailed technical information on engine systems, a script reference guide automatically generated from the source code, and articles on how to contribute to our open source development.
 
 ### Community
 
@@ -53,6 +53,14 @@ You also might be able to find useful information on the less active GarageGames
 * [Torque 2D Beginner Forum](http://www.garagegames.com/community/forums/84)
 * [Torque 2D Professional Forum](http://www.garagegames.com/community/forums/85)
 * [GarageGames Community Blogs](http://www.garagegames.com/community/blogs)
+
+### Support
+
+Torque 2D is completely free to use, but like all things, it takes time and energy to maintain and develop. You can support T2D by becoming a sponsor on Patreon. Doing so ensures that T2D will continue receiving the attention it needs to remain competitive.
+
+[Become a Patron](https://www.patreon.com/bePatron?u=15485520)
+
+You can also support development directly by submitting pull requests or joining the steering committee! See the wiki for details.
 
 # License
 Copyright (c) 2012 GarageGames, LLC

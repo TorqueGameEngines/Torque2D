@@ -296,12 +296,18 @@ U16 Input::getAscii(U16 keyCode, KEY_STATE keyState)
 // Not yet implemented. Will resolve in the next platform update
 void Input::pushCursor(S32 cursorID)
 {
+    CursorManager* cm = getCursorManager();
+    if(cm)
+        cm->pushCursor(cursorID);
 }
 
 //------------------------------------------------------------------------------
 // Not yet implemented. Will resolve in the next platform update
 void Input::popCursor()
 {
+    CursorManager* cm = getCursorManager();
+    if(cm)
+        cm->popCursor();
 }
 
 //-----------------------------------------------------------------------------
@@ -336,21 +342,33 @@ S32 Input::getDoubleClickHeight()
 // Not yet implemented. Will resolve in the next platform update
 void Input::setCursorPos(S32 x, S32 y)
 {
+    
 }
 
 //-----------------------------------------------------------------------------
 // Not yet implemented. Will resolve in the next platform update
 void Input::setCursorState(bool on)
 {
-
+    on ? [NSCursor unhide] : [NSCursor hide];
 }
+
 
 //-----------------------------------------------------------------------------
 // Not yet implemented. Will resolve in the next platform update
 void Input::setCursorShape(U32 cursorID)
 {
-
+    NSCursor *cur;
+    switch (cursorID) {
+        case CursorManager::curArrow:
+            cur = [NSCursor arrowCursor];
+            [cur set];
+        default:
+            cur = [NSCursor arrowCursor];
+            [cur set];
+    }
+    
 }
+
 
 #pragma mark ---- Platform Namespace Functions ----
 

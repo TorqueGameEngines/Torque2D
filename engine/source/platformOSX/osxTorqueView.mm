@@ -370,6 +370,18 @@
 }
 
 //-----------------------------------------------------------------------------
+- (void)mouseEntered:(NSEvent *)event
+{
+    if (!Canvas->getUseNativeCursor())
+    {
+        [NSCursor hide];
+    }
+}
+
+-(void)mouseExited:(NSEvent *)event
+{
+    [NSCursor unhide];
+}
 // Default otherMouseDown override
 - (void)mouseMoved:(NSEvent *)event
 {
@@ -387,6 +399,7 @@
     // Grab any modifiers
     U32 modifiers = 0;
     [self getModifierKey:modifiers event:event];
+    
     
     // Move the cursor
     Canvas->setCursorPos(Point2I((S32) location.x, (S32) location.y));
