@@ -1,5 +1,6 @@
 /*
 * Copyright (c) 2006-2010 Erin Catto http://www.box2d.org
+* Copyright (c) 2013 Google, Inc.
 *
 * This software is provided 'as-is', without any express or implied
 * warranty.  In no event will the authors be held liable for any damages
@@ -18,7 +19,6 @@
 
 #include <Box2D/Collision/Shapes/b2EdgeShape.h>
 #include <new>
-using namespace std;
 
 void b2EdgeShape::Set(const b2Vec2& v1, const b2Vec2& v2)
 {
@@ -46,6 +46,35 @@ bool b2EdgeShape::TestPoint(const b2Transform& xf, const b2Vec2& p) const
 	B2_NOT_USED(xf);
 	B2_NOT_USED(p);
 	return false;
+}
+
+void b2EdgeShape::ComputeDistance(const b2Transform& xf, const b2Vec2& p, float32* distance, b2Vec2* normal, int32 childIndex) const
+{
+	B2_NOT_USED(childIndex);
+
+	b2Vec2 v1 = b2Mul(xf, m_vertex1);
+	b2Vec2 v2 = b2Mul(xf, m_vertex2);
+
+	b2Vec2 d = p - v1;
+	b2Vec2 s = v2 - v1;
+	float32 ds = b2Dot(d, s);
+	if (ds > 0)
+	{
+		float32 s2 = b2Dot(s, s);
+		if (ds > s2)
+		{
+			d = p - v2;
+		}
+		else
+		{
+			d -= ds / s2 * s;
+		}
+	}
+
+	float32 d1 = d.Length();
+	*distance = d1;
+	*normal = d1 > 0 ? 1 / d1 * d : b2Vec2_zero;
+
 }
 
 // p = p1 + t * d
@@ -105,11 +134,11 @@ bool b2EdgeShape::RayCast(b2RayCastOutput* output, const b2RayCastInput& input,
 	output->fraction = t;
 	if (numerator > 0.0f)
 	{
-		output->normal = -normal;
+		output->normal = -b2Mul(xf.q, normal);
 	}
 	else
 	{
-		output->normal = normal;
+		output->normal = b2Mul(xf.q, normal);
 	}
 	return true;
 }

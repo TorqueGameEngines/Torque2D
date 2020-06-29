@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\..\Lib\ljpeg\jcapimin.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jutils.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcapistd.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jccoefct.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jccolor.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcdctmgr.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jchuff.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcinit.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcmainct.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcmarker.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcmaster.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcomapi.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcparam.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcphuff.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcprepct.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jcsample.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jctrans.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdapimin.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdapistd.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdatadst.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdatasrc.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdcoefct.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdcolor.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jddctmgr.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdhuff.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdinput.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdmainct.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdmarker.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdmaster.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdmerge.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdphuff.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdpostct.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdsample.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jdtrans.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jerror.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jfdctflt.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jfdctfst.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jfdctint.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jidctflt.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jidctfst.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jidctint.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jidctred.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jmemmgr.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jmemnobs.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jquant1.c" />
+    <ClCompile Include="..\..\Lib\ljpeg\jquant2.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\Lib\ljpeg\jchuff.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jpeglib.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jconfig.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jconfig.vc.win.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jdct.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jdhuff.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jerror.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jinclude.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jmemsys.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jmorecfg.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jpegint.h" />
+    <ClInclude Include="..\..\Lib\ljpeg\jversion.h" />
+  </ItemGroup>
+</Project>

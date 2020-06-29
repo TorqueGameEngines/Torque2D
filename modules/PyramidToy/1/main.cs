@@ -88,7 +88,8 @@ function PyramidToy::setBlockSize(%this, %value)
 //-----------------------------------------------------------------------------
 
 function PyramidToy::createBackground( %this )
-{    
+{ 
+
     // Create the sprite.
     %object = new Sprite();
     
@@ -125,6 +126,7 @@ function PyramidToy::createGround( %this )
     %ground.setSize(PyramidToy.GroundWidth, 6);
     %ground.setRepeatX(PyramidToy.GroundWidth / 60);   
     %ground.createEdgeCollisionShape(PyramidToy.GroundWidth/-2, 3, PyramidToy.GroundWidth/2, 3);
+	//%ground.SceneLayer = 10;
     SandboxScene.add(%ground);  
     
     // Create the grass.
@@ -133,6 +135,7 @@ function PyramidToy::createGround( %this )
     %grass.Image = "ToyAssets:grassForeground";
     %grass.setPosition(0, -8.5);
     %grass.setSize(PyramidToy.GroundWidth, 2); 
+	%grass.SceneLayer = 10;
     SandboxScene.add(%grass);       
 }
 
@@ -180,9 +183,16 @@ function PyramidToy::createPyramid( %this )
             %obj.setImageFrame( getRandom(0,55) );
             %obj.setDefaultFriction( 1.0 );
             %obj.createPolygonBoxCollisionShape( %blockSize, %blockSize );
+			%obj.SceneLayer = 15;
             
             // Add to the scene.
             SandboxScene.add( %obj );          
         }
     }
+	
+	%map = new LightObject();
+	%map.setSize("15 15");
+	%map.SceneLayer = 17;
+	%map.setBlendColor(0.5,0.5,1.0,1.0);
+	SandboxScene.add(%map);
 }

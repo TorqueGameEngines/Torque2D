@@ -343,6 +343,7 @@ if(!isObject(SandboxWindowProfile)) new GuiControlProfile (SandboxWindowProfile 
     fontType = $platformFontType;
     fontSize = $platformFontSize;
     fontColor = "255 255 255 255";
+	lockMouse = "0";
 }; 
 
 //-----------------------------------------------------------------------------

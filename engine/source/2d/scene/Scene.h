@@ -678,7 +678,7 @@ public:
     static const char* getPickModeDescription( PickMode pickMode );
     static DebugOption getDebugOptionEnum(const char* label);
     static const char* getDebugOptionDescription( DebugOption debugOption );
-
+    b2ParticleSystem*			mParticleSystem;
     /// Declare Console Object.
     DECLARE_CONOBJECT(Scene);
 

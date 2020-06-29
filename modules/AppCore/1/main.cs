@@ -26,6 +26,7 @@ function AppCore::create( %this )
     exec("./scripts/constants.cs");
     exec("./scripts/defaultPreferences.cs");
     exec("./scripts/canvas.cs");
+	exec("./scripts/cursor.cs");
     exec("./scripts/openal.cs");
     
     // Initialize the canvas
@@ -37,7 +38,6 @@ function AppCore::create( %this )
     
     // Initialize audio
     initializeOpenAL();
-    
     ModuleDatabase.loadGroup("gameBase");
 }
 

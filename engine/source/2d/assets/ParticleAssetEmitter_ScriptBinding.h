@@ -123,6 +123,63 @@ ConsoleMethodWithDocs(ParticleAssetEmitter, getEmitterOffset, ConsoleString, 2, 
     return object->getEmitterOffset().scriptThis();
 }
 
+/*! Sets if the emitter targets a point.
+    @param target The point that the emitter's particles will be drawn to.
+    @return No return value.
+*/
+ConsoleMethodWithDocs(ParticleAssetEmitter, setIsTargeting, ConsoleVoid, 3, 3, (target))
+{
+   object->setIsTargeting(dAtob(argv[2]));
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Gets whether the emitter targets a point.
+    @return True if the emitter uses a target for particles.
+*/
+ConsoleMethodWithDocs(ParticleAssetEmitter, getIsTargeting, ConsoleBool, 2, 2, ())
+{
+   return object->getIsTargeting();
+}
+
+/* Sets the world point that the emitter will target. Targeting must be turned on with setIsTargeting().
+    @param Position The world point that will be the target.
+    @return No return value.
+*/
+ConsoleMethodWithDocs(ParticleAssetEmitter, setTargetPosition, ConsoleVoid, 3, 4, (float X / float Y))
+{
+   // Grab the element count.
+   U32 elementCount = Utility::mGetStringElementCount(argv[2]);
+
+   // ("positionX positionY")
+   if ((elementCount == 2) && (argc < 4))
+   {
+      object->setTargetPosition(Vector2(argv[2]));
+      return;
+   }
+
+   // (positionX, positionY)
+   if ((elementCount == 1) && (argc > 3))
+   {
+      object->setTargetPosition(Vector2(dAtof(argv[2]), dAtof(argv[3])));
+      return;
+   }
+
+   // Warn.
+   Con::warnf("ParticleAssetEmitter::setTargetPosition() - Invalid number of parameters!");
+}
+
+//------------------------------------------------------------------------------
+
+/*! Gets the emitter target position.
+    @return (float x/float y) The position of the target of the emitter.
+*/
+ConsoleMethodWithDocs(ParticleAssetEmitter, getTargetPosition, ConsoleString, 2, 2, ())
+{
+   return object->getTargetPosition().scriptThis();
+}
+
+
 //------------------------------------------------------------------------------
 
 /*! Sets the emitter size.

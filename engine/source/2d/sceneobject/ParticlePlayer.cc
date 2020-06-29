@@ -1147,11 +1147,23 @@ void ParticlePlayer::configureParticle( EmitterNode* pEmitterNode, ParticleSyste
                                                                 pParticleAssetEmitter->getEmissionForceVariationField(),
                                                                 particlePlayerAge) * getForceScale();
 
-        // Calculate Emission Angle.
-        emissionAngle = ParticleAssetField::calculateFieldBV(   pParticleAssetEmitter->getEmissionAngleBaseField(),
-                                                                pParticleAssetEmitter->getEmissionAngleVariationField(),
-                                                                particlePlayerAge );
+        if (pParticleAssetEmitter->getIsTargeting())
+        {
+           Vector2 tPos = pParticleAssetEmitter->getTargetPosition();
+           Vector2 pPos = pParticleNode->mPosition;
+           Vector2 subVec = tPos - pPos;
+           F32 vecN = mAtan(subVec.x, subVec.y);
+           F32 vecDeg = mRadToDeg(vecN);
+           emissionAngle = vecDeg;
+        }
+        else
+        {
 
+           // Calculate Emission Angle.
+           emissionAngle = ParticleAssetField::calculateFieldBV(  pParticleAssetEmitter->getEmissionAngleBaseField(),
+                                                                  pParticleAssetEmitter->getEmissionAngleVariationField(),
+                                                                  particlePlayerAge);
+        }
         // Calculate Emission Arc.
         // NOTE:-   We're actually interested in half the emission arc!
         emissionArc = ParticleAssetField::calculateFieldBV( pParticleAssetEmitter->getEmissionArcBaseField(),
