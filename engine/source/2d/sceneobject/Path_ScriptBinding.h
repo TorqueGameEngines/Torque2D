@@ -19,6 +19,18 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
+
+/*! Attaches a sceneObject to the path.
+@param SceneObject The object that will be attached to the path.
+@param speed The rate that the sceneObject will follow the path.
+@param orient If true, the object will automatically rate to face the direction that it is moving.
+@param angOff The offset that will be applied to the rotation if orient is true.
+@param snapToNode If true, the object will have to get close to a node instead of reaching it exactly. The distance is based on the distance given a node when it is created.
+@param startNode A zero-based integer that represents the node that the object should start at.
+@param loop If true, the object will start the path again when it reaches the last node. The object will travel from the last node to the first.
+@param maxLoop An integer value describing the number of times the object will travel the path if looping is turned on.
+@return No return value.
+*/
 ConsoleMethodWithDocs(Path, attachObject, ConsoleVoid, 4, 11, (sceneObject, float speed,[float force], [bool orient], [float angOff], [bool snapToNode],[integer startNode],[bool loop],[integer maxLoop]))
 {
    // Set Group.
@@ -80,6 +92,10 @@ ConsoleMethodWithDocs(Path, attachObject, ConsoleVoid, 4, 11, (sceneObject, floa
 
 }
 
+/*! Removes a sceneObject from a path.
+@param SceneObject The object that will be detached from the path.
+@return No return value.
+*/
 ConsoleMethodWithDocs(Path, detachObject, ConsoleVoid, 3, 3, (sceneObject))
 {
    // Set Group.
@@ -91,6 +107,12 @@ ConsoleMethodWithDocs(Path, detachObject, ConsoleVoid, 3, 3, (sceneObject))
       Con::warnf("Path::detachObject() - Could not find the specified object '%s'.", argv[2]);
 }
 
+/*! Adds a node to a path.
+@param x The horizontal position of the node in world units.
+@param y The vertical position of the node in world units.
+@param distance The distance a from a node that it object must reach before it is considered to have reached the node, if snapToNode is set true for the object.
+@return No return value.
+*/
 ConsoleMethodWithDocs(Path, addNode, ConsoleVoid, 3, 6, (float x, float y, [float distance], [float weight]))
 {
    Vector2 position;
