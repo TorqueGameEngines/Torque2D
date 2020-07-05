@@ -1386,6 +1386,7 @@
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
       <Filter>gui</Filter>
+	</ClCompile>
     <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp">
       <Filter>Box2D\Particle</Filter>
     </ClCompile>
