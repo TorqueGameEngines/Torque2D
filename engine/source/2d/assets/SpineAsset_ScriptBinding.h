@@ -20,46 +20,46 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-ConsoleMethodGroupBeginWithDocs(SkeletonAsset, AssetBase)
+ConsoleMethodGroupBeginWithDocs(SpineAsset, AssetBase)
 
 /*! Sets the atlas file.
-    @return No return value.
+	@return No return value.
 */
-ConsoleMethodWithDocs(SkeletonAsset, setAtlasFile, ConsoleVoid, 3, 3, (AtlasFile))
+ConsoleMethodWithDocs(SpineAsset, setAtlasFile, ConsoleVoid, 3, 3, (AtlasFile))
 {
-    object->setAtlasFile( argv[2] );
+	object->setAtlasFile(argv[2]);
 }
 
 //-----------------------------------------------------------------------------
 
 /*! Gets the atlas file.
-    @return Returns the atlas file.
+	@return Returns the atlas file.
 */
-ConsoleMethodWithDocs(SkeletonAsset, getAtlasFile, ConsoleString, 2, 2, ())
+ConsoleMethodWithDocs(SpineAsset, getAtlasFile, ConsoleString, 2, 2, ())
 {
-    return object->getAtlasFile();
+	return object->getAtlasFile();
 }
 
 //------------------------------------------------------------------------------
 
-/*! Sets the skeleton file.
-    @return No return value.
+/*! Sets the spine file.
+	@return No return value.
 */
-ConsoleMethodWithDocs(SkeletonAsset, setSkeletonFile, ConsoleVoid, 3, 3, (SkeletonFile))
+ConsoleMethodWithDocs(SpineAsset, setSpineFile, ConsoleVoid, 3, 3, (SpineFile))
 {
-    object->setSkeletonFile( argv[2] );
+	object->setSpineFile(argv[2]);
 }
 
 //-----------------------------------------------------------------------------
 
-/*! Gets the skeleton file.
-    @return Returns the skeleton file.
+/*! Gets the spine file.
+	@return Returns the spine file.
 */
-ConsoleMethodWithDocs(SkeletonAsset, getSkeletonFile, ConsoleString, 2, 2, ())
+ConsoleMethodWithDocs(SpineAsset, getSpineFile, ConsoleString, 2, 2, ())
 {
-    return object->getSkeletonFile();
+	return object->getSpineFile();
 }
 
 //------------------------------------------------------------------------------
 
-ConsoleMethodGroupEndWithDocs(SkeletonAsset)
+ConsoleMethodGroupEndWithDocs(SpineAsset)

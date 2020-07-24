@@ -33,7 +33,7 @@
 #include "math/mSplinePatch.h"
 #endif
 #ifndef _COLOR_H_
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #endif
 
 /// Spline utility namespace.  This is used for generating pretty splines so you can get nice curved surfaces.

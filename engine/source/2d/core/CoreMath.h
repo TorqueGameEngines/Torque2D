@@ -170,6 +170,16 @@ bool mPointInRectangle( const Vector2& point, const Vector2& rectMin, const Vect
 /// Calculate line/rectangle intersection.
 bool mLineRectangleIntersect( const Vector2& startPoint, const Vector2& endPoint, const Vector2& rectMin, const Vector2& rectMax, F32* pTime = NULL );
 
+/// Transform the incoming point 'v' by rotating it about the point (and by the amount) specified in the transform 'T'.
+/// NOTE: b2Math has a method called b2Mul() that is similar, but doesn't take into account the offset in T. So I made this.
+inline b2Vec2 mRotateAboutArbitraryPoint(const b2Transform& T, const b2Vec2& v)
+{
+	float32 x = (T.q.c * (v.x - T.p.x) - T.q.s * (v.y - T.p.y)) + T.p.x;
+	float32 y = (T.q.s * (v.x - T.p.x) + T.q.c * (v.y - T.p.y)) + T.p.y;
+
+	return b2Vec2(x, y);
+}
+
 } // Namespace CoreMath.
 
 #endif // _CORE_UTILITY_H_

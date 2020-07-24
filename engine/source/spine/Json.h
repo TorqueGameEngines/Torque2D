@@ -1,16 +1,16 @@
 /*
  Copyright (c) 2009 Dave Gamble
- 
+
  Permission is hereby granted, dispose of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
  in the Software without restriction, including without limitation the rights
  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  copies of the Software, and to permit persons to whom the Software is
  furnished to do so, subject to the following conditions:
- 
+
  The above copyright notice and this permission notice shall be included in
  all copies or substantial portions of the Software.
- 
+
  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -38,10 +38,17 @@ extern "C" {
 #define Json_Array 5
 #define Json_Object 6
 
+#ifndef SPINE_JSON_HAVE_PREV
+/* Spine doesn't use the "prev" link in the Json sibling lists. */
+#define SPINE_JSON_HAVE_PREV 0
+#endif
+
 /* The Json structure: */
 typedef struct Json {
 	struct Json* next;
+#if SPINE_JSON_HAVE_PREV
 	struct Json* prev; /* next/prev allow you to walk array/object chains. Alternatively, use getSize/getItem */
+#endif
 	struct Json* child; /* An array or object item will have a child pointer pointing to a chain of the items in the array/object. */
 
 	int type; /* The type of the item, as above. */
