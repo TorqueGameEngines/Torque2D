@@ -40,7 +40,7 @@
 #endif
 
 #ifndef _COLOR_H_
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #endif
 
 #ifndef _SIMBASE_H_

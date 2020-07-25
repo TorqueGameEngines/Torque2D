@@ -54,7 +54,9 @@ SpriteBatch::SpriteBatch() :
     mBatchTransformId = 0;
 
     // Reset local extents.
-    mLocalExtents.SetZero();
+	mLocalAABB.lowerBound.SetZero();
+	mLocalAABB.upperBound.SetZero();
+	mLocalExtents.SetZero();
     mLocalExtentsDirty = true;
 }
 
@@ -96,9 +98,6 @@ void SpriteBatch::prepareRender( SceneRenderObject* pSceneRenderObject, const Sc
     // Set the sort mode.
     pSceneRenderQueue->setSortMode( getBatchSortMode() );
 
-    // Calculate local AABB.
-    const b2AABB localAABB = calculateLocalAABB( pSceneRenderState->mRenderAABB );
-
     // Do we have a sprite batch query?
     if ( mpSpriteBatchQuery != NULL )
     {
@@ -108,8 +107,11 @@ void SpriteBatch::prepareRender( SceneRenderObject* pSceneRenderObject, const Sc
         // Yes, so fetch sprite batch query and clear results.
         SpriteBatchQuery* pSpriteBatchQuery = getSpriteBatchQuery( true );
 
-        // Perform query.
-        pSpriteBatchQuery->queryArea( localAABB, false );
+		// Calculate local AABB.
+		const b2AABB localAABB = calculateLocalAABB(pSceneRenderState->mRenderAABB);
+
+		// Perform query.
+		pSpriteBatchQuery->queryArea( localAABB, false );
 
         // Debug Profiling.
         PROFILE_END(); // SpriteBatch_PrepareRenderQuery
@@ -1262,12 +1264,22 @@ void SpriteBatch::setBatchTransform( const b2Transform& batchTransform )
 
 //------------------------------------------------------------------------------
 
-void SpriteBatch::updateLocalExtents( void )
+void SpriteBatch::updateLocalExtents(const b2AABB *precalculatedLocalAABB)
 {
     // Debug Profiling.
     PROFILE_SCOPE(SpriteBatch_UpdateLocalExtents);
 
-    // Finish if the local extents are not dirty.
+	if (precalculatedLocalAABB && precalculatedLocalAABB->IsValid()) {
+		// We are being given our AABB.  Nothing further is needed.
+		mLocalAABB = *precalculatedLocalAABB;
+		mLocalExtents = mLocalAABB.upperBound - mLocalAABB.lowerBound;
+
+		mLocalExtentsDirty = false;
+
+		return;
+	}
+
+	// Finish if the local extents are not dirty.
     if ( !mLocalExtentsDirty )
         return;
 
@@ -1287,26 +1299,22 @@ void SpriteBatch::updateLocalExtents( void )
     typeSpriteBatchHash::iterator spriteItr = mSprites.begin();
 
     // Set render AABB to this sprite.
-    b2AABB localAABB = spriteItr->value->getLocalAABB();
+    mLocalAABB = spriteItr->value->getLocalAABB();
 
-    // Combine with the rest of the sprites.
+	// Combine with the rest of the sprites.
     for( ; spriteItr != mSprites.end(); ++spriteItr )
     {
-        localAABB.Combine( spriteItr->value->getLocalAABB() );
+		mLocalAABB.Combine( spriteItr->value->getLocalAABB() );
     }
+	
+	float xSize = mLocalAABB.upperBound.x > mLocalAABB.lowerBound.x
+		? mLocalAABB.upperBound.x - mLocalAABB.lowerBound.x
+		: mLocalAABB.lowerBound.x - mLocalAABB.upperBound.x;
+	float ySize = mLocalAABB.upperBound.y > mLocalAABB.lowerBound.y
+		? mLocalAABB.upperBound.y - mLocalAABB.lowerBound.y
+		: mLocalAABB.lowerBound.y - mLocalAABB.upperBound.y;
 
-    // Fetch local render extents.
-    const b2Vec2& localLowerExtent = localAABB.lowerBound;
-    const b2Vec2& localUpperExtent = localAABB.upperBound;
-
-    // Calculate maximum extents.
-    const F32 lowerExtentX = mFabs(localLowerExtent.x);
-    const F32 lowerExtentY = mFabs(localLowerExtent.y);
-    const F32 upperExtentX = mFabs(localUpperExtent.x);
-    const F32 upperExtentY = mFabs(localUpperExtent.y);
-
-    // Calculate local extents.
-    mLocalExtents.Set( mFabs(lowerExtentX > upperExtentX ? lowerExtentX : upperExtentX) * 2.0f, mFabs(lowerExtentY > upperExtentY ? lowerExtentY : upperExtentY) * 2.0f );
+	mLocalExtents.Set(xSize, ySize);
 }
 
 //------------------------------------------------------------------------------

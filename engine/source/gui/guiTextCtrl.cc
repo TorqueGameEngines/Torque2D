@@ -22,7 +22,7 @@
 
 #include "console/consoleTypes.h"
 #include "console/console.h"
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #include "gui/guiTextCtrl.h"
 #include "graphics/dgl.h"
 #include "gui/language/lang.h"

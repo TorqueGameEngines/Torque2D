@@ -1,42 +1,44 @@
 /******************************************************************************
- * Spine Runtimes Software License
- * Version 2
- * 
- * Copyright (c) 2013, Esoteric Software
- * All rights reserved.
- * 
- * You are granted a perpetual, non-exclusive, non-sublicensable and
- * non-transferable license to install, execute and perform the Spine Runtimes
- * Software (the "Software") solely for internal use. Without the written
- * permission of Esoteric Software, you may not (a) modify, translate, adapt or
- * otherwise create derivative works, improvements of the Software or develop
- * new applications using the Software or (b) remove, delete, alter or obscure
- * any trademarks or any copyright, trademark, patent or other intellectual
- * property or proprietary rights notices on or in the Software, including
- * any copy thereof. Redistributions in binary or source form must include
- * this license and terms. THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY
+ * Spine Runtimes License Agreement
+ * Last updated January 1, 2020. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2020, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #include <spine/Atlas.h>
 #include <ctype.h>
 #include <spine/extension.h>
 
-spAtlasPage* spAtlasPage_create (const char* name) {
+spAtlasPage* spAtlasPage_create(spAtlas* atlas, const char* name) {
 	spAtlasPage* self = NEW(spAtlasPage);
+	CONST_CAST(spAtlas*, self->atlas) = atlas;
 	MALLOC_STR(self->name, name);
 	return self;
 }
 
-void spAtlasPage_dispose (spAtlasPage* self) {
+void spAtlasPage_dispose(spAtlasPage* self) {
 	_spAtlasPage_disposeTexture(self);
 	FREE(self->name);
 	FREE(self);
@@ -44,11 +46,11 @@ void spAtlasPage_dispose (spAtlasPage* self) {
 
 /**/
 
-spAtlasRegion* spAtlasRegion_create () {
-	return NEW(spAtlasRegion) ;
+spAtlasRegion* spAtlasRegion_create() {
+	return NEW(spAtlasRegion);
 }
 
-void spAtlasRegion_dispose (spAtlasRegion* self) {
+void spAtlasRegion_dispose(spAtlasRegion* self) {
 	FREE(self->name);
 	FREE(self->splits);
 	FREE(self->pads);
@@ -62,39 +64,34 @@ typedef struct {
 	const char* end;
 } Str;
 
-static void trim (Str* str) {
-	while (isspace(*str->begin) && str->begin < str->end)
+static void trim(Str* str) {
+	while (isspace((unsigned char)*str->begin) && str->begin < str->end)
 		(str->begin)++;
 	if (str->begin == str->end) return;
 	str->end--;
-	while (isspace(*str->end) && str->end >= str->begin)
+	while (((unsigned char)*str->end == '\r') && str->end >= str->begin)
 		str->end--;
 	str->end++;
 }
 
 /* Tokenize string without modification. Returns 0 on failure. */
-static int readLine (const char* begin, const char* end, Str* str) {
-	static const char* nextStart;
-	if (begin) {
-		nextStart = begin;
-		return 1;
-	}
-	if (nextStart == end) return 0;
-	str->begin = nextStart;
+static int readLine(const char** begin, const char* end, Str* str) {
+	if (*begin == end) return 0;
+	str->begin = *begin;
 
 	/* Find next delimiter. */
-	while (nextStart != end && *nextStart != '\n')
-		nextStart++;
+	while (*begin != end && **begin != '\n')
+		(*begin)++;
 
-	str->end = nextStart;
+	str->end = *begin;
 	trim(str);
 
-	if (nextStart != end) nextStart++;
+	if (*begin != end) (*begin)++;
 	return 1;
 }
 
 /* Moves str->begin past the first occurence of c. Returns 0 on failure. */
-static int beginPast (Str* str, char c) {
+static int beginPast(Str* str, char c) {
 	const char* begin = str->begin;
 	while (1) {
 		char lastSkippedChar = *begin;
@@ -107,26 +104,23 @@ static int beginPast (Str* str, char c) {
 }
 
 /* Returns 0 on failure. */
-static int readValue (const char* end, Str* str) {
-	readLine(0, end, str);
+static int readValue(const char** begin, const char* end, Str* str) {
+	readLine(begin, end, str);
 	if (!beginPast(str, ':')) return 0;
 	trim(str);
 	return 1;
 }
 
-/* Returns the number of tuple values read (2, 4, or 0 for failure). */
-static int readTuple (const char* end, Str tuple[]) {
+/* Returns the number of tuple values read (1, 2, 4, or 0 for failure). */
+static int readTuple(const char** begin, const char* end, Str tuple[]) {
 	int i;
-	Str str;
-	readLine(0, end, &str);
+	Str str = { NULL, NULL };
+	readLine(begin, end, &str);
 	if (!beginPast(&str, ':')) return 0;
 
 	for (i = 0; i < 3; ++i) {
 		tuple[i].begin = str.begin;
-		if (!beginPast(&str, ',')) {
-			if (i == 0) return 0;
-			break;
-		}
+		if (!beginPast(&str, ',')) break;
 		tuple[i].end = str.begin - 2;
 		trim(&tuple[i]);
 	}
@@ -136,7 +130,7 @@ static int readTuple (const char* end, Str tuple[]) {
 	return i + 1;
 }
 
-static char* mallocString (Str* str) {
+static char* mallocString(Str* str) {
 	int length = (int)(str->end - str->begin);
 	char* string = MALLOC(char, length + 1);
 	memcpy(string, str->begin, length);
@@ -144,56 +138,59 @@ static char* mallocString (Str* str) {
 	return string;
 }
 
-static int indexOf (const char** array, int count, Str* str) {
+static int indexOf(const char** array, int count, Str* str) {
 	int length = (int)(str->end - str->begin);
 	int i;
 	for (i = count - 1; i >= 0; i--)
 		if (strncmp(array[i], str->begin, length) == 0) return i;
-	return -1;
+	return 0;
 }
 
-static int equals (Str* str, const char* other) {
+static int equals(Str* str, const char* other) {
 	return strncmp(other, str->begin, str->end - str->begin) == 0;
 }
 
-static int toInt (Str* str) {
-	return strtol(str->begin, (char**)&str->end, 10);
+static int toInt(Str* str) {
+	return (int)strtol(str->begin, (char**)&str->end, 10);
 }
 
-static spAtlas* abortAtlas (spAtlas* self) {
+static spAtlas* abortAtlas(spAtlas* self) {
 	spAtlas_dispose(self);
 	return 0;
 }
 
-static const char* formatNames[] = {"Alpha", "Intensity", "LuminanceAlpha", "RGB565", "RGBA4444", "RGB888", "RGBA8888"};
-static const char* textureFilterNames[] = {"Nearest", "Linear", "MipMap", "MipMapNearestNearest", "MipMapLinearNearest",
-		"MipMapNearestLinear", "MipMapLinearLinear"};
+static const char* formatNames[] = { "", "Alpha", "Intensity", "LuminanceAlpha", "RGB565", "RGBA4444", "RGB888", "RGBA8888" };
+static const char* textureFilterNames[] = { "", "Nearest", "Linear", "MipMap", "MipMapNearestNearest", "MipMapLinearNearest",
+"MipMapNearestLinear", "MipMapLinearLinear" };
 
-spAtlas* spAtlas_readAtlas (const char* begin, int length, const char* dir) {
+spAtlas* spAtlas_create(const char* begin, int length, const char* dir, void* rendererObject) {
+	spAtlas* self;
+
 	int count;
 	const char* end = begin + length;
 	int dirLength = (int)strlen(dir);
 	int needsSlash = dirLength > 0 && dir[dirLength - 1] != '/' && dir[dirLength - 1] != '\\';
-
-	spAtlas* self = NEW(spAtlas);
 
 	spAtlasPage *page = 0;
 	spAtlasPage *lastPage = 0;
 	spAtlasRegion *lastRegion = 0;
 	Str str;
 	Str tuple[4];
-	readLine(begin, 0, 0);
-	while (readLine(0, end, &str)) {
-		if (str.end - str.begin == 0) {
+
+	self = NEW(spAtlas);
+	self->rendererObject = rendererObject;
+
+	while (readLine(&begin, end, &str)) {
+		if (str.end - str.begin == 0)
 			page = 0;
-		} else if (!page) {
+		else if (!page) {
 			char* name = mallocString(&str);
 			char* path = MALLOC(char, dirLength + needsSlash + strlen(name) + 1);
 			memcpy(path, dir, dirLength);
 			if (needsSlash) path[dirLength] = '/';
 			strcpy(path + dirLength + needsSlash, name);
 
-			page = spAtlasPage_create(name);
+			page = spAtlasPage_create(self, name);
 			FREE(name);
 			if (lastPage)
 				lastPage->next = page;
@@ -201,17 +198,35 @@ spAtlas* spAtlas_readAtlas (const char* begin, int length, const char* dir) {
 				self->pages = page;
 			lastPage = page;
 
-			if (!readValue(end, &str)) return abortAtlas(self);
-			page->format = (spAtlasFormat)indexOf(formatNames, 7, &str);
+			switch (readTuple(&begin, end, tuple)) {
+			case 0:
+				return abortAtlas(self);
+			case 2: /* size is only optional for an atlas packed with an old TexturePacker. */
+				page->width = toInt(tuple);
+				page->height = toInt(tuple + 1);
+				if (!readTuple(&begin, end, tuple)) return abortAtlas(self);
+			}
+			page->format = (spAtlasFormat)indexOf(formatNames, 8, tuple);
 
-			if (!readTuple(end, tuple)) return abortAtlas(self);
-			page->minFilter = (spAtlasFilter)indexOf(textureFilterNames, 7, tuple);
-			page->magFilter = (spAtlasFilter)indexOf(textureFilterNames, 7, tuple + 1);
+			if (!readTuple(&begin, end, tuple)) return abortAtlas(self);
+			page->minFilter = (spAtlasFilter)indexOf(textureFilterNames, 8, tuple);
+			page->magFilter = (spAtlasFilter)indexOf(textureFilterNames, 8, tuple + 1);
 
-			if (!readValue(end, &str)) return abortAtlas(self);
+			if (!readValue(&begin, end, &str)) return abortAtlas(self);
+
+			page->uWrap = SP_ATLAS_CLAMPTOEDGE;
+			page->vWrap = SP_ATLAS_CLAMPTOEDGE;
 			if (!equals(&str, "none")) {
-				page->uWrap = *str.begin == 'x' ? ATLAS_REPEAT : (*str.begin == 'y' ? ATLAS_CLAMPTOEDGE : ATLAS_REPEAT);
-				page->vWrap = *str.begin == 'x' ? ATLAS_CLAMPTOEDGE : (*str.begin == 'y' ? ATLAS_REPEAT : ATLAS_REPEAT);
+				if (str.end - str.begin == 1) {
+					if (*str.begin == 'x')
+						page->uWrap = SP_ATLAS_REPEAT;
+					else if (*str.begin == 'y')
+						page->vWrap = SP_ATLAS_REPEAT;
+				}
+				else if (equals(&str, "xy")) {
+					page->uWrap = SP_ATLAS_REPEAT;
+					page->vWrap = SP_ATLAS_REPEAT;
+				}
 			}
 
 			_spAtlasPage_createTexture(page, path);
@@ -227,14 +242,20 @@ spAtlas* spAtlas_readAtlas (const char* begin, int length, const char* dir) {
 			region->page = page;
 			region->name = mallocString(&str);
 
-			if (!readValue(end, &str)) return abortAtlas(self);
-			region->rotate = equals(&str, "true");
+			if (!readValue(&begin, end, &str)) return abortAtlas(self);
+			if (equals(&str, "true"))
+				region->degrees = 90;
+			else if (equals(&str, "false"))
+				region->degrees = 0;
+			else
+				region->degrees = toInt(&str);
+			region->rotate = region->degrees == 90;
 
-			if (readTuple(end, tuple) != 2) return abortAtlas(self);
+			if (readTuple(&begin, end, tuple) != 2) return abortAtlas(self);
 			region->x = toInt(tuple);
 			region->y = toInt(tuple + 1);
 
-			if (readTuple(end, tuple) != 2) return abortAtlas(self);
+			if (readTuple(&begin, end, tuple) != 2) return abortAtlas(self);
 			region->width = toInt(tuple);
 			region->height = toInt(tuple + 1);
 
@@ -248,7 +269,8 @@ spAtlas* spAtlas_readAtlas (const char* begin, int length, const char* dir) {
 				region->v2 = (region->y + region->height) / (float)page->height;
 			}
 
-			if (!(count = readTuple(end, tuple))) return abortAtlas(self);
+			count = readTuple(&begin, end, tuple);
+			if (!count) return abortAtlas(self);
 			if (count == 4) { /* split is optional */
 				region->splits = MALLOC(int, 4);
 				region->splits[0] = toInt(tuple);
@@ -256,7 +278,8 @@ spAtlas* spAtlas_readAtlas (const char* begin, int length, const char* dir) {
 				region->splits[2] = toInt(tuple + 2);
 				region->splits[3] = toInt(tuple + 3);
 
-				if (!(count = readTuple(end, tuple))) return abortAtlas(self);
+				count = readTuple(&begin, end, tuple);
+				if (!count) return abortAtlas(self);
 				if (count == 4) { /* pad is optional, but only present with splits */
 					region->pads = MALLOC(int, 4);
 					region->pads[0] = toInt(tuple);
@@ -264,18 +287,18 @@ spAtlas* spAtlas_readAtlas (const char* begin, int length, const char* dir) {
 					region->pads[2] = toInt(tuple + 2);
 					region->pads[3] = toInt(tuple + 3);
 
-					if (!readTuple(end, tuple)) return abortAtlas(self);
+					if (!readTuple(&begin, end, tuple)) return abortAtlas(self);
 				}
 			}
 
 			region->originalWidth = toInt(tuple);
 			region->originalHeight = toInt(tuple + 1);
 
-			readTuple(end, tuple);
+			readTuple(&begin, end, tuple);
 			region->offsetX = toInt(tuple);
 			region->offsetY = toInt(tuple + 1);
 
-			if (!readValue(end, &str)) return abortAtlas(self);
+			if (!readValue(&begin, end, &str)) return abortAtlas(self);
 			region->index = toInt(&str);
 		}
 	}
@@ -283,7 +306,7 @@ spAtlas* spAtlas_readAtlas (const char* begin, int length, const char* dir) {
 	return self;
 }
 
-spAtlas* spAtlas_readAtlasFile (const char* path) {
+spAtlas* spAtlas_createFromFile(const char* path, void* rendererObject) {
 	int dirLength;
 	char *dir;
 	int length;
@@ -296,20 +319,20 @@ spAtlas* spAtlas_readAtlasFile (const char* path) {
 	const char* lastBackwardSlash = strrchr(path, '\\');
 	const char* lastSlash = lastForwardSlash > lastBackwardSlash ? lastForwardSlash : lastBackwardSlash;
 	if (lastSlash == path) lastSlash++; /* Never drop starting slash. */
-	dirLength = lastSlash ? lastSlash - path : 0;
+	dirLength = (int)(lastSlash ? lastSlash - path : 0);
 	dir = MALLOC(char, dirLength + 1);
 	memcpy(dir, path, dirLength);
 	dir[dirLength] = '\0';
 
 	data = _spUtil_readFile(path, &length);
-	if (data) atlas = spAtlas_readAtlas(data, length, dir);
+	if (data) atlas = spAtlas_create(data, length, dir, rendererObject);
 
 	FREE(data);
 	FREE(dir);
 	return atlas;
 }
 
-void spAtlas_dispose (spAtlas* self) {
+void spAtlas_dispose(spAtlas* self) {
 	spAtlasRegion* region, *nextRegion;
 	spAtlasPage* page = self->pages;
 	while (page) {
@@ -328,7 +351,7 @@ void spAtlas_dispose (spAtlas* self) {
 	FREE(self);
 }
 
-spAtlasRegion* spAtlas_findRegion (const spAtlas* self, const char* name) {
+spAtlasRegion* spAtlas_findRegion(const spAtlas* self, const char* name) {
 	spAtlasRegion* region = self->regions;
 	while (region) {
 		if (strcmp(region->name, name) == 0) return region;

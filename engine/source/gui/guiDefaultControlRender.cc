@@ -23,7 +23,7 @@
 #include "graphics/dgl.h"
 #include "gui/guiDefaultControlRender.h"
 #include "gui/guiTypes.h"
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #include "math/mRect.h"
 
 void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state )

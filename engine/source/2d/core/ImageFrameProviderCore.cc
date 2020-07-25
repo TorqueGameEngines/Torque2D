@@ -224,7 +224,7 @@ void ImageFrameProviderCore::render(
     const Vector2& vertexPos1,
     const Vector2& vertexPos2,
     const Vector2& vertexPos3,
-    BatchRender* pBatchRenderer ) const
+	BatchRender* pBatchRenderer ) const
 {
     // Finish if we can't render.
     if ( !validRender() )
@@ -240,21 +240,81 @@ void ImageFrameProviderCore::render(
     const Vector2& texLower = texelArea.mTexelLower;
     const Vector2& texUpper = texelArea.mTexelUpper;
     
+	Vector2 texturePos0, texturePos1, texturePos2, texturePos3;
+
+	texturePos0 = Vector2(texLower.x, texUpper.y);
+	texturePos1 = Vector2(texUpper.x, texUpper.y);
+	texturePos2 = Vector2(texUpper.x, texLower.y);
+	texturePos3 = Vector2(texLower.x, texLower.y);
+
     // Submit batched quad.
     pBatchRenderer->SubmitQuad(
         vertexPos0,
         vertexPos1,
         vertexPos2,
         vertexPos3,
-        Vector2( texLower.x, texUpper.y ),
-        Vector2( texUpper.x, texUpper.y ),
-        Vector2( texUpper.x, texLower.y ),
-        Vector2( texLower.x, texLower.y ),
-        getProviderTexture() );
+		texturePos0,
+		texturePos1,
+		texturePos2,
+		texturePos3,
+		getProviderTexture() );
+}
+
+//------------------------------------------------------------------------------
+
+void ImageFrameProviderCore::render(
+	const bool flipX,
+	const bool flipY,
+	const Vector2& vertexPos0,
+	const Vector2& vertexPos1,
+	const Vector2& vertexPos2,
+	const Vector2& vertexPos3,
+	const Vector2& uvPos0,
+	const Vector2& uvPos1,
+	const Vector2& uvPos2,
+	const Vector2& uvPos3,
+	BatchRender* pBatchRenderer) const
+{
+	// Finish if we can't render.
+	if (!validRender())
+		return;
+
+	// Submit batched quad.
+	pBatchRenderer->SubmitQuad(
+		vertexPos0,
+		vertexPos1,
+		vertexPos2,
+		vertexPos3,
+		uvPos0,
+		uvPos1,
+		uvPos2,
+		uvPos3,
+		getProviderTexture());
 }
 
 //-----------------------------------------------------------------------------
 
+void ImageFrameProviderCore::render(
+		const U32 vertexCount,
+		const Vector2 *vertexArray,
+		const Vector2 *textureArray,
+		const ColorF *colorArray,
+		BatchRender* pBatchRenderer) const
+{
+	// Finish if we can't render.
+	if (!validRender() || !vertexCount)
+		return;
+
+	// Submit mesh list
+	pBatchRenderer->SubmitTriangles(
+		vertexCount,
+		vertexArray,
+		textureArray,
+		colorArray,
+		getProviderTexture());
+}
+
+//------------------------------------------------------------------------------
 void ImageFrameProviderCore::renderGui( GuiControl& owner, Point2I offset, const RectI &updateRect ) const
 {
     // Validate frame provider.

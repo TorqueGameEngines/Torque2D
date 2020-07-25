@@ -20,11 +20,11 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #include "console/console.h"
 #include "console/consoleTypes.h"
 
-#include "color_ScriptBinding.h"
+#include "gColor_ScriptBinding.h"
 
 #ifndef _STRINGUNIT_H_
 #include "string/stringUnit.h"

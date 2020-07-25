@@ -110,7 +110,29 @@ public:
         const Vector2& vertexPos3,
         BatchRender* pBatchRenderer ) const;
 
-    void renderGui( GuiControl& owner, Point2I offset, const RectI &updateRect ) const;
+	// Use uv coordinates explicitly given.
+	virtual void render(
+		const bool flipX,
+		const bool flipY,
+		const Vector2& vertexPos0,
+		const Vector2& vertexPos1,
+		const Vector2& vertexPos2,
+		const Vector2& vertexPos3,
+		const Vector2& uvPos0,
+		const Vector2& uvPos1,
+		const Vector2& uvPos2,
+		const Vector2& uvPos3,
+		BatchRender* pBatchRenderer) const;
+
+	// Render the given list of vertex information directly.
+	void ImageFrameProviderCore::render(
+		const U32 vertexCount,
+		const Vector2 *vertexArray,
+		const Vector2 *textureArray,
+		const ColorF *colorArray,
+		BatchRender* pBatchRenderer) const;
+
+	void renderGui( GuiControl& owner, Point2I offset, const RectI &updateRect ) const;
 
     /// Static-Image Frame.
     inline bool setImage( const char* pImageAssetId ) { return setImage( pImageAssetId, mImageFrame ); }
@@ -121,7 +143,7 @@ public:
     inline U32 getImageFrame( void ) const { return mImageFrame; }
     virtual bool setNamedImageFrame( const char* frame );
     inline StringTableEntry getNamedImageFrame( void ) const { return mNamedImageFrame; }
-
+	
     /// Animated-Image Frame.
     virtual bool setAnimation( const char* pAnimationAssetId );
     inline StringTableEntry getAnimation( void ) const { return mpAnimationAsset->getAssetId(); }
