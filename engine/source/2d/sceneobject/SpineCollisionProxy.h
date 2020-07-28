@@ -28,6 +28,14 @@ protected:
 
 public:
 	SpineCollisionProxy();
+	SpineCollisionProxy(const char *name, const char *slot, const char *skin, F32 wSizer = 1.0f, F32 hSizer = 1.0f, const char *objectName = NULL);
+
+	const char *mAttachmentName;
+	const char *mSlotName;
+	const char *mSkinName;
+	F32			mWidthSizer;
+	F32			mHeightSizer;
+	const char *mObjectName;
 
 	bool mActive;
 
@@ -39,6 +47,7 @@ public:
 public:
 	inline void deActivate(void) { if (!mActive) return;  mActive = false; setActive(false); }
 	inline void activate(void) { if (mActive) return;  mActive = true; setActive(true); }
+
 };
 
 #endif // _SPINE_COLLISION_PROXY_H_

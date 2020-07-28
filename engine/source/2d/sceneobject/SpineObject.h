@@ -230,23 +230,45 @@ protected:
 	// Internal management
 	void SpineObject::resetState();
 
+	virtual void OnRegisterScene(Scene *scene);
+	virtual void OnUnregisterScene(Scene *scene);
+
 private:
 	// Utility 
 
 	// Cope with spine reflecting about an axis to accomplish a flip, while the SceneObject doesn't support such flipping.
 	inline F32 setPerFlipState(const F32 value) { return mFlipY ? (mFlipX ? value : -value) : (mFlipX ? -value : value); }
 
-	// This is only used during TAML loading. It buffers the value needed when setting the requested animation.
-	bool mShouldLoop;
+	// Object Persistence Support
+	//
+	// This determines if there is any animation data to write and returns true if there is.
+	bool writeAnimationData(void) const;
+	bool writeCollisionData(void) const;
+
+	// This encodes and returns the information required to restart the currently running animations.  It is returned
+	// in a string for writing to the TAML file.
+	const char *getAnimationData(void) const;
+
+	// This encodes and returns the information required to recreate the Spine object's collision boxes.  
+	const char *getCollisionData(void) const;
+
+	// This attempts to start the animation(s) defined in the animation data string passed in.
+	void setAnimationData(const char *animationData);
+
+	// This attempts to create the collision boxes defined in the data passed in.
+	void setCollisionData(const char *collisionData);
 
 protected:
 	static bool setSpineAsset(void* obj, const char* data) { static_cast<SpineObject*>(obj)->setSpineAsset(data); return false; }
 	static bool writeSpineAsset(void* obj, StringTableEntry pFieldName) { return static_cast<SpineObject*>(obj)->mSpineAsset.notNull(); }
 
-	static bool setShouldLoop(void* obj, const char* data) { static_cast<SpineObject*>(obj)->mShouldLoop = dAtob(data); return false; }
-	static bool setAnimation(void* obj, const char* data) { static_cast<SpineObject*>(obj)->setAnimation(data, static_cast<SpineObject*>(obj)->mShouldLoop); return false; }
-	static const char* getAnimationName(void* obj, const char* data) { return static_cast<SpineObject*>(obj)->getAnimationName(); }
-	static bool writeAnimationData(void*obj, const char* data) { return static_cast<SpineObject*>(obj)->getAnimationName() != StringTable->EmptyString; }
+	static bool setAnimationData(void* obj, const char* data) { static_cast<SpineObject*>(obj)->setAnimationData(data); return false; }
+	static const char* getAnimationData(void* obj, const char* data) { return static_cast<SpineObject*>(obj)->getAnimationData(); }
+	static bool writeAnimationData(void*obj, const char* data) { return static_cast<SpineObject*>(obj)->writeAnimationData(); }
+
+	static bool setCollisionData(void* obj, const char* data) { static_cast<SpineObject*>(obj)->setCollisionData(data); return false; }
+	static const char* getCollisionData(void* obj, const char* data) { return static_cast<SpineObject*>(obj)->getCollisionData(); }
+	static bool writeCollisionData(void*obj, const char* data) { return static_cast<SpineObject*>(obj)->writeCollisionData(); }
 
 	static bool setSkin(void* obj, const char* data) { static_cast<SpineObject*>(obj)->setSkin(data); return false; }
 	static const char* getSkinName(void* obj, const char* data) { return static_cast<SpineObject*>(obj)->getSkinName(); }

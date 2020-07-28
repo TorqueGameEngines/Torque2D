@@ -20,9 +20,25 @@ IMPLEMENT_CONOBJECT(SpineCollisionProxy);
 //------------------------------------------------------------------------------
 
 SpineCollisionProxy::SpineCollisionProxy() :
+	mAttachmentName{NULL},
+	mSlotName{NULL},
+	mSkinName{NULL},
+	mWidthSizer{1.0f},
+	mHeightSizer{1.0f},
+	mObjectName{NULL},
 	mActive{true},
 	mRotation{0.0f}
 {}
 
 //------------------------------------------------------------------------------
 
+SpineCollisionProxy::SpineCollisionProxy(const char *name, const char *slot, const char *skin, F32 wSizer, F32 hSizer, const char *objectName) :
+	mAttachmentName{ name },
+	mSlotName{ slot },
+	mSkinName{ skin },
+	mWidthSizer{ wSizer },
+	mHeightSizer{ hSizer },
+	mObjectName{ objectName },
+	mActive{ true },
+	mRotation{ 0.0f }
+{}
