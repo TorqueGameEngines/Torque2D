@@ -218,46 +218,39 @@ const ImageAsset::FrameArea& ImageFrameProviderCore::getProviderImageFrameArea( 
 //------------------------------------------------------------------------------
 
 void ImageFrameProviderCore::render(
-    const bool flipX,
-    const bool flipY,
-    const Vector2& vertexPos0,
-    const Vector2& vertexPos1,
-    const Vector2& vertexPos2,
-    const Vector2& vertexPos3,
-	BatchRender* pBatchRenderer ) const
+	const bool flipX,
+	const bool flipY,
+	const Vector2& vertexPos0,
+	const Vector2& vertexPos1,
+	const Vector2& vertexPos2,
+	const Vector2& vertexPos3,
+	BatchRender* pBatchRenderer) const
 {
-    // Finish if we can't render.
-    if ( !validRender() )
-        return;
+	// Finish if we can't render.
+	if (!validRender())
+		return;
 
-    // Fetch texel area.
-    ImageAsset::FrameArea::TexelArea texelArea = getProviderImageFrameArea().mTexelArea;
+	// Fetch texel area.
+	ImageAsset::FrameArea::TexelArea texelArea = getProviderImageFrameArea().mTexelArea;
 
-    // Flip texture coordinates appropriately.
-    texelArea.setFlip( flipX, flipY );
+	// Flip texture coordinates appropriately.
+	texelArea.setFlip(flipX, flipY);
 
-    // Fetch lower/upper texture coordinates.
-    const Vector2& texLower = texelArea.mTexelLower;
-    const Vector2& texUpper = texelArea.mTexelUpper;
-    
-	Vector2 texturePos0, texturePos1, texturePos2, texturePos3;
+	// Fetch lower/upper texture coordinates.
+	const Vector2& texLower = texelArea.mTexelLower;
+	const Vector2& texUpper = texelArea.mTexelUpper;
 
-	texturePos0 = Vector2(texLower.x, texUpper.y);
-	texturePos1 = Vector2(texUpper.x, texUpper.y);
-	texturePos2 = Vector2(texUpper.x, texLower.y);
-	texturePos3 = Vector2(texLower.x, texLower.y);
-
-    // Submit batched quad.
-    pBatchRenderer->SubmitQuad(
-        vertexPos0,
-        vertexPos1,
-        vertexPos2,
-        vertexPos3,
-		texturePos0,
-		texturePos1,
-		texturePos2,
-		texturePos3,
-		getProviderTexture() );
+	// Submit batched quad.
+	pBatchRenderer->SubmitQuad(
+		vertexPos0,
+		vertexPos1,
+		vertexPos2,
+		vertexPos3,
+		Vector2(texLower.x, texUpper.y),
+		Vector2(texUpper.x, texUpper.y),
+		Vector2(texUpper.x, texLower.y),
+		Vector2(texLower.x, texLower.y),
+		getProviderTexture());
 }
 
 //------------------------------------------------------------------------------

@@ -129,8 +129,7 @@ void SpineObject::initPersistFields()
 	addProtectedField("Asset", TypeSpineAssetPtr, Offset(mSpineAsset, SpineObject), &setSpineAsset, &defaultProtectedGetFn, &writeSpineAsset, "The spine asset ID used for the spine.");
 	addProtectedField("Skin", TypeString, 0, &setSkin, &getSkinName, &writeCurrentSkin, "The skin to use.");
 	addProtectedField("Scale", TypeVector2, 0, &setScale, &getScale, &writeScale, "Scaling of the skeleton geometry.");
-	addProtectedField("AnimationCycle", TypeBool, Offset(mShouldLoop, SpineObject), &setShouldLoop, &defaultProtectedGetFn, &writeAnimationData, "Whether the startup animation should loop or not.");
-	addProtectedField("AnimationName", TypeString, 0, &setAnimation, &getAnimationName, &writeAnimationData, "The animation name to play at startup.");
+	addProtectedField("AnimationData", TypeString, 0, &setAnimationData, &getAnimationData, &writeAnimationData, "String encoding of the running animations.  It's a tilde separated list of animation entries.  Within each entry, each attribute is separated by a semicolon.  The attributes are, in this order:  1) Name - String: Name of animation as defined in Spine.  2) Track - Integer: Track the animation is running on.  3) Is Looping - Boolean: 1 or 0.  4) Mix Duration - Float: Can be set to -1.0 to request default mix duration.");
 	addProtectedField("TimeScale", TypeF32, 0, &setTimeScale, &getTimeScale, &writeTimeScale, "Time scale (animation speed) adjustment factor.");
 	addProtectedField("FlipX", TypeBool, Offset(mFlipX, SpineObject), &setFlipX, &defaultProtectedGetFn, &writeFlipX, "Whether to invert the image horizontally.");
 	addProtectedField("FlipY", TypeBool, Offset(mFlipY, SpineObject), &setFlipY, &defaultProtectedGetFn, &writeFlipY, "Whether image should be inverted vertically.");
@@ -144,6 +143,7 @@ void SpineObject::initPersistFields()
 	addProtectedField("SwirlAngle", TypeF32, 0, &setSwirlAngle, &getSwirlAngle, &writeSwirlEffectValues, "A 'Swirl' vertex special effect setting.");
 	endGroup("Vertex Effects");
 	addProtectedField("EventCallbacksEnabled", TypeBool, 0, &setEventCallbacksEnabled, &defaultProtectedGetFn, &writeEventCallbacksEnabled, "Whether the SpineObject should receive spine animation event callbacks.");
+	addProtectedField("CollisionData", TypeString, 0, &setCollisionData, &getCollisionData, &writeCollisionData, "String encoding of the Spine object's collision boxes.  It's a tilde separated list of collision proxy definitions.  Within each entry, each attribute is separated by a semicolon.  The attributes are, in this order:  1) Attachment Name - String: Name of attachment that box belongs to.  2) Slot Name - String: Slot that owns the attachment.  3) Skin Name - String: Skin that defines the attachment.  4) Width Sizer - Float: Factor useful to tweak the width of the box.  5) Height Sizer - Float: Factor useful to tweak the height of the box.  6) SimObject Name - String: Name assigned to the collision proxy instance.  May be NULL if no name was assigned.");
 
 }
 
@@ -174,8 +174,6 @@ void SpineObject::resetState() {
 	mPriorRootBoneWorldY = 0.0f;
 	mPriorFlipX = mFlipX;
 	mPriorFlipY = mFlipY;
-
-	mShouldLoop = false;
 
 	mCollisionProxies.clear();
 }
@@ -483,6 +481,8 @@ inline StringTableEntry SpineObject::getSkinName(void) const {
 	spSkin* pSkin = mSkeleton->skin;
 
 	if (!pSkin) {
+		AssertFatal(mSkeleton->data->defaultSkin, avar("SpineObject::getSkinName() - Skin name is undefined in '%s'.  Is file valid?", mSpineAsset->mSpineFile));
+
 		// Using default skin.
 		return StringTable->insert(mSkeleton->data->defaultSkin->name, true);
 	}
@@ -1089,7 +1089,7 @@ const SpineCollisionProxy* SpineObject::getCollisionProxy(
 	const char* aSkinName,
 	const F32 sizerWidth,
 	const F32 sizerHeight,
-	const char* objectName) {
+	const char* anObjectName) {
 
 	// First, locate the requested attachment.
 	spAttachment* pAttachment = NULL;
@@ -1146,7 +1146,8 @@ const SpineCollisionProxy* SpineObject::getCollisionProxy(
 	}
 
 	// Create new proxy object.
-	auto pProxy = new SpineCollisionProxy();
+	const char *objectName = anObjectName ? StringTable->insert(anObjectName, true) : NULL;
+	auto pProxy = new SpineCollisionProxy(attachmentName, slotName, skinName, sizerWidth, sizerHeight, objectName);
 
 	// Add to the internal collection
 	mCollisionProxies.insert(pAttachment, pProxy);
@@ -1192,7 +1193,7 @@ const SpineCollisionProxy* SpineObject::getCollisionProxy(
 	}
 
 	// Create collision fixture and enable collision callback support.
-	auto fixtureIndex = pProxy->createPolygonBoxCollisionShape(width * mSkeleton->scaleX, height * mSkeleton->scaleY);
+	auto fixtureIndex = pProxy->createPolygonBoxCollisionShape(width * abs(mSkeleton->scaleX), height * abs(mSkeleton->scaleY));
 	pProxy->setCollisionShapeIsSensor(fixtureIndex, true);
 	pProxy->setCollisionCallback(true);
 
@@ -1209,7 +1210,10 @@ const SpineCollisionProxy* SpineObject::getCollisionProxy(
 	// Deactivate.  If should be active, it will be made so at render time.
 	pProxy->deActivate();
 
-	getScene()->addToScene(pProxy);
+	// If Spine object is already in the scene, add the proxy too.
+	if (getScene()) {
+		getScene()->addToScene(pProxy);
+	}
 
 	return pProxy;
 }
@@ -1236,4 +1240,155 @@ bool SpineObject::deleteCollisionProxy(const char *proxyId) {
 
 	Con::warnf("SpineObject::deleteCollisionProxy() - Unable to locate proxy with given id: '%s'.", proxyId);
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+
+bool SpineObject::writeAnimationData(void) const {
+	// According to the API, a track entry might be null.  So we need to make sure there is at least
+	// one valid entry before returning true.
+	for (auto i = 0; i < mAnimationState->tracksCount; ++i) {
+		if (mAnimationState->tracks[i] != NULL) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+
+const char *SpineObject::getAnimationData(void) const {
+	string result;
+	
+	for (auto i = 0; i < mAnimationState->tracksCount; ++i) {
+		spTrackEntry *track = mAnimationState->tracks[i];
+		if (track) {
+			// Encode the track entry.
+			result
+				.append(track->animation->name).append(";")
+				.append(Con::getIntArg(track->trackIndex)).append(";")
+				.append(Con::getBoolArg(track->loop)).append(";")
+				.append(Con::getFloatArg(track->mixDuration)).append(";~");
+		}
+	}
+
+	// Could throw it in the StringTable, but don't want to pollute that with this crud.
+	unique_ptr<char> retVal = unique_ptr<char>(new char[result.size() + 1]);
+	dStrcpy(retVal.get(), result.c_str());
+
+	return retVal.get();
+}
+
+//-----------------------------------------------------------------------------
+
+void SpineObject::setAnimationData(const char *animationData) {
+	if (!animationData) {
+		Con::warnf("SpineObject::setAnimationData() - Ignoring empty animation data string.");
+		return;
+	}
+
+	// Break into list of entries.
+	vector<char *> entries;
+	char *entry = dStrtok(const_cast<char *>(animationData), "~");
+	while (entry) {
+		entries.push_back(entry);
+		entry = dStrtok(NULL, "~");
+	}
+
+	// Process each entry
+	for (auto entry : entries) {
+		const char *name = dStrtok(entry, ";");
+		int track = dAtoi(dStrtok(NULL, ";"));
+		bool loop = dAtob(dStrtok(NULL, ";"));
+		F32 mixDuration = dAtof(dStrtok(NULL, ";"));
+
+		setAnimation(name, track, loop, mixDuration);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+bool SpineObject::writeCollisionData(void) const {
+	return mCollisionProxies.size() > 0;
+}
+
+//-----------------------------------------------------------------------------
+
+const char *SpineObject::getCollisionData(void) const {
+	string result;
+
+	for (auto pair : mCollisionProxies) {
+		auto proxy = pair.value;
+
+		// Encode the proxy.
+		result
+			.append(proxy->mAttachmentName).append(";")
+			.append(proxy->mSlotName).append(";")
+			.append(proxy->mSkinName).append(";")
+			.append(Con::getFloatArg(proxy->mWidthSizer)).append(";")
+			.append(Con::getFloatArg(proxy->mHeightSizer)).append(";");
+
+		if (proxy->mObjectName) {
+			result.append(proxy->mObjectName).append(";~");
+		}
+		else {
+			result.append("~");
+		}
+	}
+
+	unique_ptr<char> retVal = unique_ptr<char>(new char[result.size() + 1]);
+	dStrcpy(retVal.get(), result.c_str());
+
+	return retVal.get();
+}
+
+//-----------------------------------------------------------------------------
+
+void SpineObject::setCollisionData(const char *collisionData) {
+	if (!collisionData) {
+		Con::warnf("SpineObject::setCollisionData() - Ignoring empty collision setup string.");
+		return;
+	}
+
+	// Break into list of entries.
+	vector<char *> entries;
+	char *entry = dStrtok(const_cast<char *>(collisionData), "~");
+	while (entry) {
+		entries.push_back(entry);
+		entry = dStrtok(NULL, "~");
+	}
+	
+	// Process each entry
+	for (auto entry : entries) {
+		const char *attachmentName = dStrtok(entry, ";");
+		const char *slotName = dStrtok(NULL, ";");
+		const char *skinName = dStrtok(NULL, ";");
+		F32 wSizer = dAtof(dStrtok(NULL, ";"));
+		F32 hSizer = dAtof(dStrtok(NULL, ";"));
+		const char *objectName = dStrtok(NULL, ";");
+
+		getCollisionProxy(attachmentName, slotName, skinName, wSizer, hSizer, objectName);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void SpineObject::OnRegisterScene(Scene *scene) {
+	Parent::OnRegisterScene(scene);
+
+	for (auto i : mCollisionProxies) {
+		scene->addToScene(i.value);
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void SpineObject::OnUnregisterScene(Scene *scene) {
+	Parent::OnUnregisterScene(scene);
+
+	for (auto i : mCollisionProxies) {
+		if(i.value->getScene())
+			i.value->getScene()->removeFromScene(i.value);
+	}
 }

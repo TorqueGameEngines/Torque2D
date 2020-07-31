@@ -621,12 +621,6 @@ ConsoleMethodWithDocs(SpineObject, disableAnimationEventCallbacks, ConsoleVoid, 
 	processing in onCollision etc... This first checks if the attachment requested already has a proxy
 	and returns that if so.  If not, a new proxy is created and returned.
 	@note
-	This method should be called after the owning spine object has been added to the scene. The
-	proxy will be automatically added to the scene in that case.  If the proxy is created prior to the
-	spine object being added to the scene, the proxy will have to be added to the scene manually. It
-	won't be automatically added later when the spine object is added.
-
-	@note
 	The collision objects never have any velocity.  They are continually positioned (warped) to match
 	the location of the attachment they were created on.  This means that they are only useful as
 	sensors.  Even if they are not explicitly set to be sensors, since they have no velocity, they
