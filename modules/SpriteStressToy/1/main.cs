@@ -168,7 +168,7 @@ function SpriteStressToy::createBackground( %this )
 function SpriteStressToy::createSpriteCountOverlay( %this )
 {    
     // Create the image font.
-    %object = new ImageFont();
+    %object = new TextSprite();
 
     // Set the overlay font object.    
     SpriteStressToy.OverlayFontObject = %object;
@@ -177,12 +177,13 @@ function SpriteStressToy::createSpriteCountOverlay( %this )
     %object.setBodyType( static );
        
     // Always try to configure a scene-object prior to adding it to a scene for best performance.
-
+	%object.Size = "24 24";
+	
     // Set the position.
-    %object.Position = "-50 -35";
+    %object.Position = "-35 -40";
 
     // Set the size.        
-    %object.FontSize = 2;
+    %object.FontSize = 5;
 
     // Set the text alignment.
     %object.TextAlignment = Left;
@@ -191,7 +192,7 @@ function SpriteStressToy::createSpriteCountOverlay( %this )
     %object.SceneLayer = 0;
     
     // Set a font image.
-    %object.Image = "ToyAssets:fancyFont";
+    %object.Font = "ToyAssets:OratorBoldFont";
     
     // Set the blend color.
     %object.BlendColor = White;
