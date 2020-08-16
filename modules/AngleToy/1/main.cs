@@ -100,11 +100,12 @@ function AngleToy::createBackground( %this )
     // Angle Labels
     for( %i = -165; %i <= 180; %i += 15 )
     {
-        %object = new ImageFont();
-        %object.Image = "ToyAssets:Font";
+        %object = new TextSprite();
+        %object.Font = "ToyAssets:ArialFont";
+		%object.Size = "1.5 1.5";
         %object.Position = Vector2Direction( %i, 30 ); // Polar ( 30, %i° )
         %object.Angle = %i - 90;
-        %object.FontSize = "1.5 2";
+        %object.FontSize = 1.5;
         %object.TextAlignment = "Center";
         %object.BlendColor = %textColor;
         %object.Text = %i;
@@ -189,28 +190,40 @@ function AngleToy::createMathematicalObjects( %this )
     %object.BlendColor = %lineSegmentColor;
     SandboxScene.add( %object );
     
-    %object = new ImageFont();
+    %object = new TextSprite();
     AngleToy.SinLabel = %object;
-    %object.Image = "ToyAssets:Font";
-    %object.FontSize = "1.5 1.5";
-    %object.TextAlignment = "Center";
+    %object.Font = "ToyAssets:OratorBoldFont";
+    %object.FontSize = 2;
+	%object.Size = "1.5 1.5";
+    %object.TextAlignment = Left;
+	%object.OverflowModeX = "visible";
     %object.BlendColor = %lineSegmentColor;
+	%object.Visible = 0;
+	%object.setBodyType( static );
     SandboxScene.add( %object );
     
-    %object = new ImageFont();
+    %object = new TextSprite();
     AngleToy.CosLabel = %object;
-    %object.Image = "ToyAssets:Font";
-    %object.FontSize = "1.5 1.5";
-    %object.TextAlignment = "Center";
+    %object.Font = "ToyAssets:OratorBoldFont";
+    %object.FontSize = 2;
+	%object.Size = "1.5 1.5";
+    %object.TextAlignment = Left;
+	%object.OverflowModeX = "visible";
     %object.BlendColor = %lineSegmentColor;
+	%object.Visible = 0;
+	%object.setBodyType( static );
     SandboxScene.add( %object );
     
-    %object = new ImageFont();
+    %object = new TextSprite();
     AngleToy.TanLabel = %object;
-    %object.Image = "ToyAssets:Font";
-    %object.FontSize = "1.5 1.5";
-    %object.TextAlignment = "Center";
+    %object.Font = "ToyAssets:OratorBoldFont";
+    %object.FontSize = 2;
+	%object.Size = "1.5 1.5";
+    %object.TextAlignment = Left;
+	%object.OverflowModeX = "visible";
     %object.BlendColor = %lineSegmentColor;
+	%object.Visible = 0;
+	%object.setBodyType( static );
     SandboxScene.add( %object );
 }
 
@@ -242,19 +255,22 @@ function AngleToy::onTouchDown(%this, %touchID, %worldPosition)
     AngleToy.SinLineSegment.draw( %worldPositionAtRadius20, %onYAxis );
     AngleToy.SinLabel.setPosition( Vector2Add( %onYAxis, "0 -1" ) );
     AngleToy.SinLabel.setText( mFloatLength( %sin, 4 ) );
-    
+    AngleToy.SinLabel.Visible = 1;
+	
     // Draw the Cosine
     %onXAxis = setWord( %worldPositionAtRadius20, 1, 0 ); // Set the Y-component to 0
     AngleToy.CosLineSegment.draw( %worldPositionAtRadius20, %onXAxis );
     AngleToy.CosLabel.setPosition( Vector2Add( %onXAxis, "-1 0" ) );
     AngleToy.CosLabel.setAngle( 90 );
     AngleToy.CosLabel.setText( mFloatLength( %cos, 4 ) );
-    
+    AngleToy.CosLabel.Visible = 1;
+	
     // Draw the Tangent
     AngleToy.TanLineSegment.drawTangent( %worldPositionAtRadius20, %tan, %angle );
     AngleToy.TanLabel.setPosition( %worldPositionAtRadius21 );
     AngleToy.TanLabel.setAngle( %angle - 90 );
     AngleToy.TanLabel.setText( mFloatLength( %tan, 4 ) );
+	AngleToy.TanLabel.Visible = 1;
 }
 
 //-----------------------------------------------------------------------------
