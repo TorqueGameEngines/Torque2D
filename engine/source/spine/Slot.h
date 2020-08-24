@@ -1,34 +1,36 @@
 /******************************************************************************
- * Spine Runtimes Software License
- * Version 2
- * 
- * Copyright (c) 2013, Esoteric Software
- * All rights reserved.
- * 
- * You are granted a perpetual, non-exclusive, non-sublicensable and
- * non-transferable license to install, execute and perform the Spine Runtimes
- * Software (the "Software") solely for internal use. Without the written
- * permission of Esoteric Software, you may not (a) modify, translate, adapt or
- * otherwise create derivative works, improvements of the Software or develop
- * new applications using the Software or (b) remove, delete, alter or obscure
- * any trademarks or any copyright, trademark, patent or other intellectual
- * property or proprietary rights notices on or in the Software, including
- * any copy thereof. Redistributions in binary or source form must include
- * this license and terms. THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY
+ * Spine Runtimes License Agreement
+ * Last updated January 1, 2020. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2020, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #ifndef SPINE_SLOT_H_
 #define SPINE_SLOT_H_
 
+#include <spine/dll.h>
 #include <spine/Bone.h>
 #include <spine/Attachment.h>
 #include <spine/SlotData.h>
@@ -37,26 +39,43 @@
 extern "C" {
 #endif
 
-struct spSkeleton;
-
 typedef struct spSlot {
 	spSlotData* const data;
-	struct spSkeleton* const skeleton;
 	spBone* const bone;
-	float r, g, b, a;
-	spAttachment* const attachment;
+	spColor color;
+	spColor* darkColor;
+	spAttachment* attachment;
+	int attachmentState;
+
+	int deformCapacity;
+	int deformCount;
+	float* deform;
+
+#ifdef __cplusplus
+	spSlot() :
+		data(0),
+		bone(0),
+		color(),
+		darkColor(0),
+		attachment(0),
+		attachmentState(0),
+		deformCapacity(0),
+		deformCount(0),
+		deform(0) {
+	}
+#endif
 } spSlot;
 
-spSlot* spSlot_create (spSlotData* data, struct spSkeleton* skeleton, spBone* bone);
-void spSlot_dispose (spSlot* self);
+SP_API spSlot* spSlot_create (spSlotData* data, spBone* bone);
+SP_API void spSlot_dispose (spSlot* self);
 
 /* @param attachment May be 0 to clear the attachment for the slot. */
-void spSlot_setAttachment (spSlot* self, spAttachment* attachment);
+SP_API void spSlot_setAttachment (spSlot* self, spAttachment* attachment);
 
-void spSlot_setAttachmentTime (spSlot* self, float time);
-float spSlot_getAttachmentTime (const spSlot* self);
+SP_API void spSlot_setAttachmentTime (spSlot* self, float time);
+SP_API float spSlot_getAttachmentTime (const spSlot* self);
 
-void spSlot_setToSetupPose (spSlot* self);
+SP_API void spSlot_setToSetupPose (spSlot* self);
 
 #ifdef SPINE_SHORT_NAMES
 typedef spSlot Slot;

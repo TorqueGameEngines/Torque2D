@@ -1670,6 +1670,8 @@ void GuiControl::renderText(Point2I offset, Point2I extent, const char *text, Gu
 
 void GuiControl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent)
 {
+   lastGuiEvent;
+
    if(GuiControl::smCursorChanged != -1 && !isMouseLocked())
    {
       // We've already changed the cursor, 

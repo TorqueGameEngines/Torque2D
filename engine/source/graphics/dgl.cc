@@ -23,7 +23,7 @@
 #include "math/mPoint.h"
 #include "graphics/TextureManager.h"
 #include "graphics/dgl.h"
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #include "math/mPoint.h"
 #include "math/mRect.h"
 #include "graphics/gFont.h"

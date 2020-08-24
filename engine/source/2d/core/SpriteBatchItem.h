@@ -45,7 +45,25 @@ class SpriteBatchItem : public ImageFrameProvider
     typedef ImageFrameProvider Parent;
 
 public:
-    // Represents a logical position.
+	
+	// Holds items required by call to SubmitTriangles.  Currently, this is only used when
+	// mTriangleRun is true due to processing of Spine's mesh attachments.
+	typedef struct
+	{
+		U32 vertexCount;
+		vector<Vector2> vertexArray;
+		vector<Vector2> textureArray;
+		vector<ColorF>  colorArray;
+
+		inline void size(U32 newSize) {
+			vertexCount = newSize;
+			vertexArray.resize(newSize);
+			textureArray.resize(newSize);
+			colorArray.resize(newSize);
+		}
+	} drawData;
+
+	// Represents a logical position.
     struct LogicalPosition : public IFactoryObjectReset
     {
         const static S32 MAX_ARGUMENTS = 6;
@@ -199,7 +217,12 @@ protected:
 
     Vector2             mLocalPosition;
     Vector2             mExplicitVerts[4];
-    F32                 mLocalAngle;
+	Vector2             mExplicitUVs[4];
+
+	bool				mTriangleRun;
+	drawData			mDrawData;
+
+	F32                 mLocalAngle;
     Vector2             mSize;
     F32                 mDepth;
     bool                mFlipX;
@@ -249,10 +272,14 @@ public:
     inline void setExplicitMode( const bool explicitMode ) { mExplicitMode = explicitMode; }
     inline bool getExplicitMode( void ) const { return mExplicitMode; }
 
-    inline void setLocalPosition( const Vector2& localPosition ) { mLocalPosition = localPosition; mLocalTransformDirty = true; }
+	inline void setTriangleRun(const bool usesTriangles) { mTriangleRun = usesTriangles; }
+	inline bool getTriangleRun(void) const { return mTriangleRun; }
+	inline drawData *getDrawData(void) { return &mDrawData; }
+
+	inline void setLocalPosition( const Vector2& localPosition ) { mLocalPosition = localPosition; mLocalTransformDirty = true; }
     inline Vector2 getLocalPosition( void ) const { return mLocalPosition; }
 
-    void setExplicitVertices( const Vector2* explicitVertices );
+    void setExplicitVertices( const F32* vertices, const F32* uvs = 0 );
 
     inline void setLocalAngle( const F32 localAngle ) { mLocalAngle = localAngle; mLocalTransformDirty = true; }
     inline F32 getLocalAngle( void ) const { return mLocalAngle; }

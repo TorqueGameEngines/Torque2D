@@ -65,6 +65,7 @@ private:
     bool                            mBatchTransformDirty;
     U32                             mBatchTransformId;
 
+	b2AABB							mLocalAABB;
     Vector2                         mLocalExtents;
     bool                            mLocalExtentsDirty;
 
@@ -86,6 +87,7 @@ public:
     inline void setLocalExtentsDirty( void ) { mLocalExtentsDirty = true; }
     inline bool getLocalExtentsDirty( void ) const { return mLocalExtentsDirty; }
     inline const Vector2& getLocalExtents( void ) { if ( getLocalExtentsDirty() ) updateLocalExtents(); return mLocalExtents; }
+	inline const b2AABB& getLocalAABB(void) { if (getLocalExtentsDirty()) updateLocalExtents(); return mLocalAABB; }
 
     void createQueryProxy( SpriteBatchItem* pSpriteBatchItem );
     void destroyQueryProxy( SpriteBatchItem* pSpriteBatchItem );
@@ -201,7 +203,7 @@ protected:
     void integrateSprites(const F32 totalTime, const F32 elapsedTime, DebugStats* pDebugStats);
 
     void setBatchTransform( const b2Transform& batchTransform );
-    void updateLocalExtents( void );
+    void updateLocalExtents(const b2AABB *precalculatedLocalAABB = NULL);
 
     void createSpriteBatchQuery( void );
     void destroySpriteBatchQuery( void );

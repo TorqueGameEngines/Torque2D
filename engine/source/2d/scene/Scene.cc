@@ -222,6 +222,9 @@ bool Scene::onAdd()
     // Set contact filter.
     mpWorld->SetContactFilter( &mContactFilter );
 
+    const b2ParticleSystemDef particleSystemDef;
+    mParticleSystem = mpWorld->CreateParticleSystem(&particleSystemDef);
+
     // Set contact listener.
     mpWorld->SetContactListener( this );
 

@@ -85,8 +85,11 @@ public:
 	/// Get the maximum friction torque in N*m.
 	float32 GetMaxTorque() const;
 
-    /// Get the correction factor.
-    float32 GetCorrectionFactor() const;
+	/// Set the position correction factor in the range [0,1].
+	void SetCorrectionFactor(float32 factor);
+
+	/// Get the position correction factor in the range [0,1].
+	float32 GetCorrectionFactor() const;
 
 	/// Dump to b2Log
 	void Dump();

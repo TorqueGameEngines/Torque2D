@@ -1,29 +1,30 @@
 /******************************************************************************
- * Spine Runtimes Software License
- * Version 2
- * 
- * Copyright (c) 2013, Esoteric Software
- * All rights reserved.
- * 
- * You are granted a perpetual, non-exclusive, non-sublicensable and
- * non-transferable license to install, execute and perform the Spine Runtimes
- * Software (the "Software") solely for internal use. Without the written
- * permission of Esoteric Software, you may not (a) modify, translate, adapt or
- * otherwise create derivative works, improvements of the Software or develop
- * new applications using the Software or (b) remove, delete, alter or obscure
- * any trademarks or any copyright, trademark, patent or other intellectual
- * property or proprietary rights notices on or in the Software, including
- * any copy thereof. Redistributions in binary or source form must include
- * this license and terms. THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY
+ * Spine Runtimes License Agreement
+ * Last updated January 1, 2020. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2020, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #include <spine/SkeletonBounds.h>
@@ -103,18 +104,18 @@ void spSkeletonBounds_update (spSkeletonBounds* self, spSkeleton* skeleton, int/
 	int i;
 
 	_spSkeletonBounds* internal = SUB_CAST(_spSkeletonBounds, self);
-	if (internal->capacity < skeleton->slotCount) {
+	if (internal->capacity < skeleton->slotsCount) {
 		spPolygon** newPolygons;
 
 		FREE(self->boundingBoxes);
-		self->boundingBoxes = MALLOC(spBoundingBoxAttachment*, skeleton->slotCount);
+		self->boundingBoxes = MALLOC(spBoundingBoxAttachment*, skeleton->slotsCount);
 
-		newPolygons = CALLOC(spPolygon*, skeleton->slotCount);
-		memcpy(newPolygons, self->polygons, internal->capacity);
+		newPolygons = CALLOC(spPolygon*, skeleton->slotsCount);
+		memcpy(newPolygons, self->polygons, sizeof(spPolygon*) * internal->capacity);
 		FREE(self->polygons);
 		self->polygons = newPolygons;
 
-		internal->capacity = skeleton->slotCount;
+		internal->capacity = skeleton->slotsCount;
 	}
 
 	self->minX = (float)INT_MAX;
@@ -123,23 +124,25 @@ void spSkeletonBounds_update (spSkeletonBounds* self, spSkeleton* skeleton, int/
 	self->maxY = (float)INT_MIN;
 
 	self->count = 0;
-	for (i = 0; i < skeleton->slotCount; ++i) {
+	for (i = 0; i < skeleton->slotsCount; ++i) {
 		spPolygon* polygon;
 		spBoundingBoxAttachment* boundingBox;
+		spAttachment* attachment;
 
 		spSlot* slot = skeleton->slots[i];
-		spAttachment* attachment = slot->attachment;
-		if (!attachment || attachment->type != ATTACHMENT_BOUNDING_BOX) continue;
+		if (!slot->bone->active) continue;
+		attachment = slot->attachment;
+		if (!attachment || attachment->type != SP_ATTACHMENT_BOUNDING_BOX) continue;
 		boundingBox = (spBoundingBoxAttachment*)attachment;
 		self->boundingBoxes[self->count] = boundingBox;
 
 		polygon = self->polygons[self->count];
-		if (!polygon || polygon->capacity < boundingBox->verticesCount) {
+		if (!polygon || polygon->capacity < boundingBox->super.worldVerticesLength) {
 			if (polygon) spPolygon_dispose(polygon);
-			self->polygons[self->count] = polygon = spPolygon_create(boundingBox->verticesCount);
+			self->polygons[self->count] = polygon = spPolygon_create(boundingBox->super.worldVerticesLength);
 		}
-		polygon->count = boundingBox->verticesCount;
-		spBoundingBoxAttachment_computeWorldVertices(boundingBox, skeleton->x, skeleton->y, slot->bone, polygon->vertices);
+		polygon->count = boundingBox->super.worldVerticesLength;
+		spVertexAttachment_computeWorldVertices(SUPER(boundingBox), slot, 0, polygon->count, polygon->vertices, 0, 2);
 
 		if (updateAabb) {
 			int ii = 0;
@@ -153,7 +156,7 @@ void spSkeletonBounds_update (spSkeletonBounds* self, spSkeleton* skeleton, int/
 			}
 		}
 
-		++self->count;
+		self->count++;
 	}
 }
 
@@ -163,8 +166,11 @@ int/*bool*/spSkeletonBounds_aabbContainsPoint (spSkeletonBounds* self, float x, 
 
 int/*bool*/spSkeletonBounds_aabbIntersectsSegment (spSkeletonBounds* self, float x1, float y1, float x2, float y2) {
 	float m, x, y;
-	if ((x1 <= self->minX && x2 <= self->minX) || (y1 <= self->minY && y2 <= self->minY) || (x1 >= self->maxX && x2 >= self->maxX)
-			|| (y1 >= self->maxY && y2 >= self->maxY)) return 0;
+	if ((x1 <= self->minX && x2 <= self->minX)
+		|| (y1 <= self->minY && y2 <= self->minY)
+		|| (x1 >= self->maxX && x2 >= self->maxX)
+		|| (y1 >= self->maxY && y2 >= self->maxY)
+	) return 0;
 	m = (y2 - y1) / (x2 - x1);
 	y = m * (self->minX - x1) + y1;
 	if (y > self->minY && y < self->maxY) return 1;

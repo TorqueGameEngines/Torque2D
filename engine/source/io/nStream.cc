@@ -23,7 +23,7 @@
 #include "platform/platform.h"
 #include "stream.h"
 #include "string/stringTable.h"
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #include "io/rawData.h"
 #include "io/byteBuffer.h"
 

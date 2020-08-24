@@ -97,6 +97,7 @@ void SpriteBatchItem::resetState( void )
 
     mVisible = true;
     mExplicitMode = false;
+	mTriangleRun = false;
 
     mLocalPosition.SetZero();
     for (U32 i = 0; i < 4; i++)
@@ -222,24 +223,64 @@ void SpriteBatchItem::render( BatchRender* pBatchRenderer, const SceneRenderRequ
     pBatchRenderer->setAlphaTestMode( pSceneRenderRequest );
 
     // Render.
-    Parent::render( mFlipX, mFlipY,
-                    mRenderOOBB[0],
-                    mRenderOOBB[1],
-                    mRenderOOBB[2],
-                    mRenderOOBB[3],
-                    pBatchRenderer );
+	if (mTriangleRun) {
+		Parent::render(
+			mDrawData.vertexCount,
+			mDrawData.vertexArray.data(),
+			mDrawData.textureArray.data(),
+			mDrawData.colorArray.data(),
+			pBatchRenderer
+		);
+	}
+	else if (mExplicitMode) {
+		Parent::render(mFlipX, mFlipY,
+			mRenderOOBB[0],
+			mRenderOOBB[1],
+			mRenderOOBB[2],
+			mRenderOOBB[3],
+			mExplicitUVs[0],
+			mExplicitUVs[1],
+			mExplicitUVs[2],
+			mExplicitUVs[3],
+			pBatchRenderer);
+	}
+	else {
+		Parent::render(mFlipX, mFlipY,
+			mRenderOOBB[0],
+			mRenderOOBB[1],
+			mRenderOOBB[2],
+			mRenderOOBB[3],
+			pBatchRenderer);
+	}
 }
 
 //------------------------------------------------------------------------------
 
-void SpriteBatchItem::setExplicitVertices( const Vector2* explicitVertices )
+// When something else (like an animation runtime) is controlling the vertices and uv's
+// just past them through to the render stage.
+void SpriteBatchItem::setExplicitVertices( const F32* vertices, const F32* uvs)
 {
-    mExplicitMode = true;
+	mExplicitMode = true;
 
-    mExplicitVerts[0] = explicitVertices[0];
-    mExplicitVerts[1] = explicitVertices[1];
-    mExplicitVerts[2] = explicitVertices[2];
-    mExplicitVerts[3] = explicitVertices[3];
+	mExplicitVerts[0].x = vertices[0];
+	mExplicitVerts[0].y = vertices[1];
+	mExplicitVerts[1].x = vertices[2];
+	mExplicitVerts[1].y = vertices[3];
+	mExplicitVerts[2].x = vertices[4];
+	mExplicitVerts[2].y = vertices[5];
+	mExplicitVerts[3].x = vertices[6];
+	mExplicitVerts[3].y = vertices[7];
+
+	if (uvs) {
+		mExplicitUVs[0].x = uvs[0];
+		mExplicitUVs[0].y = uvs[1];
+		mExplicitUVs[1].x = uvs[2];
+		mExplicitUVs[1].y = uvs[3];
+		mExplicitUVs[2].x = uvs[4];
+		mExplicitUVs[2].y = uvs[5];
+		mExplicitUVs[3].x = uvs[6];
+		mExplicitUVs[3].y = uvs[7];
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -256,19 +297,19 @@ void SpriteBatchItem::updateLocalTransform( void )
     if ( !mLocalTransformDirty )
         return;
 
-    // Set local transform.
-    b2Transform localTransform;
-    localTransform.p = mLocalPosition;
-    localTransform.q.Set( mLocalAngle );
+	// Set local transform.
+	b2Transform localTransform;
+	localTransform.p = mLocalPosition;
+	localTransform.q.Set(mLocalAngle);
 
-    // Calculate half size.
-    const F32 halfWidth = mSize.x * 0.5f;
-    const F32 halfHeight = mSize.y * 0.5f;
-
-    // Set local size vertices.
+	// Set local size vertices.
     if (!mExplicitMode)
     {
-        mLocalOOBB[0].Set( -halfWidth, -halfHeight );
+		// Calculate half size.
+		const F32 halfWidth = mSize.x * 0.5f;
+		const F32 halfHeight = mSize.y * 0.5f;
+
+		mLocalOOBB[0].Set( -halfWidth, -halfHeight );
         mLocalOOBB[1].Set( +halfWidth, -halfHeight );
         mLocalOOBB[2].Set( +halfWidth, +halfHeight );
         mLocalOOBB[3].Set( -halfWidth, +halfHeight );

@@ -18,7 +18,7 @@
     <ProjectGuid>{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}</ProjectGuid>
     <RootNamespace>TorqueGame</RootNamespace>
     <ProjectName>Torque2D</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -247,7 +247,7 @@
     <ClCompile Include="..\..\source\2d\assets\ParticleAssetEmitter.cc" />
     <ClCompile Include="..\..\source\2d\assets\ParticleAssetField.cc" />
     <ClCompile Include="..\..\source\2d\assets\ParticleAssetFieldCollection.cc" />
-    <ClCompile Include="..\..\source\2d\assets\SkeletonAsset.cc" />
+    <ClCompile Include="..\..\source\2d\assets\SpineAsset.cc" />
     <ClCompile Include="..\..\source\2d\controllers\AmbientForceController.cc" />
     <ClCompile Include="..\..\source\2d\controllers\core\GroupedSceneController.cc" />
     <ClCompile Include="..\..\source\2d\controllers\core\PickingSceneController.cc" />
@@ -272,12 +272,15 @@
     <ClCompile Include="..\..\source\2d\gui\SceneWindow.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\CompositeSprite.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\ParticlePlayer.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\Path.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectList.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\SceneObjectSet.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\Scroller.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\LightObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\ShapeVector.cc" />
-    <ClCompile Include="..\..\source\2d\sceneobject\SkeletonObject.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\SpineCollisionProxy.cc" />
+    <ClCompile Include="..\..\source\2d\sceneobject\SpineObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\Sprite.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\TextSprite.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\Trigger.cc" />
@@ -316,10 +319,13 @@
     <ClCompile Include="..\..\source\Box2D\Collision\Shapes\b2PolygonShape.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2BlockAllocator.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Draw.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Common\b2FreeList.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Math.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Settings.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2StackAllocator.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Common\b2Stat.cpp" />
     <ClCompile Include="..\..\source\Box2D\Common\b2Timer.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Common\b2TrackedBlock.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\b2Body.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\b2ContactManager.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\b2Fixture.cpp" />
@@ -347,6 +353,11 @@
     <ClCompile Include="..\..\source\Box2D\Dynamics\Joints\b2RopeJoint.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\Joints\b2WeldJoint.cpp" />
     <ClCompile Include="..\..\source\Box2D\Dynamics\Joints\b2WheelJoint.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleAssembly.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleGroup.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2ParticleSystem.cpp" />
+    <ClCompile Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.cpp" />
     <ClCompile Include="..\..\source\Box2D\Rope\b2Rope.cpp" />
     <ClCompile Include="..\..\source\collection\bitTables.cc" />
     <ClCompile Include="..\..\source\collection\hashTable.cc" />
@@ -371,7 +382,7 @@
     <ClCompile Include="..\..\source\graphics\bitmapBmp.cc" />
     <ClCompile Include="..\..\source\graphics\bitmapJpeg.cc" />
     <ClCompile Include="..\..\source\graphics\bitmapPng.cc" />
-    <ClCompile Include="..\..\source\graphics\color.cc" />
+    <ClCompile Include="..\..\source\graphics\gColor.cc" />
     <ClCompile Include="..\..\source\graphics\dgl.cc" />
     <ClCompile Include="..\..\source\graphics\dglMatrix.cc" />
     <ClCompile Include="..\..\source\graphics\DynamicTexture.cc" />
@@ -589,6 +600,7 @@
     <ClCompile Include="..\..\source\spine\Animation.c" />
     <ClCompile Include="..\..\source\spine\AnimationState.c" />
     <ClCompile Include="..\..\source\spine\AnimationStateData.c" />
+    <ClCompile Include="..\..\source\spine\Array.c" />
     <ClCompile Include="..\..\source\spine\Atlas.c" />
     <ClCompile Include="..\..\source\spine\AtlasAttachmentLoader.c" />
     <ClCompile Include="..\..\source\spine\Attachment.c" />
@@ -596,18 +608,34 @@
     <ClCompile Include="..\..\source\spine\Bone.c" />
     <ClCompile Include="..\..\source\spine\BoneData.c" />
     <ClCompile Include="..\..\source\spine\BoundingBoxAttachment.c" />
+    <ClCompile Include="..\..\source\spine\ClippingAttachment.c" />
+    <ClCompile Include="..\..\source\spine\Color.c" />
     <ClCompile Include="..\..\source\spine\Event.c" />
     <ClCompile Include="..\..\source\spine\EventData.c" />
     <ClCompile Include="..\..\source\spine\extension.c" />
+    <ClCompile Include="..\..\source\spine\IkConstraint.c" />
+    <ClCompile Include="..\..\source\spine\IkConstraintData.c" />
     <ClCompile Include="..\..\source\spine\Json.c" />
+    <ClCompile Include="..\..\source\spine\MeshAttachment.c" />
+    <ClCompile Include="..\..\source\spine\PathAttachment.c" />
+    <ClCompile Include="..\..\source\spine\PathConstraint.c" />
+    <ClCompile Include="..\..\source\spine\PathConstraintData.c" />
+    <ClCompile Include="..\..\source\spine\PointAttachment.c" />
     <ClCompile Include="..\..\source\spine\RegionAttachment.c" />
     <ClCompile Include="..\..\source\spine\Skeleton.c" />
+    <ClCompile Include="..\..\source\spine\SkeletonBinary.c" />
     <ClCompile Include="..\..\source\spine\SkeletonBounds.c" />
+    <ClCompile Include="..\..\source\spine\SkeletonClipping.c" />
     <ClCompile Include="..\..\source\spine\SkeletonData.c" />
     <ClCompile Include="..\..\source\spine\SkeletonJson.c" />
     <ClCompile Include="..\..\source\spine\Skin.c" />
     <ClCompile Include="..\..\source\spine\Slot.c" />
     <ClCompile Include="..\..\source\spine\SlotData.c" />
+    <ClCompile Include="..\..\source\spine\TransformConstraint.c" />
+    <ClCompile Include="..\..\source\spine\TransformConstraintData.c" />
+    <ClCompile Include="..\..\source\spine\Triangulator.c" />
+    <ClCompile Include="..\..\source\spine\VertexAttachment.c" />
+    <ClCompile Include="..\..\source\spine\VertexEffect.c" />
     <ClCompile Include="..\..\source\string\findMatch.cc" />
     <ClCompile Include="..\..\source\string\stringBuffer.cc" />
     <ClCompile Include="..\..\source\string\stringStack.cc" />
@@ -651,8 +679,8 @@
     <ClInclude Include="..\..\source\2d\assets\ParticleAssetField.h" />
     <ClInclude Include="..\..\source\2d\assets\ParticleAssetFieldCollection.h" />
     <ClInclude Include="..\..\source\2d\assets\ParticleAsset_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\2d\assets\SkeletonAsset.h" />
-    <ClInclude Include="..\..\source\2d\assets\SkeletonAsset_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\assets\SpineAsset.h" />
+    <ClInclude Include="..\..\source\2d\assets\SpineAsset_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\controllers\AmbientForceController.h" />
     <ClInclude Include="..\..\source\2d\controllers\AmbientForceController_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\controllers\core\GroupedSceneController.h" />
@@ -694,6 +722,8 @@
     <ClInclude Include="..\..\source\2d\sceneobject\CompositeSprite_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ParticlePlayer.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ParticlePlayer_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\Path.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\Path_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObject.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObjectList.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObjectMoveToEvent.h" />
@@ -703,10 +733,13 @@
     <ClInclude Include="..\..\source\2d\sceneobject\SceneObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Scroller.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Scroller_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\LightObject.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\LightObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ShapeVector.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ShapeVector_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\2d\sceneobject\SkeletonObject.h" />
-    <ClInclude Include="..\..\source\2d\sceneobject\SkeletonObject_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\SpineCollisionProxy.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\SpineObject.h" />
+    <ClInclude Include="..\..\source\2d\sceneobject\SpineObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Sprite.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Sprite_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\TextSprite.h" />
@@ -768,11 +801,17 @@
     <ClInclude Include="..\..\source\Box2D\Collision\Shapes\b2Shape.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2BlockAllocator.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Draw.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2FreeList.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2GrowableBuffer.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2GrowableStack.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2IntrusiveList.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Math.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Settings.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2SlabAllocator.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2StackAllocator.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2Stat.h" />
     <ClInclude Include="..\..\source\Box2D\Common\b2Timer.h" />
+    <ClInclude Include="..\..\source\Box2D\Common\b2TrackedBlock.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\b2Body.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\b2ContactManager.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\b2Fixture.h" />
@@ -801,6 +840,12 @@
     <ClInclude Include="..\..\source\Box2D\Dynamics\Joints\b2RopeJoint.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\Joints\b2WeldJoint.h" />
     <ClInclude Include="..\..\source\Box2D\Dynamics\Joints\b2WheelJoint.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2Particle.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleAssembly.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleGroup.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2ParticleSystem.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2StackQueue.h" />
+    <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h" />
     <ClInclude Include="..\..\source\Box2D\Rope\b2Rope.h" />
     <ClInclude Include="..\..\source\collection\bitMatrix.h" />
     <ClInclude Include="..\..\source\collection\bitSet.h" />
@@ -859,8 +904,8 @@
     <ClInclude Include="..\..\source\game\gameInterface.h" />
     <ClInclude Include="..\..\source\game\gameInterface_ScriptBinding.h" />
     <ClInclude Include="..\..\source\game\version_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\graphics\color.h" />
-    <ClInclude Include="..\..\source\graphics\color_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\graphics\gColor.h" />
+    <ClInclude Include="..\..\source\graphics\gColor_ScriptBinding.h" />
     <ClInclude Include="..\..\source\graphics\dgl.h" />
     <ClInclude Include="..\..\source\graphics\dglMac_Scriptbinding.h" />
     <ClInclude Include="..\..\source\graphics\dgl_ScriptBinding.h" />
@@ -1168,6 +1213,7 @@
     <ClInclude Include="..\..\source\spine\Animation.h" />
     <ClInclude Include="..\..\source\spine\AnimationState.h" />
     <ClInclude Include="..\..\source\spine\AnimationStateData.h" />
+    <ClInclude Include="..\..\source\spine\Array.h" />
     <ClInclude Include="..\..\source\spine\Atlas.h" />
     <ClInclude Include="..\..\source\spine\AtlasAttachmentLoader.h" />
     <ClInclude Include="..\..\source\spine\Attachment.h" />
@@ -1175,19 +1221,36 @@
     <ClInclude Include="..\..\source\spine\Bone.h" />
     <ClInclude Include="..\..\source\spine\BoneData.h" />
     <ClInclude Include="..\..\source\spine\BoundingBoxAttachment.h" />
+    <ClInclude Include="..\..\source\spine\ClippingAttachment.h" />
+    <ClInclude Include="..\..\source\spine\Color.h" />
+    <ClInclude Include="..\..\source\spine\dll.h" />
     <ClInclude Include="..\..\source\spine\Event.h" />
     <ClInclude Include="..\..\source\spine\EventData.h" />
     <ClInclude Include="..\..\source\spine\extension.h" />
+    <ClInclude Include="..\..\source\spine\IkConstraint.h" />
+    <ClInclude Include="..\..\source\spine\IkConstraintData.h" />
     <ClInclude Include="..\..\source\spine\Json.h" />
+    <ClInclude Include="..\..\source\spine\MeshAttachment.h" />
+    <ClInclude Include="..\..\source\spine\PathAttachment.h" />
+    <ClInclude Include="..\..\source\spine\PathConstraint.h" />
+    <ClInclude Include="..\..\source\spine\PathConstraintData.h" />
+    <ClInclude Include="..\..\source\spine\PointAttachment.h" />
     <ClInclude Include="..\..\source\spine\RegionAttachment.h" />
     <ClInclude Include="..\..\source\spine\Skeleton.h" />
+    <ClInclude Include="..\..\source\spine\SkeletonBinary.h" />
     <ClInclude Include="..\..\source\spine\SkeletonBounds.h" />
+    <ClInclude Include="..\..\source\spine\SkeletonClipping.h" />
     <ClInclude Include="..\..\source\spine\SkeletonData.h" />
     <ClInclude Include="..\..\source\spine\SkeletonJson.h" />
     <ClInclude Include="..\..\source\spine\Skin.h" />
     <ClInclude Include="..\..\source\spine\Slot.h" />
     <ClInclude Include="..\..\source\spine\SlotData.h" />
     <ClInclude Include="..\..\source\spine\spine.h" />
+    <ClInclude Include="..\..\source\spine\TransformConstraint.h" />
+    <ClInclude Include="..\..\source\spine\TransformConstraintData.h" />
+    <ClInclude Include="..\..\source\spine\Triangulator.h" />
+    <ClInclude Include="..\..\source\spine\VertexAttachment.h" />
+    <ClInclude Include="..\..\source\spine\VertexEffect.h" />
     <ClInclude Include="..\..\source\string\findMatch.h" />
     <ClInclude Include="..\..\source\string\stringBuffer.h" />
     <ClInclude Include="..\..\source\string\stringBuffer_ScriptBinding.h" />
@@ -1285,6 +1348,9 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="Torque 2D.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\source\Box2D\Particle\b2ParticleAssembly.neon.s" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

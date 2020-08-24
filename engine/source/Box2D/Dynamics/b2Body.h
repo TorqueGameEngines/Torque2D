@@ -1,5 +1,6 @@
 /*
 * Copyright (c) 2006-2011 Erin Catto http://www.box2d.org
+* Copyright (c) 2013 Google, Inc.
 *
 * This software is provided 'as-is', without any express or implied
 * warranty.  In no event will the authors be held liable for any damages
@@ -68,6 +69,11 @@ struct b2BodyDef
 		active = true;
 		gravityScale = 1.0f;
 	}
+
+#if LIQUIDFUN_EXTERNAL_LANGUAGE_API
+	/// Set position with direct floats.
+	void SetPosition(float32 positionX, float32 positionY);
+#endif // LIQUIDFUN_EXTERNAL_LANGUAGE_API
 
 	/// The body type: static, kinematic, or dynamic.
 	/// Note: if a dynamic body would have zero mass, the mass is set to one.
@@ -154,8 +160,8 @@ public:
 	void DestroyFixture(b2Fixture* fixture);
 
 	/// Set the position of the body's origin and rotation.
-	/// This breaks any contacts and wakes the other bodies.
 	/// Manipulating a body's transform may cause non-physical behavior.
+	/// Note: contacts are updated on the next call to b2World::Step.
 	/// @param position the world position of the body's local origin.
 	/// @param angle the world rotation in radians.
 	void SetTransform(const b2Vec2& position, float32 angle);
@@ -324,7 +330,7 @@ public:
 	void SetAwake(bool flag);
 
 	/// Get the sleeping state of this body.
-	/// @return true if the body is sleeping.
+	/// @return true if the body is awake.
 	bool IsAwake() const;
 
 	/// Set the active state of the body. An inactive body is not
@@ -383,6 +389,18 @@ public:
 	/// Dump this body to a log file
 	void Dump();
 
+#if LIQUIDFUN_EXTERNAL_LANGUAGE_API
+public:
+	/// Get x-coordinate of position.
+	float32 GetPositionX() const { return GetPosition().x; }
+
+	/// Get y-coordinate of position.
+	float32 GetPositionY() const { return GetPosition().y; }
+
+	/// Set b2Transform using direct floats.
+	void SetTransform(float32 positionX, float32 positionY, float32 angle);
+#endif // LIQUIDFUN_EXTERNAL_LANGUAGE_API
+
 private:
 
 	friend class b2World;
@@ -390,7 +408,7 @@ private:
 	friend class b2ContactManager;
 	friend class b2ContactSolver;
 	friend class b2Contact;
-	
+
 	friend class b2DistanceJoint;
 	friend class b2FrictionJoint;
 	friend class b2GearJoint;
@@ -402,6 +420,9 @@ private:
 	friend class b2RopeJoint;
 	friend class b2WeldJoint;
 	friend class b2WheelJoint;
+
+	friend class b2ParticleSystem;
+	friend class b2ParticleGroup;
 
 	// m_flags
 	enum
@@ -434,6 +455,7 @@ private:
 	int32 m_islandIndex;
 
 	b2Transform m_xf;		// the body origin transform
+	b2Transform m_xf0;		// the previous transform for particle simulation
 	b2Sweep m_sweep;		// the swept motion for CCD
 
 	b2Vec2 m_linearVelocity;
@@ -856,5 +878,17 @@ inline const b2World* b2Body::GetWorld() const
 {
 	return m_world;
 }
+
+#if LIQUIDFUN_EXTERNAL_LANGUAGE_API
+inline void b2BodyDef::SetPosition(float32 positionX, float32 positionY)
+{
+	position.Set(positionX, positionY);
+}
+
+inline void b2Body::SetTransform(float32 positionX, float32 positionY, float32 angle)
+{
+	SetTransform(b2Vec2(positionX, positionY), angle);
+}
+#endif // LIQUIDFUN_EXTERNAL_LANGUAGE_API
 
 #endif

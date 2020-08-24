@@ -27,7 +27,7 @@ Torque2D_DEBUG.exe
 Torque2DGame.app
 Torque2DGame_Debug.app
 linkmap.txt
-.vs/
+**/.vs/**
 
 # Compiled source #
 ###################

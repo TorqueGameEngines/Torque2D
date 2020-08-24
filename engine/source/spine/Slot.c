@@ -1,82 +1,81 @@
 /******************************************************************************
- * Spine Runtimes Software License
- * Version 2
- * 
- * Copyright (c) 2013, Esoteric Software
- * All rights reserved.
- * 
- * You are granted a perpetual, non-exclusive, non-sublicensable and
- * non-transferable license to install, execute and perform the Spine Runtimes
- * Software (the "Software") solely for internal use. Without the written
- * permission of Esoteric Software, you may not (a) modify, translate, adapt or
- * otherwise create derivative works, improvements of the Software or develop
- * new applications using the Software or (b) remove, delete, alter or obscure
- * any trademarks or any copyright, trademark, patent or other intellectual
- * property or proprietary rights notices on or in the Software, including
- * any copy thereof. Redistributions in binary or source form must include
- * this license and terms. THIS SOFTWARE IS PROVIDED BY ESOTERIC SOFTWARE
- * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
- * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
- * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTARE BE LIABLE FOR ANY
+ * Spine Runtimes License Agreement
+ * Last updated January 1, 2020. Replaces all prior versions.
+ *
+ * Copyright (c) 2013-2020, Esoteric Software LLC
+ *
+ * Integration of the Spine Runtimes into software or otherwise creating
+ * derivative works of the Spine Runtimes is permitted under the terms and
+ * conditions of Section 2 of the Spine Editor License Agreement:
+ * http://esotericsoftware.com/spine-editor-license
+ *
+ * Otherwise, it is permitted to integrate the Spine Runtimes into software
+ * or otherwise create derivative works of the Spine Runtimes (collectively,
+ * "Products"), provided that each user of the Products must obtain their own
+ * Spine Editor license and redistribution of the Products in any form must
+ * include this license and copyright notice.
+ *
+ * THE SPINE RUNTIMES ARE PROVIDED BY ESOTERIC SOFTWARE LLC "AS IS" AND ANY
+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL ESOTERIC SOFTWARE LLC BE LIABLE FOR ANY
  * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
- * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
- * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES,
+ * BUSINESS INTERRUPTION, OR LOSS OF USE, DATA, OR PROFITS) HOWEVER CAUSED AND
  * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
- * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * THE SPINE RUNTIMES, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *****************************************************************************/
 
 #include <spine/Slot.h>
 #include <spine/extension.h>
-#include <spine/Skeleton.h>
 
 typedef struct {
 	spSlot super;
 	float attachmentTime;
 } _spSlot;
 
-spSlot* spSlot_create (spSlotData* data, spSkeleton* skeleton, spBone* bone) {
+spSlot* spSlot_create (spSlotData* data, spBone* bone) {
 	spSlot* self = SUPER(NEW(_spSlot));
 	CONST_CAST(spSlotData*, self->data) = data;
-	CONST_CAST(spSkeleton*, self->skeleton) = skeleton;
 	CONST_CAST(spBone*, self->bone) = bone;
+	spColor_setFromFloats(&self->color, 1, 1, 1, 1);
+	self->darkColor = data->darkColor == 0 ? 0 : spColor_create();
 	spSlot_setToSetupPose(self);
 	return self;
 }
 
 void spSlot_dispose (spSlot* self) {
+	FREE(self->deform);
+	FREE(self->darkColor);
 	FREE(self);
 }
 
 void spSlot_setAttachment (spSlot* self, spAttachment* attachment) {
+	if (attachment == self->attachment) return;
 	CONST_CAST(spAttachment*, self->attachment) = attachment;
-	SUB_CAST(_spSlot, self) ->attachmentTime = self->skeleton->time;
+	SUB_CAST(_spSlot, self)->attachmentTime = self->bone->skeleton->time;
+	self->deformCount = 0;
 }
 
 void spSlot_setAttachmentTime (spSlot* self, float time) {
-	SUB_CAST(_spSlot, self) ->attachmentTime = self->skeleton->time - time;
+	SUB_CAST(_spSlot, self)->attachmentTime = self->bone->skeleton->time - time;
 }
 
 float spSlot_getAttachmentTime (const spSlot* self) {
-	return self->skeleton->time - SUB_CAST(_spSlot, self) ->attachmentTime;
+	return self->bone->skeleton->time - SUB_CAST(_spSlot, self) ->attachmentTime;
 }
 
 void spSlot_setToSetupPose (spSlot* self) {
-	spAttachment* attachment = 0;
-	self->r = self->data->r;
-	self->g = self->data->g;
-	self->b = self->data->b;
-	self->a = self->data->a;
+	spColor_setFromColor(&self->color, &self->data->color);
+	if (self->darkColor) spColor_setFromColor(self->darkColor, self->data->darkColor);
 
-	if (self->data->attachmentName) {
-		/* Find slot index. */
-		int i;
-		for (i = 0; i < self->skeleton->data->slotCount; ++i) {
-			if (self->data == self->skeleton->data->slots[i]) {
-				attachment = spSkeleton_getAttachmentForSlotIndex(self->skeleton, i, self->data->attachmentName);
-				break;
-			}
-		}
+	if (!self->data->attachmentName)
+		spSlot_setAttachment(self, 0);
+	else {
+		spAttachment* attachment = spSkeleton_getAttachmentForSlotIndex(
+			self->bone->skeleton, self->data->index, self->data->attachmentName);
+		CONST_CAST(spAttachment*, self->attachment) = 0;
+		spSlot_setAttachment(self, attachment);
 	}
-	spSlot_setAttachment(self, attachment);
 }

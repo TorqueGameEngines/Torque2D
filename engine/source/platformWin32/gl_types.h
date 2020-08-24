@@ -159,6 +159,7 @@
 typedef unsigned int	GLenum;
 typedef unsigned char	GLboolean;
 typedef unsigned int	GLbitfield;
+typedef unsigned int GLuint; /* update ogl imp capabilities*/
 typedef void		GLvoid;
 typedef signed char	GLbyte;		/* 1-byte signed */
 typedef short		GLshort;	/* 2-byte signed */
@@ -474,9 +475,9 @@ typedef double		GLclampd;	/* double precision float in [0,1] */
 #define GL_NONE					0x0
 #define GL_LEFT					0x0406
 #define GL_RIGHT				0x0407
-/*GL_FRONT					0x0404 */
-/*GL_BACK					0x0405 */
-/*GL_FRONT_AND_BACK				0x0408 */
+/*#define GL_FRONT					0x0404 */
+/*#define GL_BACK					0x0405*/
+/*#define GL_FRONT_AND_BACK				0x0408 */
 #define GL_FRONT_LEFT				0x0400
 #define GL_FRONT_RIGHT				0x0401
 #define GL_BACK_LEFT				0x0402
