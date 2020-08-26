@@ -478,4 +478,3 @@ void Array::echo()
 		Con::printf("%d    [%s]    =>    %s",(U32)i, key, val);
 	}
 }
-
