@@ -364,6 +364,7 @@
     <ClCompile Include="..\..\source\collection\nameTags.cpp" />
     <ClCompile Include="..\..\source\collection\undo.cc" />
     <ClCompile Include="..\..\source\collection\vector.cc" />
+    <ClCompile Include="..\..\source\console\arrayObject.cpp" />
     <ClCompile Include="..\..\source\console\consoleBaseType.cc" />
     <ClCompile Include="..\..\source\console\consoleDictionary.cc" />
     <ClCompile Include="..\..\source\console\consoleExprEvalState.cc" />
