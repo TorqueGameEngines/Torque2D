@@ -1471,6 +1471,9 @@
     <ClCompile Include="..\..\source\2d\sceneobject\SpineCollisionProxy.cc">
       <Filter>2d\sceneobject</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\console\arrayObject.cpp">
+      <Filter>console</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
