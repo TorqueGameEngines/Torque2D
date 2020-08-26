@@ -872,6 +872,8 @@
     <ClInclude Include="..\..\source\component\behaviors\behaviorTemplate_ScriptBinding.h" />
     <ClInclude Include="..\..\source\component\dynamicConsoleMethodComponent_ScriptBinding.h" />
     <ClInclude Include="..\..\source\component\simComponent_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\console\arrayObject.h" />
+    <ClInclude Include="..\..\source\console\arrayObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\console\consoleBaseType.h" />
     <ClInclude Include="..\..\source\console\consoleDictionary.h" />
     <ClInclude Include="..\..\source\console\consoleDoc_ScriptBinding.h" />
