@@ -3298,6 +3298,12 @@
     <ClInclude Include="..\..\source\2d\sceneobject\SpineCollisionProxy.h">
       <Filter>2d\sceneobject</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\console\arrayObject.h">
+      <Filter>console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\console\arrayObject_ScriptBinding.h">
+      <Filter>console</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
