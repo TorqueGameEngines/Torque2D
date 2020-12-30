@@ -234,8 +234,7 @@ GuiControlProfile::GuiControlProfile(void) :
     
     mTabable       = false;
     mCanKeyFocus   = false;
-    
-    mOpaque        = true;
+	mUseInput      = true;
 
 	mBorderDefault = NULL;
 	mBorderLeft = NULL;
@@ -253,47 +252,17 @@ GuiControlProfile::GuiControlProfile(void) :
     mBitmapName    = NULL;
     mTextOffset.set(0,0);
     
-    //used by GuiTextCtrl
-    mModal         = true;
     mAlignment     = LeftAlign;
 	mVAlignment    = MiddleVAlign;
     mReturnTab     = false;
     mNumbersOnly   = false;
     mProfileForChildren = NULL;
-/*
-   GuiControlProfile *def = dynamic_cast<GuiControlProfile*>(Sim::findObject("GuiDefaultProfile"));
-   if (def)
-   {
-      mTabable       = def->mTabable;
-      mCanKeyFocus   = def->mCanKeyFocus;
-      mMouseOverSelected = def->mMouseOverSelected;
 
-      mOpaque        = def->mOpaque;
-      mFillColor     = def->mFillColor;
-      mFillColorHL   = def->mFillColorHL;
-      mFillColorNA   = def->mFillColorNA;
-
-      // default font
-      mFontType      = def->mFontType;
-      mFontSize      = def->mFontSize;
-      mFontCharset   = def->mFontCharset;
-
-      for(U32 i = 0; i < 10; i++)
-         mFontColors[i] = def->mFontColors[i];
-
-      // default bitmap
-      mTextOffset    = def->mTextOffset;
-
-      //used by GuiTextCtrl
-      mModal         = def->mModal;
-      mAlignment     = def->mAlignment;
-      mAutoSizeWidth = def->mAutoSizeWidth;
-      mAutoSizeHeight= def->mAutoSizeHeight;
-      mReturnTab     = def->mReturnTab;
-      mNumbersOnly   = def->mNumbersOnly;
-      mCursorColor   = def->mCursorColor;
-      mProfileForChildren = def->mProfileForChildren;
-   }*/
+	//fill color
+	mFillColor.set(0, 0, 0, 0);
+	mFillColorHL.set(0, 0, 0, 0);
+	mFillColorSL.set(0, 0, 0, 0);
+	mFillColorNA.set(0, 0, 0, 0);
 }
 
 GuiControlProfile::~GuiControlProfile()
@@ -307,10 +276,9 @@ void GuiControlProfile::initPersistFields()
 
    addField("tab",           TypeBool,       Offset(mTabable, GuiControlProfile));
    addField("canKeyFocus",   TypeBool,       Offset(mCanKeyFocus, GuiControlProfile));
+   addField("useInput",      TypeBool,       Offset(mUseInput, GuiControlProfile));
    addField("mouseOverSelected", TypeBool,   Offset(mMouseOverSelected, GuiControlProfile));
 
-   addField("modal",         TypeBool,       Offset(mModal, GuiControlProfile));
-   addField("opaque",        TypeBool,       Offset(mOpaque, GuiControlProfile));
    addField("fillColor",     TypeColorI,     Offset(mFillColor, GuiControlProfile));
    addField("fillColorHL",   TypeColorI,     Offset(mFillColorHL, GuiControlProfile));
    addField("fillColorSL",   TypeColorI,     Offset(mFillColorSL, GuiControlProfile));

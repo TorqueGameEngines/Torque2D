@@ -56,6 +56,10 @@
 #include "platform/Tickable.h"
 #endif
 
+#ifndef _MFLUID_H_
+#include "math/mFluid.h"
+#endif
+
 class GuiCanvas;
 class GuiEditCtrl;
 
@@ -183,6 +187,11 @@ public:
 		tRotateLeft, 
 		tRotateRight
 	};
+
+	ColorI mFillColor; //Replaces the default fill color provided by the profile.
+	ColorI mFillColorHL; //The highlight fill color used when the cursor enters the control.
+	ColorI mFillColorSL; //Color used when the control is selected.
+	ColorI mFillColorNA; //Used if the object is not active or disabled.
 
 protected:
     /// @name Control State
@@ -672,7 +681,7 @@ public:
     ///
     /// @see GuiControlProfile
     /// @param   prof   Control profile to apply
-    void setControlProfile(GuiControlProfile *prof);
+    virtual void setControlProfile(GuiControlProfile *prof);
 
     /// Occurs when this control performs its "action"
     virtual void onAction();

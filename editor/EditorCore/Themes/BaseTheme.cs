@@ -2,7 +2,19 @@ function BaseTheme::onAdd(%this)
 {
 	%this.init();
 
+	%this.emptyProfile = new GuiControlProfile()
+	{
+		fillColor = "0 0 0 0";
+
+		fontType = %this.font;
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		align = center;
+		vAlign = middle;
+	};
+
 	%this.makeTipProfile();
+	%this.makeGeneralProfiles();
 	%this.makePanelProfile();
 	%this.makeButtonProfile();
 	%this.makeTabProfile();
@@ -13,6 +25,7 @@ function BaseTheme::onAdd(%this)
 
 function BaseTheme::init(%this)
 {
+	%this.name = "Construction Vest";
 	//fonts and font sizes
 	%this.font = "monaco";
 	%this.fontSize = 12;
@@ -39,6 +52,11 @@ function BaseTheme::init(%this)
 	%this.borderSize = 3;
 }
 
+function BaseTheme::createProfile(%this, %profileName, %parentName, %settings)
+{
+
+}
+
 function BaseTheme::makeTipProfile(%this)
 {
 	%tipBorder = new GuiBorderProfile()
@@ -50,7 +68,7 @@ function BaseTheme::makeTipProfile(%this)
 
 	%this.tipProfile = new GuiControlProfile()
 	{
-		fillColor = %this.setAlpha(%this.color2, 200);
+		fillColor = %this.setAlpha(%this.color3, 100);
 
 		fontType = %this.font;
 		fontSize = %this.fontSize;
@@ -60,39 +78,9 @@ function BaseTheme::makeTipProfile(%this)
 	};
 }
 
-function BaseTheme::makePanelProfile(%this)
+function BaseTheme::makeGeneralProfiles(%this)
 {
-	%panelBorder = new GuiBorderProfile()
-	{
-		padding = 0;
-		border = %this.borderSize;
-		borderColor = "0 0 0 60";
-	};
-
-	%this.panelProfile = new GuiControlProfile()
-	{
-		fillColor = %this.color1;
-
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
-		fontColor = %this.color4;
-		align = center;
-		vAlign = middle;
-
-		borderDefault = %panelBorder;
-	};
-
-	%this.fullPanelProfile = new GuiControlProfile()
-	{
-		fillColor = %this.color1;
-
-		fontType = %this.font;
-		fontSize = %this.fontSize;
-		fontColor = %this.color4;
-		align = center;
-		vAlign = middle;
-	};
-
+	//Useful as a background
 	%this.overlayProfile = new GuiControlProfile()
 	{
 		fillColor = %this.setAlpha(%this.color1, 150);
@@ -102,7 +90,83 @@ function BaseTheme::makePanelProfile(%this)
 		fontColor = %this.color4;
 	};
 
-	//Scrolling panel
+	%simpleBorder = new GuiBorderProfile()
+	{
+		padding = 0;
+		border = %this.borderSize;
+		borderColor = "0 0 0 60";
+	};
+	//A simple, well-rounded profile for text or containers
+	%this.simpleProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color1;
+
+		fontType = %this.font;
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		align = center;
+		vAlign = middle;
+
+		borderDefault = %standardBorder;
+	};
+
+	%this.spriteProfile = new GuiControlProfile()
+	{
+		fillColor = "255 255 255 255";
+		useInput = false;
+	};
+}
+
+function BaseTheme::makePanelProfile(%this)
+{
+	%panelBorderH = new GuiBorderProfile()
+	{
+		padding = 10;
+		paddingHL = 10;
+		paddingSL = 10;
+		paddingNA = 10;
+	};
+
+	%panelBorderV = new GuiBorderProfile()
+	{
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.adjustValue(%this.color3, -50);
+		borderColorHL = %this.adjustValue(%this.color3, -60);
+		borderColorSL = %this.adjustValue(%this.color3, -60);
+		borderColorNA = %this.adjustValue(%this.color3, -50);
+	};
+
+	%this.panelProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color2;
+		fillColorHL = %this.adjustValue(%this.color2, 5);
+		fillColorSL = %this.adjustValue(%this.color2, 5);
+		fillColorNA = %this.setAlpha(%this.color2, 80);
+
+		fontType = %this.font;
+		fontSize = 14;
+		fontColor = %this.color5;
+		fontColorHL = %this.adjustValue(%this.color5, 10);
+		fontColorSL = %this.adjustValue(%this.color5, 20);
+		fontColorNA = %this.setAlpha(%this.color4, 100);
+		align = left;
+		vAlign = middle;
+
+		borderDefault = %panelBorderH;
+		borderTop = %panelBorderV;
+		borderBottom = %panelBorderV;
+	};
+
+	//Scrolling panel - a less space demanding scroll bar.
 	%this.scrollingPanelTrackProfile = new GuiControlProfile()
 	{
 		fillColor = %this.color2;
@@ -153,14 +217,6 @@ function BaseTheme::makePanelProfile(%this)
 
 		borderDefault = %buttonBorder;
 	};
-
-	%mainBorder = new GuiBorderProfile()
-	{
-		margin = 5;
-		padding = 5;
-		border = 3;
-		borderColor = %this.color5;
-	};
 	%this.scrollingPanelProfile = new GuiControlProfile()
 	{
 	    fillColor = %this.color1;
@@ -171,10 +227,10 @@ function BaseTheme::makeButtonProfile(%this)
 {
 	%buttonBorderV = new GuiBorderProfile()
 	{
-		padding = 6;
-		paddingHL = 6 - %this.borderSize;
-		paddingSL = 6 - %this.borderSize;
-		paddingNA = 6;
+		padding = %this.borderSize;
+		paddingHL = 0;
+		paddingSL = 0;
+		paddingNA = %this.borderSize;
 
 		border = 0;
 		borderHL = %this.borderSize;
@@ -191,10 +247,10 @@ function BaseTheme::makeButtonProfile(%this)
 
 	%buttonBorderH = new GuiBorderProfile()
 	{
-		padding = 20;
-		paddingHL = 20 - %this.borderSize;
-		paddingSL = 20 - %this.borderSize;
-		paddingNA = 20;
+		padding = %this.borderSize;
+		paddingHL = 0;
+		paddingSL = 0;
+		paddingNA = %this.borderSize;
 
 		border = 0;
 		borderHL = %this.borderSize;

@@ -22,14 +22,12 @@
 
 function AssetAdmin::create(%this)
 {
+	exec("./AssetDictionary.cs");
+
 	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
 
 	%this.scroller = new GuiScrollCtrl()
 	{
-		Profile=EditorCore.themes.scrollingPanelProfile;
-		ThumbProfile = EditorCore.themes.scrollingPanelThumbProfile;
-		TrackProfile = EditorCore.themes.scrollingPanelTrackProfile;
-		ArrowProfile = EditorCore.themes.scrollingPanelArrowProfile;
 		HorizSizing="left";
 		VertSizing="height";
 		Position="700 0";
@@ -41,33 +39,28 @@ function AssetAdmin::create(%this)
 		showArrowButtons="1";
 		scrollBarThickness="14";
 	};
+	ThemeManager.setProfile(%this.scroller, "scrollingPanelProfile");
+	ThemeManager.setProfile(%this.scroller, "scrollingPanelThumbProfile", ThumbProfile);
+	ThemeManager.setProfile(%this.scroller, "scrollingPanelTrackProfile", TrackProfile);
+	ThemeManager.setProfile(%this.scroller, "scrollingPanelArrowProfile", ArrowProfile);
+
 	%this.guiPage.add(%this.scroller);
 
-	%this.testLogButton = new GuiButtonCtrl()
+	%this.Dictionary["ImageAsset"] = new GuiPanelCtrl()
 	{
-		Profile = EditorCore.themes.buttonProfile;
-		Text="Test";
+		Class = AssetDictionary;
+		Text="Image Assets";
 		command="";
 		HorizSizing="bottom";
 		VertSizing="right";
 		Position="0 0";
-		Extent="100 30";
-		MinExtent="80 20";
+		Extent="310 22";
+		MinExtent="80 22";
+		Type = "ImageAsset";
 	};
-	%this.scroller.add(%this.testLogButton);
-
-	%this.testLogButton2 = new GuiButtonCtrl()
-	{
-		Profile = EditorCore.themes.buttonProfile;
-		Text="Test2";
-		command="";
-		HorizSizing="bottom";
-		VertSizing="right";
-		Position="0 800";
-		Extent="100 30";
-		MinExtent="80 20";
-	};
-	%this.scroller.add(%this.testLogButton2);
+	%this.Dictionary["ImageAsset"].setExpandEase("EaseOutBounce", 1500);
+	ThemeManager.setProfile(%this.Dictionary["ImageAsset"], "panelProfile");
+	%this.scroller.add(%this.Dictionary["ImageAsset"]);
 
 	EditorCore.FinishRegistration(%this.guiPage);
 }
@@ -77,20 +70,12 @@ function AssetAdmin::destroy(%this)
 
 }
 
-function AssetAdmin::onThemeChanged(%this, %theme)
-{
-	%this.scroller.setProfile(%theme.scrollingPanelProfile);
-	%this.scroller.setThumbProfile(%theme.scrollingPanelThumbProfile);
-	%this.scroller.setTrackProfile(%theme.scrollingPanelTrackProfile);
-	%this.scroller.setArrowProfile(%theme.scrollingPanelArrowProfile);
-}
-
 function AssetAdmin::open(%this)
 {
-
+	//%this.Dictionary["ImageAsset"].load();
 }
 
 function AssetAdmin::close(%this)
 {
-
+	//%this.Dictionary["ImageAsset"].unload();
 }

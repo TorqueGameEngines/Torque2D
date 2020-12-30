@@ -233,8 +233,7 @@ void GuiFormCtrl::onRender(Point2I offset, const RectI &updateRect)
    boundsRect.extent.y -= mThumbSize.y;
 
    // draw the border of the form if specified
-   if (mProfile->mOpaque)
-      dglDrawRectFill(boundsRect, mProfile->mFillColor);
+   dglDrawRectFill(boundsRect, mProfile->mFillColor);
 
    //if (mProfile->mBorder)
       //renderBorder(boundsRect, mProfile);

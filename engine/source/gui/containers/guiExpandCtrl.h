@@ -20,38 +20,56 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-function ProjectManager::create(%this)
+#ifndef _GUIEXPANDCTRL_H_
+#define _GUIEXPANDCTRL_H_
+
+#ifndef _GUICONTROL_H_
+#include "gui/guiControl.h"
+#endif
+
+#ifndef _MFLUID_H_
+#include "math/mFluid.h"
+#endif
+
+#include "graphics/dgl.h"
+#include "console/console.h"
+#include "console/consoleTypes.h"
+
+/// The Amazing Expand Control!
+///
+/// This class has a set size like any other GuiControl or it can expand to fit 
+/// its contents. It can be collapsed again to the set size. Expanding/collapsing
+/// is only done in the right/down directions. In other words, it only affects
+/// the size of the control not the position.
+///
+class GuiExpandCtrl : public GuiControl, public Fluid
 {
-	%this.guiPage = EditorCore.RegisterEditor("Project Manager", %this);
+private:
+   typedef GuiControl Parent;
 
-	%this.comingSoon = new GuiControl()
-	{
-		Profile = ThemeManager.activeTheme.panelProfile;
-		HorizSizing="center";
-		VertSizing="center";
-		Position="412 324";
-		Extent="200 120";
-		minExtent="8 8";
-		Visible="1";
-		Text = "Coming Soon!";
-	};
-	ThemeManager.setProfile(%this.comingSoon, "simpleProfile");
-	%this.guiPage.add(%this.comingSoon);
+   void setCollapsedExtent(const Point2I &extent);
 
-	EditorCore.FinishRegistration(%this.guiPage);
-}
+protected:
+	bool mExpanded;
+	Point2I mCollapsedExtent;
+	Point2I mExpandedExtent;
 
-function ProjectManager::destroy(%this)
-{
+	virtual bool calcExpandedExtent();
 
-}
+public:
+	GuiExpandCtrl();
 
-function ProjectManager::open(%this)
-{
+   void parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
 
-}
+   inline bool getExpanded() { return mExpanded; };
+   void setExpanded(bool isExpanded);
 
-function ProjectManager::close(%this)
-{
+   static void initPersistFields();
+   DECLARE_CONOBJECT(GuiExpandCtrl);
 
-}
+protected:
+	virtual void processTick();
+	bool processExpansion();
+};
+
+#endif

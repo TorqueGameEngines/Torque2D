@@ -20,38 +20,8 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-function ProjectManager::create(%this)
-{
-	%this.guiPage = EditorCore.RegisterEditor("Project Manager", %this);
+ConsoleMethodGroupBeginWithDocs(GuiPanelCtrl, GuiControl)
 
-	%this.comingSoon = new GuiControl()
-	{
-		Profile = ThemeManager.activeTheme.panelProfile;
-		HorizSizing="center";
-		VertSizing="center";
-		Position="412 324";
-		Extent="200 120";
-		minExtent="8 8";
-		Visible="1";
-		Text = "Coming Soon!";
-	};
-	ThemeManager.setProfile(%this.comingSoon, "simpleProfile");
-	%this.guiPage.add(%this.comingSoon);
+//Empty, for now...
 
-	EditorCore.FinishRegistration(%this.guiPage);
-}
-
-function ProjectManager::destroy(%this)
-{
-
-}
-
-function ProjectManager::open(%this)
-{
-
-}
-
-function ProjectManager::close(%this)
-{
-
-}
+ConsoleMethodGroupEndWithDocs(GuiPanelCtrl)

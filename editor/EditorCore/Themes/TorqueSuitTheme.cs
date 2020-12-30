@@ -1,5 +1,7 @@
 function TorqueSuitTheme::init(%this)
 {
+	%this.name = "Torque Suit";
+
 	//fonts and font sizes
 	%this.font = "monaco";
 	%this.fontSize = 12;

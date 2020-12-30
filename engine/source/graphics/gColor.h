@@ -179,6 +179,8 @@ class ColorI
    U16 get565()  const;
    U16 get4444() const;
 
+   void clamp();
+
    inline StringTableEntry stringThis(void) const   { char buffer[64]; dSprintf(buffer, 64, "%d %d %d %d", red, green, blue, alpha ); return StringTable->insert(buffer); }
    inline const char* scriptThis(void) const        { char* pBuffer = Con::getReturnBuffer(64); dSprintf(pBuffer, 32, "%d %d %d %d", red, green, blue, alpha ); return pBuffer; }
 };
@@ -548,6 +550,16 @@ inline void ColorI::interpolate(const ColorI& in_rC1,
    green = U8(((F32(in_rC1.green) * f2) + (F32(in_rC2.green) * in_factor)) + 0.5f);
    blue  = U8(((F32(in_rC1.blue)  * f2) + (F32(in_rC2.blue)  * in_factor)) + 0.5f);
    alpha = U8(((F32(in_rC1.alpha) * f2) + (F32(in_rC2.alpha) * in_factor)) + 0.5f);
+}
+
+//-----------------------------------------------------------------------------
+
+inline void ColorI::clamp()
+{
+	red = mClamp(red, 0, 255);
+	green = mClamp(green, 0, 255);
+	blue = mClamp(blue, 0, 255);
+	alpha = mClamp(alpha, 0, 255);
 }
 
 //-----------------------------------------------------------------------------

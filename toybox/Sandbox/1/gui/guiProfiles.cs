@@ -37,7 +37,7 @@ else
 
 new GuiCursor(DefaultCursor)
 {
-    hotSpot = "4 4";
+    hotSpot = "3 3";
     renderOffset = "0 0";
     bitmapName = "^Sandbox/gui/images/defaultCursor";
 };
@@ -54,16 +54,15 @@ if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
     mouseOverSelected = false;
 
     // fill color
-    opaque = false;
-    fillColor = "211 211 211";
-    fillColorHL = "244 244 244";
-    fillColorNA = "244 244 244";
+    fillColor = "211 211 211 0";
+    fillColorHL = "244 244 244 0";
+    fillColorNA = "244 244 244 0";
 
     // border color
     border = 0;
     borderColor   = "100 100 100 255";
-    borderColorHL = "128 128 128";
-    borderColorNA = "64 64 64";
+    borderColorHL = "128 128 128 255";
+    borderColorNA = "64 64 64 255";
 
     // font
     fontType = $platformFontType;

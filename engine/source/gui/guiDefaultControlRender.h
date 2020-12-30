@@ -30,6 +30,7 @@
 class GuiControlProfile;
 
 void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state);
+void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor);
 void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profile, GuiControlState state);
 void renderSizableBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile); 
 void renderSizableBitmapBordersFilledIndex(RectI &bounds, S32 startIndex, GuiControlProfile *profile);

@@ -20,38 +20,37 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-function ProjectManager::create(%this)
+#ifndef _GUIPANELCTRL_H_
+#define _GUIPANELCTRL_H_
+
+#ifndef _GUIEXPANDCTRL_H_
+#include "gui/containers/guiExpandCtrl.h"
+#endif
+
+#ifndef _GUIBUTTONCTRL_H_
+#include "gui/buttons/guiButtonCtrl.h"
+#endif
+
+class GuiPanelCtrl : public GuiExpandCtrl
 {
-	%this.guiPage = EditorCore.RegisterEditor("Project Manager", %this);
+private:
+   typedef GuiExpandCtrl Parent;
+   GuiButtonCtrl*      mHeader;
 
-	%this.comingSoon = new GuiControl()
-	{
-		Profile = ThemeManager.activeTheme.panelProfile;
-		HorizSizing="center";
-		VertSizing="center";
-		Position="412 324";
-		Extent="200 120";
-		minExtent="8 8";
-		Visible="1";
-		Text = "Coming Soon!";
-	};
-	ThemeManager.setProfile(%this.comingSoon, "simpleProfile");
-	%this.guiPage.add(%this.comingSoon);
+protected:
+	virtual bool calcExpandedExtent();
 
-	EditorCore.FinishRegistration(%this.guiPage);
-}
+public:
+	GuiPanelCtrl();
+	virtual ~GuiPanelCtrl();
 
-function ProjectManager::destroy(%this)
-{
+	bool onAdd();
+	virtual void onRender(Point2I offset, const RectI &updateRect);
 
-}
+   static void initPersistFields();
+   DECLARE_CONOBJECT(GuiPanelCtrl);
 
-function ProjectManager::open(%this)
-{
+   virtual void setControlProfile(GuiControlProfile *prof);
+};
 
-}
-
-function ProjectManager::close(%this)
-{
-
-}
+#endif

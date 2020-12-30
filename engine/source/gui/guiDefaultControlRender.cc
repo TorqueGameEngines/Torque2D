@@ -26,7 +26,13 @@
 #include "graphics/gColor.h"
 #include "math/mRect.h"
 
-void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state )
+void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state)
+{
+	ColorI fillColor = profile->getFillColor(state);
+	renderBorderedRect(bounds, profile, state, fillColor);
+}
+
+void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor)
 {
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
@@ -35,7 +41,6 @@ void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlSta
 	GuiBorderProfile *bottomProfile = profile->getBottomBorder();
 
 	//Get the colors
-	ColorI fillColor = profile->getFillColor(state);
 	ColorI leftColor = (leftProfile) ? leftProfile->getBorderColor(state) : ColorI();
 	ColorI rightColor = (rightProfile) ? rightProfile->getBorderColor(state) : ColorI();
 	ColorI topColor = (topProfile) ? topProfile->getBorderColor(state) : ColorI();
@@ -50,7 +55,7 @@ void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlSta
 	RectI innerRect = RectI(bounds.point.x + leftSize, bounds.point.y + topSize, (bounds.extent.x - leftSize) - rightSize, (bounds.extent.y - topSize) - bottomSize);
 
 	//Draw the fill
-	if(profile->mOpaque)
+	if(fillColor.alpha > 0)
 	{
 		S32 fillWidth = innerRect.extent.x + ((leftProfile && leftProfile->mUnderfill) ? leftSize : 0) + ((rightProfile && rightProfile->mUnderfill) ? rightSize : 0);
 		S32 fillHeight = innerRect.extent.y + ((topProfile && topProfile->mUnderfill) ? topSize : 0) + ((bottomProfile && bottomProfile->mUnderfill) ? bottomSize : 0);
@@ -101,11 +106,8 @@ void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profil
 	S32 borderSize = (profile->mBorderDefault) ? profile->mBorderDefault->getBorder(state) : 0;
 
 	//Draw the fill
-	if (profile->mOpaque)
-	{
-		S32 fillRadius = (profile->mBorderDefault && profile->mBorderDefault->mUnderfill) ? radius : radius - borderSize;
-		dglDrawCircleFill(center, (F32)fillRadius, fillColor);
-	}
+	S32 fillRadius = (profile->mBorderDefault && profile->mBorderDefault->mUnderfill) ? radius : radius - borderSize;
+	dglDrawCircleFill(center, (F32)fillRadius, fillColor);
 
 	//Draw the border
 	dglDrawCircle(center, (F32)radius, borderColor, (F32)borderSize);

@@ -471,9 +471,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiPaneCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
@@ -1474,6 +1471,15 @@
     <ClCompile Include="..\..\source\console\arrayObject.cpp">
       <Filter>console</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\math\mFluid.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -1762,9 +1768,6 @@
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiPaneCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
@@ -3303,6 +3306,24 @@
     </ClInclude>
     <ClInclude Include="..\..\source\console\arrayObject_ScriptBinding.h">
       <Filter>console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\mFluid.h">
+      <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl_ScriptBinding.h">
+      <Filter>gui\buttons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

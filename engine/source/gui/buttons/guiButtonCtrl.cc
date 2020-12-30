@@ -28,6 +28,8 @@
 #include "gui/buttons/guiButtonCtrl.h"
 #include "gui/guiDefaultControlRender.h"
 
+#include "guiButtonCtrl_ScriptBinding.h"
+
 IMPLEMENT_CONOBJECT(GuiButtonCtrl);
 
 GuiButtonCtrl::GuiButtonCtrl()
@@ -38,15 +40,26 @@ GuiButtonCtrl::GuiButtonCtrl()
 	mBounds.extent.set(140, 30);
 	mText = StringTable->insert("Button");
 	mTextID = StringTable->EmptyString;
+
+	//fill color
+	mEaseFillColorHL = EasingFunction::Linear;
+	mEaseFillColorSL = EasingFunction::Linear;
+	mEaseTimeFillColorHL = 500;
+	mEaseTimeFillColorSL = 0;
+
+	//control state
+	mPreviousState = GuiControlState::DisabledState;
+	mCurrentState = GuiControlState::DisabledState;
 }
 
-bool GuiButtonCtrl::onWake()
+void GuiButtonCtrl::initPersistFields()
 {
-   if( !Parent::onWake() )
-      return false;
+	Parent::initPersistFields();
 
-   return true;
-
+	addField("easeFillColorHL", TypeEnum, Offset(mEaseFillColorHL, GuiButtonCtrl), 1, &gEasingTable);
+	addField("easeFillColorSL", TypeEnum, Offset(mEaseFillColorSL, GuiButtonCtrl), 1, &gEasingTable);
+	addField("easeTimeFillColorHL", TypeS32, Offset(mEaseTimeFillColorHL, GuiButtonCtrl));
+	addField("easeTimeFillColorSL", TypeS32, Offset(mEaseTimeFillColorSL, GuiButtonCtrl));
 }
 
 void GuiButtonCtrl::acceleratorKeyPress(U32)
@@ -236,41 +249,42 @@ void GuiButtonCtrl::onAction()
 	Parent::onAction();
 }
 
+GuiControlState GuiButtonCtrl::getCurrentState()
+{
+	if (!mActive)
+		return GuiControlState::DisabledState;
+	else if (mDepressed)
+		return GuiControlState::SelectedState;
+	else if (mMouseOver)
+		return GuiControlState::HighlightState;
+	else
+	return GuiControlState::NormalState;
+}
+
+S32 GuiButtonCtrl::getBitmapIndex(const GuiControlState state)
+{
+	if (state == GuiControlState::HighlightState)
+		return 2;
+	else if (state == GuiControlState::SelectedState)
+		return 3;
+	else if (state == GuiControlState::DisabledState)
+		return 4;
+	else 
+		return 1;
+}
+
 void GuiButtonCtrl::onRender(Point2I offset, const RectI& updateRect)
 {
-
-	GuiControlState currentState = GuiControlState::NormalState;
-	if (!mActive)
-	{
-		currentState = GuiControlState::DisabledState;
-	}
-	else if (mDepressed)
-	{
-		currentState = GuiControlState::SelectedState;
-	}
-	else if(mMouseOver)
-	{
-		currentState = GuiControlState::HighlightState;
-	}
-
+	GuiControlState currentState = getCurrentState();
 	RectI ctrlRect = applyMargins(offset, mBounds.extent, currentState, mProfile);
-	RectI boundsRect(offset, mBounds.extent);
 
 	if(mProfile->mBitmapName != NULL && mProfile->constructBitmapArray() >= 36)
 	{
-		S32 indexMultiplier = 1;
-		if ( currentState == GuiControlState::HighlightState)
-			indexMultiplier = 2;
-		else if ( currentState == GuiControlState::SelectedState )
-			indexMultiplier = 3;
-		else if ( currentState == GuiControlState::DisabledState )
-			indexMultiplier = 4;
-
-		renderSizableBitmapBordersFilled(ctrlRect, indexMultiplier, mProfile );
+		renderSizableBitmapBordersFilled(ctrlRect, getBitmapIndex(currentState), mProfile );
 	}
 	else
 	{
-		renderBorderedRect(ctrlRect, mProfile, currentState);
+		renderBorderedRect(ctrlRect, mProfile, currentState, getFillColor(currentState));
 	}
 
 	//Render Text
@@ -280,7 +294,7 @@ void GuiButtonCtrl::onRender(Point2I offset, const RectI& updateRect)
 	renderText(contentRect.point, contentRect.extent, mText, mProfile);
 
 	//Render the childen
-	renderChildControls(contentRect.point, contentRect, updateRect);
+	renderChildControls(offset, contentRect, updateRect);
 }
 
 void GuiButtonCtrl::setScriptValue(const char *value)
@@ -300,4 +314,67 @@ const char *GuiButtonCtrl::getScriptValue()
 void GuiButtonCtrl::onMessage(GuiControl *sender, S32 msg)
 {
 	Parent::onMessage(sender, msg);
+}
+
+const ColorI& GuiButtonCtrl::getFillColor(const GuiControlState state)
+{
+	if (state != mCurrentState)
+	{
+		//We have just switched states!
+		mPreviousState = mCurrentState;
+		mCurrentState = state;
+		if (mCurrentState == GuiControlState::DisabledState || mPreviousState == GuiControlState::DisabledState)
+		{
+			mFluidFillColor.stopFluidAnimation();
+			mFluidFillColor.set(mProfile->getFillColor(state));
+		}
+		else if (mCurrentState == GuiControlState::SelectedState || mPreviousState == GuiControlState::SelectedState)
+		{
+			mFluidFillColor.setEasingFunction(mEaseFillColorSL);
+			mFluidFillColor.setAnimationLength(mEaseTimeFillColorSL);
+			mFluidFillColor.startFluidAnimation(mProfile->getFillColor(state));
+		}
+		else if (mCurrentState == GuiControlState::HighlightState || mPreviousState == GuiControlState::HighlightState)
+		{
+			mFluidFillColor.setEasingFunction(mEaseFillColorHL);
+			mFluidFillColor.setAnimationLength(mEaseTimeFillColorHL);
+			mFluidFillColor.startFluidAnimation(mProfile->getFillColor(state));
+		}
+		else
+		{
+			//we should never get here...
+			mFluidFillColor.stopFluidAnimation();
+			mFluidFillColor.set(mProfile->getFillColor(state));
+		}
+	}
+
+	if (mFluidFillColor.isAnimating() && !isProcessingTicks())
+	{
+		setProcessTicks(true);
+	}
+
+	if (!mFluidFillColor.isAnimating())
+	{
+		mFluidFillColor.set(mProfile->getFillColor(state));
+	}
+
+	return mFluidFillColor;
+}
+
+void GuiButtonCtrl::processTick()
+{
+	bool shouldWeContinue = false;
+
+	shouldWeContinue |= mFluidFillColor.processTick();
+
+	if (!shouldWeContinue)
+	{
+		setProcessTicks(false);
+	}
+}
+
+void GuiButtonCtrl::setControlProfile(GuiControlProfile *prof)
+{
+	Parent::setControlProfile(prof);
+	mCurrentState = mCurrentState == DisabledState ? NormalState : DisabledState;
 }

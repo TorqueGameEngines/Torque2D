@@ -26,7 +26,6 @@ function EditorConsole::create(%this)
 
 	%this.consoleEntry = new GuiConsoleEditCtrl()
 	{
-		Profile = EditorCore.themes.textEditProfile;
 		HorizSizing="width";
 		VertSizing="top";
 		Position="0 738";
@@ -41,11 +40,11 @@ function EditorConsole::create(%this)
 		SinkAllKeyEvents="1";
 		UseSiblingScroller="1";
 	};
+	ThemeManager.setProfile(%this.consoleEntry, "textEditProfile");
 	%this.guiPage.add(%this.consoleEntry);
 
 	%this.hideLogButton = new GuiButtonCtrl()
 	{
-		Profile = EditorCore.themes.buttonProfile;
 		Text="Close";
 		command="EditorCore.close();";
 		HorizSizing="left";
@@ -54,14 +53,11 @@ function EditorConsole::create(%this)
 		Extent="100 30";
 		MinExtent="80 20";
 	};
+	ThemeManager.setProfile(%this.hideLogButton, "buttonProfile");
 	%this.guiPage.add(%this.hideLogButton);
 
 	%this.scroller = new GuiScrollCtrl()
 	{
-		Profile=EditorCore.themes.scrollProfile;
-		ThumbProfile = EditorCore.themes.thumbProfile;
-		TrackProfile = EditorCore.themes.trackProfile;
-		ArrowProfile = EditorCore.themes.scrollArrowProfile;
 		HorizSizing="width";
 		VertSizing="height";
 		Position="0 0";
@@ -72,17 +68,21 @@ function EditorConsole::create(%this)
 		constantThumbHeight="0";
 		showArrowButtons="1";
 	};
+	ThemeManager.setProfile(%this.scroller, "scrollProfile");
+	ThemeManager.setProfile(%this.scroller, "thumbProfile", ThumbProfile);
+	ThemeManager.setProfile(%this.scroller, "trackProfile", TrackProfile);
+	ThemeManager.setProfile(%this.scroller, "scrollArrowProfile", ArrowProfile);
 	%this.guiPage.add(%this.scroller);
 
 	%this.consoleLog = new GuiConsole()
 	{
-		Profile=EditorCore.themes.consoleProfile;
 		Position="0 0";
 		Extent="1024 738";
 		HorizSizing="width";
 		VertSizing="height";
 		Visible="1";
 	};
+	ThemeManager.setProfile(%this.consoleLog, "consoleProfile");
 	%this.scroller.add(%this.consoleLog);
 
 	EditorCore.FinishRegistration(%this.guiPage);
@@ -91,17 +91,6 @@ function EditorConsole::create(%this)
 function EditorConsole::destroy(%this)
 {
 
-}
-
-function EditorConsole::onThemeChanged(%this, %theme)
-{
-	%this.consoleEntry.setProfile(%theme.textEditProfile);
-	%this.hideLogButton.setProfile(%theme.buttonProfile);
-	%this.scroller.setProfile(%theme.scrollProfile);
-	%this.scroller.setThumbProfile(%theme.thumbProfile);
-	%this.scroller.setTrackProfile(%theme.trackProfile);
-	%this.scroller.setArrowProfile(%theme.scrollArrowProfile);
-	%this.consoleLog.setProfile(%theme.consoleProfile);
 }
 
 function EditorConsole::open(%this)

@@ -954,9 +954,8 @@ void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
 
    RectI ctrlRect(offset, mBounds.extent);
 
-   //if opaque, fill the update rect with the fill color
-   if (mProfile->mOpaque)
-      dglDrawRectFill(RectI(offset, mBounds.extent), mProfile->mFillColor);
+   //fill the update rect with the fill color
+   dglDrawRectFill(RectI(offset, mBounds.extent), mProfile->mFillColor);
 
    //if there's a border, draw the border
    //if (mProfile->mBorder)

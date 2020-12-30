@@ -28,11 +28,7 @@ function EditorCore::create( %this )
 	exec("./Themes/ForestRobeTheme.cs");
 	exec("./Themes/TorqueSuitTheme.cs");
 
-	%this.themes = new ScriptObject()
-	{
-		class = "ThemeManager";
-	};
-	%this.startListening(%this.themes);
+	new ScriptObject(ThemeManager);
 
 	%this.initGui();
 
@@ -51,14 +47,16 @@ function EditorCore::initGui(%this)
 {
 	%this.tabBook = new GuiTabBookCtrl()
 	{
-		Profile = %this.themes.tabBookProfileTop;
-		TabProfile = %this.themes.tabProfileTop;
+		Class = EditorCoreTabBook;
 		HorizSizing = width;
 		VertSizing = height;
 		Position = "0 0";
 		Extent = "1024 768";
 		TabPosition = top;
+		Core = %this;
 	};
+	ThemeManager.setProfile(%this.tabBook, "tabBookProfileTop");
+	ThemeManager.setProfile(%this.tabBook, "tabProfileTop", "TabProfile");
 }
 
 function EditorCore::toggleEditor(%this)
@@ -83,7 +81,6 @@ function EditorCore::open(%this)
     Canvas.pushDialog(%this.tabBook);
 
 	%this.tabBook.selectPage(0);
-	EditorConsole.open();
 }
 
 function EditorCore::close(%this)
@@ -97,15 +94,14 @@ function EditorCore::RegisterEditor(%this, %name, %editor)
 {
 	%this.page[%name] = new GuiTabPageCtrl()
 	{
-		Profile = %this.themes.tabPageProfile;
 		HorizSizing = width;
 		VertSizing = height;
 		Position = "0 0";
 		Extent = "1024 768";
 		Text = %name;
+		Editor = %editor;
 	};
-
-	%editor.startListening(%this.themes);
+	ThemeManager.setProfile(%this.page[%name], "tabPageProfile");
 
 	return %this.page[%name];
 }
@@ -115,29 +111,12 @@ function EditorCore::FinishRegistration(%this, %page)
 	%this.tabBook.add(%page);
 }
 
-function EditorCore::onThemeChanged(%this, %theme)
+function EditorCoreTabBook::onTabSelected(%this, %tabText)
 {
-	%this.tabBook.setProfile(%theme.tabBookProfileTop);
-	%this.tabBook.setTabProfile(%theme.tabProfileTop);
-
-	for(%i = 0; %i < %this.tabBook.getCount(); %i++)
+	if(isObject(%this.openEditor))
 	{
-		%page = %this.tabBook.getObject(%i);
-		%page.setProfile(%theme.tabPageProfile);
+		%this.openEditor.close();
 	}
-}
-
-function EditorCore::setTheme(%this, %i)
-{
-	%this.themes.setTheme(%i);
-}
-
-function EditorCore::nextTheme(%this)
-{
-	%this.themes.nextTheme();
-}
-
-function EditorCore::prevTheme(%this)
-{
-	%this.themes.prevTheme();
+	%this.Core.page[%tabText].Editor.open();
+	%this.openEditor = %this.Core.page[%tabText].Editor;
 }

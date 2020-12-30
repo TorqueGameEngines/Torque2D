@@ -35,6 +35,10 @@
 #include "graphics/gColor.h"
 #endif
 
+#ifndef _FLUID_H_
+#include "math/mFluid.h"
+#endif
+
 #ifndef _SIMBASE_H_
 #include "sim/simBase.h"
 #endif
@@ -76,8 +80,6 @@ enum GuiControlState
 	DisabledState,				//Control cannot be used
 	StateCount					//Not an actual state! Should always be at the end of the list.
 };
-
-
 
 enum class GuiDirection
 {
@@ -156,13 +158,12 @@ public:
 
    static StringTableEntry  sFontCacheDirectory;
    bool mCanKeyFocus;                              ///< True if the object can be given keyboard focus (in other words, made a first responder @see GuiControl)
-   bool mModal;                                    ///< True if this is a Modeless dialog meaning it will pass input through instead of taking it all
+   bool mUseInput;                                 ///< True if input events like a click can be passed to this object. False will pass events to the parent and this object and its children will not be evaluated.
 
-   bool mOpaque;                                   ///< True if this object should render its fill color
-   ColorI mFillColor;                              ///< Fill color, this is used to fill the bounds of the control if it is opaque
-   ColorI mFillColorHL;                            ///< This is used insetead of mFillColor if the object is highlited
-   ColorI mFillColorSL;								//Color used when the control is selected.
-   ColorI mFillColorNA;                            ///< This is used to instead of mFillColor if the object is not active or disabled
+   ColorI mFillColor; //Normal fill color used to fill the control area inside (and possibly under) the border.
+   ColorI mFillColorHL; //The highlight fill color used when the cursor enters the control.
+   ColorI mFillColorSL;	//Color used when the control is selected.
+   ColorI mFillColorNA; //Used if the object is not active or disabled.
 
    GuiBorderProfile *mBorderDefault;					//The default border settings.
    GuiBorderProfile *mBorderTop;

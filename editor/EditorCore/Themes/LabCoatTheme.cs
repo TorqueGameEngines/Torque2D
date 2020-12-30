@@ -1,5 +1,7 @@
 function LabCoatTheme::init(%this)
 {
+	%this.name = "Lab Coat";
+
 	//fonts and font sizes
 	%this.font = "monaco";
 	%this.fontSize = 12;

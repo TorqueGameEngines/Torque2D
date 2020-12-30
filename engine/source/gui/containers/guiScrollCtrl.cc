@@ -216,7 +216,7 @@ GuiControl* GuiScrollCtrl::findHitControl(const Point2I& pt, S32 initialLayer)
 				Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
 				GuiControl* hitCtrl = ctrl->findHitControl(ptemp);
 
-				if (hitCtrl->mProfile->mModal)
+				if (hitCtrl->mProfile->mUseInput)
 					return hitCtrl;
 			}
 		}
@@ -302,6 +302,12 @@ void GuiScrollCtrl::computeSizes()
 			mHBarEnabled = true;
 		if (mChildExt.y > mContentExt.y)
 			mVBarEnabled = true;
+
+		//Are we now over-scrolled?
+		if ((mScrollOffset.x + mContentExt.x) > mChildExt.x)
+			mScrollOffset.x = getMax(mChildExt.x - mContentExt.x, 0);
+		if ((mScrollOffset.y + mContentExt.y) > mChildExt.y)
+			mScrollOffset.y = getMax(mChildExt.y - mContentExt.y, 0);
 	}
 	// build all the rectangles and such...
 	calcScrollRects();
