@@ -395,6 +395,7 @@
     <ClCompile Include="..\..\source\graphics\TextureDictionary.cc" />
     <ClCompile Include="..\..\source\graphics\TextureHandle.cc" />
     <ClCompile Include="..\..\source\graphics\TextureManager.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
@@ -929,6 +930,8 @@
     <ClInclude Include="..\..\source\graphics\TextureObject.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl.h" />

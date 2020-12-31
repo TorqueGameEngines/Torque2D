@@ -1480,6 +1480,9 @@
     <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -3324,6 +3327,12 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl_ScriptBinding.h">
       <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
