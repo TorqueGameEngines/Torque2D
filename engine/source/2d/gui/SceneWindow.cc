@@ -1144,7 +1144,7 @@ void SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& e
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseEnter( const GuiEvent& event )
+void SceneWindow::onTouchEnter( const GuiEvent& event )
 {
     // Dispatch input event.
     dispatchInputEvent(mouseEventEnterName, event);
@@ -1152,7 +1152,7 @@ void SceneWindow::onMouseEnter( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseLeave( const GuiEvent& event )
+void SceneWindow::onTouchLeave( const GuiEvent& event )
 {
     // Dispatch input event.
     dispatchInputEvent(mouseEventLeaveName, event);
@@ -1160,7 +1160,7 @@ void SceneWindow::onMouseLeave( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseDown( const GuiEvent& event )
+void SceneWindow::onTouchDown( const GuiEvent& event )
 {
     // Lock Mouse (if necessary).
     if(mLockMouse)
@@ -1172,7 +1172,7 @@ void SceneWindow::onMouseDown( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseUp( const GuiEvent& event )
+void SceneWindow::onTouchUp( const GuiEvent& event )
 {
     // Lock Mouse (if necessary).
     if(mLockMouse)
@@ -1184,7 +1184,7 @@ void SceneWindow::onMouseUp( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseMove( const GuiEvent& event )
+void SceneWindow::onTouchMove( const GuiEvent& event )
 {
     // Dispatch input event.
     dispatchInputEvent(inputEventMovedName, event);
@@ -1192,7 +1192,7 @@ void SceneWindow::onMouseMove( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseDragged( const GuiEvent& event )
+void SceneWindow::onTouchDragged( const GuiEvent& event )
 {
     // Dispatch input event.
     dispatchInputEvent(inputEventDraggedName, event);
@@ -1784,7 +1784,7 @@ void SceneWindow::renderMetricsOverlay( Point2I offset, const RectI& updateRect 
     // Calculate Debug Banner Offset.
     Point2I bannerOffset = updateRect.point + Point2I(8,8);
 
-    static GLfloat sWindowVertices[] = {
+    GLfloat sWindowVertices[] = {
         (GLfloat)updateRect.point.x, (GLfloat)updateRect.point.y,
         (GLfloat)updateRect.point.x + updateRect.extent.x, (GLfloat)updateRect.point.y,
         (GLfloat)updateRect.point.x, (GLfloat)updateRect.point.y + bannerHeight + 16,

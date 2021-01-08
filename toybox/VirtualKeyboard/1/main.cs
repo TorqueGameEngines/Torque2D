@@ -1,12 +1,12 @@
 function VirtualKeyboard::create(%this)
 {
    %this.resetState();
-   
+
 }
 
 function VirtualKeyboard::destroy(%this)
 {
-   
+
 }
 
 function VirtualKeyboard::resetState(%this)
@@ -20,22 +20,22 @@ function VirtualKeyboard::push(%this, %targetGui, %textBox, %showClose)
 {
    Sandbox.add( TamlRead("./gui/keyboardGui.taml") );
    %textBox.setText("");
-   
+
    %this.targetGui = %targetGui;
    %this.textBox = %textBox;
    Canvas.pushDialog(%targetGui);
    // resize to targetGui
    %targetExtent = %targetGui.Extent;
-   KeyboardGui.resize(0, 0, %targetExtent._0, %targetExtent._1); 
+   KeyboardGui.resize(0, 0, %targetExtent._0, %targetExtent._1);
    %this.targetGui.addGuiControl(KeyboardSet);
    %textBox.setFirstResponder();
-   
+
    if (%showClose)
       keyCloseBtn.setVisible(true);
    else
       keyCloseBtn.setVisible(false);
    %this.toLower();
-   
+
 }
 
 function VirtualKeyboard::Pop(%this)
@@ -55,11 +55,11 @@ function VirtualKeyboard::toLower(%this)
    toNumber_symbolBtn.visible = false;
    toLower_UpperLockBtn.visible = false;
    toUpperLockBtn.visible =false;
-   
+
    toUpperBtn.visible = true;
    toNumberBtn.visible = true;
    keyboardSet.Image = "VirtualKeyboard:keyboardAlphaLower";
-   
+
 }
 
 function VirtualKeyboard::toUpper(%this)
@@ -86,7 +86,7 @@ function VirtualKeyboard::toUpperLock(%this)
    toLower_NumberBtn.visible = false;
    toSymbolBtn.visible = false;
    toNumber_symbolBtn.visible = false;
-   
+
    toLower_UpperLockBtn.visible = true;
    toNumberBtn.visible = true;
    keyboardSet.Image = "VirtualKeyboard:keyboardAlpha";
@@ -101,7 +101,7 @@ function VirtualKeyboard::toNumber(%this)
    toNumber_symbolBtn.visible = false;
    toLower_UpperLockBtn.visible = false;
    toUpperLockBtn.visible =false;
-   
+
    toSymbolBtn.visible = true;
    toLower_NumberBtn.visible = true;
    keyboardSet.Image = "VirtualKeyboard:keyboardNumber";
@@ -116,10 +116,10 @@ function VirtualKeyboard::toSymbol(%this)
    toNumberBtn.visible = false;
    toLower_UpperLockBtn.visible = false;
    toUpperLockBtn.visible =false;
-   
+
    toNumber_symbolBtn.visible = true;
    toLower_NumberBtn.visible = true;
-   
+
    keyboardSet.Image = "VirtualKeyboard:keyboardSymbol";
 }
 
@@ -190,16 +190,17 @@ if(!isObject(GuiKeyboardProfile)) new GuiControlProfile (GuiKeyboardProfile)
     mouseOverSelected = false;
 
     // fill color
-    opaque = false;
-    fillColor = "211 211 211";
-    fillColorHL = "244 244 244";
-    fillColorNA = "244 244 244";
+    fillColor = "211 211 211 255";
+    fillColorHL = "244 244 244 255";
+    fillColorSL = "244 244 244 255";
+    fillColorNA = "244 244 244 255";
 
     // border color
     border = 0;
     borderColor   = "100 100 100 255";
-    borderColorHL = "128 128 128";
-    borderColorNA = "64 64 64";
+    borderColorHL = "128 128 128 255";
+    borderColorSL = "128 128 128 255";
+    borderColorNA = "64 64 64 255";
 
     // font
     fontType = $platformFontType;
@@ -207,14 +208,11 @@ if(!isObject(GuiKeyboardProfile)) new GuiControlProfile (GuiKeyboardProfile)
 
     fontColor = "0 0 0";
     fontColorHL = "32 100 100";
+    fontColorSL= "10 10 10";
     fontColorNA = "0 0 0";
-    fontColorSEL= "10 10 10";
 
     // used by guiTextControl
-    modal = true;
-    justify = "left";
-    autoSizeWidth = false;
-    autoSizeHeight = false;
+    align = "left";
     returnTab = false;
     numbersOnly = false;
     cursorColor = "0 0 0 255";

@@ -19,8 +19,8 @@ function TorqueSuitTheme::init(%this)
 		%this.fontSize = 18;
 	}
 
-	%this.color1 = "48 0 34 255";
-	%this.color2 = "128 25 70 255";
+	%this.color1 = "34 19 30 255";
+	%this.color2 = "62 32 52 255";
 	%this.color3 = "166 38 70 255";
 	%this.color4 = "246 75 72 255";
 	%this.color5 = "33 191 132 255";

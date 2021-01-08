@@ -31,7 +31,7 @@ ConsoleMethodWithDocs(GuiCheckBoxCtrl, setStateOn, ConsoleVoid, 3, 3, (isStateOn
 }
 
 /*! Gets the current state of the control.
-	@return Returns true if on and false if off.
+	@return Returns True if on and false if off.
 */
 ConsoleMethodWithDocs(GuiCheckBoxCtrl, getStateOn, ConsoleBool, 2, 2, ())
 {

@@ -26,7 +26,7 @@ Sandbox.customLabelSpacing = "18";
 Sandbox.customOptionSpacing = "15";
 Sandbox.customContainerExtent = "250 3";
 Sandbox.containerXPosition = "20";
-Sandbox.flagOptionExtent = "240 35";
+Sandbox.flagOptionExtent = "240 30";
 Sandbox.buttonOptionExtent = "240 35";
 Sandbox.spinnerExtent = "22 25";
 Sandbox.intOptionExtent = "196 25";
@@ -54,13 +54,13 @@ function createCustomLabel(%text)
     %labelWidth = Sandbox.customLabelWidth + (%characterCount * 5);
     %labelExtent = %labelWidth SPC Sandbox.customLabelHeight;
 
-    %labelControl = new GuiTextCtrl()
+    %labelControl = new GuiControl()
     {
         text = %text;
         Extent = %labelExtent;
         HorizSizing = "relative";
         VertSizing = "relative";
-        Profile = "GuiTextProfile";
+        Profile = "GuiLabelProfile";
         canSaveDynamicFields = "0";
         isContainer = "0";
         Position = "3 0";
@@ -105,13 +105,13 @@ function addFlagOption( %label, %callback, %startingValue, %shouldReset, %toolti
         VertSizing = "relative";
     };
 
-    %button = new GuiButtonCtrl()
+    %button = new GuiCheckBoxCtrl()
     {
         canSaveDynamicFields = "0";
         HorizSizing = "relative";
         VertSizing = "relative";
         isContainer = "0";
-        Profile = "BlueButtonProfile";
+        Profile = "GuiCheckBoxProfile";
         Position = "0 0";
         Extent = Sandbox.flagOptionExtent;
         Visible = "1";
@@ -125,9 +125,6 @@ function addFlagOption( %label, %callback, %startingValue, %shouldReset, %toolti
         toolTipProfile = "GuiToolTipProfile";
         toolTip = %tooltipText;
         text = %label;
-        groupNum = "-1";
-        buttonType = "ToggleButton";
-        useMouseEvents = "0";
      };
 
     %button.setStateOn(%startingValue);
@@ -282,7 +279,7 @@ function addNumericOption( %label, %min, %max, %step, %callback, %startingValue,
         VertSizing = "relative";
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiDefaultProfile";
+        Profile = "GuiSpriteProfile";
         Position = %spinnerPosition;
         Extent = Sandbox.spinnerExtent;
         MinExtent = "8 2";
@@ -334,7 +331,7 @@ function addNumericOption( %label, %min, %max, %step, %callback, %startingValue,
         Step = %step;
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiDefaultProfile";
+        Profile = "GuiSpriteProfile";
         Position = %spinnerPosition;
         Extent = Sandbox.spinnerExtent;
         MinExtent = "8 2";
@@ -507,7 +504,10 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         canSaveDynamicFields = "1";
         isContainer = "1";
         class = "CustomScrollControl";
-        Profile = "GuiLightScrollProfile";
+        Profile = "GuiScrollProfile";
+		ThumbProfile = "GuiScrollThumbProfile";
+		TrackProfile = "GuiScrollTrackProfile";
+		ArrowProfile = "GuiScrollArrowProfile";
         HorizSizing = "relative";
         VertSizing = "relative";
         Position = "3 3";
@@ -534,7 +534,7 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
         Profile = "GuiTransparentProfile";
         HorizSizing = "relative";
         VertSizing = "relative";
-        Position = "25 1";
+        Position = "0 1";
         Extent = %arrayListWidth SPC %arrayListHeight;
         MinExtent = "1 2";
         canSave = "1";
@@ -596,7 +596,7 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
     {
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiDefaultProfile";
+        Profile = "GuiSpriteProfile";
         HorizSizing = "relative";
         VertSizing = "relative";
         Position = %buttonX SPC %upButtonY;
@@ -622,7 +622,7 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
     {
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiDefaultProfile";
+        Profile = "GuiSpriteProfile";
         HorizSizing = "relative";
         VertSizing = "relative";
         Position = %buttonX SPC %downButtonY;

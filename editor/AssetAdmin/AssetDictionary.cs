@@ -74,7 +74,14 @@ function AssetDictionary::load(%this)
 			};
 			ThemeManager.setProfile(%texture, "spriteProfile");
 			%button.add(%texture);
-			%texture.setImage(%assetID);
+			if(%this.Type $= "ImageAsset")
+			{
+				%texture.setImage(%assetID);
+			}
+			else if(%this.Type $= "AnimationAsset")
+			{
+				%texture.setAnimation(%assetID);
+			}
 		}
 	}
 	%query.delete();

@@ -28,12 +28,20 @@
 
 void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state)
 {
-	ColorI fillColor = profile->getFillColor(state);
-	renderBorderedRect(bounds, profile, state, fillColor);
+	if(profile)
+	{
+		ColorI fillColor = profile->getFillColor(state);
+		renderBorderedRect(bounds, profile, state, fillColor);
+	}
 }
 
 void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor)
 {
+	if (!profile)
+	{
+		return;
+	}
+
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();

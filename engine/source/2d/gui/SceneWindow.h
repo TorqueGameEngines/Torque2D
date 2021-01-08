@@ -300,13 +300,13 @@ public:
     virtual void resize(const Point2I &newPosition, const Point2I &newExtent);
     virtual void onRender( Point2I offset, const RectI& updateRect );
 
-    virtual void onMouseEnter( const GuiEvent& event );
-    virtual void onMouseLeave( const GuiEvent& event );
+    virtual void onTouchEnter( const GuiEvent& event );
+    virtual void onTouchLeave( const GuiEvent& event );
 
-    virtual void onMouseDown( const GuiEvent& event );
-    virtual void onMouseUp( const GuiEvent& event );
-    virtual void onMouseMove( const GuiEvent& event );
-    virtual void onMouseDragged( const GuiEvent& event );
+    virtual void onTouchDown( const GuiEvent& event );
+    virtual void onTouchUp( const GuiEvent& event );
+    virtual void onTouchMove( const GuiEvent& event );
+    virtual void onTouchDragged( const GuiEvent& event );
 
     virtual void onMiddleMouseDown(const GuiEvent &event);
     virtual void onMiddleMouseUp(const GuiEvent &event);

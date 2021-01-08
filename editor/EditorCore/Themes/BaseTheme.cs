@@ -68,7 +68,7 @@ function BaseTheme::makeTipProfile(%this)
 
 	%this.tipProfile = new GuiControlProfile()
 	{
-		fillColor = %this.setAlpha(%this.color3, 100);
+		fillColor = %this.setAlpha(%this.color3, 220);
 
 		fontType = %this.font;
 		fontSize = %this.fontSize;
@@ -94,7 +94,7 @@ function BaseTheme::makeGeneralProfiles(%this)
 	{
 		padding = 0;
 		border = %this.borderSize;
-		borderColor = "0 0 0 60";
+		borderColor = %this.color5;
 	};
 	//A simple, well-rounded profile for text or containers
 	%this.simpleProfile = new GuiControlProfile()
@@ -107,7 +107,27 @@ function BaseTheme::makeGeneralProfiles(%this)
 		align = center;
 		vAlign = middle;
 
-		borderDefault = %standardBorder;
+		borderDefault = %simpleBorder;
+	};
+
+	%simpleBorder2 = new GuiBorderProfile()
+	{
+		padding = 10;
+		border = %this.borderSize;
+		borderColor = %this.color5;
+	};
+	//A simple, well-rounded profile for text or containers
+	%this.simpleProfile2 = new GuiControlProfile()
+	{
+		fillColor = %this.color1;
+
+		fontType = %this.font;
+		fontSize = %this.fontSize + 2;
+		fontColor = %this.color4;
+		align = center;
+		vAlign = middle;
+
+		borderDefault = %simpleBorder2;
 	};
 
 	%this.spriteProfile = new GuiControlProfile()
@@ -675,10 +695,9 @@ function BaseTheme::makeScrollProfile(%this)
 	};
 	%this.scrollProfile = new GuiControlProfile()
 	{
-			opaque = true;
 	    fillColor = %this.setAlpha(%this.color2, 180);
 
-			borderDefault = %mainBorder;
+		borderDefault = %mainBorder;
 	};
 }
 
@@ -701,15 +720,7 @@ function BaseTheme::adjustValue(%this, %color, %percent)
 	%blue = getWord(%color, 2);
 	%alpha = getWord(%color, 3);
 
-	%largest = %red;
-	if(%green > %largest)
-	{
-		%largest = %green;
-	}
-	if(%blue > %largest)
-	{
-		%largest = %blue;
-	}
+	%largest = mGetMax(%red, mGetMax(%blue, %green));
 	%currentValue = %largest / 255;
 	%fullRed = %red / %currentValue;
 	%fullGreen = %green / %currentValue;

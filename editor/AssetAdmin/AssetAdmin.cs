@@ -46,6 +46,17 @@ function AssetAdmin::create(%this)
 
 	%this.guiPage.add(%this.scroller);
 
+	%this.dictionaryContainer = new GuiChainCtrl()
+	{
+		HorizSizing="bottom";
+		VertSizing="right";
+		Position="0 0";
+		Extent="310 768";
+		MinExtent="220 200";
+	};
+	ThemeManager.setProfile(%this.dictionaryContainer, "emptyProfile");
+	%this.scroller.add(%this.dictionaryContainer);
+
 	%this.Dictionary["ImageAsset"] = new GuiPanelCtrl()
 	{
 		Class = AssetDictionary;
@@ -60,7 +71,23 @@ function AssetAdmin::create(%this)
 	};
 	%this.Dictionary["ImageAsset"].setExpandEase("EaseOutBounce", 1500);
 	ThemeManager.setProfile(%this.Dictionary["ImageAsset"], "panelProfile");
-	%this.scroller.add(%this.Dictionary["ImageAsset"]);
+	%this.dictionaryContainer.add(%this.Dictionary["ImageAsset"]);
+
+	%this.Dictionary["AnimationAsset"] = new GuiPanelCtrl()
+	{
+		Class = AssetDictionary;
+		Text="Animation Assets";
+		command="";
+		HorizSizing="bottom";
+		VertSizing="right";
+		Position="0 0";
+		Extent="310 22";
+		MinExtent="80 22";
+		Type = "AnimationAsset";
+	};
+	%this.Dictionary["AnimationAsset"].setExpandEase("EaseOutBounce", 1500);
+	ThemeManager.setProfile(%this.Dictionary["AnimationAsset"], "panelProfile");
+	%this.dictionaryContainer.add(%this.Dictionary["AnimationAsset"]);
 
 	EditorCore.FinishRegistration(%this.guiPage);
 }

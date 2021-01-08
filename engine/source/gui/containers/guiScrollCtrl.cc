@@ -885,6 +885,11 @@ GuiControlState GuiScrollCtrl::getRegionCurrentState(GuiScrollCtrl::Region regio
 
 void GuiScrollCtrl::renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile* profile, GuiControlState state, GuiDirection direction)
 {
+	if (!profile)
+	{
+		return;
+	}
+
 	renderBorderedRect(bounds, profile, state);
 
 	RectI ctrlRect = applyMargins(bounds.point, bounds.extent, state, profile);
@@ -924,11 +929,11 @@ void GuiScrollCtrl::renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile
 
 void GuiScrollCtrl::renderVScrollBar(const Point2I& offset)
 {
-	if(mHasVScrollBar)
+	if(mHasVScrollBar && mTrackProfile && mThumbProfile)
 	{ 
 		if(mVBarEnabled)
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mUpArrowRect.point + offset, mUpArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::UpArrow), GuiDirection::Up);
 				renderBorderedRectWithArrow(RectI(mDownArrowRect.point + offset, mDownArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::DownArrow), GuiDirection::Down);
@@ -943,7 +948,7 @@ void GuiScrollCtrl::renderVScrollBar(const Point2I& offset)
 		}
 		else
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mUpArrowRect.point + offset, mUpArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Up);
 				renderBorderedRectWithArrow(RectI(mDownArrowRect.point + offset, mDownArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Down);
@@ -955,11 +960,11 @@ void GuiScrollCtrl::renderVScrollBar(const Point2I& offset)
 
 void GuiScrollCtrl::renderHScrollBar(const Point2I& offset)
 {
-	if(mHasHScrollBar)
+	if(mHasHScrollBar && mTrackProfile && mThumbProfile)
 	{
 		if (mHBarEnabled)
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::LeftArrow), GuiDirection::Left);
 				renderBorderedRectWithArrow(RectI(mRightArrowRect.point + offset, mRightArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::RightArrow), GuiDirection::Right);
@@ -974,7 +979,7 @@ void GuiScrollCtrl::renderHScrollBar(const Point2I& offset)
 		}
 		else
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Left);
 				renderBorderedRectWithArrow(RectI(mRightArrowRect.point + offset, mRightArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Right);

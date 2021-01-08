@@ -192,7 +192,7 @@ void GuiControl::initPersistFields()
    endGroup("Localization");
 
    addGroup("Text");
-   addField("text", TypeCaseString, Offset(mText, GuiControl));
+   addProtectedField("text", TypeCaseString, Offset(mText, GuiControl), setTextProperty, getTextProperty, "");
    addField("textID", TypeString, Offset(mTextID, GuiControl));
    endGroup("Text");
 }
