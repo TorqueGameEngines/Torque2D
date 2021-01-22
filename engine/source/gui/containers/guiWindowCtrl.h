@@ -31,10 +31,10 @@
 ///
 /// @ingroup gui_group Gui System
 /// @{
-class GuiWindowCtrl : public GuiTextCtrl
+class GuiWindowCtrl : public GuiControl
 {
    private:
-      typedef GuiTextCtrl Parent;
+      typedef GuiControl Parent;
 
       bool mResizeWidth;
       bool mResizeHeight;

@@ -1372,9 +1372,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp">
       <Filter>Box2D\Particle</Filter>
     </ClCompile>
@@ -3177,9 +3174,6 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h">
       <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
-      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h">
       <Filter>Box2D\Particle</Filter>

@@ -122,7 +122,6 @@ if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
 	align = center;
 	vAlign = middle;
 
-    // bitmap information
 	cursorColor = "0 0 0 255";
 
 	borderDefault = GuiDefaultBorderProfile;

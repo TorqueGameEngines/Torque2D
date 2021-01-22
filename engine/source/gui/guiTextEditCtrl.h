@@ -30,15 +30,18 @@
 #include "gui/guiTextCtrl.h"
 #endif
 
-class GuiTextEditCtrl : public GuiTextCtrl
+class GuiTextEditCtrl : public GuiControl
 {
 private:
-   typedef GuiTextCtrl Parent;
+   typedef GuiControl Parent;
 
    static U32 smNumAwake;
 
 protected:
 
+	S32 mMaxStrLen;   // max string len, must be less then or equal to 255
+	Resource<GFont> mFont;
+	bool     mTruncateWhenUnfocused;
    StringBuffer mTextBuffer;
 
    StringTableEntry mValidateCommand;
@@ -86,6 +89,8 @@ protected:
    UTF16   **mHistoryBuf;
    void updateHistory(StringBuffer *txt, bool moveIndex);
 
+   S32 textBufferWidth(StringBuffer buffer);
+   StringBuffer truncate(StringBuffer buffer, StringBuffer terminationString, S32 width);
 
 public:
    GuiTextEditCtrl();
@@ -94,6 +99,7 @@ public:
    static void initPersistFields();
 
    bool onAdd();
+   void inspectPostApply();
    bool onWake();
    void onSleep();
 
@@ -104,6 +110,8 @@ public:
 
    virtual void setText(const UTF8* txt);
    virtual void setText(const UTF16* txt);
+   virtual void setTextID(S32 id);
+   virtual void setTextID(const char *id);
    S32   getCursorPos()   { return( mCursorPos ); }
    void  reallySetCursorPos( const S32 newPos );
    
@@ -134,7 +142,9 @@ public:
    virtual void drawText( const RectI &drawRect, GuiControlState currentState );
 	
 	void playDeniedSound();
-	void execConsoleCallback();	
+	void execConsoleCallback();
+
+	enum Constants { MAX_STRING_LENGTH = 1024 };
 };
 
 #endif //_GUI_TEXTEDIT_CTRL_H

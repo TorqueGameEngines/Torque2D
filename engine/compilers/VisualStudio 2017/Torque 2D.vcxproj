@@ -419,7 +419,6 @@
     <ClCompile Include="..\..\source\gui\guiPopUpCtrlEx.cc" />
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc" />
@@ -961,7 +960,6 @@
     <ClInclude Include="..\..\source\gui\guiPopUpCtrlEx.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextListCtrl.h" />
