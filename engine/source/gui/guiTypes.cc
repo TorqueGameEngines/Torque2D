@@ -57,7 +57,7 @@ void GuiCursor::initPersistFields()
 bool GuiCursor::onAdd()
 {
    if(!Parent::onAdd())
-      return false;
+	  return false;
 
    Sim::getGuiDataGroup()->addObject(this);
 
@@ -73,10 +73,10 @@ void GuiCursor::render(const Point2I &pos)
 {
    if (!mTextureHandle && mBitmapName && mBitmapName[0])
    {
-      mTextureHandle = TextureHandle(mBitmapName, TextureHandle::BitmapTexture);
-      if(!mTextureHandle)
-         return;
-      mExtent.set(mTextureHandle.getWidth(), mTextureHandle.getHeight());
+	  mTextureHandle = TextureHandle(mBitmapName, TextureHandle::BitmapTexture);
+	  if(!mTextureHandle)
+		 return;
+	  mExtent.set(mTextureHandle.getWidth(), mTextureHandle.getHeight());
    }
 
    // Render the cursor centered according to dimensions of texture
@@ -96,8 +96,7 @@ IMPLEMENT_CONOBJECT(GuiBorderProfile);
 
 GuiBorderProfile::GuiBorderProfile()
 {
-	S32 stateCount = static_cast<S32>(StateCount);
-	for(S32 i = 0; i < stateCount; i++)
+	for(S32 i = 0; i < 4; i++)
 	{
 		mMargin[i] = 0;
 		mBorder[i] = 0;
@@ -156,22 +155,22 @@ void GuiBorderProfile::onRemove()
 
 S32 GuiBorderProfile::getMargin(const GuiControlState state)
 {
-	return getMax(mMargin[static_cast<S32>(state)], 0);
+	return getMax(mMargin[getStateIndex(state)], 0);
 }
 
 S32 GuiBorderProfile::getBorder(const GuiControlState state)
 {
-	return getMax(mBorder[static_cast<S32>(state)], 0);
+	return getMax(mBorder[getStateIndex(state)], 0);
 }
 
 const ColorI& GuiBorderProfile::getBorderColor(const GuiControlState state)
 {
-	return mBorderColor[static_cast<S32>(state)];
+	return mBorderColor[getStateIndex(state)];
 }
 
 S32 GuiBorderProfile::getPadding(const GuiControlState state)
 {
-	return getMax(mPadding[static_cast<S32>(state)], 0);
+	return getMax(mPadding[getStateIndex(state)], 0);
 }
 
 //------------------------------------------------------------------------------
@@ -195,25 +194,25 @@ static EnumTable gVAlignTable(3, &vAlignEnums[0]);
 
 static EnumTable::Enums charsetEnums[]=
 {
-    { TGE_ANSI_CHARSET,         "ANSI" },
-    { TGE_SYMBOL_CHARSET,       "SYMBOL" },
-    { TGE_SHIFTJIS_CHARSET,     "SHIFTJIS" },
-    { TGE_HANGEUL_CHARSET,      "HANGEUL" },
-    { TGE_HANGUL_CHARSET,       "HANGUL" },
-    { TGE_GB2312_CHARSET,       "GB2312" },
-    { TGE_CHINESEBIG5_CHARSET,  "CHINESEBIG5" },
-    { TGE_OEM_CHARSET,          "OEM" },
-    { TGE_JOHAB_CHARSET,        "JOHAB" },
-    { TGE_HEBREW_CHARSET,       "HEBREW" },
-    { TGE_ARABIC_CHARSET,       "ARABIC" },
-    { TGE_GREEK_CHARSET,        "GREEK" },
-    { TGE_TURKISH_CHARSET,      "TURKISH" },
-    { TGE_VIETNAMESE_CHARSET,   "VIETNAMESE" },
-    { TGE_THAI_CHARSET,         "THAI" },
-    { TGE_EASTEUROPE_CHARSET,   "EASTEUROPE" },
-    { TGE_RUSSIAN_CHARSET,      "RUSSIAN" },
-    { TGE_MAC_CHARSET,          "MAC" },
-    { TGE_BALTIC_CHARSET,       "BALTIC" },
+	{ TGE_ANSI_CHARSET,         "ANSI" },
+	{ TGE_SYMBOL_CHARSET,       "SYMBOL" },
+	{ TGE_SHIFTJIS_CHARSET,     "SHIFTJIS" },
+	{ TGE_HANGEUL_CHARSET,      "HANGEUL" },
+	{ TGE_HANGUL_CHARSET,       "HANGUL" },
+	{ TGE_GB2312_CHARSET,       "GB2312" },
+	{ TGE_CHINESEBIG5_CHARSET,  "CHINESEBIG5" },
+	{ TGE_OEM_CHARSET,          "OEM" },
+	{ TGE_JOHAB_CHARSET,        "JOHAB" },
+	{ TGE_HEBREW_CHARSET,       "HEBREW" },
+	{ TGE_ARABIC_CHARSET,       "ARABIC" },
+	{ TGE_GREEK_CHARSET,        "GREEK" },
+	{ TGE_TURKISH_CHARSET,      "TURKISH" },
+	{ TGE_VIETNAMESE_CHARSET,   "VIETNAMESE" },
+	{ TGE_THAI_CHARSET,         "THAI" },
+	{ TGE_EASTEUROPE_CHARSET,   "EASTEUROPE" },
+	{ TGE_RUSSIAN_CHARSET,      "RUSSIAN" },
+	{ TGE_MAC_CHARSET,          "MAC" },
+	{ TGE_BALTIC_CHARSET,       "BALTIC" },
 };
 
 #define NUMCHARSETENUMS     (sizeof(charsetEnums) / sizeof(EnumTable::Enums))
@@ -226,14 +225,15 @@ GuiControlProfile::GuiControlProfile(void) :
    mFontColor(mFontColors[BaseColor]),
    mFontColorHL(mFontColors[ColorHL]),
    mFontColorNA(mFontColors[ColorNA]),
-   mFontColorSL(mFontColors[ColorSL])
+   mFontColorSL(mFontColors[ColorSL]),
+   mImageAssetID( StringTable->EmptyString )
 {
-    mRefCount = 0;
-    mBitmapArrayRects.clear();
-    mMouseOverSelected = false;
-    
-    mTabable       = false;
-    mCanKeyFocus   = false;
+	mRefCount = 0;
+	mBitmapArrayRects.clear();
+	mMouseOverSelected = false;
+	
+	mTabable       = false;
+	mCanKeyFocus   = false;
 	mUseInput      = true;
 
 	mBorderDefault = NULL;
@@ -241,22 +241,25 @@ GuiControlProfile::GuiControlProfile(void) :
 	mBorderRight = NULL;
 	mBorderTop = NULL;
 	mBorderBottom = NULL;
-    
-    // default font
-    mFontType      = StringTable->EmptyString;
-    mFontSize      = 12;
-    mFontCharset   = TGE_ANSI_CHARSET;
-    mFontColors[BaseColor].set(255,255,255,255);
-    
-    // default bitmap
-    mBitmapName    = NULL;
-    mTextOffset.set(0,0);
-    
-    mAlignment     = LeftAlign;
+	
+	// default font
+	mFontType      = StringTable->EmptyString;
+	mFontSize      = 12;
+	mFontCharset   = TGE_ANSI_CHARSET;
+	mFontColors[BaseColor].set(255,255,255,255);
+	
+	// default bitmap
+	mBitmapName    = NULL;
+	mTextOffset.set(0,0);
+
+	// default image asset
+	mImageAsset = NULL;
+	
+	mAlignment     = LeftAlign;
 	mVAlignment    = MiddleVAlign;
-    mReturnTab     = false;
-    mNumbersOnly   = false;
-    mProfileForChildren = NULL;
+	mReturnTab     = false;
+	mNumbersOnly   = false;
+	mProfileForChildren = NULL;
 
 	//fill color
 	mFillColor.set(0, 0, 0, 0);
@@ -309,6 +312,7 @@ void GuiControlProfile::initPersistFields()
    addField("cursorColor",   TypeColorI,     Offset(mCursorColor, GuiControlProfile));
 
    addField("bitmap",        TypeFilename,   Offset(mBitmapName, GuiControlProfile));
+   addProtectedField("imageAsset", TypeAssetId, Offset(mImageAssetID, GuiControlProfile), &setImageAsset, &getImageAsset, "The image asset ID used to render the control");
 
    addField("soundButtonDown", TypeAudioAssetPtr,  Offset(mSoundButtonDown, GuiControlProfile));
    addField("soundButtonOver", TypeAudioAssetPtr,  Offset(mSoundButtonOver, GuiControlProfile));
@@ -318,7 +322,7 @@ void GuiControlProfile::initPersistFields()
 bool GuiControlProfile::onAdd()
 {
    if(!Parent::onAdd())
-      return false;
+	  return false;
 
    Sim::getGuiDataGroup()->addObject(this);
 
@@ -328,22 +332,22 @@ bool GuiControlProfile::onAdd()
 S32 GuiControlProfile::constructBitmapArray()
 {
    if(mBitmapArrayRects.size())
-      return mBitmapArrayRects.size();
+	  return mBitmapArrayRects.size();
 
    GBitmap *bmp = mTextureHandle.getBitmap();
 
    // Make sure the texture exists.
    if( !bmp )
-      return 0;
+	  return 0;
   
    //get the separator color
    ColorI sepColor;
    if ( !bmp || !bmp->getColor( 0, 0, sepColor ) )
-    {
-      Con::errorf("Failed to create bitmap array from %s for profile %s - couldn't ascertain seperator color!", mBitmapName, getName());
-      AssertFatal( false, avar("Failed to create bitmap array from %s for profile %s - couldn't ascertain seperator color!", mBitmapName, getName()));
-      return 0;
-    }
+	{
+	  Con::errorf("Failed to create bitmap array from %s for profile %s - couldn't ascertain seperator color!", mBitmapName, getName());
+	  AssertFatal( false, avar("Failed to create bitmap array from %s for profile %s - couldn't ascertain seperator color!", mBitmapName, getName()));
+	  return 0;
+	}
 
    //now loop through all the scroll pieces, and find the bounding rectangle for each piece in each state
    S32 curY = 0;
@@ -353,84 +357,105 @@ S32 GuiControlProfile::constructBitmapArray()
    mBitmapArrayRects.clear();
    while(curY < (S32)bmp->getHeight())
    {
-      // skip any sep colors
-      bmp->getColor( 0, curY, color);
-      if(color == sepColor)
-      {
-         curY++;
-         continue;
-      }
-      // ok, process left to right, grabbing bitmaps as we go...
-      S32 curX = 0;
-      while(curX < (S32)bmp->getWidth())
-      {
-         bmp->getColor(curX, curY, color);
-         if(color == sepColor)
-         {
-            curX++;
-            continue;
-         }
-         S32 startX = curX;
-         while(curX < (S32)bmp->getWidth())
-         {
-            bmp->getColor(curX, curY, color);
-            if(color == sepColor)
-               break;
-            curX++;
-         }
-         S32 stepY = curY;
-         while(stepY < (S32)bmp->getHeight())
-         {
-            bmp->getColor(startX, stepY, color);
-            if(color == sepColor)
-               break;
-            stepY++;
-         }
-         mBitmapArrayRects.push_back(RectI(startX, curY, curX - startX, stepY - curY));
-      }
-      // ok, now skip to the next separation color on column 0
-      while(curY < (S32)bmp->getHeight())
-      {
-         bmp->getColor(0, curY, color);
-         if(color == sepColor)
-            break;
-         curY++;
-      }
+	  // skip any sep colors
+	  bmp->getColor( 0, curY, color);
+	  if(color == sepColor)
+	  {
+		 curY++;
+		 continue;
+	  }
+	  // ok, process left to right, grabbing bitmaps as we go...
+	  S32 curX = 0;
+	  while(curX < (S32)bmp->getWidth())
+	  {
+		 bmp->getColor(curX, curY, color);
+		 if(color == sepColor)
+		 {
+			curX++;
+			continue;
+		 }
+		 S32 startX = curX;
+		 while(curX < (S32)bmp->getWidth())
+		 {
+			bmp->getColor(curX, curY, color);
+			if(color == sepColor)
+			   break;
+			curX++;
+		 }
+		 S32 stepY = curY;
+		 while(stepY < (S32)bmp->getHeight())
+		 {
+			bmp->getColor(startX, stepY, color);
+			if(color == sepColor)
+			   break;
+			stepY++;
+		 }
+		 mBitmapArrayRects.push_back(RectI(startX, curY, curX - startX, stepY - curY));
+	  }
+	  // ok, now skip to the next separation color on column 0
+	  while(curY < (S32)bmp->getHeight())
+	  {
+		 bmp->getColor(0, curY, color);
+		 if(color == sepColor)
+			break;
+		 curY++;
+	  }
    }
    return mBitmapArrayRects.size();
 }
 
 void GuiControlProfile::incRefCount()
 {
-   if(!mRefCount++)
-   {
-      sFontCacheDirectory = Con::getVariable("$GUI::fontCacheDirectory");
+	if(!mRefCount++)
+	{
+		sFontCacheDirectory = Con::getVariable("$GUI::fontCacheDirectory");
 
-      //verify the font
-      mFont = GFont::create(mFontType, mFontSize, sFontCacheDirectory);
-      if (mFont.isNull())
-         Con::errorf("Failed to load/create profile font (%s/%d)", mFontType, mFontSize);
-       
-      if ( mBitmapName != NULL && mBitmapName != StringTable->EmptyString )
-      {
-          mTextureHandle = TextureHandle(mBitmapName, TextureHandle::BitmapKeepTexture);
-          if (!(bool)mTextureHandle)
-             Con::errorf("Failed to load profile bitmap (%s)",mBitmapName);
-      }
-   }
+		//verify the font
+		mFont = GFont::create(mFontType, mFontSize, sFontCacheDirectory);
+		if (mFont.isNull())
+			Con::errorf("Failed to load/create profile font (%s/%d)", mFontType, mFontSize);
+
+		//Set the bitmap
+		if ( mBitmapName != NULL && mBitmapName != StringTable->EmptyString )
+		{
+			mTextureHandle = TextureHandle(mBitmapName, TextureHandle::BitmapKeepTexture);
+			if (!(bool)mTextureHandle)
+				Con::errorf("Failed to load profile bitmap (%s)",mBitmapName);
+		}
+
+		//set the image asset
+		if (mImageAssetID != NULL && mImageAssetID != StringTable->EmptyString)
+		{
+			mImageAsset = mImageAssetID;
+		}
+	}
 }
 
 void GuiControlProfile::decRefCount()
 {
    AssertFatal(mRefCount, "GuiControlProfile::decRefCount: zero ref count");
    if(!mRefCount)
-      return;
+	  return;
 
    if(!--mRefCount)
    {
-      mFont = NULL;
-      mTextureHandle = NULL;
+	  mFont = NULL;
+	  mTextureHandle = NULL;
+	  mImageAsset.clear();
    }
+}
+
+void GuiControlProfile::setImageAsset(const char* pImageAssetID)
+{
+	// Sanity!
+	AssertFatal(pImageAssetID != NULL, "Cannot use a NULL asset ID.");
+
+	// Fetch the asset ID
+	mImageAsset = StringTable->insert(pImageAssetID);
+
+	// Assign asset if this profile is being used.
+	if (mRefCount != 0)
+		mImageAsset = pImageAssetID;
 }
 
 const ColorI& GuiControlProfile::getFillColor(const GuiControlState state)
@@ -439,15 +464,19 @@ const ColorI& GuiControlProfile::getFillColor(const GuiControlState state)
 	{
 	default:
 	case NormalState:
+	case NormalStateOn:
 		return mFillColor;
 		break;
 	case HighlightState:
+	case HighlightStateOn:
 		return mFillColorHL;
 		break;
 	case SelectedState:
+	case SelectedStateOn:
 		return mFillColorSL;
 		break;
 	case DisabledState:
+	case DisabledStateOn:
 		return mFillColorNA;
 		break;
 	}
@@ -459,15 +488,19 @@ const ColorI& GuiControlProfile::getFontColor(const GuiControlState state)
 	{
 	default:
 	case NormalState:
+	case NormalStateOn:
 		return mFontColor;
 		break;
 	case HighlightState:
+	case HighlightStateOn:
 		return mFontColorHL;
 		break;
 	case SelectedState:
+	case SelectedStateOn:
 		return mFontColorSL;
 		break;
 	case DisabledState:
+	case DisabledStateOn:
 		return mFontColorNA;
 		break;
 	}
@@ -479,20 +512,20 @@ ConsoleSetType( TypeGuiProfile )
 {
    GuiControlProfile *profile = NULL;
    if(argc == 1)
-      Sim::findObject(argv[0], profile);
+	  Sim::findObject(argv[0], profile);
 
    AssertWarn(profile != NULL, avar("GuiControlProfile: requested gui profile (%s) does not exist.", argv[0]));
    if(!profile)
-      profile = dynamic_cast<GuiControlProfile*>(Sim::findObject("GuiDefaultProfile"));
+	  profile = dynamic_cast<GuiControlProfile*>(Sim::findObject("GuiDefaultProfile"));
 
    AssertFatal(profile != NULL, avar("GuiControlProfile: unable to find specified profile (%s) and GuiDefaultProfile does not exist!", argv[0]));
 
    GuiControlProfile **obj = (GuiControlProfile **)dptr;
    if((*obj) == profile)
-      return;
+	  return;
 
    if(*obj)
-      (*obj)->decRefCount();
+	  (*obj)->decRefCount();
 
    *obj = profile;
    (*obj)->incRefCount();

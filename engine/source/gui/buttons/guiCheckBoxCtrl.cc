@@ -64,18 +64,18 @@ bool GuiCheckBoxCtrl::onWake()
 
 void GuiCheckBoxCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-	GuiControlState currentState = GuiControlState::NormalState;
+	GuiControlState currentState = mStateOn ? GuiControlState::NormalStateOn : GuiControlState::NormalState;
 	if (!mActive)
 	{
-		currentState = GuiControlState::DisabledState;
+		currentState = mStateOn ? GuiControlState::DisabledStateOn : GuiControlState::DisabledState;
 	}
-	else if (mDepressed || mStateOn)
+	else if (mDepressed)
 	{
-		currentState = GuiControlState::SelectedState;
+		currentState = mStateOn ? GuiControlState::SelectedStateOn : GuiControlState::SelectedState;
 	}
 	else if (mMouseOver)
 	{
-		currentState = GuiControlState::HighlightState;
+		currentState = mStateOn ? GuiControlState::HighlightStateOn : GuiControlState::HighlightState;
 	}
 
 	RectI ctrlRect = applyMargins(offset, mBounds.extent, currentState, mProfile);
@@ -92,33 +92,9 @@ void GuiCheckBoxCtrl::onRender(Point2I offset, const RectI &updateRect)
 	{
 		boxRect.extent.y = contentRect.point.y + contentRect.extent.y - boxRect.point.y;
 	}
-
-	if(mProfile->mBitmapName != NULL && mProfile->constructBitmapArray() >= 6)
-	{
-		//Use the bitmap to create the checkbox
-		S32 index = 1;
-		if (mStateOn || mDepressed)
-		{
-			index = 2;
-		}
-		if (mMouseOver)
-		{
-			index += 2;
-		}
-		else if (!mActive)
-		{
-			index += 4;
-		}
-
-		RectI dest = RectI(offset + mBoxOffset, mBoxExtent);
-		dglClearBitmapModulation();
-		dglDrawBitmapStretchSR(mProfile->mTextureHandle, dest, mProfile->mBitmapArrayRects[index-1]);
-	}
-	else
-	{
-		//Draw the checkbox
-		renderInnerControl(boxRect, currentState);
-	}
+	
+	//Draw the checkbox
+	renderInnerControl(boxRect, currentState);
 
 	RectI textRect(contentRect.point + mTextOffset, mTextExtent);
 
@@ -142,7 +118,7 @@ void GuiCheckBoxCtrl::onRender(Point2I offset, const RectI &updateRect)
 
 void GuiCheckBoxCtrl::renderInnerControl(RectI &boxRect, const GuiControlState currentState)
 {
-	renderBorderedRect(boxRect, mProfile, currentState);
+	renderUniversalRect(boxRect, mProfile, currentState);
 }
 
 void GuiCheckBoxCtrl::onAction()

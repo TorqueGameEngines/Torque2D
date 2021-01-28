@@ -251,7 +251,7 @@ void GuiTextEditCtrl::setText( const UTF8 *txt )
 	mProfile->incRefCount();
 	mFont = mProfile->mFont;
 
-	//Luma:	If the font isn't found, we want to decrement the profile usage and return now or we may crash!
+	//If the font isn't found, we want to decrement the profile usage and return now or we may crash!
 	if (mFont.isNull())
 	{
 		//decrement the profile referrence
@@ -1194,7 +1194,7 @@ void GuiTextEditCtrl::onRender(Point2I offset, const RectI & updateRect)
 		return;
 	}
 
-	renderBorderedRect(ctrlRect, mProfile, currentState);
+	renderUniversalRect(ctrlRect, mProfile, currentState);
 
 	//Render Text
 	dglSetBitmapModulation(mProfile->mFontColor);

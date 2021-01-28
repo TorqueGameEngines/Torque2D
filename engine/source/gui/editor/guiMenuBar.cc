@@ -981,11 +981,11 @@ void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
         highlightBounds.inset(1,1);
          if(walk == mouseDownMenu)
 		 {
-			renderBorderedRect(highlightBounds, mProfile, GuiControlState::HighlightState);
+			 renderUniversalRect(highlightBounds, mProfile, GuiControlState::HighlightState);
          }
 		 else if(walk == mouseOverMenu && mouseDownMenu == NULL)
 		 {
-			 renderBorderedRect(highlightBounds, mProfile, GuiControlState::NormalState);
+			 renderUniversalRect(highlightBounds, mProfile, GuiControlState::NormalState);
 		 }
 	  }
 

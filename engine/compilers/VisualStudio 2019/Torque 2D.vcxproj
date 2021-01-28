@@ -266,7 +266,6 @@
     <ClCompile Include="..\..\source\2d\core\Utility.cc" />
     <ClCompile Include="..\..\source\2d\core\Vector2.cc" />
     <ClCompile Include="..\..\source\2d\experimental\composites\WaveComposite.cc" />
-    <ClCompile Include="..\..\source\2d\gui\guiImageButtonCtrl.cc" />
     <ClCompile Include="..\..\source\2d\gui\guiSceneObjectCtrl.cc" />
     <ClCompile Include="..\..\source\2d\gui\guiSpriteCtrl.cc" />
     <ClCompile Include="..\..\source\2d\gui\SceneWindow.cc" />
@@ -714,8 +713,6 @@
     <ClInclude Include="..\..\source\2d\core\Vector2_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\experimental\composites\WaveComposite.h" />
     <ClInclude Include="..\..\source\2d\experimental\composites\WaveComposite_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl.h" />
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl_ScriptBindings.h" />
     <ClInclude Include="..\..\source\2d\gui\guiSceneObjectCtrl.h" />
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl.h" />
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl_ScriptBindings.h" />

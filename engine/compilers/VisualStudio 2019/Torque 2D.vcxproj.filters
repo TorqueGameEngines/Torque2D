@@ -1116,9 +1116,6 @@
     <ClCompile Include="..\..\source\2d\scene\WorldQuery.cc">
       <Filter>2d\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\2d\gui\guiImageButtonCtrl.cc">
-      <Filter>2d\gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\2d\gui\guiSpriteCtrl.cc">
       <Filter>2d\gui</Filter>
     </ClCompile>
@@ -2555,12 +2552,6 @@
     </ClInclude>
     <ClInclude Include="..\..\source\2d\scene\WorldQuery.h">
       <Filter>2d\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl.h">
-      <Filter>2d\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl_ScriptBindings.h">
-      <Filter>2d\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl.h">
       <Filter>2d\gui</Filter>

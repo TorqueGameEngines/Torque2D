@@ -464,7 +464,7 @@ void GuiControl::onRender(Point2I offset, const RectI &updateRect)
 		return;
 	}
 
-    renderBorderedRect(ctrlRect, mProfile, NormalState);
+	renderUniversalRect(ctrlRect, mProfile, NormalState);
 
 	//Render Text
 	dglSetBitmapModulation(mProfile->mFontColor);
@@ -696,7 +696,7 @@ bool GuiControl::renderTooltip(Point2I cursorPos, const char* tipText )
     dglSetClipRect(rect);
 
     // Draw body and border of the tool tip
-	renderBorderedRect(rect, mTooltipProfile, NormalState);
+	renderUniversalRect(rect, mTooltipProfile, NormalState);
 
     // Draw the text centered in the tool tip box
     dglSetBitmapModulation( mTooltipProfile->mFontColor );

@@ -278,14 +278,7 @@ void GuiButtonCtrl::onRender(Point2I offset, const RectI& updateRect)
 	GuiControlState currentState = getCurrentState();
 	RectI ctrlRect = applyMargins(offset, mBounds.extent, currentState, mProfile);
 
-	if(mProfile->mBitmapName != NULL && mProfile->constructBitmapArray() >= 36)
-	{
-		renderSizableBitmapBordersFilled(ctrlRect, getBitmapIndex(currentState), mProfile );
-	}
-	else
-	{
-		renderBorderedRect(ctrlRect, mProfile, currentState, getFillColor(currentState));
-	}
+	renderUniversalRect(ctrlRect, mProfile, currentState, getFillColor(currentState), true);
 
 	//Render Text
 	dglSetBitmapModulation(mProfile->getFontColor(currentState));

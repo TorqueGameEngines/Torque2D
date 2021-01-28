@@ -55,6 +55,10 @@
 #include "audio/AudioAsset.h"
 #endif
 
+#ifndef _IMAGE_ASSET_H_
+#include "2d/assets/ImageAsset.h"
+#endif
+
 #include "graphics/gFont.h"
 
 class GBitmap;
@@ -78,6 +82,10 @@ enum GuiControlState
 	HighlightState,				//Control is highlighted
 	SelectedState,				//Control has been selected
 	DisabledState,				//Control cannot be used
+	NormalStateOn,				//Used by controls like checkboxes to denote the normal state while checked
+	HighlightStateOn,			//The highlight state while on
+	SelectedStateOn,			//The selected state while on
+	DisabledStateOn,			//The disabled state while on
 	StateCount					//Not an actual state! Should always be at the end of the list.
 };
 
@@ -120,13 +128,14 @@ class GuiBorderProfile : public SimObject
 {
 private:
 	typedef SimObject Parent;
+	inline U8 getStateIndex(const GuiControlState state) { return state >= 4 ? state - 4 : state; }
 
 public:
-	S32 mMargin[static_cast<S32>(StateCount)];					//The distance between the edge and the start of the border. Margin is outside of the control.
-	S32 mBorder[static_cast<S32>(StateCount)];					//Width of the border.
-	ColorI mBorderColor[static_cast<S32>(StateCount)];			//The color of the border.
-	S32 mPadding[static_cast<S32>(StateCount)];					//The distance between the border and content of the control.
-	bool mUnderfill;											//True if the control's fill color should appear under the border.
+	S32 mMargin[static_cast<S32>(4)];					//The distance between the edge and the start of the border. Margin is outside of the control.
+	S32 mBorder[static_cast<S32>(4)];					//Width of the border.
+	ColorI mBorderColor[static_cast<S32>(4)];			//The color of the border.
+	S32 mPadding[static_cast<S32>(4)];					//The distance between the border and content of the control.
+	bool mUnderfill;									//True if the control's fill color should appear under the border.
 public:
 	DECLARE_CONOBJECT(GuiBorderProfile);
 	GuiBorderProfile();
@@ -218,6 +227,16 @@ public:
 
    Point2I mTextOffset;                            ///< Text offset for the control
 
+   // imageAsset members
+   StringTableEntry mImageAssetID;
+   AssetPtr<ImageAsset> mImageAsset;
+   void setImageAsset( const char* pImageAssetID );
+   inline StringTableEntry getImageAsset( void ) const { return mImageAssetID; }
+protected:
+	static bool setImageAsset(void* obj, const char* data) { static_cast<GuiControlProfile*>(obj)->setImageAsset(data); return false; }
+	static const char* getImageAsset(void* obj, const char* data) { return static_cast<GuiControlProfile*>(obj)->getImageAsset(); }
+
+public:
    // bitmap members
    StringTableEntry mBitmapName;                   ///< Bitmap file name for the bitmap of the control
    TextureHandle mTextureHandle;                   ///< Texture handle for the control

@@ -221,12 +221,12 @@
             Profile="GuiSpinnerProfile"
             tooltipprofile="GuiToolTipProfile"
             hovertime="1000" />
-        <GuiImageButtonCtrl
+        <GuiButtonCtrl
             Name="CategoryDownButton"
             command="ToyCategorySelectList.previousCategory();"
             canSaveDynamicFields="0"
             isContainer="0"
-            Profile="GuiSpriteProfile"
+            Profile="GuiMinusButtonProfile"
             HorizSizing="relative"
             VertSizing="relative"
             Position="0 18"
@@ -236,19 +236,13 @@
             Visible="1"
             Active="1"
             hovertime="1000"
-            groupNum="-1"
-            buttonType="PushButton"
-            useMouseEvents="0"
-            NormalImage="@asset=Sandbox:minusButtonNormal"
-            HoverImage="@asset=Sandbox:minusButtonHover"
-            DownImage="@asset=Sandbox:minusButtonDown"
-            InactiveImage="@asset=Sandbox:minusButtonInactive" />
-        <GuiImageButtonCtrl
+            text="" />
+        <GuiButtonCtrl
             Name="CategoryUpButton"
             command="ToyCategorySelectList.nextCategory();"
             canSaveDynamicFields="0"
             isContainer="0"
-            Profile="GuiSpriteProfile"
+            Profile="GuiPlusButtonProfile"
             HorizSizing="relative"
             VertSizing="relative"
             Position="192 18"
@@ -257,57 +251,40 @@
             canSave="1"
             Visible="1"
             Active="1"
-            groupNum="-1"
-            buttonType="PushButton"
-            useMouseEvents="0"
-            NormalImage="@asset=Sandbox:plusButtonNormal"
-            HoverImage="@asset=Sandbox:plusButtonHover"
-            DownImage="@asset=Sandbox:plusButtonDown"
-            InactiveImage="@asset=Sandbox:plusButtonInactive" />
+            text="" />
 
 		<!-- Toy Selection -->
-		<GuiImageButtonCtrl
+		<GuiButtonCtrl
 			Name="PreviousToyButton"
 			canSaveDynamicFields="0"
 			command="ToyListScroller.scrollToPrevious();"
 			isContainer="0"
-			Profile="GuiSpriteProfile"
+			Profile="GuiNorthButtonProfile"
 			HorizSizing="relative"
 			VertSizing="relative"
-			Position="70 65"
+			Position="105 65"
 			Extent="69 23"
-			MinExtent="8 2"
+			MinExtent="12 4"
 			canSave="1"
 			Visible="1"
 			Active="1"
-			groupNum="-1"
-			buttonType="PushButton"
-			useMouseEvents="0"
-			NormalImage="@asset=Sandbox:northArrowNormal"
-			HoverImage="@asset=Sandbox:northArrowHover"
-			DownImage="@asset=Sandbox:northArrowDown" />
+			Text="" />
 
-		<GuiImageButtonCtrl
+		<GuiButtonCtrl
 			Name="NextToyButton"
 			command="ToyListScroller.scrollToNext();"
 			canSaveDynamicFields="0"
 			isContainer="0"
-			Profile="GuiSpriteProfile"
+			Profile="GuiSouthButtonProfile"
 			HorizSizing="relative"
 			VertSizing="relative"
-			Position="70 700"
+			Position="105 700"
 			Extent="69 23"
-			MinExtent="8 2"
+			MinExtent="12 4"
 			canSave="1"
 			Visible="1"
 			Active="1"
-			hovertime="1000"
-			groupNum="-1"
-			buttonType="PushButton"
-			useMouseEvents="0"
-			NormalImage="@asset=Sandbox:southArrowNormal"
-			HoverImage="@asset=Sandbox:southArrowHover"
-			DownImage="@asset=Sandbox:southArrowDown" />
+			Text="" />
 
 		<!-- Toy Selection Scrollbox -->
         <GuiControl
