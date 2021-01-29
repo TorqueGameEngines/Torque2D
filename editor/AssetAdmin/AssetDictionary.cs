@@ -35,8 +35,6 @@ function AssetDictionary::onAdd(%this)
 	};
 	ThemeManager.setProfile(%this.grid, "emptyProfile");
 	%this.add(%this.grid);
-
-	%this.load();
 }
 
 function AssetDictionary::load(%this)
@@ -97,7 +95,6 @@ function AssetDictionary::load(%this)
 					Position = "0 0";
 				};
 				ThemeManager.setProfile(%texture, "spriteProfile");
-				%button.add(%texture);
 				if(%this.Type $= "ImageAsset")
 				{
 					%texture.setImage(%assetID);
@@ -107,6 +104,7 @@ function AssetDictionary::load(%this)
 					%texture.setAnimation(%assetID);
 					AssetDatabase.releaseAsset(%animationAsset.getImage());
 				}
+				%button.add(%texture);
 			}
 		}
 	}
@@ -116,10 +114,10 @@ function AssetDictionary::load(%this)
 function AssetDictionary::unload(%this)
 {
 	//Remove all the child gui controls
-	for(%i = %this.getCount() - 1; %i >= 0; %i++)
+	for(%i = %this.grid.getCount() - 1; %i >= 0; %i--)
 	{
-		%obj = %this.getObject(%i);
-		%obj.safeDelete();
+		%obj = %this.grid.getObject(%i);
+		%obj.delete();
 	}
 
 	//release all the assets we loaded for this - might take them out of memory

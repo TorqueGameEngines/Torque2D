@@ -157,10 +157,6 @@ void GuiTabBookCtrl::onChildAdded( GuiControl *child )
    calculatePageTabs();
 
    child->resize( mPageRect.point, mPageRect.extent );
-
-
-   // Select this Page
-   selectPage( page );
 }
 
 

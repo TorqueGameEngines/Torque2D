@@ -99,10 +99,12 @@ function AssetAdmin::destroy(%this)
 
 function AssetAdmin::open(%this)
 {
-	//%this.Dictionary["ImageAsset"].load();
+	%this.Dictionary["ImageAsset"].load();
+	%this.Dictionary["AnimationAsset"].load();
 }
 
 function AssetAdmin::close(%this)
 {
-	//%this.Dictionary["ImageAsset"].unload();
+	%this.Dictionary["ImageAsset"].unload();
+	%this.Dictionary["AnimationAsset"].unload();
 }

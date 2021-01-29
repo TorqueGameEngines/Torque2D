@@ -40,10 +40,11 @@ function FaceObjectBehavior::updateFace(%this)
 {
     if (!isObject(%this.target) || !%this.owner.active)
         return;
-   
+
     %origin = %this.owner.getPosition();
     %angle = mAtan( Vector2Sub( %this.target.getPosition(), %origin ) );
-    
+	%angle -= 90;
+
     if ( %this.turnSpeed > 0.0 )
     {
         %this.owner.rotateTo(%angle, %this.turnSpeed);
@@ -52,7 +53,7 @@ function FaceObjectBehavior::updateFace(%this)
     {
         %this.owner.setAngle(%angle);
     }
-    
-      
+
+
     %this.schedule(200, updateFace);
 }
