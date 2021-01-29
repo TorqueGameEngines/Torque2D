@@ -64,23 +64,49 @@ function AssetDictionary::load(%this)
 			ThemeManager.setProfile(%button, "tipProfile", "TooltipProfile");
 			%this.grid.add(%button);
 
-			%texture = new GuiSpriteCtrl()
+			if(%this.Type $= "ImageAsset" || %this.Type $= "AnimationAsset")
 			{
-				HorizSizing="center";
-				VertSizing="bottom";
-				Extent = "50 50";
-				minExtent="8 8";
-				Position = "0 0";
-			};
-			ThemeManager.setProfile(%texture, "spriteProfile");
-			%button.add(%texture);
-			if(%this.Type $= "ImageAsset")
-			{
-				%texture.setImage(%assetID);
-			}
-			else if(%this.Type $= "AnimationAsset")
-			{
-				%texture.setAnimation(%assetID);
+				if(%this.Type $= "ImageAsset")
+				{
+					%imageAsset = AssetDatabase.acquireAsset(%assetID);
+				}
+				else if(%this.Type $= "AnimationAsset")
+				{
+					%animationAsset = AssetDatabase.acquireAsset(%assetID);
+					%imageAsset = AssetDatabase.acquireAsset(%animationAsset.getImage());
+				}
+				%size = %imageAsset.getFrameSize(0);
+				%x = getWord(%size, 0);
+				%y = getWord(%size, 1);
+				%ratio = %x / %y;
+				%extent = "50 50";
+				if(%x > %y)
+				{
+					%extent = "50" SPC (50/%ratio);
+				}
+				else if(%x < %y)
+				{
+					%extent = (50*%ratio) SPC "50";
+				}
+				%texture = new GuiSpriteCtrl()
+				{
+					HorizSizing="center";
+					VertSizing="center";
+					Extent = %extent;
+					minExtent=%extent;
+					Position = "0 0";
+				};
+				ThemeManager.setProfile(%texture, "spriteProfile");
+				%button.add(%texture);
+				if(%this.Type $= "ImageAsset")
+				{
+					%texture.setImage(%assetID);
+				}
+				else if(%this.Type $= "AnimationAsset")
+				{
+					%texture.setAnimation(%assetID);
+					AssetDatabase.releaseAsset(%animationAsset.getImage());
+				}
 			}
 		}
 	}
@@ -89,9 +115,35 @@ function AssetDictionary::load(%this)
 
 function AssetDictionary::unload(%this)
 {
-	for(%i = %this.getCoun() - 1; %i >= 0; %i++)
+	//Remove all the child gui controls
+	for(%i = %this.getCount() - 1; %i >= 0; %i++)
 	{
 		%obj = %this.getObject(%i);
 		%obj.safeDelete();
 	}
+
+	//release all the assets we loaded for this - might take them out of memory
+	%query = new AssetQuery();
+	AssetDatabase.findAllAssets(%query);
+	AssetDatabase.findAssetType(%query, %this.Type, true);
+
+	for(%i = 0; %i < %query.getCount(); %i++)
+	{
+		%assetID = %query.getAsset(%i);
+		if(!AssetDatabase.isAssetInternal(%assetID))
+		{
+			AssetDatabase.releaseAsset(%assetID);
+		}
+	}
+	%query.delete();
+}
+
+function GuiSpriteCtrl::onAnimationEnd(%this, %animationAssetID)
+{
+	%this.schedule(2000, "restartAnimation", %animationAssetID);
+}
+
+function GuiSpriteCtrl::restartAnimation(%this, %animationAssetID)
+{
+	%this.setAnimation(%animationAssetID);
 }
