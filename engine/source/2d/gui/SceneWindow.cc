@@ -1606,6 +1606,12 @@ void SceneWindow::onRender( Point2I offset, const RectI& updateRect )
     // Debug Profiling.
     PROFILE_SCOPE(SceneWindow_onRender);
 
+	//save the old clip
+	RectI oldClipRect = dglGetClipRect();
+
+	//clip to the updateRect
+	dglSetClipRect(updateRect);
+
     // Fetch scene.
     Scene* pScene = getScene();
 
@@ -1724,6 +1730,9 @@ void SceneWindow::onRender( Point2I offset, const RectI& updateRect )
 
     // Update Window.
     setUpdate();
+
+	//return the clip rect
+	dglSetClipRect(oldClipRect);
 }
 
 //------------------------------------------------------------------------------
