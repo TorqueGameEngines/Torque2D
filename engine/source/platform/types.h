@@ -23,6 +23,12 @@
 #ifndef _TORQUE_TYPES_H_
 #define _TORQUE_TYPES_H_
 
+#if (defined _MSC_VER) && (_MSC_VER <= 1500)
+#include "platformWin32/stdint.h"
+#else
+#include <stdint.h>
+#endif
+
 //------------------------------------------------------------------------------
 //-------------------------------------- Basic Types...
 
@@ -87,6 +93,13 @@ static const F32 F32_MAX = F32(3.402823466e+38F);                 ///< Constant 
 #  include "platform/types.gcc.h"
 #else
 #  error "Unknown Compiler"
+#endif
+
+/// Integral type matching the host's memory address width.
+#ifdef TORQUE_CPU_X64
+typedef U64 MEM_ADDRESS;
+#else
+typedef U32 MEM_ADDRESS;
 #endif
 
 //--------------------------------------

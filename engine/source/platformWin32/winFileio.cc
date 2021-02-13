@@ -998,21 +998,16 @@ bool Platform::hasSubDirectory(const char *pPath)
 static bool recurseDumpDirectories(const char *basePath, const char *subPath, Vector<StringTableEntry> &directoryVector, S32 currentDepth, S32 recurseDepth, bool noBasePath)
 {
    char search[1024];
-   WIN32_FIND_DATAA findData;
 
    //-----------------------------------------------------------------------------
    // Compose our search string - Format : ([path]/[subpath]/*)
    //-----------------------------------------------------------------------------
 
-   char trail = basePath[ dStrlen(basePath) - 1 ];
-   char subTrail;
-   char subLead;
-   if( subPath )
-   {
-       subTrail = subPath[ dStrlen(subPath) - 1 ];
-       subLead = subPath[0];
-   }
-
+   dsize_t trLen = basePath ? dStrlen(basePath) : 0;
+   dsize_t subtrLen = subPath ? dStrlen(subPath) : 0;
+   char trail = trLen > 0 ? basePath[trLen - 1] : '\0';
+   char subTrail = subtrLen > 0 ? subPath[subtrLen - 1] : '\0';
+   char subLead = subtrLen > 0 ? subPath[0] : '\0';
 
    if( trail == '/' )
    {
@@ -1041,7 +1036,7 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
    //-----------------------------------------------------------------------------
    // See if we get any hits
    //-----------------------------------------------------------------------------
-
+   WIN32_FIND_DATAA findData;
    HANDLE handle = FindFirstFileA(search, &findData);
    if (handle == INVALID_HANDLE_VALUE)
       return false;
