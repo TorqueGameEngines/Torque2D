@@ -25,10 +25,11 @@
 #include "console/console.h"
 #include "string/stringTable.h"
 #include <math.h>
+#include <intrin.h>
 
 extern void PlatformBlitInit();
 extern void SetProcessorInfo(TorqueSystemInfo::Processor& pInfo,
-   char* vendor, U32 processor, U32 properties); // platform/platformCPU.cc
+   char* vendor, U32 processor, U32 properties, U32 properties2); // platform/platformCPU.cc
 
 
 #if defined(TORQUE_SUPPORTS_NASM)
@@ -56,9 +57,23 @@ void Processor::init()
    PlatformSystemInfo.processor.mhz  = 0;
    PlatformSystemInfo.processor.properties = CPU_PROP_C;
 
-   char     vendor[13] = {0,};
+   char  vendor[0x20];
+   dMemset(vendor, 0, sizeof(vendor));
    U32   properties = 0;
-   U32   processor  = 0;
+   U32   processor = 0;
+   U32   properties2 = 0;
+
+   S32 vendorInfo[4];
+   __cpuid(vendorInfo, 0);
+   *reinterpret_cast<int*>(vendor) = vendorInfo[1];     // ebx
+   *reinterpret_cast<int*>(vendor + 4) = vendorInfo[3]; // edx
+   *reinterpret_cast<int*>(vendor + 8) = vendorInfo[2]; // ecx
+
+   S32 cpuInfo[4];
+   __cpuid(cpuInfo, 1);
+   processor = cpuInfo[0];   // eax
+   properties = cpuInfo[3];  // edx
+   properties2 = cpuInfo[2]; // ecx
 
 #if defined(TORQUE_SUPPORTS_NASM)
 
@@ -121,7 +136,7 @@ void Processor::init()
    }
 #endif
 
-   SetProcessorInfo(PlatformSystemInfo.processor, vendor, processor, properties);
+   SetProcessorInfo(PlatformSystemInfo.processor, vendor, processor, properties, properties2);
 
 // now calculate speed of processor...
    U16 nearmhz = 0; // nearest rounded mhz
@@ -223,6 +238,24 @@ void Processor::init()
    }
 #endif
 
+   LONG result;
+   DWORD data = 0;
+   DWORD dataSize = 4;
+   HKEY hKey;
+
+   result = ::RegOpenKeyExA(HKEY_LOCAL_MACHINE, "Hardware\\Description\\System\\CentralProcessor\\0", 0, KEY_QUERY_VALUE, &hKey);
+   if (result == ERROR_SUCCESS)
+   {
+      result = ::RegQueryValueExA(hKey, "~MHz", NULL, NULL, (LPBYTE)&data, &dataSize);
+
+      if (result == ERROR_SUCCESS)
+         nearmhz = mhz = data;
+
+      ::RegCloseKey(hKey);
+   }
+
+   PlatformSystemInfo.processor.mhz = mhz;
+
    if (mhz==0)
    {
       Con::printf("   %s, (Unknown) Mhz", PlatformSystemInfo.processor.name);
@@ -244,6 +277,11 @@ void Processor::init()
       }
    }
 
+   if (PlatformSystemInfo.processor.numAvailableCores > 0
+      || PlatformSystemInfo.processor.numPhysicalProcessors > 0
+      || PlatformSystemInfo.processor.isHyperThreaded)
+      PlatformSystemInfo.processor.properties |= CPU_PROP_MP;
+
    if (PlatformSystemInfo.processor.properties & CPU_PROP_FPU)
       Con::printf("   FPU detected");
    if (PlatformSystemInfo.processor.properties & CPU_PROP_MMX)
@@ -252,6 +290,15 @@ void Processor::init()
       Con::printf("   3DNow detected");
    if (PlatformSystemInfo.processor.properties & CPU_PROP_SSE)
       Con::printf("   SSE detected");
+   if (PlatformSystemInfo.processor.properties & CPU_PROP_SSE2)
+      Con::printf("   SSE2 detected");
+   if (PlatformSystemInfo.processor.isHyperThreaded)
+      Con::printf("   HT detected");
+   if (PlatformSystemInfo.processor.properties & CPU_PROP_MP)
+      Con::printf("   MP detected [%i cores, %i logical, %i physical]",
+         PlatformSystemInfo.processor.numAvailableCores,
+         PlatformSystemInfo.processor.numLogicalProcessors,
+         PlatformSystemInfo.processor.numPhysicalProcessors);
    Con::printf(" ");
 
    PlatformBlitInit();

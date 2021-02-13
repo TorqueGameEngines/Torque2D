@@ -38,16 +38,24 @@ enum ProcessorType
    CPU_Intel_PentiumCeleron,
    CPU_Intel_PentiumIII,
    CPU_Intel_Pentium4,
+   CPU_Intel_PentiumM,
+   CPU_Intel_Core,
+   CPU_Intel_Core2,
+   CPU_Intel_Corei7Xeon, // Core i7 or Xeon
    CPU_AMD_K6,
    CPU_AMD_K6_2,
    CPU_AMD_K6_3,
    CPU_AMD_Athlon,
+   CPU_AMD_Phenom,
+   CPU_AMD_PhenomII,
+   CPU_AMD_Bulldozer,
    CPU_AMD_Unknown,
    CPU_Cyrix_6x86,
    CPU_Cyrix_MediaGX,
    CPU_Cyrix_6x86MX,
-   CPU_Cyrix_GXm,          // Media GX w/ MMX
+   CPU_Cyrix_GXm,          ///< Media GX w/ MMX
    CPU_Cyrix_Unknown,
+
    // PowerPC
    CPU_PowerPC_Unknown,
    CPU_PowerPC_601,
@@ -61,23 +69,28 @@ enum ProcessorType
    CPU_PowerPC_G4,
    CPU_PowerPC_G4_7450,
    CPU_PowerPC_G4_7455,
-   CPU_PowerPC_G4_7447, 
-   CPU_PowerPC_G5
+   CPU_PowerPC_G4_7447,
+   CPU_PowerPC_G5,
 };
 
 //-----------------------------------------------------------------------------
 
-enum x86Properties
+enum ProcessprProperties
 {
-    // x86 properties
-    CPU_PROP_C         = (1<<0),
-    CPU_PROP_FPU       = (1<<1),
-    CPU_PROP_MMX       = (1<<2),     // Integer-SIMD
-    CPU_PROP_3DNOW     = (1<<3),     // AMD Float-SIMD
-    CPU_PROP_SSE       = (1<<4),     // PentiumIII SIMD
-    CPU_PROP_RDTSC     = (1<<5)     // Read Time Stamp Counter
-    //   CPU_PROP_SSE2      = (1<<6),   // Pentium4 SIMD
-    //   CPU_PROP_MP        = (1<<7)      // Multi-processor system
+   CPU_PROP_C = (1 << 0),  ///< We should use C fallback math functions.
+   CPU_PROP_FPU = (1 << 1),  ///< Has an FPU. (It better!)
+   CPU_PROP_MMX = (1 << 2),  ///< Supports MMX instruction set extension.
+   CPU_PROP_3DNOW = (1 << 3),  ///< Supports AMD 3dNow! instruction set extension.
+   CPU_PROP_SSE = (1 << 4),  ///< Supports SSE instruction set extension.
+   CPU_PROP_RDTSC = (1 << 5),  ///< Supports Read Time Stamp Counter op.
+   CPU_PROP_SSE2 = (1 << 6),  ///< Supports SSE2 instruction set extension.
+   CPU_PROP_SSE3 = (1 << 7),  ///< Supports SSE3 instruction set extension.  
+   CPU_PROP_SSE3xt = (1 << 8),  ///< Supports extended SSE3 instruction set  
+   CPU_PROP_SSE4_1 = (1 << 9),  ///< Supports SSE4_1 instruction set extension.  
+   CPU_PROP_SSE4_2 = (1 << 10), ///< Supports SSE4_2 instruction set extension.  
+   CPU_PROP_MP = (1 << 11), ///< This is a multi-processor system.
+   CPU_PROP_LE = (1 << 12), ///< This processor is LITTLE ENDIAN.  
+   CPU_PROP_64bit = (1 << 13), ///< This processor is 64-bit capable
 };
 
 //-----------------------------------------------------------------------------
@@ -101,13 +114,18 @@ struct Processor
 
 struct TorqueSystemInfo
 {
-    struct Processor
-    {
-        ProcessorType type;
-        const char *name;
-        U32         mhz;
-        U32         properties;      // CPU type specific enum
-    } processor;
+   struct Processor
+   {
+      ProcessorType  type;
+      const char*    name;
+      U32            mhz;
+      bool           isMultiCore;
+      bool           isHyperThreaded;
+      U32            numLogicalProcessors;
+      U32            numPhysicalProcessors;
+      U32            numAvailableCores;
+      U32            properties;      // CPU type specific enum
+   } processor;
 };
 
 extern TorqueSystemInfo PlatformSystemInfo;

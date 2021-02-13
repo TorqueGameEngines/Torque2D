@@ -117,6 +117,10 @@
     <IntDir>../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
     <OutDir>../../../</OutDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>../../../</OutDir>
+    <IntDir>../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
       <TypeLibraryName>$(OutDir)Torque2D.tlb</TypeLibraryName>
@@ -299,6 +303,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <OmitFramePointers>false</OmitFramePointers>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -758,11 +763,13 @@
     <ClCompile Include="..\..\source\math\mSplinePatch.cc" />
     <ClCompile Include="..\..\source\persistence\SimXMLDocument.cpp" />
     <ClCompile Include="..\..\source\platformWin32\nativeDialogs\win32FileDialog.cc" />
+    <ClCompile Include="..\..\source\platformWin32\winPlatformCPUCount.cc" />
     <ClCompile Include="..\..\source\platform\CursorManager.cc" />
     <ClCompile Include="..\..\source\platform\nativeDialogs\fileDialog.cc" />
     <ClCompile Include="..\..\source\platform\platform.cc" />
     <ClCompile Include="..\..\source\platform\platformAssert.cc" />
     <ClCompile Include="..\..\source\platform\platformCPU.cc" />
+    <ClCompile Include="..\..\source\platform\platformCPUCount.cc" />
     <ClCompile Include="..\..\source\platform\platformFileIO.cc" />
     <ClCompile Include="..\..\source\platform\platformFont.cc" />
     <ClCompile Include="..\..\source\platform\platformMemory.cc" />
@@ -1368,6 +1375,7 @@
     <ClInclude Include="..\..\source\platform\platformAssert_ScriptBinding.h" />
     <ClInclude Include="..\..\source\platform\platformAudio.h" />
     <ClInclude Include="..\..\source\platform\platformCPU.h" />
+    <ClInclude Include="..\..\source\platform\platformCPUCount.h" />
     <ClInclude Include="..\..\source\platform\platformEndian.h" />
     <ClInclude Include="..\..\source\platform\platformFileIO.h" />
     <ClInclude Include="..\..\source\platform\platformFileIO_ScriptBinding.h" />

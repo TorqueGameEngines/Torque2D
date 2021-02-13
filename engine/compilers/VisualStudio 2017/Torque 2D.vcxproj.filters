@@ -202,6 +202,9 @@
     <Filter Include="Box2D\Particle">
       <UniqueIdentifier>{b2903a96-6c49-4961-82a8-f1832989d4a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2d\editorToy">
+      <UniqueIdentifier>{983ea611-a551-40d6-a16d-ff54ed51e504}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\audio\audio.cc">
@@ -469,9 +472,6 @@
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiPaneCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
@@ -1474,6 +1474,33 @@
     <ClCompile Include="..\..\source\console\arrayObject.cpp">
       <Filter>console</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\math\mFluid.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToySceneWindow.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToyTool.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToySelection.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\platform\platformCPUCount.cc">
+      <Filter>platform</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\platformWin32\winPlatformCPUCount.cc">
+      <Filter>platformWin32</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -1762,9 +1789,6 @@
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiPaneCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
@@ -3304,7 +3328,45 @@
     <ClInclude Include="..\..\source\console\arrayObject_ScriptBinding.h">
       <Filter>console</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\math\mFluid.h">
       <Filter>math</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl_ScriptBinding.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow_ScriptBinding.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToyTool.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySelection.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\platform\platformCPUCount.h">
+      <Filter>platform</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />
