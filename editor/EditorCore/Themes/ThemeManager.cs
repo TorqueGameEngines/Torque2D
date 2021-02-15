@@ -23,6 +23,7 @@
 function ThemeManager::onAdd(%this)
 {
 	%this.themeList = new SimSet();
+	%this.controlList = new SimSet();
 
 	%constructionVest = new ScriptObject()
 	{
@@ -59,7 +60,8 @@ function ThemeManager::setTheme(%this, %i)
 	%i = mClamp(%i, 0, %this.themeList.getCount() - 1);
 	%this.curTheme = %i;
 	%theme = %this.themeList.getObject(%i);
-	%this.activateTheme(%theme);
+	%this.activeTheme = %theme;
+	%this.refreshProfiles();
 }
 
 function ThemeManager::nextTheme(%this)
@@ -77,32 +79,59 @@ function ThemeManager::registerTheme(%this, %theme)
 	%this.themeList.add(%theme);
 }
 
-function ThemeManager::activateTheme(%this, %theme)
+function ThemeManager::refreshProfiles(%this)
 {
-	%this.panelProfile = %theme.panelProfile;
-	%this.fullPanelProfile = %theme.fullPanelProfile;
-	%this.overlayProfile = %theme.overlayProfile;
-	%this.tipProfile = %theme.tipProfile;
-	%this.buttonProfile = %theme.buttonProfile;
-	%this.tabProfileLeft = %theme.tabProfileLeft;
-	%this.tabProfileRight = %theme.tabProfileRight;
-	%this.tabProfileTop = %theme.tabProfileTop;
-	%this.tabProfileBottom = %theme.tabProfileBottom;
-	%this.tabBookProfileLeft = %theme.tabBookProfileLeft;
-	%this.tabBookProfileRight = %theme.tabBookProfileRight;
-	%this.tabBookProfileTop = %theme.tabBookProfileTop;
-	%this.tabBookProfileBottom = %theme.tabBookProfileBottom;
-	%this.tabPageProfile = %theme.tabPageProfile;
-	%this.textEditProfile = %theme.textEditProfile;
-	%this.scrollProfile = %theme.scrollProfile;
-	%this.thumbProfile = %theme.thumbProfile;
-	%this.trackProfile = %theme.trackProfile;
-	%this.scrollArrowProfile = %theme.scrollArrowProfile;
-	%this.consoleProfile = %theme.consoleProfile;
-	%this.scrollingPanelProfile = %theme.scrollingPanelProfile;
-	%this.scrollingPanelThumbProfile = %theme.scrollingPanelThumbProfile;
-	%this.scrollingPanelTrackProfile = %theme.scrollingPanelTrackProfile;
-	%this.scrollingPanelArrowProfile = %theme.scrollingPanelArrowProfile;
+	for (%i = 0; %i < %this.controlList.getCount(); %i++)
+	{
+		%obj = %this.controlList.getObject(%i);
 
-	%this.postEvent("ThemeChanged", %this);
+		if(isObject(%obj.gui))
+		{
+			if(!isObject(%this.activeTheme.getFieldValue(%obj.profileName)))
+			{
+				error("ThemeManager::setProfile - Unable to find profile" SPC %obj.profileName SPC "for theme" SPC %this.activeTheme.name @ "!");
+			}
+
+			%obj.gui.setFieldValue(%obj.profileTag, %this.activeTheme.getFieldValue(%obj.profileName));
+		}
+		else
+		{
+			//let's remove this corpse
+			%this.controlList.remove(%obj);
+			%this.i--;
+		}
+	}
+}
+
+function ThemeManager::setProfile(%this, %gui, %profileName, %profileTag)
+{
+	if(%profileTag $= "")
+	{
+		%profileTag = "Profile";
+	}
+
+	if(!isObject(%this.activeTheme.getFieldValue(%profileName)))
+	{
+		error("ThemeManager::setProfile - Unable to find profile" SPC %profileName SPC "for theme" SPC %this.activeTheme.name @ "!");
+	}
+
+	%gui.setFieldValue(%profileTag, %this.activeTheme.getFieldValue(%profileName));
+	%this.controlList.add(
+		new ScriptObject()
+		{
+			gui = %gui;
+			profileTag = %profileTag;
+			profileName = %profileName;
+		}
+	);
+}
+
+function ThemeManager::createProfile(%this, %profileName, %parentName, %settings)
+{
+	if(!isObject(%this.activeTheme.getFieldValue(%parentName)))
+	{
+		error("ThemeManager::createProfile - Unable to find parent profile" SPC %parentName SPC "for theme" SPC %this.activeTheme.name @ "!");
+	}
+
+	%this.themeList.callOnChildren("createProfile", %profileName, %parentName, %settings);
 }

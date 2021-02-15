@@ -570,10 +570,7 @@ void GuiCanvas::rootMouseDown(const GuiEvent &event)
          GuiControl *ctrl = static_cast<GuiControl *>(*i);
          GuiControl *controlHit = ctrl->findHitControl(event.mousePoint);
 
-         //see if the controlHit is a modeless dialog...
-         if ((! controlHit->mActive) && (! controlHit->mProfile->mModal))
-            continue;
-         else
+         if (controlHit->mProfile->mUseInput)
          {
             controlHit->onTouchDown(event);
             break;
@@ -633,14 +630,11 @@ void GuiCanvas::rootScreenTouchDown(const GuiEvent &event)
                 }  
             }  
               
-            //see if the controlHit is a modeless dialog...  
-            if ((! controlHit->mActive) && (! controlHit->mProfile->mModal))  
-                continue;  
-            else  
-            {  
-                controlHit->onTouchDown(event);  
-                break;  
-            }  
+			if (controlHit->mProfile->mUseInput)
+			{
+				controlHit->onTouchDown(event);
+				break;
+			}
         }  
       
     if (bool(mMouseControl))  
@@ -660,14 +654,11 @@ void GuiCanvas::rootScreenTouchUp(const GuiEvent &event)
         GuiControl *ctrl = static_cast<GuiControl *>(*i);
         GuiControl *controlHit = ctrl->findHitControl(event.mousePoint);
         
-        //see if the controlHit is a modeless dialog...
-        if ((! controlHit->mActive) && (! controlHit->mProfile->mModal))
-            continue;
-        else
-        {
-            controlHit->onTouchUp(event);
-            break;
-        }
+		if (controlHit->mActive && controlHit->mProfile->mUseInput)
+		{
+			controlHit->onTouchUp(event);
+			break;
+		}
     }
 }
 
@@ -945,8 +936,10 @@ void GuiCanvas::setContentControl(GuiControl *gui)
       GuiControl *ctrl = static_cast<GuiControl *>(*i);
       ctrl->buildAcceleratorMap();
 
-      if (ctrl->mProfile->mModal)
-         break;
+	  if (ctrl->mProfile->mUseInput)
+	  {
+		  break;
+	  }
    }
    refreshMouseControl();
 
@@ -1006,11 +999,6 @@ void GuiCanvas::pushDialogControl(GuiControl *gui, S32 layer)
       ctrl->buildAcceleratorMap();
    }
    refreshMouseControl();
-   if(gui->mProfile && gui->mProfile->mModal)
-   {
-      Input::pushCursor(CursorManager::curArrow);
-
-   }
 }
 
 void GuiCanvas::popDialogControl(GuiControl *gui)
@@ -1022,13 +1010,6 @@ void GuiCanvas::popDialogControl(GuiControl *gui)
    GuiControl *ctrl = NULL;
    if (gui)
    {
-      //*** DAW: For modal dialogs, reset the mouse cursor and enable the appropriate platform menus
-      if(gui->mProfile && gui->mProfile->mModal)
-      {
-         Input::popCursor();
-
-      }
-
       //make sure the gui really exists on the stack
       iterator i;
       bool found = false;

@@ -1,0 +1,7 @@
+<ImageAsset
+    AssetName="minusButton"
+    ImageFile="minusButton"
+	CellCountX="1"
+	CellCountY="4"
+	CellWidth="22"
+	CellHeight="25" />

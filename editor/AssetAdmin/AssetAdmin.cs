@@ -22,54 +22,120 @@
 
 function AssetAdmin::create(%this)
 {
-	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
+	exec("./AssetDictionary.cs");
+	exec("./AssetWindow.cs");
+	exec("./AssetDictionaryButton.cs");
 
-	%this.scroller = new GuiScrollCtrl()
+	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
+	%this.guiPage.add(%this.buildAssetWindow());
+	%this.guiPage.add(%this.buildLibrary());
+	%this.guiPage.add(%this.buildInspector());
+
+	EditorCore.FinishRegistration(%this.guiPage);
+}
+
+function AssetAdmin::buildLibrary(%this)
+{
+	%this.libScroller = new GuiScrollCtrl()
 	{
-		Profile=EditorCore.themes.scrollingPanelProfile;
-		ThumbProfile = EditorCore.themes.scrollingPanelThumbProfile;
-		TrackProfile = EditorCore.themes.scrollingPanelTrackProfile;
-		ArrowProfile = EditorCore.themes.scrollingPanelArrowProfile;
 		HorizSizing="left";
 		VertSizing="height";
 		Position="700 0";
 		Extent="324 768";
-		MinExtent="220 200";
+		MinExtent="162 384";
 		hScrollBar="dynamic";
 		vScrollBar="alwaysOn";
 		constantThumbHeight="0";
 		showArrowButtons="1";
 		scrollBarThickness="14";
 	};
-	%this.guiPage.add(%this.scroller);
+	ThemeManager.setProfile(%this.libScroller, "scrollingPanelProfile");
+	ThemeManager.setProfile(%this.libScroller, "scrollingPanelThumbProfile", ThumbProfile);
+	ThemeManager.setProfile(%this.libScroller, "scrollingPanelTrackProfile", TrackProfile);
+	ThemeManager.setProfile(%this.libScroller, "scrollingPanelArrowProfile", ArrowProfile);
 
-	%this.testLogButton = new GuiButtonCtrl()
+	%this.dictionaryList = new GuiChainCtrl()
 	{
-		Profile = EditorCore.themes.buttonProfile;
-		Text="Test";
+		HorizSizing="bottom";
+		VertSizing="right";
+		Position="0 0";
+		Extent="310 768";
+		MinExtent="220 200";
+	};
+	ThemeManager.setProfile(%this.dictionaryList, "emptyProfile");
+	%this.libScroller.add(%this.dictionaryList);
+
+	%this.dictionaryList.add(%this.buildDictionary("Images", "ImageAsset"));
+	%this.dictionaryList.add(%this.buildDictionary("Animations", "AnimationAsset"));
+
+	return %this.libScroller;
+}
+
+function AssetAdmin::buildDictionary(%this, %title, %type)
+{
+	%this.Dictionary[%type] = new GuiPanelCtrl()
+	{
+		Class = AssetDictionary;
+		Text=%title;
 		command="";
 		HorizSizing="bottom";
 		VertSizing="right";
 		Position="0 0";
-		Extent="100 30";
-		MinExtent="80 20";
+		Extent="310 22";
+		MinExtent="80 22";
+		Type = %type;
 	};
-	%this.scroller.add(%this.testLogButton);
+	%this.Dictionary[%type].setExpandEase("EaseInOut", 1000);
+	ThemeManager.setProfile(%this.Dictionary[%type], "panelProfile");
 
-	%this.testLogButton2 = new GuiButtonCtrl()
+	return %this.Dictionary[%type];
+}
+
+function AssetAdmin::buildInspector(%this)
+{
+	%this.insScroller = new GuiScrollCtrl()
 	{
-		Profile = EditorCore.themes.buttonProfile;
-		Text="Test2";
-		command="";
-		HorizSizing="bottom";
-		VertSizing="right";
-		Position="0 800";
-		Extent="100 30";
-		MinExtent="80 20";
+		HorizSizing="width";
+		VertSizing="top";
+		Position="0 444";
+		Extent="700 324";
+		MinExtent="350 222";
+		hScrollBar="alwaysOn";
+		vScrollBar="alwaysOn";
+		constantThumbHeight="0";
+		showArrowButtons="1";
+		scrollBarThickness="14";
 	};
-	%this.scroller.add(%this.testLogButton2);
+	ThemeManager.setProfile(%this.insScroller, "scrollingPanelProfile");
+	ThemeManager.setProfile(%this.insScroller, "scrollingPanelThumbProfile", ThumbProfile);
+	ThemeManager.setProfile(%this.insScroller, "scrollingPanelTrackProfile", TrackProfile);
+	ThemeManager.setProfile(%this.insScroller, "scrollingPanelArrowProfile", ArrowProfile);
 
-	EditorCore.FinishRegistration(%this.guiPage);
+	return %this.insScroller;
+}
+
+function AssetAdmin::buildAssetWindow(%this)
+{
+	%this.assetScene = new Scene();
+	%this.assetScene.setScenePause(true);
+
+	%this.assetWindow = new SceneWindow()
+	{
+		class = AssetWindow;
+		profile = ThemeManager.activeTheme.overlayProfile;
+		position = "0 0";
+		extent = "700 444";
+		HorizSizing="width";
+		VertSizing="height";
+		minExtent = "175 111";
+		cameraPosition = "0 0";
+		cameraSize = "175 111";
+		useWindowInputEvents = false;
+		useObjectInputEvents = true;
+	};
+	%this.assetWindow.setScene(%this.assetScene);
+
+	return %this.assetWindow;
 }
 
 function AssetAdmin::destroy(%this)
@@ -77,20 +143,18 @@ function AssetAdmin::destroy(%this)
 
 }
 
-function AssetAdmin::onThemeChanged(%this, %theme)
-{
-	%this.scroller.setProfile(%theme.scrollingPanelProfile);
-	%this.scroller.setThumbProfile(%theme.scrollingPanelThumbProfile);
-	%this.scroller.setTrackProfile(%theme.scrollingPanelTrackProfile);
-	%this.scroller.setArrowProfile(%theme.scrollingPanelArrowProfile);
-}
-
 function AssetAdmin::open(%this)
 {
+	%this.Dictionary["ImageAsset"].load();
+	%this.Dictionary["AnimationAsset"].load();
 
+	%this.assetScene.setScenePause(false);
 }
 
 function AssetAdmin::close(%this)
 {
+	%this.Dictionary["ImageAsset"].unload();
+	%this.Dictionary["AnimationAsset"].unload();
 
+	%this.assetScene.setScenePause(true);
 }

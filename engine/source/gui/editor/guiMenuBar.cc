@@ -954,9 +954,8 @@ void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
 
    RectI ctrlRect(offset, mBounds.extent);
 
-   //if opaque, fill the update rect with the fill color
-   if (mProfile->mOpaque)
-      dglDrawRectFill(RectI(offset, mBounds.extent), mProfile->mFillColor);
+   //fill the update rect with the fill color
+   dglDrawRectFill(RectI(offset, mBounds.extent), mProfile->mFillColor);
 
    //if there's a border, draw the border
    //if (mProfile->mBorder)
@@ -982,11 +981,11 @@ void GuiMenuBar::onRender(Point2I offset, const RectI &updateRect)
         highlightBounds.inset(1,1);
          if(walk == mouseDownMenu)
 		 {
-			renderBorderedRect(highlightBounds, mProfile, GuiControlState::HighlightState);
+			 renderUniversalRect(highlightBounds, mProfile, GuiControlState::HighlightState);
          }
 		 else if(walk == mouseOverMenu && mouseDownMenu == NULL)
 		 {
-			 renderBorderedRect(highlightBounds, mProfile, GuiControlState::NormalState);
+			 renderUniversalRect(highlightBounds, mProfile, GuiControlState::NormalState);
 		 }
 	  }
 

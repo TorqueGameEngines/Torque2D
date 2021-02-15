@@ -31,6 +31,10 @@
 #include "math/mConstants.h"
 #endif
 
+#ifndef _CONSOLE_H_
+#include "console/console.h"
+#endif
+
 #include <math.h>
 
 // Remove a couple of annoying macros, if they are present (In VC 6, they are.)
@@ -657,5 +661,45 @@ inline void mGetMinMax(const F32& a, const F32& b, F32& min, F32& max) { if ( mG
 
 /// Swap.
 inline void mSwap(F32& a, F32& b) { F32 temp = b; b = a; a = temp; }
+
+//list of possible ways to ease progress
+enum EasingFunction
+{
+	Linear,
+	EaseIn,
+	EaseOut,
+	EaseInOut,
+	EaseInBack,
+	EaseOutBack,
+	EaseInOutBack,
+	EaseInElastic,
+	EaseOutElastic,
+	EaseInOutElastic,
+	EaseInBounce,
+	EaseOutBounce,
+	EaseInOutBounce
+};
+
+static EnumTable::Enums easingEnums[] =
+{
+   { EasingFunction::Linear, "linear" },
+   { EasingFunction::EaseIn, "easeIn" },
+   { EasingFunction::EaseOut, "easeOut" },
+   { EasingFunction::EaseInOut, "easeInOut" },
+   { EasingFunction::EaseInBack, "easeInBack" },
+   { EasingFunction::EaseOutBack, "easeOutBack" },
+   { EasingFunction::EaseInOutBack, "easeInOutBack" },
+   { EasingFunction::EaseInElastic, "easeInElastic" },
+   { EasingFunction::EaseOutElastic, "easeOutElastic" },
+   { EasingFunction::EaseInOutElastic, "easeInOutElastic" },
+   { EasingFunction::EaseInBounce, "easeInBounce" },
+   { EasingFunction::EaseOutBounce, "easeOutBounce" },
+   { EasingFunction::EaseInOutBounce, "easeInOutBounce" }
+};
+static EnumTable gEasingTable(13, &easingEnums[0]);
+
+// Given linear time progress between 0 and 1, this returns animation progress, based on 
+// a selected easing function, between 0 and 1 (and possibly outside of 0 and 1 in some cases).
+F32 mEase(const EasingFunction &ease, const F32 &progress);
 
 #endif //_MMATHFN_H_

@@ -224,30 +224,28 @@ void GuiSceneObjectCtrl::onRender(Point2I offset, const RectI& updateRect)
    RectI ctrlRect( offset, mBounds.extent );
 
    // Draw Background
-   if( mProfile->mOpaque )
-   {
       if( mDepressed )
       {
          if( mHasTexture )
-            renderSizableBitmapBordersFilled( ctrlRect, 3, mProfile );
+			 renderUniversalRect( ctrlRect, mProfile, GuiControlState::SelectedState);
          else
             dglDrawRectFill( ctrlRect, mProfile->mFillColorHL );
       }
       else if ( mMouseOver )
       {
          if( mHasTexture )
-            renderSizableBitmapBordersFilled( ctrlRect, 2, mProfile );
+			 renderUniversalRect( ctrlRect, mProfile, GuiControlState::HighlightState);
          else
             dglDrawRectFill( ctrlRect, mProfile->mFillColorHL );
       }
       else
       {
          if( mHasTexture )
-            renderSizableBitmapBordersFilled( ctrlRect, 1, mProfile );
+			 renderUniversalRect( ctrlRect, mProfile, GuiControlState::NormalState);
          else
             dglDrawRectFill( ctrlRect, mProfile->mFillColor );
       }
-   }
+   
 
    //// Render Border.
    //if( mProfile->mBorder || mStateOn )    
@@ -263,13 +261,10 @@ void GuiSceneObjectCtrl::onRender(Point2I offset, const RectI& updateRect)
       ctrlRectInset.inset( mMargin, mMargin); 
 
       // Draw Canvas color for object
-      if ( mProfile->mOpaque )
-      {
-         if( mHasTexture )
-            renderSizableBitmapBordersFilled( objRect, 4, mProfile );
-         else
-            dglDrawRectFill( objRect, mProfile->mFillColorNA );
-      }
+	if( mHasTexture )
+		renderUniversalRect( objRect, mProfile, GuiControlState::DisabledState);
+	else
+		dglDrawRectFill( objRect, mProfile->mFillColorNA );
 
       // Yes, so fetch object clip boundary.
       const b2Vec2* pClipBoundary = mSelectedSceneObject->getRenderOOBB();

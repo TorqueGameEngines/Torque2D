@@ -26,7 +26,7 @@ function ProjectManager::create(%this)
 
 	%this.comingSoon = new GuiControl()
 	{
-		Profile = EditorCore.themes.panelProfile;
+		Profile = ThemeManager.activeTheme.panelProfile;
 		HorizSizing="center";
 		VertSizing="center";
 		Position="412 324";
@@ -35,6 +35,7 @@ function ProjectManager::create(%this)
 		Visible="1";
 		Text = "Coming Soon!";
 	};
+	ThemeManager.setProfile(%this.comingSoon, "simpleProfile");
 	%this.guiPage.add(%this.comingSoon);
 
 	EditorCore.FinishRegistration(%this.guiPage);
@@ -43,11 +44,6 @@ function ProjectManager::create(%this)
 function ProjectManager::destroy(%this)
 {
 
-}
-
-function ProjectManager::onThemeChanged(%this, %theme)
-{
-	%this.comingSoon.setProfile(%theme.panelProfile);
 }
 
 function ProjectManager::open(%this)

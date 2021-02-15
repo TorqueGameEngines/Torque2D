@@ -56,6 +56,10 @@
 #include "platform/Tickable.h"
 #endif
 
+#ifndef _MFLUID_H_
+#include "math/mFluid.h"
+#endif
+
 class GuiCanvas;
 class GuiEditCtrl;
 
@@ -299,10 +303,14 @@ public:
     const S32        getWidth() { return mBounds.extent.x; } ///< Returns the width of the control
     const S32        getHeight() { return mBounds.extent.y; } ///< Returns the height of the control
 	
-	void             setText(const char *text);
-	void             setTextID(S32 id);
-	void             setTextID(const char *id);
-	const char*      getText();
+	virtual void             setText(const char *text);
+	virtual void             setTextID(S32 id);
+	virtual void             setTextID(const char *id);
+	virtual const char*      getText();
+
+	// Text Property Accessors
+	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return true; }
+	static const char* getTextProperty(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getText(); }
 
     /// @}
 
@@ -672,7 +680,7 @@ public:
     ///
     /// @see GuiControlProfile
     /// @param   prof   Control profile to apply
-    void setControlProfile(GuiControlProfile *prof);
+    virtual void setControlProfile(GuiControlProfile *prof);
 
     /// Occurs when this control performs its "action"
     virtual void onAction();

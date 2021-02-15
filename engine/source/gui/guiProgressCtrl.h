@@ -32,10 +32,10 @@
 #endif
 
 
-class GuiProgressCtrl : public GuiTextCtrl
+class GuiProgressCtrl : public GuiControl
 {
 private:
-   typedef GuiTextCtrl Parent;
+   typedef GuiControl Parent;
 
    F32 mProgress;
 

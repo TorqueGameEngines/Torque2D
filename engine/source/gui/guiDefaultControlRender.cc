@@ -26,8 +26,74 @@
 #include "graphics/gColor.h"
 #include "math/mRect.h"
 
-void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state )
+// Renders a rect in one of three ways: ImageAsset, bitmap, or default render. ImageAsset and bitmap can use
+// nine frames per state or one frame per state. The default render is used as a fall back if neither are present.
+void renderUniversalRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor, const bool bUseFillColor)
 {
+	if (profile == NULL)
+	{
+		return;
+	}
+
+	U8 stateIndex = state;
+
+	//prepare
+	S32 bitmapFrameCount = 0;
+	S32 imageFrameCount = 0;
+	if (profile->mImageAsset != NULL && profile->mImageAsset->isAssetValid())
+	{
+		imageFrameCount = profile->mImageAsset->getFrameCount();
+	}
+	else if (profile->mBitmapName != NULL)
+	{
+		bitmapFrameCount = profile->constructBitmapArray();
+	}
+
+	if (imageFrameCount >= (9 * (stateIndex + 1)))
+	{
+		renderSizableBorderedImageAsset(bounds, stateIndex, profile->mImageAsset, imageFrameCount);
+	}
+	else if (imageFrameCount > stateIndex && imageFrameCount < 9)
+	{
+		renderStretchedImageAsset(bounds, stateIndex, profile);
+	}
+	else if (bitmapFrameCount >= (9 * (stateIndex + 1)))
+	{
+		renderSizableBorderedBitmap(bounds, stateIndex, profile->mTextureHandle, profile->mBitmapArrayRects.address(), bitmapFrameCount);
+	}
+	else if (bitmapFrameCount > stateIndex && bitmapFrameCount < 9)
+	{
+		renderStretchedBitmap(bounds, stateIndex, profile);
+	}
+	else
+	{
+		if (bUseFillColor)
+		{
+			renderBorderedRect(bounds, profile, state, fillColor);
+		}
+		else
+		{
+			renderBorderedRect(bounds, profile, state);
+		}
+	}
+}
+
+void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state)
+{
+	if(profile)
+	{
+		ColorI fillColor = profile->getFillColor(state);
+		renderBorderedRect(bounds, profile, state, fillColor);
+	}
+}
+
+void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor)
+{
+	if (!profile)
+	{
+		return;
+	}
+
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();
@@ -35,7 +101,6 @@ void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlSta
 	GuiBorderProfile *bottomProfile = profile->getBottomBorder();
 
 	//Get the colors
-	ColorI fillColor = profile->getFillColor(state);
 	ColorI leftColor = (leftProfile) ? leftProfile->getBorderColor(state) : ColorI();
 	ColorI rightColor = (rightProfile) ? rightProfile->getBorderColor(state) : ColorI();
 	ColorI topColor = (topProfile) ? topProfile->getBorderColor(state) : ColorI();
@@ -50,7 +115,7 @@ void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlSta
 	RectI innerRect = RectI(bounds.point.x + leftSize, bounds.point.y + topSize, (bounds.extent.x - leftSize) - rightSize, (bounds.extent.y - topSize) - bottomSize);
 
 	//Draw the fill
-	if(profile->mOpaque)
+	if(fillColor.alpha > 0)
 	{
 		S32 fillWidth = innerRect.extent.x + ((leftProfile && leftProfile->mUnderfill) ? leftSize : 0) + ((rightProfile && rightProfile->mUnderfill) ? rightSize : 0);
 		S32 fillHeight = innerRect.extent.y + ((topProfile && topProfile->mUnderfill) ? topSize : 0) + ((bottomProfile && bottomProfile->mUnderfill) ? bottomSize : 0);
@@ -88,6 +153,16 @@ void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlSta
 	{
 		dglDrawQuadFill(p6, p2, p3, p7, bottomColor);
 	}
+
+	if (state > 3)
+	{
+		RectI checkRect = RectI(bounds);
+		checkRect.inset(3, 3);
+		if (checkRect.isValidRect())
+		{
+			renderBorderedRect(checkRect, profile, GuiControlState::SelectedState);
+		}
+	}
 }
 
 void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profile, GuiControlState state)
@@ -101,177 +176,127 @@ void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profil
 	S32 borderSize = (profile->mBorderDefault) ? profile->mBorderDefault->getBorder(state) : 0;
 
 	//Draw the fill
-	if (profile->mOpaque)
-	{
-		S32 fillRadius = (profile->mBorderDefault && profile->mBorderDefault->mUnderfill) ? radius : radius - borderSize;
-		dglDrawCircleFill(center, (F32)fillRadius, fillColor);
-	}
+	S32 fillRadius = (profile->mBorderDefault && profile->mBorderDefault->mUnderfill) ? radius : radius - borderSize;
+	dglDrawCircleFill(center, (F32)fillRadius, fillColor);
 
 	//Draw the border
 	dglDrawCircle(center, (F32)radius, borderColor, (F32)borderSize);
+
+	if (state > 3 && radius >= 8)
+	{
+		dglDrawCircleFill(center, radius - 6, profile->getFillColor(GuiControlState::SelectedState));
+	}
 }
 
-// DAW: Render out the sizable bitmap borders based on a multiplier into the bitmap array
 // Based on the 'Skinnable GUI Controls in TGE' resource by Justin DuJardin
-void renderSizableBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile)
+void renderSizableBorderedImageAsset(RectI &bounds, U8 frame, ImageAsset *imageAsset, S32 frameCount)
 {
-   S32 NumBitmaps = 9;
-   S32 startIndex = NumBitmaps * (baseMultiplier - 1);
+	S32 NumFrames = 9;
+	S32 i = NumFrames * frame;
 
-   renderSizableBitmapBordersFilledIndex(bounds, startIndex, profile);
+	if (frameCount >= (NumFrames + i))
+	{
+		const ImageAsset::FrameArea::PixelArea& pixelArea1 = imageAsset->getImageFrameArea((U32)i).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea2 = imageAsset->getImageFrameArea((U32)i+1).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea3 = imageAsset->getImageFrameArea((U32)i+2).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea4 = imageAsset->getImageFrameArea((U32)i+3).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea5 = imageAsset->getImageFrameArea((U32)i+4).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea6 = imageAsset->getImageFrameArea((U32)i+5).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea7 = imageAsset->getImageFrameArea((U32)i+6).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea8 = imageAsset->getImageFrameArea((U32)i+7).mPixelArea;
+		const ImageAsset::FrameArea::PixelArea& pixelArea9 = imageAsset->getImageFrameArea((U32)i+8).mPixelArea;
+
+		renderSizableBorderedTexture(bounds, imageAsset->getImageTexture(), 
+			RectI(pixelArea1.mPixelOffset, Point2I(pixelArea1.mPixelWidth, pixelArea1.mPixelHeight)),
+			RectI(pixelArea2.mPixelOffset, Point2I(pixelArea2.mPixelWidth, pixelArea2.mPixelHeight)),
+			RectI(pixelArea3.mPixelOffset, Point2I(pixelArea3.mPixelWidth, pixelArea3.mPixelHeight)), 
+			RectI(pixelArea4.mPixelOffset, Point2I(pixelArea4.mPixelWidth, pixelArea4.mPixelHeight)), 
+			RectI(pixelArea5.mPixelOffset, Point2I(pixelArea5.mPixelWidth, pixelArea5.mPixelHeight)), 
+			RectI(pixelArea6.mPixelOffset, Point2I(pixelArea6.mPixelWidth, pixelArea6.mPixelHeight)), 
+			RectI(pixelArea7.mPixelOffset, Point2I(pixelArea7.mPixelWidth, pixelArea7.mPixelHeight)), 
+			RectI(pixelArea8.mPixelOffset, Point2I(pixelArea8.mPixelWidth, pixelArea8.mPixelHeight)), 
+			RectI(pixelArea9.mPixelOffset, Point2I(pixelArea9.mPixelWidth, pixelArea9.mPixelHeight)));
+	}
 }
 
-
-// DAW: Render out the sizable bitmap borders based on a multiplier into the bitmap array
-// Based on the 'Skinnable GUI Controls in TGE' resource by Justin DuJardin
-void renderSizableBitmapBordersFilledIndex(RectI &bounds, S32 startIndex, GuiControlProfile *profile)
+void renderSizableBorderedBitmap(RectI &bounds, U8 frame, TextureHandle &texture, RectI *bitmapBounds, S32 frameCount)
 {
-   // DAW: Indices into the bitmap array
-   S32 NumBitmaps = 9;
-   S32 BorderTopLeft =     startIndex;
-   S32 BorderTop =         1 + BorderTopLeft;
-   S32 BorderTopRight =    2 + BorderTopLeft;
-   S32 BorderLeft =        3 + BorderTopLeft;
-   S32 Fill =              4 + BorderTopLeft;
-   S32 BorderRight =       5 + BorderTopLeft;
-   S32 BorderBottomLeft =  6 + BorderTopLeft;
-   S32 BorderBottom =      7 + BorderTopLeft;
-   S32 BorderBottomRight = 8 + BorderTopLeft;
+   S32 NumFrames = 9;
+   S32 i = NumFrames * frame;
 
-   dglClearBitmapModulation();
-   if (profile->mBitmapArrayRects.size() >= (NumBitmaps + startIndex))
+   if (frameCount >= (NumFrames + i))
    {
-	   RectI destRect;
-	   RectI stretchRect;
-	   RectI* mBitmapBounds = profile->mBitmapArrayRects.address();
-
-	   // Draw all corners first.
-
-	   //top left border
-	   dglDrawBitmapSR(profile->mTextureHandle, Point2I(bounds.point.x, bounds.point.y), mBitmapBounds[BorderTopLeft]);
-	   //top right border
-	   dglDrawBitmapSR(profile->mTextureHandle, Point2I(bounds.point.x + bounds.extent.x - mBitmapBounds[BorderTopRight].extent.x, bounds.point.y), mBitmapBounds[BorderTopRight]);
-
-	   //bottom left border
-	   dglDrawBitmapSR(profile->mTextureHandle, Point2I(bounds.point.x, bounds.point.y + bounds.extent.y - mBitmapBounds[BorderBottomLeft].extent.y), mBitmapBounds[BorderBottomLeft]);
-	   //bottom right border
-	   dglDrawBitmapSR(profile->mTextureHandle, Point2I(
-		   bounds.point.x + bounds.extent.x - mBitmapBounds[BorderBottomRight].extent.x,
-		   bounds.point.y + bounds.extent.y - mBitmapBounds[BorderBottomRight].extent.y),
-		   mBitmapBounds[BorderBottomRight]);
-
-	   // End drawing corners
-
-	   // Begin drawing sides and top stretched borders
-
-	   //start with top line stretch
-	   destRect.point.x = bounds.point.x + mBitmapBounds[BorderTopLeft].extent.x;
-	   destRect.extent.x = bounds.extent.x - mBitmapBounds[BorderTopRight].extent.x - mBitmapBounds[BorderTopLeft].extent.x;
-	   destRect.extent.y = mBitmapBounds[BorderTop].extent.y;
-	   destRect.point.y = bounds.point.y;
-	   //stretch it
-	   stretchRect = mBitmapBounds[BorderTop];
-	   stretchRect.inset(1, 0);
-	   //draw it
-	   dglDrawBitmapStretchSR(profile->mTextureHandle, destRect, stretchRect);
-	   //bottom line stretch
-	   destRect.point.x = bounds.point.x + mBitmapBounds[BorderBottomLeft].extent.x;
-	   destRect.extent.x = bounds.extent.x - mBitmapBounds[BorderBottomRight].extent.x - mBitmapBounds[BorderBottomLeft].extent.x;
-	   destRect.extent.y = mBitmapBounds[BorderBottom].extent.y;
-	   destRect.point.y = bounds.point.y + bounds.extent.y - mBitmapBounds[BorderBottom].extent.y;
-	   //stretch it
-	   stretchRect = mBitmapBounds[BorderBottom];
-	   stretchRect.inset(1, 0);
-	   //draw it
-	   dglDrawBitmapStretchSR(profile->mTextureHandle, destRect, stretchRect);
-	   //left line stretch
-	   destRect.point.x = bounds.point.x;
-	   destRect.extent.x = mBitmapBounds[BorderLeft].extent.x;
-	   destRect.extent.y = bounds.extent.y - mBitmapBounds[BorderTopLeft].extent.y - mBitmapBounds[BorderBottomLeft].extent.y;
-	   destRect.point.y = bounds.point.y + mBitmapBounds[BorderTopLeft].extent.y;
-	   //stretch it
-	   stretchRect = mBitmapBounds[BorderLeft];
-	   stretchRect.inset(0, 1);
-	   //draw it
-	   dglDrawBitmapStretchSR(profile->mTextureHandle, destRect, stretchRect);
-	   //right line stretch
-	   destRect.point.x = bounds.point.x + bounds.extent.x - mBitmapBounds[BorderRight].extent.x;
-	   destRect.extent.x = mBitmapBounds[BorderRight].extent.x;
-	   destRect.extent.y = bounds.extent.y - mBitmapBounds[BorderTopRight].extent.y - mBitmapBounds[BorderBottomRight].extent.y;
-	   destRect.point.y = bounds.point.y + mBitmapBounds[BorderTopRight].extent.y;
-	   //stretch it
-	   stretchRect = mBitmapBounds[BorderRight];
-	   stretchRect.inset(0, 1);
-	   //draw it
-	   dglDrawBitmapStretchSR(profile->mTextureHandle, destRect, stretchRect);
-	   //fill stretch
-	   destRect.point.x = bounds.point.x + mBitmapBounds[BorderLeft].extent.x;
-	   destRect.extent.x = (bounds.extent.x) - mBitmapBounds[BorderLeft].extent.x - mBitmapBounds[BorderRight].extent.x;
-	   destRect.extent.y = bounds.extent.y - mBitmapBounds[BorderTop].extent.y - mBitmapBounds[BorderBottom].extent.y;
-	   destRect.point.y = bounds.point.y + mBitmapBounds[BorderTop].extent.y;
-	   //stretch it
-	   stretchRect = mBitmapBounds[Fill];
-	   stretchRect.inset(1, 1);
-	   //draw it
-	   dglDrawBitmapStretchSR(profile->mTextureHandle, destRect, stretchRect);
-
-	   // End drawing sides and top stretched borders
+	   renderSizableBorderedTexture(bounds, texture, bitmapBounds[i], bitmapBounds[i+1], bitmapBounds[i+2], bitmapBounds[i+3], bitmapBounds[i+4], bitmapBounds[i+5], bitmapBounds[i+6], bitmapBounds[i+7], bitmapBounds[i+8]);
    }
 }
 
+void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &TopLeft, RectI &Top, RectI &TopRight, RectI &Left, RectI &Fill, RectI &Right, RectI &BottomLeft, RectI &Bottom, RectI &BottomRight)
+{
+	dglClearBitmapModulation();
+	RectI destRect;
+	RectI stretchRect;
 
+	//top corners
+	dglDrawBitmapSR(texture, bounds.point, TopLeft);
+	dglDrawBitmapSR(texture, Point2I(bounds.point.x + bounds.extent.x - TopRight.extent.x, bounds.point.y), TopRight);
 
-// DAW: Render out the fixed bitmap borders based on a multiplier into the bitmap array
+	//bottom corners
+	dglDrawBitmapSR(texture, Point2I(bounds.point.x, bounds.point.y + bounds.extent.y - BottomLeft.extent.y), BottomLeft);
+	dglDrawBitmapSR(texture, Point2I(bounds.point.x + bounds.extent.x - BottomRight.extent.x, bounds.point.y + bounds.extent.y - BottomRight.extent.y), BottomRight);
+
+	//top line stretch
+	destRect.point.x = bounds.point.x + TopLeft.extent.x;
+	destRect.extent.x = bounds.extent.x - TopRight.extent.x - TopLeft.extent.x;
+	destRect.extent.y = Top.extent.y;
+	destRect.point.y = bounds.point.y;
+	stretchRect = Top;
+	stretchRect.inset(1, 0);
+	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
+
+	//bottom line stretch
+	destRect.point.x = bounds.point.x + BottomLeft.extent.x;
+	destRect.extent.x = bounds.extent.x - BottomRight.extent.x - BottomLeft.extent.x;
+	destRect.extent.y = Bottom.extent.y;
+	destRect.point.y = bounds.point.y + bounds.extent.y - Bottom.extent.y;
+	stretchRect = Bottom;
+	stretchRect.inset(1, 0);
+	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
+
+	//left line stretch
+	destRect.point.x = bounds.point.x;
+	destRect.extent.x = Left.extent.x;
+	destRect.extent.y = bounds.extent.y - TopLeft.extent.y - BottomLeft.extent.y;
+	destRect.point.y = bounds.point.y + TopLeft.extent.y;
+	stretchRect = Left;
+	stretchRect.inset(0, 1);
+	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
+
+	//right line stretch
+	destRect.point.x = bounds.point.x + bounds.extent.x - Right.extent.x;
+	destRect.extent.x = Right.extent.x;
+	destRect.extent.y = bounds.extent.y - TopRight.extent.y - BottomRight.extent.y;
+	destRect.point.y = bounds.point.y + TopRight.extent.y;
+	stretchRect = Right;
+	stretchRect.inset(0, 1);
+	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
+
+	//fill stretch
+	destRect.point.x = bounds.point.x + Left.extent.x;
+	destRect.extent.x = (bounds.extent.x) - Left.extent.x - Right.extent.x;
+	destRect.extent.y = bounds.extent.y - Top.extent.y - Bottom.extent.y;
+	destRect.point.y = bounds.point.y + Top.extent.y;
+	stretchRect = Fill;
+	stretchRect.inset(1, 1);
+	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
+}
+
+// Renders out the fixed bitmap borders based on a multiplier into the bitmap array.
 // It renders left and right caps, with a sizable fill area in the middle to reach
 // the x extent.  It does not stretch in the y direction.
 void renderFixedBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile)
 {
-   // DAW: Indices into the bitmap array
-   S32 NumBitmaps = 3;
-   S32 BorderLeft =     NumBitmaps * baseMultiplier - NumBitmaps;
-   S32 Fill =              1 + BorderLeft;
-   S32 BorderRight =       2 + BorderLeft;
-
-   dglClearBitmapModulation();
-   if(profile->mBitmapArrayRects.size() >= (NumBitmaps * baseMultiplier))
-   {
-      RectI destRect;
-      RectI stretchRect;
-      RectI* mBitmapBounds = profile->mBitmapArrayRects.address();
-
-      // Draw all corners first.
-
-      //left border
-      dglDrawBitmapSR(profile->mTextureHandle,Point2I(bounds.point.x,bounds.point.y),mBitmapBounds[BorderLeft]);
-      //right border
-      dglDrawBitmapSR(profile->mTextureHandle,Point2I(bounds.point.x + bounds.extent.x - mBitmapBounds[BorderRight].extent.x,bounds.point.y),mBitmapBounds[BorderRight]);
-
-      // End drawing corners
-
-      // Begin drawing fill
-
-      //fill stretch
-      destRect.point.x = bounds.point.x + mBitmapBounds[BorderLeft].extent.x;
-      destRect.extent.x = (bounds.extent.x) - mBitmapBounds[BorderLeft].extent.x - mBitmapBounds[BorderRight].extent.x;
-      destRect.extent.y = mBitmapBounds[Fill].extent.y;
-      destRect.point.y = bounds.point.y;
-      //stretch it
-      stretchRect = mBitmapBounds[Fill];
-      stretchRect.inset(1,0);
-      //draw it
-      dglDrawBitmapStretchSR(profile->mTextureHandle,destRect,stretchRect);
-
-      // End drawing fill
-   }
-}
-
-// DAW: Render out the fixed bitmap borders based on a multiplier into the bitmap array
-// It renders left and right caps, with a sizable fill area in the middle to reach
-// the x extent.  It does not stretch in the y direction.
-void renderFixedBitmapBordersFilledIndex(RectI &bounds, S32 startIndex, GuiControlProfile *profile)
-{
-   // DAW: Indices into the bitmap array
-   S32 NumBitmaps = 3;
+	S32 NumBitmaps = 3;
+	S32 startIndex = NumBitmaps * (baseMultiplier - 1);
    S32 BorderLeft =     startIndex;
    S32 Fill =              1 + startIndex;
    S32 BorderRight =       2 + startIndex;
@@ -283,62 +308,12 @@ void renderFixedBitmapBordersFilledIndex(RectI &bounds, S32 startIndex, GuiContr
       RectI stretchRect;
       RectI* mBitmapBounds = profile->mBitmapArrayRects.address();
 
-      // Draw all corners first.
-
-      //left border
+      //draw left endcap
       dglDrawBitmapSR(profile->mTextureHandle,Point2I(bounds.point.x,bounds.point.y),mBitmapBounds[BorderLeft]);
-      //right border
+      //draw right endcap
       dglDrawBitmapSR(profile->mTextureHandle,Point2I(bounds.point.x + bounds.extent.x - mBitmapBounds[BorderRight].extent.x,bounds.point.y),mBitmapBounds[BorderRight]);
 
-      // End drawing corners
-
-      // Begin drawing fill
-
-      //fill stretch
-      destRect.point.x = bounds.point.x + mBitmapBounds[BorderLeft].extent.x;
-      destRect.extent.x = (bounds.extent.x) - mBitmapBounds[BorderLeft].extent.x - mBitmapBounds[BorderRight].extent.x;
-      destRect.extent.y = mBitmapBounds[Fill].extent.y;
-      destRect.point.y = bounds.point.y;
-      //stretch it
-      stretchRect = mBitmapBounds[Fill];
-      stretchRect.inset(1,0);
-      //draw it
-      dglDrawBitmapStretchSR(profile->mTextureHandle,destRect,stretchRect);
-
-      // End drawing fill
-   }
-}
-
-// DAW: Render out the fixed bitmap borders based on a multiplier into the bitmap array
-// It renders left and right caps, with a sizable fill area in the middle to reach
-// the x extent.  It does not stretch in the y direction.
-void renderFixedBitmapBordersStretchYFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile)
-{
-   // DAW: Indices into the bitmap array
-   S32 NumBitmaps = 3;
-   S32 BorderLeft =     NumBitmaps * baseMultiplier - NumBitmaps;
-   S32 Fill =              1 + BorderLeft;
-   S32 BorderRight =       2 + BorderLeft;
-
-   dglClearBitmapModulation();
-   if(profile->mBitmapArrayRects.size() >= (NumBitmaps * baseMultiplier))
-   {
-      RectI destRect;
-      RectI stretchRect;
-      RectI* mBitmapBounds = profile->mBitmapArrayRects.address();
-
-      // Draw all corners first.
-
-      //left border
-      dglDrawBitmapStretchSR(profile->mTextureHandle, RectI( bounds.point.x, bounds.point.y, mBitmapBounds[BorderLeft].extent.x, bounds.extent.y ), mBitmapBounds[BorderLeft] );
-      //right border
-      dglDrawBitmapStretchSR(profile->mTextureHandle, RectI(bounds.point.x + bounds.extent.x - mBitmapBounds[BorderRight].extent.x, bounds.point.y, mBitmapBounds[BorderRight].extent.x, bounds.extent.y ), mBitmapBounds[BorderRight] );
-
-      // End drawing corners
-
-      // Begin drawing fill
-
-      //fill stretch
+      //draw stretched content
       destRect.point.x = bounds.point.x + mBitmapBounds[BorderLeft].extent.x;
       destRect.extent.x = (bounds.extent.x) - mBitmapBounds[BorderLeft].extent.x - mBitmapBounds[BorderRight].extent.x;
       destRect.extent.y = bounds.extent.y;
@@ -347,9 +322,34 @@ void renderFixedBitmapBordersStretchYFilled(RectI &bounds, S32 baseMultiplier, G
       stretchRect = mBitmapBounds[Fill];
       stretchRect.inset(1,0);
       //draw it
-      dglDrawBitmapStretchSR(profile->mTextureHandle, destRect, stretchRect);
-
-      // End drawing fill
+      dglDrawBitmapStretchSR(profile->mTextureHandle,destRect,stretchRect);
    }
+}
+
+// Renders out a stretched bitmap.
+void renderStretchedBitmap(RectI &bounds, U8 frame, GuiControlProfile *profile)
+{
+	dglClearBitmapModulation();
+	if (profile->mBitmapArrayRects.size() > frame)
+	{
+		RectI* mBitmapBounds = profile->mBitmapArrayRects.address();
+		dglDrawBitmapStretchSR(profile->mTextureHandle, bounds, mBitmapBounds[frame]);
+	}
+}
+
+// Renders out a stretched image asset.
+void renderStretchedImageAsset(RectI &bounds, U8 frame, GuiControlProfile *profile)
+{
+	dglClearBitmapModulation();
+	ImageAsset *imageAsset = profile->mImageAsset;
+
+	if (imageAsset != NULL && imageAsset->isAssetValid() && imageAsset->getFrameCount() > frame)
+	{
+		const ImageAsset::FrameArea::PixelArea& pixelArea = imageAsset->getImageFrameArea(frame).mPixelArea;
+		RectI srcRect(pixelArea.mPixelOffset, Point2I(pixelArea.mPixelWidth, pixelArea.mPixelHeight));
+
+		// Render image.
+		dglDrawBitmapStretchSR(imageAsset->getImageTexture(), bounds, srcRect);
+	}
 }
 

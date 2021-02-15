@@ -839,7 +839,7 @@ void GuiPopUpMenuCtrl::onRender(Point2I offset, const RectI &updateRect)
             index = 4; // inactive state images are indexes 4 and 5.
             //S32 l = r.point.x, r2 = r.point.x + r.extent.x - 1;
             //S32 t = r.point.y, b = r.point.y + r.extent.y - 1;
-            renderFixedBitmapBordersStretchYFilled(r, index, mProfile);
+			renderFixedBitmapBordersFilled(r, index, mProfile);
             return;
         }
     }
@@ -852,7 +852,7 @@ void GuiPopUpMenuCtrl::onRender(Point2I offset, const RectI &updateRect)
       if(mProfile->mProfileForChildren && mProfile->mBitmapArrayRects.size())
       {
          // Render the fixed, filled in border
-         renderFixedBitmapBordersStretchYFilled(r, 3, mProfile);
+		  renderFixedBitmapBordersFilled(r, 3, mProfile);
          renderedBitmapIndex = 3;
       } 
       else
@@ -895,7 +895,7 @@ void GuiPopUpMenuCtrl::onRender(Point2I offset, const RectI &updateRect)
          if(mProfile->mProfileForChildren && mProfile->mBitmapArrayRects.size())
          {
             // Render the fixed, filled in border
-            renderFixedBitmapBordersStretchYFilled(r, 2, mProfile);
+			 renderFixedBitmapBordersFilled(r, 2, mProfile);
             renderedBitmapIndex = 2;
 
          } else
@@ -927,7 +927,7 @@ void GuiPopUpMenuCtrl::onRender(Point2I offset, const RectI &updateRect)
          if(mProfile->mProfileForChildren && mProfile->mBitmapArrayRects.size())
          {
             // Render the fixed, filled in border
-            renderFixedBitmapBordersStretchYFilled(r, 1, mProfile);
+			 renderFixedBitmapBordersFilled(r, 1, mProfile);
             renderedBitmapIndex = 1;
 
          } else
@@ -951,9 +951,9 @@ void GuiPopUpMenuCtrl::onRender(Point2I offset, const RectI &updateRect)
       }
       //      renderSlightlyRaisedBox(r, mProfile); // DAW: Used to be the only 'else' condition to mInAction above.
 
-      S32 txt_w = mFont->getStrWidth(mText);
+      S32 txt_w = mProfile->mFont->getStrWidth(mText);
       localStart.x = 0;
-      localStart.y = (mBounds.extent.y - (mFont->getHeight())) / 2;
+      localStart.y = (mBounds.extent.y - (mProfile->mFont->getHeight())) / 2;
 
         // DAW: Indices into the bitmap array
         const S32 NumBitmaps = 3;
@@ -1069,28 +1069,28 @@ void GuiPopUpMenuCtrl::onRender(Point2I offset, const RectI &updateRect)
 
          // Draw the first column
          getColumn(mText, buff, 0, "\t");
-         dglDrawText(mFont, globalStart, buff, mProfile->mFontColors);
+         dglDrawText(mProfile->mFont, globalStart, buff, mProfile->mFontColors);
 
          // Draw the second column to the right
          getColumn(mText, buff, 1, "\t");
-         S32 txt_w = mFont->getStrWidth(buff);
+         S32 txt_w = mProfile->mFont->getStrWidth(buff);
          if(mProfile->mProfileForChildren && mProfile->mBitmapArrayRects.size())
          {
             // We're making use of a bitmap border, so take into account the
             // right cap of the border.
             RectI* mBitmapBounds = mProfile->mBitmapArrayRects.address();
             Point2I textpos = localToGlobalCoord(Point2I(mBounds.extent.x - txt_w - mBitmapBounds[2].extent.x,localStart.y));
-            dglDrawText(mFont, textpos, buff, mProfile->mFontColors);
+            dglDrawText(mProfile->mFont, textpos, buff, mProfile->mFontColors);
 
          } else
          {
             Point2I textpos = localToGlobalCoord(Point2I(mBounds.extent.x - txt_w - 12,localStart.y));
-            dglDrawText(mFont, textpos, buff, mProfile->mFontColors);
+            dglDrawText(mProfile->mFont, textpos, buff, mProfile->mFontColors);
          }
 
       } else
       {
-         dglDrawText(mFont, globalStart, mText, mProfile->mFontColors);
+         dglDrawText(mProfile->mFont, globalStart, mText, mProfile->mFontColors);
       }
 
       // Restore the clip rectangle.
@@ -1224,8 +1224,8 @@ void GuiPopUpMenuCtrl::onAction()
    bool setScroll = false;
 
    for( U32 i=0; i < (U32)mEntries.size(); ++i )
-      if(S32(mFont->getStrWidth(mEntries[i].buf)) > textWidth)
-         textWidth = mFont->getStrWidth(mEntries[i].buf);
+      if(S32(mProfile->mFont->getStrWidth(mEntries[i].buf)) > textWidth)
+         textWidth = mProfile->mFont->getStrWidth(mEntries[i].buf);
 
    //if(textWidth > mBounds.extent.x)
    S32 sbWidth = 0;//mSc->mProfile->mBorderSize * 2 + mSc->scrollBarThickness(); // DAW: Calculate the scroll bar width
@@ -1242,7 +1242,7 @@ void GuiPopUpMenuCtrl::onAction()
    }
 
    //mTl->setCellSize(Point2I(width, mFont->getHeight()+3));
-   mTl->setCellSize(Point2I(width, mFont->getHeight() + textSpace)); // DAW: Modified the above line to use textSpace rather than the '3' as this is what is used below.
+   mTl->setCellSize(Point2I(width, mProfile->mFont->getHeight() + textSpace)); // DAW: Modified the above line to use textSpace rather than the '3' as this is what is used below.
 
    for( U32 j = 0; j < (U32)mEntries.size(); ++j )
       mTl->addEntry(mEntries[j].id, mEntries[j].buf);

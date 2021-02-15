@@ -216,7 +216,7 @@ GuiControl* GuiScrollCtrl::findHitControl(const Point2I& pt, S32 initialLayer)
 				Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
 				GuiControl* hitCtrl = ctrl->findHitControl(ptemp);
 
-				if (hitCtrl->mProfile->mModal)
+				if (hitCtrl->mProfile->mUseInput)
 					return hitCtrl;
 			}
 		}
@@ -302,6 +302,12 @@ void GuiScrollCtrl::computeSizes()
 			mHBarEnabled = true;
 		if (mChildExt.y > mContentExt.y)
 			mVBarEnabled = true;
+
+		//Are we now over-scrolled?
+		if ((mScrollOffset.x + mContentExt.x) > mChildExt.x)
+			mScrollOffset.x = getMax(mChildExt.x - mContentExt.x, 0);
+		if ((mScrollOffset.y + mContentExt.y) > mChildExt.y)
+			mScrollOffset.y = getMax(mChildExt.y - mContentExt.y, 0);
 	}
 	// build all the rectangles and such...
 	calcScrollRects();
@@ -808,29 +814,14 @@ void GuiScrollCtrl::onRender(Point2I offset, const RectI &updateRect)
 		return;
 	}
 
-	renderBorderedRect(ctrlRect, mProfile, NormalState);
+	renderUniversalRect(ctrlRect, mProfile, NormalState);
 
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
 	RectI contentRect = applyScrollBarSpacing(fillRect.point, fillRect.extent);
 	mChildArea.set(contentRect.point, contentRect.extent);
 
-	if (mProfile->mBitmapName == NULL || mProfile->constructBitmapArray() < 39)
-	{
-		renderVScrollBar(offset);
-		renderHScrollBar(offset);
-	}
-	else
-	{
-		if (mHasVScrollBar)
-			drawVScrollBar(offset);
-
-		if (mHasHScrollBar)
-			drawHScrollBar(offset);
-
-		//draw the scroll corner
-		if (mHasVScrollBar && mHasHScrollBar)
-			drawScrollCorner(offset);
-   }
+	renderVScrollBar(offset);
+	renderHScrollBar(offset);
 
 	if (contentRect.isValidRect())
 	{
@@ -879,7 +870,12 @@ GuiControlState GuiScrollCtrl::getRegionCurrentState(GuiScrollCtrl::Region regio
 
 void GuiScrollCtrl::renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile* profile, GuiControlState state, GuiDirection direction)
 {
-	renderBorderedRect(bounds, profile, state);
+	if (!profile)
+	{
+		return;
+	}
+
+	renderUniversalRect(bounds, profile, state);
 
 	RectI ctrlRect = applyMargins(bounds.point, bounds.extent, state, profile);
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, state, profile);
@@ -918,62 +914,62 @@ void GuiScrollCtrl::renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile
 
 void GuiScrollCtrl::renderVScrollBar(const Point2I& offset)
 {
-	if(mHasVScrollBar)
+	if(mHasVScrollBar && mTrackProfile && mThumbProfile)
 	{ 
 		if(mVBarEnabled)
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mUpArrowRect.point + offset, mUpArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::UpArrow), GuiDirection::Up);
 				renderBorderedRectWithArrow(RectI(mDownArrowRect.point + offset, mDownArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::DownArrow), GuiDirection::Down);
 			}
-			renderBorderedRect(RectI(mVTrackRect.point + offset, mVTrackRect.extent), mTrackProfile, GuiControlState::NormalState);
+			renderUniversalRect(RectI(mVTrackRect.point + offset, mVTrackRect.extent), mTrackProfile, GuiControlState::NormalState);
 
 			//The Thumb
 			GuiControlState thumbState = getRegionCurrentState(Region::VertThumb);
 			RectI vThumb = RectI(mVTrackRect.point.x + offset.x, mVTrackRect.point.y + mVThumbPos + offset.y, mScrollBarThickness, mVThumbSize);
 			RectI vThumbWithMargins = applyMargins(vThumb.point, vThumb.extent, thumbState, mThumbProfile);
-			renderBorderedRect(vThumbWithMargins, mThumbProfile, thumbState);
+			renderUniversalRect(vThumbWithMargins, mThumbProfile, thumbState);
 		}
 		else
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mUpArrowRect.point + offset, mUpArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Up);
 				renderBorderedRectWithArrow(RectI(mDownArrowRect.point + offset, mDownArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Down);
 			}
-			renderBorderedRect(RectI(mVTrackRect.point + offset, mVTrackRect.extent), mTrackProfile, GuiControlState::DisabledState);
+			renderUniversalRect(RectI(mVTrackRect.point + offset, mVTrackRect.extent), mTrackProfile, GuiControlState::DisabledState);
 		}
 	}
 }
 
 void GuiScrollCtrl::renderHScrollBar(const Point2I& offset)
 {
-	if(mHasHScrollBar)
+	if(mHasHScrollBar && mTrackProfile && mThumbProfile)
 	{
 		if (mHBarEnabled)
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::LeftArrow), GuiDirection::Left);
 				renderBorderedRectWithArrow(RectI(mRightArrowRect.point + offset, mRightArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::RightArrow), GuiDirection::Right);
 			}
-			renderBorderedRect(RectI(mHTrackRect.point + offset, mHTrackRect.extent), mTrackProfile, GuiControlState::NormalState);
+			renderUniversalRect(RectI(mHTrackRect.point + offset, mHTrackRect.extent), mTrackProfile, GuiControlState::NormalState);
 
 			//The Thumb
 			GuiControlState thumbState = getRegionCurrentState(Region::HorizThumb);
 			RectI hThumb = RectI(mHTrackRect.point.x + mHThumbPos + offset.x, mHTrackRect.point.y + offset.y, mHThumbSize, mScrollBarThickness);
 			RectI hThumbWithMargins = applyMargins(hThumb.point, hThumb.extent, thumbState, mThumbProfile);
-			renderBorderedRect(hThumbWithMargins, mThumbProfile, thumbState);
+			renderUniversalRect(hThumbWithMargins, mThumbProfile, thumbState);
 		}
 		else
 		{
-			if (mShowArrowButtons)
+			if (mShowArrowButtons && mArrowProfile)
 			{
 				renderBorderedRectWithArrow(RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Left);
 				renderBorderedRectWithArrow(RectI(mRightArrowRect.point + offset, mRightArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Right);
 			}
-			renderBorderedRect(RectI(mHTrackRect.point + offset, mHTrackRect.extent), mTrackProfile, GuiControlState::DisabledState);
+			renderUniversalRect(RectI(mHTrackRect.point + offset, mHTrackRect.extent), mTrackProfile, GuiControlState::DisabledState);
 		}
 	}
 }
@@ -1027,158 +1023,6 @@ void GuiScrollCtrl::renderChildControls(Point2I offset, RectI content, const Rec
 			}
 		}
 	}
-}
-
-void GuiScrollCtrl::drawVScrollBar(const Point2I &offset)
-{
-   Point2I pos = offset + mUpArrowRect.point;
-   S32 bitmap = (mVBarEnabled ? ((curHitRegion == UpArrow && mDepressed) ?
-         BmpStates * BmpUp + BmpHilite : BmpStates * BmpUp) : BmpStates * BmpUp + BmpDisabled);
-
-   dglClearBitmapModulation();
-   dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[bitmap]);
-
-   pos.y += mScrollBarThickness;
-   S32 end;
-   if (mVBarEnabled)
-      end = mVThumbPos + mChildArea.point.y + mDownArrowRect.extent.y;
-   else
-      end = mDownArrowRect.point.y + offset.y;
-
-   bitmap = (mVBarEnabled ? ((curHitRegion == DownPage && mDepressed) ?
-         BmpStates * BmpVPage + BmpHilite : BmpStates * BmpVPage) : BmpStates * BmpVPage + BmpDisabled);
-
-   if (end > pos.y)
-   {
-      dglClearBitmapModulation();
-      dglDrawBitmapStretchSR(mTextureHandle, RectI(pos, Point2I(mBitmapBounds[bitmap].extent.x, end - pos.y)), mBitmapBounds[bitmap]);
-   }
-
-   pos.y = end;
-   if (mVBarEnabled)
-   {
-      bool thumbSelected = (curHitRegion == VertThumb && mDepressed);
-      S32 ttop = (thumbSelected ? BmpStates * BmpVThumbTopCap + BmpHilite : BmpStates * BmpVThumbTopCap);
-      S32 tmid = (thumbSelected ? BmpStates * BmpVThumb + BmpHilite : BmpStates * BmpVThumb);
-      S32 tbot = (thumbSelected ? BmpStates * BmpVThumbBottomCap + BmpHilite : BmpStates * BmpVThumbBottomCap);
-
-      // draw the thumb
-      dglClearBitmapModulation();
-      dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[ttop]);
-      pos.y += mBitmapBounds[ttop].extent.y;
-      end = (mVThumbPos + mChildArea.point.y + mDownArrowRect.extent.y) + mVThumbSize - mBitmapBounds[tbot].extent.y;
-
-      if (end > pos.y)
-      {
-         dglClearBitmapModulation();
-         dglDrawBitmapStretchSR(mTextureHandle, RectI(pos, Point2I(mBitmapBounds[tmid].extent.x, end - pos.y)), mBitmapBounds[tmid]);
-      }
-
-      pos.y = end;
-      dglClearBitmapModulation();
-      dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[tbot]);
-      pos.y += mBitmapBounds[tbot].extent.y;
-      end = mVTrackRect.point.y + mVTrackRect.extent.y - 1 + offset.y;
-
-      bitmap = (curHitRegion == DownPage && mDepressed) ? BmpStates * BmpVPage + BmpHilite : BmpStates * BmpVPage;
-      if (end > pos.y)
-      {
-         dglClearBitmapModulation();
-         dglDrawBitmapStretchSR(mTextureHandle, RectI(pos, Point2I(mBitmapBounds[bitmap].extent.x, end - pos.y)), mBitmapBounds[bitmap]);
-      }
-
-      pos.y = end;
-   }
-
-   bitmap = (mVBarEnabled ? ((curHitRegion == DownArrow && mDepressed ) ?
-         BmpStates * BmpDown + BmpHilite : BmpStates * BmpDown) : BmpStates * BmpDown + BmpDisabled);
-
-   dglClearBitmapModulation();
-   dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[bitmap]);
-}
-
-void GuiScrollCtrl::drawHScrollBar(const Point2I &offset)
-{
-   S32 bitmap;
-
-   //draw the left arrow
-   bitmap = (mHBarEnabled ? ((curHitRegion == LeftArrow && mDepressed) ?
-            BmpStates * BmpLeft + BmpHilite : BmpStates * BmpLeft) : BmpStates * BmpLeft + BmpDisabled);
-
-   Point2I pos = offset;
-   pos += mLeftArrowRect.point;
-
-   dglClearBitmapModulation();
-   dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[bitmap]);
-
-   pos.x += mLeftArrowRect.extent.x;
-
-   //draw the left page
-   S32 end;
-   if (mHBarEnabled)
-      end = mHThumbPos + mChildArea.point.x + mDownArrowRect.extent.x;
-   else
-      end = mRightArrowRect.point.x + offset.x;
-
-   bitmap = (mHBarEnabled ? ((curHitRegion == LeftPage && mDepressed) ?
-            BmpStates * BmpHPage + BmpHilite : BmpStates * BmpHPage) : BmpStates * BmpHPage + BmpDisabled);
-
-   if (end > pos.x)
-   {
-      dglClearBitmapModulation();
-      dglDrawBitmapStretchSR(mTextureHandle, RectI(pos, Point2I(end - pos.x, mBitmapBounds[bitmap].extent.y)), mBitmapBounds[bitmap]);
-   }
-   pos.x = end;
-
-   //draw the thumb and the rightPage
-   if (mHBarEnabled)
-   {
-      bool thumbSelected = (curHitRegion == HorizThumb && mDepressed);
-      S32 ttop = (thumbSelected ? BmpStates * BmpHThumbLeftCap + BmpHilite : BmpStates * BmpHThumbLeftCap );
-      S32 tmid = (thumbSelected ? BmpStates * BmpHThumb + BmpHilite : BmpStates * BmpHThumb);
-      S32 tbot = (thumbSelected ? BmpStates * BmpHThumbRightCap + BmpHilite : BmpStates * BmpHThumbRightCap);
-
-      // draw the thumb
-      dglClearBitmapModulation();
-      dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[ttop]);
-      pos.x += mBitmapBounds[ttop].extent.x;
-      end = (mHThumbPos + mChildArea.point.x + mDownArrowRect.extent.x) + mHThumbSize - mBitmapBounds[tbot].extent.x;
-      if (end > pos.x)
-      {
-         dglClearBitmapModulation();
-         dglDrawBitmapStretchSR(mTextureHandle, RectI(pos, Point2I(end - pos.x, mBitmapBounds[tmid].extent.y)), mBitmapBounds[tmid]);
-      }
-
-      pos.x = end;
-      dglClearBitmapModulation();
-      dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[tbot]);
-      pos.x += mBitmapBounds[tbot].extent.x;
-      end = mHTrackRect.point.x + mHTrackRect.extent.x - 1 + offset.x;
-
-      bitmap = ((curHitRegion == RightPage && mDepressed) ? BmpStates * BmpHPage + BmpHilite : BmpStates * BmpHPage);
-
-      if (end > pos.x)
-      {
-         dglClearBitmapModulation();
-         dglDrawBitmapStretchSR(mTextureHandle, RectI(pos, Point2I(end - pos.x, mBitmapBounds[bitmap].extent.y)), mBitmapBounds[bitmap]);
-      }
-
-      pos.x = end;
-   }
-   bitmap = (mHBarEnabled ? ((curHitRegion == RightArrow && mDepressed) ?
-            BmpStates * BmpRight + BmpHilite : BmpStates * BmpRight) : BmpStates * BmpRight + BmpDisabled);
-
-   dglClearBitmapModulation();
-   dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[bitmap]);
-}
-
-void GuiScrollCtrl::drawScrollCorner(const Point2I &offset)
-{
-   Point2I pos = offset;
-   pos.x += mRightArrowRect.point.x + mRightArrowRect.extent.x;
-   pos.y += mRightArrowRect.point.y;
-   dglClearBitmapModulation();
-   dglDrawBitmapSR(mTextureHandle, pos, mBitmapBounds[BmpStates * BmpResize]);
 }
 #pragma endregion
 

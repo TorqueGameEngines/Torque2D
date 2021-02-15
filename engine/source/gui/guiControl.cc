@@ -119,7 +119,12 @@ bool GuiControl::onAdd()
 
 void GuiControl::onChildAdded( GuiControl *child )
 {
-   // Base class does not make use of this
+	if(mProfile)
+	{
+		//This will cause the child control to be centered if it needs to be.
+		RectI innerRect = this->getInnerRect(mBounds.point, mBounds.extent, GuiControlState::NormalState, mProfile);
+		child->parentResized(innerRect.extent, innerRect.extent);
+	}
 }
 
 static EnumTable::Enums horzEnums[] =
@@ -187,7 +192,7 @@ void GuiControl::initPersistFields()
    endGroup("Localization");
 
    addGroup("Text");
-   addField("text", TypeCaseString, Offset(mText, GuiControl));
+   addProtectedField("text", TypeCaseString, Offset(mText, GuiControl), setTextProperty, getTextProperty, "");
    addField("textID", TypeString, Offset(mTextID, GuiControl));
    endGroup("Text");
 }
@@ -242,7 +247,7 @@ void GuiControl::addObject(SimObject *object)
    if(mAwake)
       ctrl->awaken();
 
-  // If we are a child, notify our parent that we've been removed
+  // If we are a child, notify our parent that we've been added
   GuiControl *parent = ctrl->getParent();
   if( parent )
      parent->onChildAdded( ctrl );
@@ -403,7 +408,7 @@ void GuiControl::setHeight( S32 newHeight )
 
 void GuiControl::childResized(GuiControl *child)
 {
-   // default to do nothing...
+   // Default to do nothing. Do not call resize from here as it will create an infinite loop.
 }
 
 void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent)
@@ -459,7 +464,7 @@ void GuiControl::onRender(Point2I offset, const RectI &updateRect)
 		return;
 	}
 
-    renderBorderedRect(ctrlRect, mProfile, NormalState);
+	renderUniversalRect(ctrlRect, mProfile, NormalState);
 
 	//Render Text
 	dglSetBitmapModulation(mProfile->mFontColor);
@@ -691,7 +696,7 @@ bool GuiControl::renderTooltip(Point2I cursorPos, const char* tipText )
     dglSetClipRect(rect);
 
     // Draw body and border of the tool tip
-	renderBorderedRect(rect, mTooltipProfile, NormalState);
+	renderUniversalRect(rect, mTooltipProfile, NormalState);
 
     // Draw the text centered in the tool tip box
     dglSetBitmapModulation( mTooltipProfile->mFontColor );
@@ -1150,7 +1155,7 @@ GuiControl* GuiControl::findHitControl(const Point2I &pt, S32 initialLayer)
          Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
          GuiControl *hitCtrl = ctrl->findHitControl(ptemp);
 
-         if(hitCtrl->mProfile->mModal)
+         if(hitCtrl->mProfile->mUseInput)
             return hitCtrl;
       }
    }

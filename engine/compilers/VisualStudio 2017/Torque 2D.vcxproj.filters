@@ -202,9 +202,6 @@
     <Filter Include="Box2D\Particle">
       <UniqueIdentifier>{b2903a96-6c49-4961-82a8-f1832989d4a4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="2d\editorToy">
-      <UniqueIdentifier>{983ea611-a551-40d6-a16d-ff54ed51e504}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\audio\audio.cc">
@@ -1119,9 +1116,6 @@
     <ClCompile Include="..\..\source\2d\scene\WorldQuery.cc">
       <Filter>2d\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\2d\gui\guiImageButtonCtrl.cc">
-      <Filter>2d\gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\2d\gui\guiSpriteCtrl.cc">
       <Filter>2d\gui</Filter>
     </ClCompile>
@@ -1375,9 +1369,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp">
       <Filter>Box2D\Particle</Filter>
     </ClCompile>
@@ -1485,21 +1476,6 @@
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc">
       <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\2d\editorToy\EditorToySceneWindow.cc">
-      <Filter>2d\editorToy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\2d\editorToy\EditorToyTool.cc">
-      <Filter>2d\editorToy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\2d\editorToy\EditorToySelection.cc">
-      <Filter>2d\editorToy</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\platform\platformCPUCount.cc">
-      <Filter>platform</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\platformWin32\winPlatformCPUCount.cc">
-      <Filter>platformWin32</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -2577,12 +2553,6 @@
     <ClInclude Include="..\..\source\2d\scene\WorldQuery.h">
       <Filter>2d\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl.h">
-      <Filter>2d\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl_ScriptBindings.h">
-      <Filter>2d\gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl.h">
       <Filter>2d\gui</Filter>
     </ClInclude>
@@ -3196,9 +3166,6 @@
     <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h">
       <Filter>Box2D\Particle</Filter>
     </ClInclude>
@@ -3352,21 +3319,20 @@
     <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow.h">
-      <Filter>2d\editorToy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow_ScriptBinding.h">
-      <Filter>2d\editorToy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\editorToy\EditorToyTool.h">
-      <Filter>2d\editorToy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\editorToy\EditorToySelection.h">
-      <Filter>2d\editorToy</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\platform\platformCPUCount.h">
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
+      <Filter>math</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\math\mMathAMD_ASM.asm">
+      <Filter>math</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\math\mMathSSE_ASM.asm">
+      <Filter>math</Filter>
+    </CustomBuild>
+    <CustomBuild Include="..\..\source\platform\platformCPUInfo.asm">
       <Filter>platform</Filter>
-    </ClInclude>
+    </CustomBuild>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />

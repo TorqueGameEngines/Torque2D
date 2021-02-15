@@ -1,5 +1,7 @@
 function ForestRobeTheme::init(%this)
 {
+	%this.name = "Forest Robe";
+
 	//fonts and font sizes
 	%this.font = "monaco";
 	%this.fontSize = 12;
