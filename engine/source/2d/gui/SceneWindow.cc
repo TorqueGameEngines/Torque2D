@@ -1606,12 +1606,6 @@ void SceneWindow::onRender( Point2I offset, const RectI& updateRect )
     // Debug Profiling.
     PROFILE_SCOPE(SceneWindow_onRender);
 
-	//save the old clip
-	RectI oldClipRect = dglGetClipRect();
-
-	//clip to the updateRect
-	dglSetClipRect(updateRect);
-
     // Fetch scene.
     Scene* pScene = getScene();
 
@@ -1730,9 +1724,6 @@ void SceneWindow::onRender( Point2I offset, const RectI& updateRect )
 
     // Update Window.
     setUpdate();
-
-	//return the clip rect
-	dglSetClipRect(oldClipRect);
 }
 
 //------------------------------------------------------------------------------
@@ -1793,7 +1784,7 @@ void SceneWindow::renderMetricsOverlay( Point2I offset, const RectI& updateRect 
     // Calculate Debug Banner Offset.
     Point2I bannerOffset = updateRect.point + Point2I(8,8);
 
-    GLfloat sWindowVertices[] = {
+    static GLfloat sWindowVertices[] = {
         (GLfloat)updateRect.point.x, (GLfloat)updateRect.point.y,
         (GLfloat)updateRect.point.x + updateRect.extent.x, (GLfloat)updateRect.point.y,
         (GLfloat)updateRect.point.x, (GLfloat)updateRect.point.y + bannerHeight + 16,

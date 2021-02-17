@@ -76,6 +76,7 @@ public:
 
     /// Any queries.
     U32             anyQueryAABB( const b2AABB& aabb );
+    U32             anyQueryArea(const Vector2& lowExtent, const Vector2& upperExtent);
     U32             anyQueryRay( const Vector2& point1, const Vector2& point2 );
     U32             anyQueryPoint( const Vector2& point );
     U32             anyQueryCircle( const Vector2& centroid, const F32 radius );

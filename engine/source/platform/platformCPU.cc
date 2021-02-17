@@ -51,11 +51,13 @@ enum CPUFlags
 
 // fill the specified structure with information obtained from asm code
 void SetProcessorInfo(TorqueSystemInfo::Processor& pInfo,
-   char* vendor, U32 processor, U32 properties, U32 properties2)
+   char* vendor, char* brand, U32 processor, U32 properties, U32 properties2)
 {
    PlatformSystemInfo.processor.properties |= (properties & BIT_FPU) ? CPU_PROP_FPU : 0;
    PlatformSystemInfo.processor.properties |= (properties & BIT_RDTSC) ? CPU_PROP_RDTSC : 0;
    PlatformSystemInfo.processor.properties |= (properties & BIT_MMX) ? CPU_PROP_MMX : 0;
+
+   //Con::printf(brand);
 
    if (dStricmp(vendor, "GenuineIntel") == 0)
    {
@@ -124,10 +126,10 @@ void SetProcessorInfo(TorqueSystemInfo::Processor& pInfo,
             pInfo.name = StringTable->insert("Intel Pentium III");
             break;
          case 0xA:
-            if (extendedModel == 1)
+            if (extendedModel >= 1)
             {
                pInfo.type = CPU_Intel_Corei7Xeon;
-               pInfo.name = StringTable->insert("Intel Core i7 / Xeon");
+               pInfo.name = brand ? brand : StringTable->insert("Intel Core i7 / Xeon");
             }
             else
             {
@@ -136,10 +138,10 @@ void SetProcessorInfo(TorqueSystemInfo::Processor& pInfo,
             }
             break;
          case 0xD:
-            if (extendedModel == 1)
+            if (extendedModel >= 1)
             {
                pInfo.type = CPU_Intel_Corei7Xeon;
-               pInfo.name = StringTable->insert("Intel Core i7 / Xeon");
+               pInfo.name = brand ? brand : StringTable->insert("Intel Core i7 / Xeon");
             }
             else
             {
@@ -171,8 +173,10 @@ void SetProcessorInfo(TorqueSystemInfo::Processor& pInfo,
 
       default:
          pInfo.type = CPU_Intel_Unknown;
-         pInfo.name = StringTable->insert("Intel (unknown)");
+         sprintf(processName, "Intel (unknown) - %d", (processor >> 8) & 0x0f, ", %d", (processor >> 4) & 0x0f);
+         pInfo.name = StringTable->insert(processName);
          break;
+
       }
    }
    //--------------------------------------
@@ -251,7 +255,8 @@ void SetProcessorInfo(TorqueSystemInfo::Processor& pInfo,
 
          default:
             pInfo.type = CPU_AMD_Unknown;
-            pInfo.name = StringTable->insert("AMD (unknown)");
+            sprintf(processName, "AMD (unknown) - %d", (processor >> 8) & 0xf, ", %d", (processor >> 4) & 0xf);
+            pInfo.name = StringTable->insert(processName);
             break;
          }
       }

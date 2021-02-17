@@ -30,10 +30,10 @@
 #include "gui/guiMLTextCtrl.h"
 #endif
 
-class GuiBubbleTextCtrl : public GuiControl
+class GuiBubbleTextCtrl : public GuiTextCtrl
 {
   private:
-   typedef GuiControl Parent;
+   typedef GuiTextCtrl Parent;
 
   protected:
      bool mInAction;

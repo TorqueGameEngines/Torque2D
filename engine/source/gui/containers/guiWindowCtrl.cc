@@ -644,7 +644,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
    if( textWidth > winRect.extent.x ) start.set( 0, 0 );
    // center the vertical
 //   start.y = ( winRect.extent.y - ( font->getHeight() - 2 ) ) / 2;
-   dglDrawText(mProfile->mFont, start + offset + mProfile->mTextOffset, mText);
+   dglDrawText(mFont, start + offset + mProfile->mTextOffset, mText);
 
    // deal with rendering the titlebar controls
    AssertFatal(root, "Unable to get the root Canvas.");

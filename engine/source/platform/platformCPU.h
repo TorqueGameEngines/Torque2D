@@ -23,6 +23,11 @@
 #ifndef _PLATFORM_CPU_H_
 #define _PLATFORM_CPU_H_
 
+#ifdef TORQUE_OS_WIN
+#include <intrin.h>
+#endif // TORQUE_OS_WIN
+
+
 //-----------------------------------------------------------------------------
 
 enum ProcessorType
@@ -108,6 +113,22 @@ enum PPCProperties
 struct Processor
 {
    static void init();
+};
+
+class CPUID
+{
+   U32 reg[4];
+   public:
+      explicit CPUID(U32 funcId, U32 subFuncId) {
+#ifdef TORQUE_OS_WIN
+         __cpuidex((int *)reg, (int)funcId, (int)subFuncId);
+#endif
+      }
+
+      const U32 &EAX() const { return reg[0]; }
+      const U32 &EBX() const { return reg[1]; }
+      const U32 &ECX() const { return reg[2]; }
+      const U32 &EDX() const { return reg[3]; }
 };
 
 //-----------------------------------------------------------------------------

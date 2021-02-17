@@ -343,15 +343,21 @@ SpriteBatchItem* CompositeSprite::createSpriteIsometricLayout( const SpriteBatch
     // Fetch logical coordinates.
     Vector2 position = logicalPosition.getAsVector2();
 
-    // Calculate position.
-    position.Set( (position.x * spriteStride.x) + (position.y * spriteStride.x), (position.x * spriteStride.y) + (position.y * -spriteStride.y) );
+    // Calculate position, because this is iso, the stride needs to be angled.
+    // TODO: the direction offset needs to be calculated to go with the offset of the squish
+    // of the sprite batch items instead of just typing arbitrary values =/.
+    Vector2 dir;
+    dir.setPolar(0.785398f, getDefaultSpriteSize().x);
+    position.Set( (position.x * dir.x ) + (position.y * dir.y ), (position.x * (dir.y * 0.3f)) + (position.y * (-dir.y * 0.3f)) );
 
     // Set the sprite default position.
-    pSpriteBatchItem->setLocalPosition( position );
+    pSpriteBatchItem->setLocalPosition(position);
 
     // Set the sprite default size and angle.
     pSpriteBatchItem->setSize( getDefaultSpriteSize() );
-    pSpriteBatchItem->setLocalAngle( SpriteBatch::getDefaultSpriteAngle() );
+    pSpriteBatchItem->setIsometric(true);
+    //45 degrees
+    pSpriteBatchItem->setLocalAngle( -0.785398f );
 
     return pSpriteBatchItem;
 }

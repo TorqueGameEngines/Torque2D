@@ -296,6 +296,7 @@ private:
     };
 
 protected:
+   static Scene * smRootScene;
     /// Taml callbacks.
     virtual void            onTamlPreRead( void );
     virtual void            onTamlPostRead( const TamlCustomNodes& customNodes );
@@ -726,6 +727,18 @@ protected:
 
 public:
     static SimObjectPtr<Scene> LoadingScene;
+
+    // Scene vector to hold all active scenes and return the root scene to the editor.
+    static Scene *getRootScene()
+    {
+       if (Scene::smSceneList.empty())
+          return nullptr;
+
+       return Scene::smSceneList[0];
+    }
+
+    static Vector<Scene*> smSceneList;
+
 };
 
 //-----------------------------------------------------------------------------

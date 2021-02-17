@@ -68,4 +68,7 @@ void    getVectorFromAngles( VectorF &vec, F32 &yawAng, F32 &pitchAng );
 /// @return A Point2F of the nearest point that lies on the line
 Point2F getClosestPointOnLine( Point2F &a, Point2F &b, Point2F &point);
 
+/// Returns an objects position when rotated around a pivot point.
+Point2F rotateAtPoint(Point2F &pivot, Point2F &objPos, F32 &ang);
+
 #endif // _MATHUTILS_H_

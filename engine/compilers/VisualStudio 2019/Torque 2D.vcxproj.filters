@@ -1116,6 +1116,9 @@
     <ClCompile Include="..\..\source\2d\scene\WorldQuery.cc">
       <Filter>2d\scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\2d\gui\guiImageButtonCtrl.cc">
+      <Filter>2d\gui</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\source\2d\gui\guiSpriteCtrl.cc">
       <Filter>2d\gui</Filter>
     </ClCompile>
@@ -1368,6 +1371,9 @@
     <ClCompile Include="..\..\source\platform\platformNet_ScriptBinding.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc">
       <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
+      <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp">
       <Filter>Box2D\Particle</Filter>
@@ -2553,6 +2559,12 @@
     <ClInclude Include="..\..\source\2d\scene\WorldQuery.h">
       <Filter>2d\scene</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl.h">
+      <Filter>2d\gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl_ScriptBindings.h">
+      <Filter>2d\gui</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl.h">
       <Filter>2d\gui</Filter>
     </ClInclude>
@@ -3165,6 +3177,9 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h">
       <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
+      <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h">
       <Filter>Box2D\Particle</Filter>

@@ -26,11 +26,15 @@ function createSandboxWindow()
     if ( !isObject(SandboxWindow) )
     {
         // Create the scene window.
-        new SceneWindow(SandboxWindow);
+        new SceneWindow(SandboxWindow)
+		{
 
         // Set profile.        
-        SandboxWindow.Profile = SandboxWindowProfile;
-        
+        Profile = SandboxWindowProfile;
+		Position = "64 64";
+		Extent = "320 240";
+		
+        };
         // Push the window.
         Canvas.setContent( SandboxWindow );                     
     }

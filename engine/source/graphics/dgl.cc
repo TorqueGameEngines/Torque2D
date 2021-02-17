@@ -834,6 +834,46 @@ void dglDrawTriangleFill(const Point2I &pt1, const Point2I &pt2, const Point2I &
 #endif
 }
 
+// Draw Rect with floats for objects in editor. 
+
+void dglDrawRectF(const Point2F &upperL, const Point2F &lowerR, const ColorI &color, const float &lineWidth)
+{
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glDisable(GL_TEXTURE_2D);
+
+   glLineWidth(lineWidth);
+
+   glColor4ub(color.red, color.green, color.blue, color.alpha);
+#if defined(TORQUE_OS_IOS) || defined(TORQUE_OS_ANDROID) || defined(TORQUE_OS_EMSCRIPTEN)
+   GLfloat verts[] = {
+       (GLfloat)(upperL.x), (GLfloat)(upperL.y),
+       (GLfloat)(lowerR.x), (GLfloat)(upperL.y),
+       (GLfloat)(lowerR.x), (GLfloat)(lowerR.y),
+       (GLfloat)(upperL.x), (GLfloat)(lowerR.y),
+   };
+
+   glVertexPointer(2, GL_FLOAT, 0, verts);
+   glDrawArrays(GL_LINE_LOOP, 0, 4);//draw last two
+#else
+   glBegin(GL_LINE_LOOP);
+   glVertex2f((F32)upperL.x, (F32)upperL.y);
+   glVertex2f((F32)lowerR.x, (F32)upperL.y);
+   glVertex2f((F32)lowerR.x, (F32)lowerR.y);
+   glVertex2f((F32)upperL.x, (F32)lowerR.y);
+   glEnd();
+#endif
+}
+
+
+void dglDrawRectF(const RectF &rect, const ColorI &color, const float &lineWidth)
+{
+   Point2F lowerR(rect.point.x + rect.extent.x, rect.point.y + rect.extent.y);
+   dglDrawRectF(rect.point, lowerR, color, lineWidth);
+}
+
+//----------------------------------------------------------------------------------
+
 void dglDrawRect(const Point2I &upperL, const Point2I &lowerR, const ColorI &color, const float &lineWidth)
 {
    glEnable(GL_BLEND);
@@ -904,6 +944,18 @@ void dglDrawRectFill(const RectI &rect, const ColorI &color)
    dglDrawRectFill(rect.point, lowerR, color);
 }
 
+void dglDrawPoly(const Point2I* vertices, U32 vertexCount, const ColorI& color)
+{
+   glColor4ub(color.red, color.green, color.blue, color.alpha);
+   glBegin(GL_LINE_LOOP);
+   for (U32 i = 0; i < vertexCount; ++i)
+   {
+      glVertex2f((F32)vertices[i].x + 0.5f, (F32)vertices[i].y + 0.5f);
+   }
+   glEnd();
+}
+
+
 void dglDrawQuadFill(const Point2I &point1, const Point2I &point2, const Point2I &point3, const Point2I &point4, const ColorI &color)
 {
 	glEnable(GL_BLEND);
@@ -913,14 +965,14 @@ void dglDrawQuadFill(const Point2I &point1, const Point2I &point2, const Point2I
 	glColor4ub(color.red, color.green, color.blue, color.alpha);
 
 	//Points 3 and 4 are switched by design.
-	GLfloat vertices[] = {
-		(GLfloat)point1.x, (GLfloat)point1.y,
-		(GLfloat)point2.x, (GLfloat)point2.y,
-		(GLfloat)point4.x, (GLfloat)point4.y,
-		(GLfloat)point3.x, (GLfloat)point3.y,
+	GLint vertices[] = {
+		(GLint)point1.x, (GLint)point1.y,
+		(GLint)point2.x, (GLint)point2.y,
+		(GLint)point4.x, (GLint)point4.y,
+		(GLint)point3.x, (GLint)point3.y,
 	};
 
-	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glVertexPointer(2, GL_INT, 0, vertices);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);

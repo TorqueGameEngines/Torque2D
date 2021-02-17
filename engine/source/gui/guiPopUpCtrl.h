@@ -70,9 +70,9 @@ public:
    void onRenderCell(Point2I offset, Point2I cell, bool selected, bool mouseOver);
 };
 
-class GuiPopUpMenuCtrl : public GuiControl
+class GuiPopUpMenuCtrl : public GuiTextCtrl
 {
-   typedef GuiControl Parent;
+   typedef GuiTextCtrl Parent;
 
 public:
    struct Entry

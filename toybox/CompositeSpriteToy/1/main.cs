@@ -38,8 +38,8 @@ function CompositeSpriteToy::create( %this )
     // Configure the toy.
     CompositeSpriteToy.LayoutMode = "None";
     CompositeSpriteToy.AngularVelocity = 15;
-    CompositeSpriteToy.SpriteCount = 50;
-    CompositeSpriteToy.RenderIsolated = false;
+    CompositeSpriteToy.SpriteCount = 32;
+    CompositeSpriteToy.RenderIsolated = true;
 
     // Add the configuration options.
     addSelectionOption( "None,Custom,Rectilinear,Isometric", "Layout Mode", 4, "setLayoutMode", true, "Selects the layout mode for the composite sprite." );
@@ -65,7 +65,7 @@ function CompositeSpriteToy::reset( %this )
     SandboxScene.clear();
     
     // Create the background.
-    %this.createBackground();
+    //%this.createBackground();
     
     // Create the appropriate layout.
     switch$( CompositeSpriteToy.LayoutMode )
@@ -153,16 +153,12 @@ function CompositeSpriteToy::onTouchDown(%this, %touchID, %worldPosition)
     if ( %spriteCount == 0 )
         return;    
         
-    // Iterate sprites.
-    for( %i = 0; %i < %spriteCount; %i++ )
-    {
-        // Fetch sprite Id.
-        %spriteId = getWord( %sprites, %i );
+    // Fetch sprite Id.
+    %spriteId = getWord( %sprites, 0 );
         
-        // Select the sprite Id.
-        %compositeSprite.selectSpriteId( %spriteId );
+    // Select the sprite Id.
+    %compositeSprite.selectSpriteId( %spriteId );
         
-        // Remove the se
-        %compositeSprite.removeSprite();
-    }
+    // Remove the se
+    %compositeSprite.removeSprite();
 }

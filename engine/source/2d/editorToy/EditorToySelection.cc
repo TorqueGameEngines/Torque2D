@@ -1,9 +1,14 @@
 #include "2d/editorToy/EditorToySelection.h"
 #include "2d/editorToy/EditorToySceneWindow.h"
+#include "2d/sceneobject/SceneObject.h"
 
 #ifndef _MATHUTILS_H_
 #include "math/mathUtils.h"
 #endif
+
+//-----------------------------------------------------------------------------
+
+IMPLEMENT_CONOBJECT(EditorToySelection);
 
 //-----------------------------------------------------------------------------
 
@@ -53,6 +58,10 @@ void EditorToySelection::addObject(SimObject* obj)
    invalidCenter();
 
    Parent::addObject(obj);
+   if (mAutoSelect)
+      EditorToySceneWindow::markAsSelected(obj, true);
+
+   updateCenter();
 
    return;
 
@@ -69,6 +78,11 @@ void EditorToySelection::removeObject(SimObject* obj)
    invalidCenter();
 
    Parent::removeObject(obj);
+
+   if (mAutoSelect)
+      EditorToySceneWindow::markAsSelected(obj, false);
+
+   updateCenter();
 
    return;
 }
@@ -106,7 +120,7 @@ bool EditorToySelection::objInSet(SimObject * obj)
 
 void EditorToySelection::updateCenter()
 {
-   if (mCenterValid)
+   if (mCenterValid || size()==0)
       return;
 
    mCenterValid = true;
@@ -119,18 +133,19 @@ void EditorToySelection::updateCenter()
       SceneObject* obj = dynamic_cast<SceneObject*>(*iter);
       if (!obj)
          continue;
-      Vector2 mPos = obj->getRenderPosition();
+
+      // Work out size for largest extent, and use each objects lower bound.
+      b2AABB vert = obj->getAABB();
+      Vector2 mPos = vert.GetCenter();
+
       mCenter += mPos;
 
-      // Worked out by taking the right bottom and minusing
-      // the left top
-      const b2Vec2* oobb = obj->getRenderOOBB();
-      Vector2 strt = oobb[0];
-      Vector2 end(oobb[3].x - strt.x, oobb[3].y - strt.y);
-      RectF bound(strt, end);
+      /// bottom left
+      mBoxBounds.point.setMin(Point2F(vert.lowerBound.x, vert.lowerBound.y));
+      /// top right
+      Vector2 size =  Vector2(vert.upperBound.x, vert.upperBound.y) - mBoxBounds.point;
 
-      mBoxBounds.point.setMin(bound.point);
-      mBoxBounds.extent.setMax(bound.extent);
+      mBoxBounds.extent.setMax(size);
    }
 
    mCenter /= (F32)size();
@@ -181,22 +196,16 @@ F32 EditorToySelection::_snapFloat(const F32 &val, const F32 &snap) const
 
 const Point2F & EditorToySelection::getCenter()
 {
-   // Refind center of selection.
-   updateCenter();
    return(mCenter);
 }
 
 const Point2F & EditorToySelection::getBoxCenter()
 {
-   // Refind center of selection.
-   updateCenter();
    return(mBoxCenter);
 }
 
 const RectF & EditorToySelection::getBoxBounds()
 {
-   // Refind center of selection.
-   updateCenter();
    return(mBoxBounds);
 }
 
@@ -336,7 +345,7 @@ void EditorToySelection::scale(const Vector2 & scale, const Point2F & center)
          off *= adj;
 
          obj->setPosition(off + center);
-
+         
       }
    }
    // We are scaling from the center so shouldnt have to refind it.

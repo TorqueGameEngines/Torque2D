@@ -139,3 +139,22 @@ void getVectorFromAngles( VectorF &vec, F32 &yawAng, F32 &pitchAng )
 
    vec = pnt;
 }
+
+Point2F rotateAtPoint(Point2F & pivot, Point2F & objPos, F32 & ang)
+{
+   F32 s = mSin(ang);
+   F32 c = mCos(ang);
+
+   Point2F out = objPos;
+
+   out.x -= pivot.x;
+   out.y -= pivot.y;
+
+   F32 x = out.x * c - out.y * s;
+   F32 y = out.x * s + out.y * c;
+
+   out.x = x + pivot.x;
+   out.y = y + pivot.y;
+
+   return out;
+}

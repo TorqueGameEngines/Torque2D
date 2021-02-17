@@ -1,5 +1,25 @@
 ConsoleMethodGroupBeginWithDocs(EditorToySceneWindow, SceneWindow)
 
+ConsoleMethod(EditorToySceneWindow, setScene, void, 3, 3, "EditorToy Scene for the EditorSceneWindow")
+{
+   object->setScene(dynamic_cast<Scene*>(Sim::findObject(argv[2])));
+}
+
+ConsoleMethod(EditorToySceneWindow, getActiveSelection, ConsoleInt, 2, 2, "EditorToy Scene for the EditorSceneWindow")
+{
+   if(object->getActiveSelectionSet())
+      return object->getActiveSelectionSet()->getId();
+   
+   return 0;
+}
+
+ConsoleMethod(EditorToySceneWindow, setActiveSelection, void, 3, 3, "EditorToy Scene for the EditorSceneWindow")
+{
+
+   object->makeActiveSelectionSet(dynamic_cast<EditorToySelection*>(Sim::findObject(argv[2])));
+}
+
+
 ConsoleMethodWithDocs(EditorToySceneWindow, getLayerMask, ConsoleInt, 2, 2, ())
 {
 

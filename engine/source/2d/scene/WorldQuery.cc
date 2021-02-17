@@ -471,6 +471,14 @@ U32 WorldQuery::anyQueryAABB( const b2AABB& aabb )
     return getQueryResultsCount();
 }
 
+U32 WorldQuery::anyQueryArea(const Vector2 & lowExtent, const Vector2 & upperExtent)
+{
+   b2AABB aabb;
+   aabb.lowerBound.Set(getMin(lowExtent.x, upperExtent.x), getMin(lowExtent.y, upperExtent.y));
+   aabb.upperBound.Set(getMax(lowExtent.x, upperExtent.x), getMax(lowExtent.y, upperExtent.y));
+   return anyQueryAABB(aabb);
+}
+
 //-----------------------------------------------------------------------------
 
 U32 WorldQuery::anyQueryRay( const Vector2& point1, const Vector2& point2 )

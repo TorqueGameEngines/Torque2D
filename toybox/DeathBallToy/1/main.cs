@@ -79,7 +79,7 @@ function DeathBallToy::reset(%this)
 
     // Limit the camera to the four sections of the desert
     SandboxWindow.setViewLimitOn( DeathBallToy.WorldLeft, DeathBallToy.WorldBottom, DeathBallToy.WorldRight, DeathBallToy.WorldTop );
-
+    
     // Add backgrounds
     %this.createDesertBackgrounds();
 
@@ -196,12 +196,12 @@ function DeathBallToy::spawnDeathball(%this, %position)
         maxSpeed = "15";
         CollisionCallback = true;
     };
-
+    
     %db.createCircleCollisionShape(8);
     %dealsDamageBehavior = DealsDamageBehavior.createInstance();
     %dealsDamageBehavior.initialize(100, false);
     Deathball.addBehavior(%dealsDamageBehavior);
-
+    
     //%db.pauseAnimation(1);
 
     Deathball.rollSchedule = Deathball.schedule(100, "updateRollAnimation");
@@ -217,7 +217,7 @@ function Deathball::updateRollAnimation(%this)
 {
     %this.rollSchedule = "";
 
-    %velocity = %this.getLinearVelocity();
+    %velocity = %this.getLinearVelocity();    
     %scaledVelocity = VectorLen(%velocity); // (mAbs(getWord(%velocity, 0))) + mAbs(getWord(%velocity, 1)) / 50;
     %flooredVelocity = mFloatLength(%scaledVelocity, 1);
 
@@ -242,10 +242,10 @@ function DeathBallToy::generateSoldierTemplate(%this)
     };
 
     %soldier.createPolygonBoxCollisionShape(5, 8);
-
+    
     // Return it to the toy
     %this.soldierTemplate = %soldier;
-
+    
     SandboxScene.add(%this.soldierTemplate);
 
     // Disable it
@@ -254,15 +254,15 @@ function DeathBallToy::generateSoldierTemplate(%this)
     // Add the behaviors
     %takesDamageBehavior = TakesDamageBehavior.createInstance();
     %takesDamageBehavior.initialize(1, "", "", "DeathBallToy:soldierDeathAnim", false);
-
+    
     %moveTowardBehavior = MoveTowardBehavior.createInstance();
-
+    
     %adjustedSpeed = DeathBallToy.soldierSpeed / DeathBallToy.maxSoldierSpeed;
     %moveTowardBehavior.initialize(Deathball, %adjustedSpeed);
-
+    
     %faceObjectBehavior = FaceObjectBehavior.createInstance();
     %faceObjectBehavior.initialize(Deathball, 0, 0);
-
+    
     %soldier.addBehavior(%takesDamageBehavior);
     %soldier.addBehavior(%moveTowardBehavior);
     %soldier.addBehavior(%faceObjectBehavior);
@@ -469,17 +469,17 @@ function DeathBallToy::onTouchUp(%this, %touchID, %worldPosition)
 {
     %origin = Deathball.getPosition();
     %angle = mAtan( Vector2Sub( %worldPosition, %origin ) );
-
+    
     // Since the speed is used instead of time, we can use the current velocity to set it's speed.
     %adjustedSpeed = VectorLen(DeathBall.getLinearVelocity());// (DeathBallToy.ballSpeed / DeathBallToy.maxBallSpeed) * 3000;
-
+   
     Deathball.MoveTo( %worldPosition, %adjustedSpeed, true, false );
 }
 
 //-----------------------------------------------------------------------------
 
 function DeathBallToy::onTouchDragged(%this, %touchID, %worldPosition)
-{
+{    
     %origin = Deathball.getPosition();
     %angle = mAtan( Vector2Sub( %worldPosition, %origin ) ) - 90;
 

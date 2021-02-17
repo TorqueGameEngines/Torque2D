@@ -30,7 +30,7 @@ function CompositeSpriteToy::createIsoLayout( %this )
 	
     // Set the default sprite stride.
     // This is used in isometrics layout mode to scale the specified logical position arguments.	
-    %composite.setDefaultSpriteStride( 4, 2 );
+    %composite.setDefaultSpriteStride( 6, 5 );
     
     // Set the default sprite size used.
     %composite.setDefaultSpriteSize( 8 );    
@@ -45,13 +45,14 @@ function CompositeSpriteToy::createIsoLayout( %this )
     %composite.SetBatchIsolated( CompositeSpriteToy.RenderIsolated );
     
 	// Calculate a range.
+	%xRange = (CompositeSpriteToy.SpriteCount * 0.5) - 0.5;
 	%range = mSqrt( CompositeSpriteToy.SpriteCount ) * 0.5;
 	if ( %range < 1 ) %range = 1;
     	
 	// Add some sprites.
-    for ( %y = -%range; %y <= %range; %y++ )
+    for ( %y = -%xRange; %y <= %xRange; %y++ )
 	{
-	    for ( %x = -%range; %x <= %range; %x++ )
+	    for ( %x = -%xRange; %x <= %xRange; %x++ )
         {
             // Add a sprite with the specified logical position.
 	        // In isometric layout this two-part position is scaled by the default sprite-stride.            
@@ -59,7 +60,7 @@ function CompositeSpriteToy::createIsoLayout( %this )
             
             // Set the sprite image with a random frame.
             // We could also use an animation here.            
-            %composite.setSpriteImage( "CompositeSpriteToy:isoTiles", getRandom(0,4) );
+            %composite.setSpriteImage( "ToyAssets:Blocks", getRandom(0,55) );
         }
 	}
 	

@@ -464,7 +464,7 @@ void GuiControl::onRender(Point2I offset, const RectI &updateRect)
 		return;
 	}
 
-	renderUniversalRect(ctrlRect, mProfile, NormalState);
+    renderBorderedRect(ctrlRect, mProfile, NormalState);
 
 	//Render Text
 	dglSetBitmapModulation(mProfile->mFontColor);
@@ -696,7 +696,7 @@ bool GuiControl::renderTooltip(Point2I cursorPos, const char* tipText )
     dglSetClipRect(rect);
 
     // Draw body and border of the tool tip
-	renderUniversalRect(rect, mTooltipProfile, NormalState);
+	renderBorderedRect(rect, mTooltipProfile, NormalState);
 
     // Draw the text centered in the tool tip box
     dglSetBitmapModulation( mTooltipProfile->mFontColor );
@@ -718,40 +718,40 @@ void GuiControl::renderChildControls(Point2I offset, RectI content, const RectI 
    // updateRect is the area that this control was allowed to draw in. It should almost always be the same as the value in onRender.
    // content is the area that child controls are allowed to draw in.
    RectI clipRect = content;
-   if(clipRect.intersect(dglGetClipRect()))
+   if (clipRect.intersect(dglGetClipRect()))
    {
-	   S32 size = objectList.size();
-	   S32 size_cpy = size;
-		//-Mat look through our vector all normal-like, trying to use an iterator sometimes gives us
-	   //bad cast on good objects
-	   for( S32 count = 0; count < objectList.size(); count++ )
-	   {
-		  GuiControl *ctrl = (GuiControl *)objectList[count];
-		  if( ctrl == NULL ) {
-			  Con::errorf( "GuiControl::renderChildControls() object %i is NULL", count );
-			continue;
-		  }
-		  if (ctrl->mVisible)
-		  {
-			 ctrl->mRenderInsetLT = content.point - offset;
-			 ctrl->mRenderInsetRB = mBounds.extent - (ctrl->mRenderInsetLT + content.extent);
-			 Point2I childPosition = content.point + ctrl->getPosition();
-			 RectI childClip(childPosition, ctrl->getExtent());
+      S32 size = objectList.size();
+      S32 size_cpy = size;
+      //-Mat look through our vector all normal-like, trying to use an iterator sometimes gives us
+      //bad cast on good objects
+      for (S32 count = 0; count < objectList.size(); count++)
+      {
+         GuiControl *ctrl = (GuiControl *)objectList[count];
+         if (ctrl == NULL) {
+            Con::errorf("GuiControl::renderChildControls() object %i is NULL", count);
+            continue;
+         }
+         if (ctrl->mVisible)
+         {
+            ctrl->mRenderInsetLT = content.point - offset;
+            ctrl->mRenderInsetRB = mBounds.extent - (ctrl->mRenderInsetLT + content.extent);
+            Point2I childPosition = content.point + ctrl->getPosition();
+            RectI childClip(childPosition, ctrl->getExtent());
 
-			 if (childClip.intersect(clipRect))
-			 {
-				dglSetClipRect(clipRect);
-				glDisable(GL_CULL_FACE);
-				ctrl->onRender(childPosition, RectI(childPosition, ctrl->getExtent()));
-			 }
-		  }
-		  size_cpy = objectList.size(); //	CHRIS: i know its wierd but the size of the list changes sometimes during execution of this loop
-		  if(size != size_cpy)
-		  {
-			  size = size_cpy;
-			  count--;	//	CHRIS: just to make sure one wasnt skipped.
-		  }
-	   }
+            if (childClip.intersect(clipRect))
+            {
+               dglSetClipRect(childClip);
+               glDisable(GL_CULL_FACE);
+               ctrl->onRender(childPosition, RectI(childPosition, ctrl->getExtent()));
+            }
+         }
+         size_cpy = objectList.size(); //	CHRIS: i know its wierd but the size of the list changes sometimes during execution of this loop
+         if (size != size_cpy)
+         {
+            size = size_cpy;
+            count--;	//	CHRIS: just to make sure one wasnt skipped.
+         }
+      }
    }
 }
 

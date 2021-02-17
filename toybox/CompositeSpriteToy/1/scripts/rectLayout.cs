@@ -46,7 +46,7 @@ function CompositeSpriteToy::createRectLayout( %this )
     %composite.SetBatchIsolated( CompositeSpriteToy.RenderIsolated );
 
 	// Calculate a range.
-	%range = mSqrt( CompositeSpriteToy.SpriteCount ) * 0.5;
+	%range = (CompositeSpriteToy.SpriteCount * 0.5) - 0.5;
 	if ( %range < 1 ) %range = 1;
 	
 	// Add some sprites.

@@ -63,16 +63,14 @@
 #include "debug/profiler.h"
 
 //------------------------------------------------------------------------------
+Scene * Scene::smRootScene = nullptr;
+Vector<Scene*> Scene::smSceneList;
 
 SimObjectPtr<Scene> Scene::LoadingScene = NULL;
 
 //------------------------------------------------------------------------------
 
 static ContactFilter mContactFilter;
-
-// Scene counter.
-static U32 sSceneCount = 0;
-static U32 sSceneMasterIndex = 0;
 
 // Joint custom node names.
 static StringTableEntry jointCustomNodeName               = StringTable->insert( "Joints" );
@@ -191,9 +189,6 @@ Scene::Scene() :
     mControllers = new SimSet();
     mControllers->registerObject();
 
-    // Assign scene index.    
-    mSceneIndex = ++sSceneMasterIndex;
-    sSceneCount++;
 }
 
 //-----------------------------------------------------------------------------
@@ -203,9 +198,6 @@ Scene::~Scene()
     // Unregister the scene controllers set.
     if ( mControllers.notNull() )
         mControllers->deleteObject();
-
-    // Decrease scene count.
-    --sSceneCount;
 }
 
 //-----------------------------------------------------------------------------
@@ -215,6 +207,9 @@ bool Scene::onAdd()
     // Call Parent.
     if(!Parent::onAdd())
         return false;
+
+    smSceneList.push_back(this);
+    mSceneIndex = smSceneList.size() - 1;
 
     // Create physics world.
     mpWorld = new b2World( mWorldGravity );
@@ -275,6 +270,9 @@ void Scene::onRemove()
 
     // Detach All Scene Windows.
     detachAllSceneWindows();
+
+    smSceneList.remove(this);
+    mSceneIndex = -1;
 
     // Call Parent. Clear scene handles all the object removal, so we can skip
     // that part and just do the sim-object stuff.
@@ -5228,7 +5226,7 @@ void Scene::onTamlCustomRead( const TamlCustomNodes& customNodes )
 
 U32 Scene::getGlobalSceneCount( void )
 {
-    return sSceneCount;
+    return smSceneList.size();
 }
 
 //-----------------------------------------------------------------------------

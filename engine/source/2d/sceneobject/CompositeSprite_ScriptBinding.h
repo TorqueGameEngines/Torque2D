@@ -1148,10 +1148,10 @@ ConsoleMethodWithDocs(CompositeSprite, pickPoint, ConsoleString, 3, 4, (x / y ))
     }
 
     // Fetch the render transform.
-    const b2Transform& renderTransform = object->getRenderTransform();
+    //const b2Transform& renderTransform = object->getRenderTransform();
 
     // Transform into local space.
-    point = b2MulT( renderTransform, point );
+    //point = b2MulT( renderTransform, point );
 
     // Perform query.
     pSpriteBatchQuery->queryPoint( point, true );

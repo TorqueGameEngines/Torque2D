@@ -43,24 +43,14 @@ void GuiRadioCtrl::initPersistFields()
 
 void GuiRadioCtrl::renderInnerControl(RectI &boxRect, const GuiControlState currentState)
 {
-	U8 stateIndex = currentState;
-
-	if ((mProfile->mImageAsset->isAssetValid() && mProfile->mImageAsset->getFrameCount() > stateIndex) 
-		|| (mProfile->mBitmapName != NULL && mProfile->constructBitmapArray() > stateIndex))
+	S32 radius = boxRect.extent.x;
+	if (boxRect.extent.y < radius)
 	{
-		renderUniversalRect(boxRect, mProfile, currentState);
+		radius = boxRect.extent.y;
 	}
-	else 
-	{
-		S32 radius = boxRect.extent.x;
-		if (boxRect.extent.y < radius)
-		{
-			radius = boxRect.extent.y;
-		}
-		radius = (S32)round(radius / 2);
-		Point2I center = Point2I(boxRect.point.x + (boxRect.extent.x / 2), boxRect.point.y + (boxRect.extent.y / 2));
-		renderBorderedCircle(center, radius, mProfile, currentState);
-	}
+	radius = (S32)round(radius / 2);
+	Point2I center = Point2I(boxRect.point.x + (boxRect.extent.x / 2), boxRect.point.y + (boxRect.extent.y / 2));
+	renderBorderedCircle(center, radius, mProfile, currentState);
 }
 
 void GuiRadioCtrl::onAction()

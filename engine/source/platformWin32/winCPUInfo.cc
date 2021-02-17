@@ -26,10 +26,12 @@
 #include "string/stringTable.h"
 #include <math.h>
 #include <intrin.h>
-
+#ifndef _VECTOR_H_
+#include "collection/vector.h"
+#endif
 extern void PlatformBlitInit();
 extern void SetProcessorInfo(TorqueSystemInfo::Processor& pInfo,
-   char* vendor, U32 processor, U32 properties, U32 properties2); // platform/platformCPU.cc
+   char* vendor, char* brand, U32 processor, U32 properties, U32 properties2); // platform/platformCPU.cc
 
 
 #if defined(TORQUE_SUPPORTS_NASM)
@@ -64,6 +66,7 @@ void Processor::init()
    U32   properties2 = 0;
 
    S32 vendorInfo[4];
+
    __cpuid(vendorInfo, 0);
    *reinterpret_cast<int*>(vendor) = vendorInfo[1];     // ebx
    *reinterpret_cast<int*>(vendor + 4) = vendorInfo[3]; // edx
@@ -71,9 +74,48 @@ void Processor::init()
 
    S32 cpuInfo[4];
    __cpuid(cpuInfo, 1);
-   processor = cpuInfo[0];   // eax
-   properties = cpuInfo[3];  // edx
-   properties2 = cpuInfo[2]; // ecx
+   processor = cpuInfo[0];    // eax
+   properties = cpuInfo[3];   // edx
+   properties2 = cpuInfo[2];  // ecx
+
+   __cpuid(cpuInfo, 0x80000000);
+   S32 nExId = cpuInfo[0];
+   char* brand;
+   U32 ubrand[12];
+   if (nExId >= 0x80000002)
+   {
+      for (int i = 0x80000002; i < 0x80000005; ++i)
+      {
+         CPUID cpuID(i, 0);
+         if (i == 0x80000002)
+         {
+            *reinterpret_cast<int*>(ubrand + 0x0) = cpuID.EAX();
+            *reinterpret_cast<int*>(ubrand + 0x1) = cpuID.EBX();
+            *reinterpret_cast<int*>(ubrand + 0x2) = cpuID.ECX();
+            *reinterpret_cast<int*>(ubrand + 0x3) = cpuID.EDX();
+         }
+
+         if (i == 0x80000003)
+         {
+            *reinterpret_cast<int*>(ubrand + 0x4) = cpuID.EAX();
+            *reinterpret_cast<int*>(ubrand + 0x5) = cpuID.EBX();
+            *reinterpret_cast<int*>(ubrand + 0x6) = cpuID.ECX();
+            *reinterpret_cast<int*>(ubrand + 0x7) = cpuID.EDX();
+         }
+
+         if (i == 0x80000004)
+         {
+            *reinterpret_cast<int*>(ubrand + 0x8) = cpuID.EAX();
+            *reinterpret_cast<int*>(ubrand + 0x9) = cpuID.EBX();
+            *reinterpret_cast<int*>(ubrand + 0xa) = cpuID.ECX();
+            *reinterpret_cast<int*>(ubrand + 0xb) = cpuID.EDX();
+         }
+
+      }
+
+      brand = reinterpret_cast<char*>(ubrand);
+   }
+
 
 #if defined(TORQUE_SUPPORTS_NASM)
 
@@ -136,7 +178,7 @@ void Processor::init()
    }
 #endif
 
-   SetProcessorInfo(PlatformSystemInfo.processor, vendor, processor, properties, properties2);
+   SetProcessorInfo(PlatformSystemInfo.processor, vendor, brand, processor, properties, properties2);
 
 // now calculate speed of processor...
    U16 nearmhz = 0; // nearest rounded mhz

@@ -157,6 +157,22 @@ void GuiTextCtrl::setText(const char *txt)
 		mProfile->decRefCount();
 		return;
 	}
+
+	//resize
+	//DEPRECIATED
+   /*
+   if (mProfile->mAutoSizeWidth)
+   {
+      if (mProfile->mAutoSizeHeight)
+         resize(mBounds.point, Point2I(mFont->getStrWidth((const UTF8 *)mText), mFont->getHeight() + 4));
+      else
+         resize(mBounds.point, Point2I(mFont->getStrWidth((const UTF8 *)mText), mBounds.extent.y));
+   }
+   else if (mProfile->mAutoSizeHeight)
+   {
+      resize(mBounds.point, Point2I(mBounds.extent.x, mFont->getHeight() + 4));
+   }
+   */
       
    setVariable((char*)mText);
    setUpdate();

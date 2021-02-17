@@ -344,8 +344,8 @@ void GuiRolloutCtrl::onRender(Point2I offset, const RectI &updateRect)
       // Draw Rollout From Skin
       if( !mIsExpanded )
          renderFixedBitmapBordersFilled( worldBounds, 1, mProfile );
-      //else// Draw Border
-         //renderSizableBitmapBordersFilledIndex( worldBounds, TopLeftHeader, mProfile );
+      else// Draw Border
+         renderSizableBitmapBordersFilledIndex( worldBounds, TopLeftHeader, mProfile );
 
       // Draw Caption ( Vertically Centered )
       ColorI currColor;

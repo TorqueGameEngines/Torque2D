@@ -16,6 +16,8 @@ IMPLEMENT_CONOBJECT(EditorToySceneWindow);
 //-----------------------------------------------------------------------
 
 EditorToySceneWindow::EditorToySceneWindow()
+   :  mLayerMask(MASK_ALL),
+      mGroupMask(MASK_ALL)
 {
    mMouseDown = false;
    mDragSelect = false;
@@ -23,18 +25,20 @@ EditorToySceneWindow::EditorToySceneWindow()
    mDragSelected = new Selection();
    mDragSelected->registerObject("EEditorToyDragSelection");
    Sim::getRootGroup()->addObject(mDragSelected);
-
    mGridSnap = false;
    mUseGroupCenter = true;
-
+   mRenderSelectionBox = true;
    mDropType = DropAtScreenCenter;
    mBoundingBoxCollision = true;
    mObjectsUseBoxCenter = true;
-   mObjSelColor.set(255, 0, 0, 200);
+   mObjSelColor.set(255, 255, 255, 200);
+   mObjMultiSelColor.set(255, 255, 0, 200);
    mObjMouseOverColor.set(0, 0, 255);
-   mObjMouseOverColor.set(0, 255, 0);
+   mObjMouseOverSelColor.set(0, 255, 0);
    mDragRectColor.set(100, 0, 255);
+   mSelectionBoxColor.set(255, 255, 255, 200);
    mActive = true;
+   mSelectionLocked = false;
 
    mActiveTool = nullptr;
 }
@@ -43,9 +47,6 @@ bool EditorToySceneWindow::onAdd()
 {
    if (!Parent::onAdd())
       return false;
-
-   mEditorScene = new Scene();
-   mEditorScene->setIsEditorScene(true);
 
    return true;
 }
@@ -63,6 +64,8 @@ void EditorToySceneWindow::setScene(Scene* pScene)
    Parent::setScene(pScene);
    if (getScene())
       getScene()->setIsEditorScene(true);
+
+   mEditorScene = pScene;
 }
 
 //-----------------------------------------------------------------------
@@ -95,7 +98,7 @@ bool EditorToySceneWindow::collide(const GuiEvent &gEvt, SceneObject **hitObj)
       // Create a filter by layer and group, we want everything else
       // objects don't have to be enabled, or visible but do need picking
       // allowed and need to be in the scope of the scene.
-      WorldQueryFilter qFilter(mLayerMask, mGroupMask, false, false, true, true);
+      WorldQueryFilter qFilter(mLayerMask, mGroupMask, false, false, true, false);
 
       mWQuery->setQueryFilter(qFilter);
 
@@ -128,14 +131,18 @@ void EditorToySceneWindow::onTouchUp(const GuiEvent& gEvt)
    {
       mDragSelect = false;
       mPossibleHitObject = NULL;
+
       const bool addToSelection = (gEvt.modifier &(SI_SHIFT | SI_CTRL));
+
       if (!addToSelection)
          clearSelection();
 
       if (mDragSelected->size() > 1)
       {
          for (U32 i = 0; i < mDragSelected->size(); i++)
+         {
             mSelected->addObject((*mDragSelected)[i]);
+         }
 
          Con::executef(this, 3, "onMultiSelect", mDragSelected->getIdString(), addToSelection ? "1" : "0");
 
@@ -230,7 +237,6 @@ void EditorToySceneWindow::onTouchUp(const GuiEvent& gEvt)
 
 void EditorToySceneWindow::onTouchDown(const GuiEvent& gEvt)
 {
-   Con::printf("left mouse down");
 
    if (mActiveTool != nullptr && mActiveTool->onMouseDown(gEvt))
       return;
@@ -243,13 +249,19 @@ void EditorToySceneWindow::onTouchDown(const GuiEvent& gEvt)
 
    mouseLock();
 
-   if (bool(mSelected) && mSelected->size() > 0)
+   /*if (bool(mSelected) && mSelected->size() > 0)
    {
       const RectF& selBounds = getActiveSelectionSet()->getBoxBounds();
       const F32 maxDim = getMax(selBounds.len_x(), selBounds.len_y());
       const F32 size = mCeil(maxDim + 10.0f);
       const F32 spacing = mCeil(size / 20.0f);
-   }
+
+      if (dynamic_cast<SceneObject*>((*mSelected)[0]))
+      {
+         mHitObject = dynamic_cast<SceneObject*>((*mSelected)[0]);
+         return;
+      }
+   }*/
 
    SceneObject *hitObj = NULL;
    if (collide(gEvt, &hitObj) && hitObj->getPickingAllowed())
@@ -283,8 +295,6 @@ void EditorToySceneWindow::onTouchDragged(const GuiEvent& gEvt)
    if (!mMouseDown)
       return;
 
-   Con::printf("left mouse dragged");
-
    if (mNoMouseDrag)
    {
       if (mAbs(mLastMouseDownEvent.mousePoint.x - gEvt.mousePoint.x) > 2 || mAbs(mLastMouseDownEvent.mousePoint.y - gEvt.mousePoint.y) > 2)
@@ -312,7 +322,10 @@ void EditorToySceneWindow::onTouchDragged(const GuiEvent& gEvt)
       if (mHitObject && bool(mSelected) && !mSelected->objInSet(mHitObject))
       {
          if (!mSelectionLocked)
+         {
             mSelected->addObject(mHitObject);
+            
+         }
       }
 
       mMouseDragged = true;
@@ -350,7 +363,7 @@ void EditorToySceneWindow::onTouchMove(const GuiEvent& gEvt)
 
    if (bool(mSelected) && mSelected->size() > 0)
    {
-
+      mHitObject = dynamic_cast<SceneObject*>((*mSelected)[0]);
    }
 
    if (!mHitObject)
@@ -395,6 +408,57 @@ void EditorToySceneWindow::setTargetCameraArea(const RectF& camWindow)
    F32 h = camWindow.extent.y;
 
    setTargetCameraPosition(center, w, h);
+}
+
+void EditorToySceneWindow::makeActiveSelectionSet(EditorToySelection* selection)
+{
+   Selection* oldSelection = getActiveSelectionSet();
+   Selection* newSelection = selection;
+
+   if (oldSelection == newSelection)
+      return;
+
+   // Unset the selection set so that calling onSelect/onUnselect callbacks
+   // on the editor object will not affect the sets we have.
+
+   mSelected = NULL;
+
+   // Go through all objects in the old selection and for each
+   // one that is not also in the new selection, signal an
+   // unselect.
+
+   if (oldSelection)
+   {
+      for (Selection::iterator iter = oldSelection->begin(); iter != oldSelection->end(); ++iter)
+         if (!newSelection || !newSelection->objInSet(*iter))
+         {
+            Con::executef(this,2, "onUnselect", (*iter)->getIdString());
+            markAsSelected(*iter, false);
+         }
+
+   }
+
+   // Go through all objects in the new selection and for each
+   // one that is not also in the old selection, signal a
+   // select.
+
+   if (newSelection)
+   {
+      for (Selection::iterator iter = newSelection->begin(); iter != newSelection->end(); ++iter)
+         if (!oldSelection || !oldSelection->objInSet(*iter))
+         {
+            markAsSelected(*iter, true);
+            Con::executef(this,2, "onSelect", (*iter)->getIdString());
+         }
+
+   }
+
+   // Install the new selection set.
+
+   mSelected = newSelection;
+
+   if (isMethod("onSelectionSetChanged"))
+      Con::executef(this,2, "onSelectionSetChanged");
 }
 
 //-----------------------------------------------------------------------
@@ -488,6 +552,8 @@ void EditorToySceneWindow::resize(const Point2I & newPosition, const Point2I & n
 
 void EditorToySceneWindow::onRender(Point2I offset, const RectI &updateRect)
 {
+   Parent::onRender(offset, updateRect);
+
    if (mActiveTool != nullptr)
       mActiveTool->onRenderScene();
 
@@ -530,47 +596,70 @@ void EditorToySceneWindow::onRender(Point2I offset, const RectI &updateRect)
    if (mDragSelect)
       mDragSelected->clear();
 
-   if (mDragSelect && mDragRect.extent.x > 1 && mDragRect.extent.y > 1)
-      dglDrawRect(mDragRect, mDragRectColor);
-
-   if (mDragSelect && mDragRect.extent.x > 1 && mDragRect.extent.y > 1)
+   if (mDragSelect)
    {
+
       if (!mEditorScene->getSceneObjectCount() > 0)
          return;
 
       WorldQuery* mWQuery = mEditorScene->getWorldQuery(true);
 
-      WorldQueryFilter qFilter(mLayerMask, mGroupMask, false, false, true, true);
+      WorldQueryFilter qFilter(mLayerMask, mGroupMask, false, false, true, false);
 
-      mWQuery->clearQuery();
+      mWQuery->setQueryFilter(qFilter);
 
       Vector2 sceneDragPt;
       Vector2 sceneCurPt;
 
-      windowToScenePoint(globalToLocalCoord(mDragStart), sceneDragPt);
-      windowToScenePoint(globalToLocalCoord(mDragStart + mDragRect.extent), sceneCurPt);
+      windowToScenePoint(globalToLocalCoord(mDragRect.point), sceneDragPt);
+      windowToScenePoint(globalToLocalCoord(mDragRect.point + mDragRect.extent), sceneCurPt);
 
       if (mWQuery->anyQueryArea(sceneDragPt, sceneCurPt) > 0)
       {
          for (U32 i = 0; i < mWQuery->getQueryResultsCount(); i++)
          {
-            SceneObject *obj = mWQuery->getQueryResults().at(0).mpSceneObject;;
+            SceneObject *obj = mWQuery->getQueryResults().at(i).mpSceneObject;;
             mDragSelected->addObject(obj);
          }
       }
 
+      dglDrawRect(mDragRect, mDragRectColor);
    }
 
+
+}
+
+RectI EditorToySceneWindow::getSelBounds(Selection* sel)
+{
+   const RectF box = getSelectionBounds();
+
+   Vector2 upperLeft = Vector2(box.point.x, box.point.y + box.extent.y);
+   Vector2 lowerRight = Vector2(box.point.x + box.extent.x, box.point.y);
+
+   Vector2 windowUpperLeft, windowLowerRight;
+   sceneToWindowPoint(upperLeft, windowUpperLeft);
+   sceneToWindowPoint(lowerRight, windowLowerRight);
+
+   return RectI(S32(windowUpperLeft.x + 0.5f), S32(windowUpperLeft.y + 0.5f),
+      S32((windowLowerRight.x + 0.5f) - (windowUpperLeft.x + 0.5f)), S32((windowLowerRight.y + 0.5f) - (windowUpperLeft.y + 0.5f)) );
 }
 
 void EditorToySceneWindow::renderObjBox(SceneObject * obj, const ColorI & col)
 {
    // HAHAHAHAHAHAH This is easier in T2D than T3D :) 
-   const b2Vec2* oobb = obj->getRenderOOBB();
-   Vector2 strt = oobb[0];
-   Vector2 ext(oobb[3].x - oobb[0].x, oobb[3].y - oobb[0].y);
-   RectF draw(strt, ext);
-   dglDrawRectF(draw, col);
+   const b2Vec2* box = obj->getRenderOOBB();
+   Vector2 vec1,vec2,vec3,vec4;
+   sceneToWindowPoint(box[0], vec1);
+   sceneToWindowPoint(box[1], vec2);
+   sceneToWindowPoint(box[2], vec3);
+   sceneToWindowPoint(box[3], vec4);
+   Point2I draw[4];
+   draw[0].x = vec1.x; draw[0].y = vec1.y;
+   draw[1].x = vec2.x; draw[1].y = vec2.y;
+   draw[2].x = vec3.x; draw[2].y = vec3.y;
+   draw[3].x = vec4.x; draw[3].y = vec4.y;
+   
+   dglDrawPoly(draw,4,col);
 }
 
 void EditorToySceneWindow::renderSelBox(Selection*  sel)
@@ -578,9 +667,10 @@ void EditorToySceneWindow::renderSelBox(Selection*  sel)
    if (!mRenderSelectionBox || !sel->size())
       return;
 
-   const RectF box = sel->getBoxBounds();
+   // gotta convert them to screenpoint
+   RectI box = getSelBounds(sel);
 
-   dglDrawRectF(box, mSelectionBoxColor);
+   dglDrawRect(box, mSelectionBoxColor);
 }
 
 //-----------------------------------------------------------------------
@@ -710,6 +800,7 @@ const Point2F & EditorToySceneWindow::getSelectionCenter()
 
 const RectF & EditorToySceneWindow::getSelectionBounds()
 {
+   
    return mSelected->getBoxBounds();
 }
 

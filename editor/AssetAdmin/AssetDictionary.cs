@@ -35,6 +35,8 @@ function AssetDictionary::onAdd(%this)
 	};
 	ThemeManager.setProfile(%this.grid, "emptyProfile");
 	%this.add(%this.grid);
+
+	%this.load();
 }
 
 function AssetDictionary::load(%this)
@@ -54,14 +56,32 @@ function AssetDictionary::load(%this)
 				Class = AssetDictionaryButton;
 				HorizSizing="center";
 				VertSizing="center";
+				Cmd = "OpenAsset";
 				Tooltip = AssetDatabase.getAssetName(%assetID);
 				Text = "";
-				AssetID = %assetID;
-				Type = %this.Type;
 			};
 			ThemeManager.setProfile(%button, "buttonProfile");
 			ThemeManager.setProfile(%button, "tipProfile", "TooltipProfile");
 			%this.grid.add(%button);
+
+			%texture = new GuiSpriteCtrl()
+			{
+				HorizSizing="center";
+				VertSizing="bottom";
+				Extent = "50 50";
+				minExtent="8 8";
+				Position = "0 0";
+			};
+			ThemeManager.setProfile(%texture, "spriteProfile");
+			%button.add(%texture);
+			if(%this.Type $= "ImageAsset")
+			{
+				%texture.setImage(%assetID);
+			}
+			else if(%this.Type $= "AnimationAsset")
+			{
+				%texture.setAnimation(%assetID);
+			}
 		}
 	}
 	%query.delete();
@@ -69,35 +89,9 @@ function AssetDictionary::load(%this)
 
 function AssetDictionary::unload(%this)
 {
-	//Remove all the child gui controls
-	for(%i = %this.grid.getCount() - 1; %i >= 0; %i--)
+	for(%i = %this.getCoun() - 1; %i >= 0; %i++)
 	{
-		%obj = %this.grid.getObject(%i);
-		%obj.delete();
+		%obj = %this.getObject(%i);
+		%obj.safeDelete();
 	}
-
-	//release all the assets we loaded for this - might take them out of memory
-	// %query = new AssetQuery();
-	// AssetDatabase.findAllAssets(%query);
-	// AssetDatabase.findAssetType(%query, %this.Type, true);
-	//
-	// for(%i = 0; %i < %query.getCount(); %i++)
-	// {
-	// 	%assetID = %query.getAsset(%i);
-	// 	if(!AssetDatabase.isAssetInternal(%assetID))
-	// 	{
-	// 		AssetDatabase.releaseAsset(%assetID);
-	// 	}
-	// }
-	// %query.delete();
-}
-
-function AssetDictionarySprite::onAnimationEnd(%this, %animationAssetID)
-{
-	%this.schedule(2000, "restartAnimation", %animationAssetID);
-}
-
-function AssetDictionarySprite::restartAnimation(%this, %animationAssetID)
-{
-	%this.setAnimation(%animationAssetID);
 }

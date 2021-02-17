@@ -35,9 +35,9 @@ private:
 
    void updateCenter();
 
-   
-
 public:
+
+   DECLARE_CONOBJECT(EditorToySelection);
 
    EditorToySelection();
    ~EditorToySelection();

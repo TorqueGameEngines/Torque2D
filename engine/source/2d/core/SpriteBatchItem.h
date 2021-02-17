@@ -244,6 +244,7 @@ protected:
     bool                mLocalTransformDirty;
 
     Vector2             mRenderOOBB[4];
+    bool                mIsoMetric;
     b2AABB              mRenderAABB;
     Vector2             mRenderPosition;
     U32                 mLastBatchTransformId;
@@ -257,6 +258,8 @@ public:
     virtual ~SpriteBatchItem();
 
     virtual void resetState( void );
+
+    void setIsometric(bool val);
 
     inline SpriteBatch* getBatchParent( void ) const { return mSpriteBatch; }
     inline U32 getBatchId( void ) const { return mBatchId; }

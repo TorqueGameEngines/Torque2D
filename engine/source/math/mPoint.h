@@ -215,6 +215,7 @@ class Point2F
    Point2F  operator*(const F32) const;
    Point2F  operator/(const F32) const;
    Point2F& operator*=(const F32);
+   Point2F& operator*=(const Point2F &_vec);
    Point2F& operator/=(const F32);
 
    // Unary operators
@@ -967,6 +968,14 @@ inline Point2F& Point2F::operator*=(const F32 _mul)
 {
    x *= _mul;
    y *= _mul;
+
+   return *this;
+}
+
+inline Point2F& Point2F::operator*=(const Point2F &_vec)
+{
+   x *= _vec.x;
+   y *= _vec.y;
 
    return *this;
 }

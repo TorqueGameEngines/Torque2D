@@ -162,6 +162,7 @@ class Vector
    void erase(U32);
    void erase_fast(U32);
    void erase_fast(iterator);
+   bool remove(const T & x);
    void clear();
    void compact();
    void sort(compare_func f);
@@ -476,6 +477,22 @@ template<class T> inline void Vector<T>::erase(iterator q)
 template<class T> inline void Vector<T>::erase_fast(iterator q)
 {
    erase_fast(U32(q - mArray));
+}
+
+template<class T> inline bool Vector<T>::remove(const T& x)
+{
+   iterator i = begin();
+   while (i != end())
+   {
+      if (*i == x)
+      {
+         erase(i);
+         return true;
+      }
+
+      i++;
+   }
+   return false;
 }
 
 template<class T> inline T& Vector<T>::front()

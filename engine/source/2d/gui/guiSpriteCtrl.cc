@@ -324,10 +324,6 @@ void GuiSpriteCtrl::onRender( Point2I offset, const RectI &updateRect)
 
 void GuiSpriteCtrl::onAnimationEnd( void )
 {
-	// We've arrived at the end - pause it
-	ImageFrameProvider::pauseAnimation(true);
-
-	// Send a callback
-	if(isMethod("onAnimationEnd"))
-		Con::executef(this, 3, "onAnimationEnd", ImageFrameProvider::getCurrentAnimationAssetId());
+    // Clear assets.
+    ImageFrameProvider::clearAssets();
 }

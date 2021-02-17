@@ -1,0 +1,15 @@
+<ModuleDefinition
+    ModuleId="EditorToy"
+    VersionId="1"
+    Description="An editor test toy."
+    Dependencies="ToyAssets=1"
+    Type="toy"
+    ToyCategoryIndex="5"
+    ScriptFile="main.cs"
+    CreateFunction="create"
+    DestroyFunction="destroy">
+        <DeclaredAssets
+            Path="assets"
+            Extension="asset.taml"
+            Recurse="true"/>		
+</ModuleDefinition>

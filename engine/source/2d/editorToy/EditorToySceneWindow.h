@@ -33,7 +33,7 @@ public:
    void clearSelection();
    void selectObject(SimObject *obj);
    void selectObject(const char *obj);
-   void markAsSelected(SimObject* obj, bool sel);
+   static void markAsSelected(SimObject* obj, bool sel);
 
    void unselectObject(SimObject *obj);
    void unselectObject(const char *obj);
@@ -138,6 +138,7 @@ public:
 
    // Camera functions
    virtual void setTargetCameraArea(const RectF& camWindow);
+   void makeActiveSelectionSet(EditorToySelection * selection);
    virtual void setTargetCameraPosition(Vector2 center, F32 w, F32 h);
    virtual void setCameraArea(const RectF& camWindow);
    virtual void setCameraPosition(Vector2 center, F32 w, F32 h);
@@ -151,6 +152,7 @@ public:
    U32 getGroupMask();
 
    virtual void onRender(Point2I offset, const RectI &updateRect);
+   RectI getSelBounds(Selection * sel);
    void renderObjBox(SceneObject * obj, const ColorI & col);
    void renderSelBox(Selection*  sel);
 

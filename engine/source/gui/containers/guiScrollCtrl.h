@@ -166,6 +166,9 @@ public:
 
    void computeSizes();
 
+   // you can change the bitmap array dynamically.
+   void loadBitmapArray();
+
    void addObject(SimObject *obj);
    void resize(const Point2I &newPosition, const Point2I &newExtent);
    void childResized(GuiControl *child);
@@ -200,6 +203,9 @@ public:
    void renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile* profile, GuiControlState state, GuiDirection direction);
    void renderVScrollBar(const Point2I& offset);
    void renderHScrollBar(const Point2I& offset);
+   virtual void drawVScrollBar(const Point2I &offset);
+   virtual void drawHScrollBar(const Point2I &offset);
+   virtual void drawScrollCorner(const Point2I &offset);
    virtual GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1);
    virtual void renderChildControls(Point2I offset, RectI content, const RectI& updateRect);
 };

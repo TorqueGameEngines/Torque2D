@@ -34,6 +34,7 @@ class TextureObject;
 class GFont;
 class MatrixF;
 class RectI;
+class RectF;
 class ColorI;
 class ColorF;
 class Point2I;
@@ -180,6 +181,10 @@ void dglDrawLine(const Point2I &startPt, const Point2I &endPt, const ColorI &col
 /// draws an UNTEXTURED filled triangle with the three points which should be given in counterclockwise order
 void dglDrawTriangleFill(const Point2I& pt1, const Point2I& pt2, const Point2I& pt3, const ColorI& color);
 /// draws a wireframe rectangle from upperL to lowerR in specified color and optional line width
+void dglDrawRectF(const Point2F &upperL, const Point2F &lowerR, const ColorI &color, const float &lineWidth = 1.0f);
+/// draws a wireframe rectangle in "rect" in specified color and optional line width
+void dglDrawRectF(const RectF &rect, const ColorI &color, const float &lineWidth = 1.0f);
+/// draws a wireframe rectangle from upperL to lowerR in specified color and optional line width
 void dglDrawRect(const Point2I &upperL, const Point2I &lowerR, const ColorI &color, const float &lineWidth = 1.0f);
 /// draws a wireframe rectangle in "rect" in specified color and optional line width
 void dglDrawRect(const RectI &rect, const ColorI &color, const float &lineWidth = 1.0f);
@@ -187,6 +192,8 @@ void dglDrawRect(const RectI &rect, const ColorI &color, const float &lineWidth 
 void dglDrawRectFill(const Point2I &upperL, const Point2I &lowerR, const ColorI &color);
 /// draws an UNTEXTURED filled rectangle in "rect" in specified color
 void dglDrawRectFill(const RectI &rect, const ColorI &color);
+/// draw a poly 
+void dglDrawPoly(const Point2I* vertices, U32 vertexCount, const ColorI & color);
 /// draws an UNTEXTURED filled quad in specified color
 void dglDrawQuadFill(const Point2I &point1, const Point2I &point2, const Point2I &point3, const Point2I &point4, const ColorI &color);
 /// draws a square, with center point "screenPoint", width of "width" on an angle of "spinAngle" in 2d

@@ -30,6 +30,28 @@ ConsoleFunctionWithDocs( getGlobalSceneCount, ConsoleInt, 1, 1, ())
     return Scene::getGlobalSceneCount();
 }
 
+ConsoleMethodWithDocs(Scene, getScene, ConsoleInt , 3, 3, (int sceneId))
+{
+   U32 id = dAtoi(argv[2]);
+   if (Scene::smSceneList.empty() || id >= Scene::smSceneList.size())
+   {
+      Con::printf("Scene not found");
+      return 0;
+   }
+
+   return Scene::smSceneList[id]->getId();
+}
+
+
+ConsoleFunctionWithDocs(getRootScene, ConsoleInt, 1, 1, ())
+{
+   Scene* root = Scene::getRootScene();
+   if (root)
+      return root->getId();
+
+   return 0;
+}
+
 //-----------------------------------------------------------------------------
 
 /*! The gravity force to apply to all objects in the scene.

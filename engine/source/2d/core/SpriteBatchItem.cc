@@ -136,6 +136,16 @@ void SpriteBatchItem::resetState( void )
 
     // Only animates if the scene is not paused.
     mSelfTick = false;
+
+    //
+    mIsoMetric = false;
+}
+
+//------------------------------------------------------------------------------
+
+void SpriteBatchItem::setIsometric(bool val)
+{
+   mIsoMetric = val;
 }
 
 //------------------------------------------------------------------------------
@@ -359,6 +369,17 @@ void SpriteBatchItem::updateWorldTransform( const U32 batchTransformId )
 
     // Calculate world OOBB.
     CoreMath::mCalculateOOBB( mLocalOOBB, worldTransform, mRenderOOBB );
+    if (mIsoMetric)
+    {
+       // verts on the oobb go anti-clockwise 
+       //   [0]---[3]
+       //    |     |
+       //   [1]---[2]
+       // at a rotation of 45 degrees anti-clockwise squash 3 and 1
+
+       mRenderOOBB[1].y = mRenderOOBB[1].y + (mSize.y * 0.5);
+       mRenderOOBB[3].y = mRenderOOBB[3].y - (mSize.y * 0.5);
+    }
 
     // Calculate render AABB.
     CoreMath::mOOBBtoAABB( mRenderOOBB, mRenderAABB );
