@@ -157,10 +157,6 @@ void GuiTabBookCtrl::onChildAdded( GuiControl *child )
    calculatePageTabs();
 
    child->resize( mPageRect.point, mPageRect.extent );
-
-
-   // Select this Page
-   selectPage( page );
 }
 
 
@@ -335,7 +331,7 @@ void GuiTabBookCtrl::onRender(Point2I offset, const RectI &updateRect)
 		return;
 	}
 
-	renderBorderedRect(ctrlRect, mProfile, NormalState);
+	renderUniversalRect(ctrlRect, mProfile, NormalState);
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, NormalState, mProfile);
 	if (contentRect.isValidRect())
@@ -387,7 +383,7 @@ void GuiTabBookCtrl::renderTab( RectI tabRect, GuiTabPageCtrl *tab )
 	   return;
    }
 
-   renderBorderedRect(ctrlRect, mTabProfile, currentState);
+   renderUniversalRect(ctrlRect, mTabProfile, currentState);
 
    //Render Text
    dglSetBitmapModulation(mTabProfile->getFontColor(currentState));

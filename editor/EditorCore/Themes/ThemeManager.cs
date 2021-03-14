@@ -85,12 +85,21 @@ function ThemeManager::refreshProfiles(%this)
 	{
 		%obj = %this.controlList.getObject(%i);
 
-		if(!isObject(%this.activeTheme.getFieldValue(%obj.profileName)))
+		if(isObject(%obj.gui))
 		{
-			error("ThemeManager::setProfile - Unable to find profile" SPC %obj.profileName SPC "for theme" SPC %this.activeTheme.name @ "!");
-		}
+			if(!isObject(%this.activeTheme.getFieldValue(%obj.profileName)))
+			{
+				error("ThemeManager::setProfile - Unable to find profile" SPC %obj.profileName SPC "for theme" SPC %this.activeTheme.name @ "!");
+			}
 
-		%obj.gui.setFieldValue(%obj.profileTag, %this.activeTheme.getFieldValue(%obj.profileName));
+			%obj.gui.setFieldValue(%obj.profileTag, %this.activeTheme.getFieldValue(%obj.profileName));
+		}
+		else
+		{
+			//let's remove this corpse
+			%this.controlList.remove(%obj);
+			%this.i--;
+		}
 	}
 }
 

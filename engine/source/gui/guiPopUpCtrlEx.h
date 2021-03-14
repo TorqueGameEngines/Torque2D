@@ -90,9 +90,9 @@ class GuiPopupTextListCtrlEx : public GuiTextListCtrl
       void onRenderCell(Point2I offset, Point2I cell, bool selected, bool mouseOver);
 };
 
-class GuiPopUpMenuCtrlEx : public GuiTextCtrl
+class GuiPopUpMenuCtrlEx : public GuiControl
 {
-   typedef GuiTextCtrl Parent;
+   typedef GuiControl Parent;
 
   public:
    struct Entry

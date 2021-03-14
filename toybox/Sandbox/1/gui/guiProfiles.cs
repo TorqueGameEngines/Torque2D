@@ -122,7 +122,6 @@ if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
 	align = center;
 	vAlign = middle;
 
-    // bitmap information
 	cursorColor = "0 0 0 255";
 
 	borderDefault = GuiDefaultBorderProfile;
@@ -219,7 +218,7 @@ if (!isObject(GuiCheckBoxProfile)) new GuiControlProfile (GuiCheckBoxProfile : G
     fillColorNA = SetColorAlpha($color3, 100);
 
     fontColor = $color3;
-	fontColorHL = $color4;
+	fontColorHL = AdjustColorValue($color5, -10);
 	fontColorSL = $color5;
 	fontColorNA = SetColorAlpha($color3, 100);
     align = "left";
@@ -228,6 +227,7 @@ if (!isObject(GuiCheckBoxProfile)) new GuiControlProfile (GuiCheckBoxProfile : G
 	borderDefault = "GuiBrightBorderProfile";
 	borderRight = "GuiDarkBorderProfile";
 	borderBottom = "GuiDarkBorderProfile";
+	bitmap = "^Sandbox/gui/images/checkBox.png";
 };
 
 //-----------------------------------------------------------------------------
@@ -316,6 +316,7 @@ if(!isObject(GuiScrollProfile)) new GuiControlProfile (GuiScrollProfile)
 {
     fillColor = $color2;
     borderDefault = GuiDefaultBorderProfile;
+	//bitmap = "^Sandbox/gui/images/scrollBar.png";
 };
 
 //-----------------------------------------------------------------------------
@@ -351,6 +352,34 @@ if (!isObject(GuiButtonProfile)) new GuiControlProfile (GuiButtonProfile : GuiDe
     fontColor = "255 255 255 255";
     fontColorHL = $color5;
     bitmap = "^Sandbox/gui/images/smallButtonContainer";
+};
+
+//-----------------------------------------------------------------------------
+
+if (!isObject(GuiNorthButtonProfile)) new GuiControlProfile (GuiNorthButtonProfile : GuiDefaultProfile)
+{
+    imageAsset = "Sandbox:northArrow";
+};
+
+//-----------------------------------------------------------------------------
+
+if (!isObject(GuiSouthButtonProfile)) new GuiControlProfile (GuiSouthButtonProfile : GuiDefaultProfile)
+{
+    imageAsset = "Sandbox:southArrow";
+};
+
+//-----------------------------------------------------------------------------
+
+if (!isObject(GuiPlusButtonProfile)) new GuiControlProfile (GuiPlusButtonProfile : GuiDefaultProfile)
+{
+    imageAsset = "Sandbox:plusButton";
+};
+
+//-----------------------------------------------------------------------------
+
+if (!isObject(GuiMinusButtonProfile)) new GuiControlProfile (GuiMinusButtonProfile : GuiDefaultProfile)
+{
+    imageAsset = "Sandbox:minusButton";
 };
 
 //-----------------------------------------------------------------------------
@@ -429,6 +458,7 @@ if (!isObject(GuiSpinnerProfile)) new GuiControlProfile (GuiSpinnerProfile : Gui
     tab = false;
     canKeyFocus = true;
     returnTab = true;
+	bitmap = "^Sandbox/gui/images/textEdit_noSides.png";
 };
 
 //-----------------------------------------------------------------------------
@@ -436,6 +466,7 @@ if (!isObject(GuiSpinnerProfile)) new GuiControlProfile (GuiSpinnerProfile : Gui
 if (!isObject(GuiSunkenContainerProfile)) new GuiControlProfile (GuiSunkenContainerProfile : GuiSolidProfile)
 {
     fillColor = SetColorAlpha($color1, 150);
+	bitmap = "^Sandbox/gui/images/sunkenContainer.png";
 };
 
 if (!isObject(GuiHeaderProfile)) new GuiControlProfile (GuiHeaderProfile : GuiSolidProfile)

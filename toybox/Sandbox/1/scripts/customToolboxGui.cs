@@ -270,7 +270,7 @@ function addNumericOption( %label, %min, %max, %step, %callback, %startingValue,
 
     %spinnerPosition = "1" SPC Sandbox.customLabelSpacing;
 
-    %spinnerDown = new GuiImageButtonCtrl()
+    %spinnerDown = new GuiButtonCtrl()
     {
         Action = "decrease";
         Class = "SpinnerController";
@@ -279,23 +279,17 @@ function addNumericOption( %label, %min, %max, %step, %callback, %startingValue,
         VertSizing = "relative";
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiSpriteProfile";
+        Profile = "GuiMinusButtonProfile";
         Position = %spinnerPosition;
         Extent = Sandbox.spinnerExtent;
-        MinExtent = "8 2";
+        MinExtent = "22 25";
         canSave = "1";
         Visible = "1";
         Active = "1";
         hovertime = "1000";
         toolTipProfile = "GuiToolTipProfile";
         toolTip = %tooltipText;
-        groupNum = "-1";
-        buttonType = "PushButton";
-        useMouseEvents = "0";
-        NormalImage = "Sandbox:minusButtonNormal";
-        HoverImage = "Sandbox:minusButtonHover";
-        DownImage = "Sandbox:minusButtonDown";
-        InactiveImage = "Sandbox:minusButtonInactive";
+        text = "";
     };
 
     %controlPosition = (getWord(Sandbox.spinnerExtent, 0) + 1) SPC Sandbox.customLabelSpacing;
@@ -322,7 +316,7 @@ function addNumericOption( %label, %min, %max, %step, %callback, %startingValue,
 
     %spinnerPosition = (getWord(%textEdit.Extent, 0) + getWord(%textEdit.position, 0)) SPC Sandbox.customLabelSpacing;
 
-    %spinnerUp = new GuiImageButtonCtrl()
+    %spinnerUp = new GuiButtonCtrl()
     {
         Action = "increase";
         HorizSizing = "relative";
@@ -331,23 +325,17 @@ function addNumericOption( %label, %min, %max, %step, %callback, %startingValue,
         Step = %step;
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiSpriteProfile";
+        Profile = "GuiPlusButtonProfile";
         Position = %spinnerPosition;
         Extent = Sandbox.spinnerExtent;
-        MinExtent = "8 2";
+        MinExtent = "22 25";
         canSave = "1";
         Visible = "1";
         Active = "1";
         hovertime = "1000";
         toolTipProfile = "GuiToolTipProfile";
         toolTip = %tooltipText;
-        groupNum = "-1";
-        buttonType = "PushButton";
-        useMouseEvents = "0";
-        NormalImage = "Sandbox:plusButtonNormal";
-        HoverImage = "Sandbox:plusButtonHover";
-        DownImage = "Sandbox:plusButtonDown";
-        InactiveImage = "Sandbox:plusButtonInactive";
+        text = "";
     };
 
     %textEdit.validate = %textEdit @ ".updateToy();";
@@ -592,25 +580,20 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
     }
 
     // Create and add the up button
-    %upButton = new GuiImageButtonCtrl()
+    %upButton = new GuiButtonCtrl()
     {
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiSpriteProfile";
+        Profile = "GuiNorthButtonProfile";
         HorizSizing = "relative";
         VertSizing = "relative";
         Position = %buttonX SPC %upButtonY;
         Extent = "69 23";
-        MinExtent = "8 2";
+        MinExtent = "12 4";
         canSave = "1";
         Visible = "1";
         Active = "1";
-        groupNum = "-1";
-        buttonType = "PushButton";
-        useMouseEvents = "0";
-        NormalImage = "Sandbox:northArrowNormal";
-        HoverImage = "Sandbox:northArrowHover";
-        DownImage = "Sandbox:northArrowDown";
+		text = "";
         toolTipProfile = "GuiToolTipProfile";
         toolTip = %tooltipText;
     };
@@ -618,25 +601,20 @@ function addSelectionOption( %entries, %label, %maxDisplay, %callback, %shouldRe
     %upButton.command = %scrollControl @ ".scrollToPrevious();";
 
     // Create and add the down button
-    %downButton = new GuiImageButtonCtrl()
+    %downButton = new GuiButtonCtrl()
     {
         canSaveDynamicFields = "0";
         isContainer = "0";
-        Profile = "GuiSpriteProfile";
+        Profile = "GuiSouthButtonProfile";
         HorizSizing = "relative";
         VertSizing = "relative";
         Position = %buttonX SPC %downButtonY;
         Extent = "69 23";
-        MinExtent = "8 2";
+        MinExtent = "12 4";
         canSave = "1";
         Visible = "1";
         Active = "1";
-        groupNum = "-1";
-        buttonType = "PushButton";
-        useMouseEvents = "0";
-        NormalImage = "Sandbox:southArrowNormal";
-        HoverImage = "Sandbox:southArrowHover";
-        DownImage = "Sandbox:southArrowDown";
+        text = "";
         toolTipProfile = "GuiToolTipProfile";
         toolTip = %tooltipText;
     };

@@ -227,21 +227,21 @@ void GuiSceneObjectCtrl::onRender(Point2I offset, const RectI& updateRect)
       if( mDepressed )
       {
          if( mHasTexture )
-            renderSizableBitmapBordersFilled( ctrlRect, 3, mProfile );
+			 renderUniversalRect( ctrlRect, mProfile, GuiControlState::SelectedState);
          else
             dglDrawRectFill( ctrlRect, mProfile->mFillColorHL );
       }
       else if ( mMouseOver )
       {
          if( mHasTexture )
-            renderSizableBitmapBordersFilled( ctrlRect, 2, mProfile );
+			 renderUniversalRect( ctrlRect, mProfile, GuiControlState::HighlightState);
          else
             dglDrawRectFill( ctrlRect, mProfile->mFillColorHL );
       }
       else
       {
          if( mHasTexture )
-            renderSizableBitmapBordersFilled( ctrlRect, 1, mProfile );
+			 renderUniversalRect( ctrlRect, mProfile, GuiControlState::NormalState);
          else
             dglDrawRectFill( ctrlRect, mProfile->mFillColor );
       }
@@ -262,7 +262,7 @@ void GuiSceneObjectCtrl::onRender(Point2I offset, const RectI& updateRect)
 
       // Draw Canvas color for object
 	if( mHasTexture )
-		renderSizableBitmapBordersFilled( objRect, 4, mProfile );
+		renderUniversalRect( objRect, mProfile, GuiControlState::DisabledState);
 	else
 		dglDrawRectFill( objRect, mProfile->mFillColorNA );
 

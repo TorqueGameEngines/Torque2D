@@ -960,9 +960,9 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
    }
 //      renderSlightlyRaisedBox(r, mProfile); // DAW: Used to be the only 'else' condition to mInAction above.
 
-   S32 txt_w = mFont->getStrWidth(mText);
+   S32 txt_w = mProfile->mFont->getStrWidth(mText);
    localStart.x = 0;
-   localStart.y = (mBounds.extent.y - (mFont->getHeight())) / 2;
+   localStart.y = (mBounds.extent.y - (mProfile->mFont->getHeight())) / 2;
 
    // align the horizontal
    switch (mProfile->mAlignment)
@@ -1046,28 +1046,28 @@ void GuiPopUpMenuCtrlEx::onRender(Point2I offset, const RectI &updateRect)
 
       // Draw the first column
       getColumn(mText, buff, 0, "\t");
-      dglDrawText(mFont, globalStart, buff, mProfile->mFontColors);
+      dglDrawText(mProfile->mFont, globalStart, buff, mProfile->mFontColors);
 
 	  // Draw the second column to the right
       getColumn(mText, buff, 1, "\t");
-      S32 txt_w = mFont->getStrWidth(buff);
+      S32 txt_w = mProfile->mFont->getStrWidth(buff);
       if(mProfile->mProfileForChildren && mProfile->mBitmapArrayRects.size())
       {
          // We're making use of a bitmap border, so take into account the
          // right cap of the border.
          RectI* mBitmapBounds = mProfile->mBitmapArrayRects.address();
          Point2I textpos = localToGlobalCoord(Point2I(mBounds.extent.x - txt_w - mBitmapBounds[2].extent.x,localStart.y));
-         dglDrawText(mFont, textpos, buff, mProfile->mFontColors);
+         dglDrawText(mProfile->mFont, textpos, buff, mProfile->mFontColors);
 
       } else
       {
          Point2I textpos = localToGlobalCoord(Point2I(mBounds.extent.x - txt_w - 12,localStart.y));
-         dglDrawText(mFont, textpos, buff, mProfile->mFontColors);
+         dglDrawText(mProfile->mFont, textpos, buff, mProfile->mFontColors);
 	  }
 
    } else
    {
-      dglDrawText(mFont, globalStart, mText, mProfile->mFontColors);
+      dglDrawText(mProfile->mFont, globalStart, mText, mProfile->mFontColors);
    }
 
    // If we're rendering a bitmap border, then it will take care of the arrow.
@@ -1207,8 +1207,8 @@ void GuiPopUpMenuCtrlEx::onAction()
    bool setScroll = false;
       
    for( U32 i = 0; i < (U32)mEntries.size(); ++i )
-      if(S32(mFont->getStrWidth(mEntries[i].buf)) > textWidth)
-         textWidth = mFont->getStrWidth(mEntries[i].buf);
+      if(S32(mProfile->mFont->getStrWidth(mEntries[i].buf)) > textWidth)
+         textWidth = mProfile->mFont->getStrWidth(mEntries[i].buf);
 
    //if(textWidth > mBounds.extent.x)
    S32 sbWidth = 0;//TODO: mSc->mProfile->mBorderSize * 2 + mSc->scrollBarThickness(); // DAW: Calculate the scroll bar width
@@ -1225,7 +1225,7 @@ void GuiPopUpMenuCtrlEx::onAction()
    }
 
    //mTl->setCellSize(Point2I(width, mFont->getHeight()+3));
-   mTl->setCellSize(Point2I(width, mFont->getHeight() + textSpace)); // DAW: Modified the above line to use textSpace rather than the '3' as this is what is used below.
+   mTl->setCellSize(Point2I(width, mProfile->mFont->getHeight() + textSpace)); // DAW: Modified the above line to use textSpace rather than the '3' as this is what is used below.
 
    for( U32 j=0; j < (U32)mEntries.size(); ++j )
       mTl->addEntry(mEntries[j].id, mEntries[j].buf);

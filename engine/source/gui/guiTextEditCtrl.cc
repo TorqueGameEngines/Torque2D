@@ -22,6 +22,7 @@
 
 #include "console/consoleTypes.h"
 #include "console/console.h"
+#include "graphics/gColor.h"
 #include "graphics/dgl.h"
 #include "gui/guiCanvas.h"
 #include "gui/guiMLTextCtrl.h"
@@ -69,6 +70,8 @@ GuiTextEditCtrl::GuiTextEditCtrl()
    mPasswordMask = StringTable->insert( "*" );
 
    mEditCursor = NULL;
+   mMaxStrLen = GuiTextEditCtrl::MAX_STRING_LENGTH;
+   mTruncateWhenUnfocused = false;
 }
 
 GuiTextEditCtrl::~GuiTextEditCtrl()
@@ -95,6 +98,8 @@ void GuiTextEditCtrl::initPersistFields()
    addField("sinkAllKeyEvents",  TypeBool,      Offset(mSinkAllKeyEvents,  GuiTextEditCtrl));
    addField("password",          TypeBool,      Offset(mPasswordText,      GuiTextEditCtrl));
    addField("passwordMask",      TypeString,    Offset(mPasswordMask,      GuiTextEditCtrl));
+   addField("maxLength",		TypeS32, Offset(mMaxStrLen, GuiTextEditCtrl));
+   addField("truncate",			TypeBool, Offset(mTruncateWhenUnfocused, GuiTextEditCtrl));
 }
 
 bool GuiTextEditCtrl::onAdd()
@@ -127,10 +132,40 @@ void GuiTextEditCtrl::onStaticModified(const char* slotName)
       setText(mText);
 }
 
+void GuiTextEditCtrl::inspectPostApply()
+{
+	Parent::inspectPostApply();
+	if (mTextID && *mTextID != 0)
+		setTextID(mTextID);
+	else
+		setText(mText);
+}
+
 bool GuiTextEditCtrl::onWake()
 {
    if (! Parent::onWake())
       return false;
+
+   mFont = mProfile->mFont;
+   AssertFatal(mFont, "GuiTextCtrl::onWake: invalid font in profile");
+
+   if (mConsoleVariable[0])
+   {
+	   const char *txt = Con::getVariable(mConsoleVariable);
+	   if (txt)
+	   {
+		   if (dStrlen(txt) > (U32)mMaxStrLen)
+		   {
+			   char* buf = new char[mMaxStrLen + 1];
+			   dStrncpy(buf, txt, mMaxStrLen);
+			   buf[mMaxStrLen] = 0;
+			   setScriptValue(buf);
+			   delete[] buf;
+		   }
+		   else
+			   setScriptValue(txt);
+	   }
+   }
 
    // If this is the first awake text edit control, enable keyboard translation
    if (smNumAwake == 0)
@@ -143,6 +178,7 @@ bool GuiTextEditCtrl::onWake()
 void GuiTextEditCtrl::onSleep()
 {
    Parent::onSleep();
+   mFont = NULL;
 
    // If this is the last awake text edit control, disable keyboard translation
    --smNumAwake;
@@ -207,6 +243,28 @@ void GuiTextEditCtrl::getText( char *dest )
  
 void GuiTextEditCtrl::setText( const UTF8 *txt )
 {
+	//make sure we don't call this before onAdd();
+	if (!mProfile)
+		return;
+
+	//Make sure we have a font
+	mProfile->incRefCount();
+	mFont = mProfile->mFont;
+
+	//If the font isn't found, we want to decrement the profile usage and return now or we may crash!
+	if (mFont.isNull())
+	{
+		//decrement the profile referrence
+		mProfile->decRefCount();
+		return;
+	}
+
+	setVariable((char*)mText);
+	setUpdate();
+
+	//decrement the profile referrence
+	mProfile->decRefCount();
+
    if(txt && txt[0] != 0)
    {
       Parent::setText(txt);
@@ -229,21 +287,29 @@ void GuiTextEditCtrl::setText( const UTF16* txt)
    {
       UTF8* txt8 = convertUTF16toUTF8( txt );
       Parent::setText( txt8 );
+	  setText(txt8);
       delete[] txt8;
-      mTextBuffer.set( txt );
    }
    else
    {
       Parent::setText("");
-      mTextBuffer.set("");
-   }
-   
-    //respect the max size
-    int diff = mTextBuffer.length() - mMaxStrLen; 
-    if( diff > 0 ) {
-        mTextBuffer.cut( mMaxStrLen, diff );
-    }
-   mCursorPos = mTextBuffer.length();   
+      setText("");
+   }  
+}
+
+void GuiTextEditCtrl::setTextID(const char *id)
+{
+	S32 n = Con::getIntVariable(id, -1);
+	if (n != -1)
+	{
+		setTextID(n);
+	}
+}
+void GuiTextEditCtrl::setTextID(S32 id)
+{
+	const UTF8 *str = getGUIString(id);
+	if (str)
+		setText((const char*)str);
 }
 
 void GuiTextEditCtrl::selectAllText()
@@ -1128,7 +1194,7 @@ void GuiTextEditCtrl::onRender(Point2I offset, const RectI & updateRect)
 		return;
 	}
 
-	renderBorderedRect(ctrlRect, mProfile, currentState);
+	renderUniversalRect(ctrlRect, mProfile, currentState);
 
 	//Render Text
 	dglSetBitmapModulation(mProfile->mFontColor);
@@ -1384,6 +1450,64 @@ void GuiTextEditCtrl::setScriptValue(const char *value)
 {
    mTextBuffer.set(value);
    mCursorPos = getMin((S32)(mTextBuffer.length() - 1), 0);
+}
+
+
+StringBuffer GuiTextEditCtrl::truncate(StringBuffer buffer, StringBuffer terminationString, S32 width)
+{
+	// Check if the buffer width exceeds the specified width
+	S32 bufferWidth = textBufferWidth(buffer);
+
+	// If not, just return the unmodified buffer
+	if (bufferWidth <= width)
+		return buffer;
+
+	// Get the width of the termination string
+	S32 terminationWidth = textBufferWidth(terminationString) + 6; // add an extra bit of space at the end
+
+	// Calculate the new target width with space allowed for the termination string
+	S32 targetWidth = width - terminationWidth;
+
+	// If the target width is zero or less, just replace the entire buffer with the termination string
+	if (targetWidth <= 0)
+		return terminationString;
+
+	// Step backwards in the buffer until we find the character that fits within the target width
+	S32 currentWidth = 0;
+	S32 count = 0;
+	for (S32 i = 0; i < (S32)buffer.length(); i++)
+	{
+		if (currentWidth >= targetWidth)
+			break;
+
+		UTF16 c = buffer.getChar(i);
+		currentWidth += mFont->getCharXIncrement(c);
+		count++;
+	}
+
+	// Get the substring
+	StringBuffer retBuffer = buffer.substring(0, count - 2);
+
+	// Append terminating string
+	retBuffer.append(terminationString);
+
+	return retBuffer;
+}
+
+S32 GuiTextEditCtrl::textBufferWidth(StringBuffer buffer)
+{
+	S32 charLength = 0;
+
+	for (S32 count = 0; count < (S32)buffer.length(); count++)
+	{
+		UTF16 c = buffer.getChar(count);
+		if (!mFont->isValidChar(c))
+			continue;
+
+		charLength += mFont->getCharXIncrement(c);
+	}
+
+	return charLength;
 }
 
 ConsoleMethod( GuiTextEditCtrl, getText, const char*, 2, 2, "() Get the contents of the textedit control\n"
