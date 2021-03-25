@@ -740,9 +740,11 @@ void GuiControl::renderChildControls(Point2I offset, RectI content, const RectI 
 
 			 if (childClip.intersect(clipRect))
 			 {
+				RectI old = dglGetClipRect();
 				dglSetClipRect(clipRect);
 				glDisable(GL_CULL_FACE);
 				ctrl->onRender(childPosition, RectI(childPosition, ctrl->getExtent()));
+				dglSetClipRect(old);
 			 }
 		  }
 		  size_cpy = objectList.size(); //	CHRIS: i know its wierd but the size of the list changes sometimes during execution of this loop
@@ -1670,7 +1672,10 @@ void GuiControl::renderText(Point2I offset, Point2I extent, const char *text, Gu
 		rotation = -90.0f;
 	}
 
+	RectI old = dglGetClipRect();
+	dglSetClipRect(RectI(offset, extent));
 	dglDrawText( font, start + offset + profile->mTextOffset, text, profile->mFontColors, 9, rotation );
+	dglSetClipRect(old);
 }
 
 void GuiControl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent)

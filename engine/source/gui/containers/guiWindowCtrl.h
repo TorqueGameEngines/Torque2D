@@ -107,9 +107,6 @@ class GuiWindowCtrl : public GuiControl
       RectI *mBitmapBounds;  //bmp is [3*n], bmpHL is [3*n + 1], bmpNA is [3*n + 2]
       TextureHandle mTextureHandle;
 
-
-      void drawWinRect(const RectI &myRect);
-
    public:
       GuiWindowCtrl();
       DECLARE_CONOBJECT(GuiWindowCtrl);
