@@ -39,7 +39,7 @@
 #include "platform/nativeDialogs/msgBox.h"
 #endif
 
-#ifndef TORQUE_OS_WIN32
+#ifndef TORQUE_OS_WIN
 #include <algorithm>
 #endif
 
