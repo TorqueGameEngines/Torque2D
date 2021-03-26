@@ -97,7 +97,7 @@ GuiPopUpBackgroundCtrlEx::GuiPopUpBackgroundCtrlEx(GuiPopUpMenuCtrlEx *ctrl, Gui
    mTextList = textList;
 }
 
-void GuiPopUpBackgroundCtrlEx::onMouseDown(const GuiEvent &event)
+void GuiPopUpBackgroundCtrlEx::onTouchDown(const GuiEvent &event)
 {
 //   mTextList->setSelectedCell(Point2I(-1,-1)); // DAW: Removed
    mPopUpCtrl->mBackgroundCancel = true; // DAW: Set that the user didn't click within the text list.  Replaces the line above.
@@ -181,7 +181,7 @@ bool GuiPopupTextListCtrlEx::onKeyDown(const GuiEvent &event)
    return Parent::onKeyDown(event);
 }
 
-void GuiPopupTextListCtrlEx::onMouseUp(const GuiEvent &event)
+void GuiPopupTextListCtrlEx::onTouchUp(const GuiEvent &event)
 {
     if(!mActive)
         return;
@@ -203,7 +203,7 @@ void GuiPopupTextListCtrlEx::onMouseUp(const GuiEvent &event)
    Parent::onTouchUp(event);
 }
 
-void GuiPopupTextListCtrlEx::onMouseMove( const GuiEvent &event )
+void GuiPopupTextListCtrlEx::onTouchMove( const GuiEvent &event )
 {
    if( !mPopUpCtrl || !mPopUpCtrl->isMethod("onHotTrackItem") )
       return Parent::onTouchMove( event );
@@ -1440,7 +1440,7 @@ bool GuiPopUpMenuCtrlEx::getColoredBox( ColorI &fontColor, S32 id )
 }
 
 //------------------------------------------------------------------------------
-void GuiPopUpMenuCtrlEx::onMouseDown(const GuiEvent &event)
+void GuiPopUpMenuCtrlEx::onTouchDown(const GuiEvent &event)
 {
    if(!mActive)
        return;
@@ -1449,20 +1449,20 @@ void GuiPopUpMenuCtrlEx::onMouseDown(const GuiEvent &event)
 }
 
 //------------------------------------------------------------------------------
-void GuiPopUpMenuCtrlEx::onMouseUp(const GuiEvent &event)
+void GuiPopUpMenuCtrlEx::onTouchUp(const GuiEvent &event)
 {
 }
 
 //------------------------------------------------------------------------------
 // DAW: Added
-void GuiPopUpMenuCtrlEx::onMouseEnter(const GuiEvent &event)
+void GuiPopUpMenuCtrlEx::onTouchEnter(const GuiEvent &event)
 {
    mMouseOver = true;
 }
 
 //------------------------------------------------------------------------------
 // DAW: Added
-void GuiPopUpMenuCtrlEx::onMouseLeave(const GuiEvent &)
+void GuiPopUpMenuCtrlEx::onTouchLeave(const GuiEvent &)
 {
    mMouseOver = false;
 }
@@ -1512,7 +1512,7 @@ void GuiPopUpMenuCtrlEx::autoScroll()
       mSc->scrollByRegion(mScrollDir);
       mScrollCount -= 1;
    }
-   mTl->onMouseMove(mEventSave);
+   mTl->onTouchMove(mEventSave);
 }
 
 //------------------------------------------------------------------------------

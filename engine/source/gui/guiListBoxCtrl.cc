@@ -762,15 +762,15 @@ void GuiListBoxCtrl::drawBox(const Point2I &box, S32 size, ColorI &outlineColor,
 // Mouse Events
 //////////////////////////////////////////////////////////////////////////
 
-void GuiListBoxCtrl::onMouseDragged(const GuiEvent &event)
+void GuiListBoxCtrl::onTouchDragged(const GuiEvent &event)
 {
    Parent::onTouchDragged(event);
 
-   if(isMethod("onMouseDragged"))
-      Con::executef(this, 1, "onMouseDragged");
+   if(isMethod("onTouchDragged"))
+      Con::executef(this, 1, "onTouchDragged");
 }
 
-void GuiListBoxCtrl::onMouseDown( const GuiEvent &event )
+void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
 {
    Point2I localPoint = globalToLocalCoord(event.mousePoint);
    

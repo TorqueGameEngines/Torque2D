@@ -99,12 +99,12 @@ public:
 
    virtual void addObject(SimObject *newObj );
 
-   void onMouseDragged(const GuiEvent &event);
-   void onMouseDown(const GuiEvent &event);
-   void onMouseUp(const GuiEvent &event);
-   void onMouseMove(const GuiEvent &event);
-   void onMouseLeave(const GuiEvent &event);
-   void onMouseEnter(const GuiEvent &event);
+   void onTouchDragged(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &event);
+   void onTouchUp(const GuiEvent &event);
+   void onTouchMove(const GuiEvent &event);
+   void onTouchLeave(const GuiEvent &event);
+   void onTouchEnter(const GuiEvent &event);
 
    static void initPersistFields();
    DECLARE_CONOBJECT(GuiFormCtrl);

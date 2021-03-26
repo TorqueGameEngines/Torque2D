@@ -124,9 +124,9 @@ class GuiWindowCtrl : public GuiControl
       GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1);
       void resize(const Point2I &newPosition, const Point2I &newExtent);
 
-      void onMouseDown(const GuiEvent &event);
-      void onMouseDragged(const GuiEvent &event);
-      void onMouseUp(const GuiEvent &event);
+      void onTouchDown(const GuiEvent &event);
+      void onTouchDragged(const GuiEvent &event);
+      void onTouchUp(const GuiEvent &event);
 
       //only cycle tabs through the current window, so overwrite the method
       GuiControl* findNextTabable(GuiControl *curResponder, bool firstCall = true);

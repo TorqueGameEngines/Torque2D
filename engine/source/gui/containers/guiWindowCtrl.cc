@@ -183,7 +183,7 @@ void GuiWindowCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
    PositionButtons();
 }
 
-void GuiWindowCtrl::onMouseDown(const GuiEvent &event)
+void GuiWindowCtrl::onTouchDown(const GuiEvent &event)
 {
    setUpdate();
 
@@ -253,7 +253,7 @@ void GuiWindowCtrl::onMouseDown(const GuiEvent &event)
    }
 }
 
-void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
+void GuiWindowCtrl::onTouchDragged(const GuiEvent &event)
 {
    GuiControl *parent = getParent();
    GuiCanvas *root = getRoot();
@@ -298,7 +298,7 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
    }
 }
 
-void GuiWindowCtrl::onMouseUp(const GuiEvent &event)
+void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
 {
    bool closing = mPressClose;
    bool maximizing = mPressMaximize;
