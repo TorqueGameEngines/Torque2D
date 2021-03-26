@@ -1,0 +1,115 @@
+//--- Created With GUIEDITORTOY ---//
+%guiContent = new GuiControl() {
+   canSaveDynamicFields = "0";
+   isContainer = "1";
+   Profile = "GuiDefaultProfile";
+   HorizSizing = "width";
+   VertSizing = "height";
+   Position = "0 0";
+   Extent = "1024 748";
+   MinExtent = "8 2";
+   canSave = "1";
+   Visible = "1";
+   Active = "0";
+   tooltipWidth = "250";
+   hovertime = "1000";
+
+   new GuiWindowCtrl(CBBWindow) {
+      canSaveDynamicFields = "0";
+      isContainer = "1";
+      Profile = "GuiWindowProfile";
+      HorizSizing = "right";
+      VertSizing = "bottom";
+      Position = "384 272";
+      Extent = "200 208";
+      MinExtent = "8 2";
+      canSave = "1";
+      Visible = "1";
+      Active = "1";
+      tooltipWidth = "250";
+      hovertime = "1000";
+      Text = "Colour Picker";
+      resizeWidth = "1";
+      resizeHeight = "1";
+      canMove = "1";
+      canClose = "1";
+      canMinimize = "0";
+      canMaximize = "0";
+      minSize = "50 50";
+
+      new GuiColorPickerCtrl(CBBC) {
+         canSaveDynamicFields = "0";
+         isContainer = "0";
+         Profile = "GuiDefaultProfile";
+         HorizSizing = "right";
+         VertSizing = "bottom";
+         Position = "16 32";
+         Extent = "136 128";
+         MinExtent = "8 2";
+         canSave = "1";
+         Visible = "1";
+         Active = "1";
+         tooltipWidth = "250";
+         hovertime = "1000";
+         BaseColor = "Red";
+         PickColor = "Black";
+         SelectorGap = "1";
+         DisplayMode = "BlendColor";
+         ActionOnMove = "1";
+         ShowSelector = "1";
+      };
+      new GuiColorPickerCtrl(CBVC) {
+         canSaveDynamicFields = "0";
+         isContainer = "0";
+         Profile = "GuiDefaultProfile";
+         HorizSizing = "right";
+         VertSizing = "bottom";
+         Position = "160 32";
+         Extent = "24 128";
+         MinExtent = "8 2";
+         canSave = "1";
+         Visible = "1";
+         Active = "1";
+         tooltipWidth = "250";
+         hovertime = "1000";
+         BaseColor = "Red";
+         PickColor = "Black";
+         SelectorGap = "1";
+         DisplayMode = "VertColor";
+         ActionOnMove = "1";
+         ShowSelector = "1";
+      };
+      new GuiSliderCtrl() {
+         canSaveDynamicFields = "0";
+         isContainer = "0";
+         Profile = "GuiSliderProfile";
+         HorizSizing = "right";
+         VertSizing = "bottom";
+         Position = "16 168";
+         Extent = "168 16";
+         MinExtent = "8 2";
+         canSave = "1";
+         Visible = "1";
+         Active = "1";
+         tooltipWidth = "250";
+         hovertime = "1000";
+         range = "0.000 1.000";
+         ticks = "0";
+         Value = "1";
+      };
+   };
+};
+//--- GUIEDITORTOY END ---//
+
+function CBBC::onAction(%this)
+{
+	%col = CBBC.getFieldValue("PickColor");
+	echo(%col);
+}
+
+function CBVC::onAction(%this)
+{
+	%col = CBVC.getFieldValue("PickColor");
+	CBBC.setFieldValue("BaseColor", %col);
+	CBBC.updateColor();
+}
