@@ -113,8 +113,8 @@ public:
    void              drawBox( const Point2I &box, S32 size, ColorI &outlineColor, ColorI &boxColor );
 
    // Mouse Events
-   virtual void      onMouseDown( const GuiEvent &event );
-   virtual void      onMouseDragged(const GuiEvent &event);
+   virtual void      onTouchDown( const GuiEvent &event );
+   virtual void      onTouchDragged(const GuiEvent &event);
 
    // String Utility
    static U32        getStringElementCount( const char *string );

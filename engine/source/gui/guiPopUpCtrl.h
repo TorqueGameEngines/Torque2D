@@ -45,7 +45,7 @@ protected:
    GuiPopupTextListCtrl *mTextList; 
 public:
    GuiPopUpBackgroundCtrl(GuiPopUpMenuCtrl *ctrl, GuiPopupTextListCtrl* textList);
-   void onMouseDown(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &event);
 };
 
 class GuiPopupTextListCtrl : public GuiTextListCtrl
@@ -65,8 +65,8 @@ public:
 
    // GuiControl overloads:
    bool onKeyDown(const GuiEvent &event);
-   void onMouseDown(const GuiEvent &event);
-   void onMouseUp(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &event);
+   void onTouchUp(const GuiEvent &event);
    void onRenderCell(Point2I offset, Point2I cell, bool selected, bool mouseOver);
 };
 
@@ -137,10 +137,10 @@ public:
    void onAction();
    virtual void closePopUp();
    void clear();
-   void onMouseDown(const GuiEvent &event);
-   void onMouseUp(const GuiEvent &event);
-   void onMouseEnter(const GuiEvent &event); // DAW: Added
-   void onMouseLeave(const GuiEvent &); // DAW: Added
+   void onTouchDown(const GuiEvent &event);
+   void onTouchUp(const GuiEvent &event);
+   void onTouchEnter(const GuiEvent &event); // DAW: Added
+   void onTouchLeave(const GuiEvent &); // DAW: Added
    void setupAutoScroll(const GuiEvent &event);
    void autoScroll();
    bool onKeyDown(const GuiEvent &event);

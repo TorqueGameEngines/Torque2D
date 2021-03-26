@@ -88,9 +88,9 @@ class DbgFileView : public GuiArrayCtrl
 
    bool findString(const char *text);
 
-   void onMouseDown(const GuiEvent &event);
-   void onMouseDragged(const GuiEvent &event);
-   void onMouseUp(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &event);
+   void onTouchDragged(const GuiEvent &event);
+   void onTouchUp(const GuiEvent &event);
 
    void onPreRender();
    void onRenderCell(Point2I offset, Point2I cell, bool selected, bool mouseOver);

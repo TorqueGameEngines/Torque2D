@@ -1136,11 +1136,11 @@ bool GuiTreeViewCtrl::buildIconTable(const char * icons)
    // This is an abominal piece of code. -- BJG
    if (!icons)
    {
-      icons =  "common/gui/images/default:"
-               "common/gui/images/simgroup:"
-               "common/gui/images/simgroupClosed:"
-               "common/gui/images/simgroupSelected:"
-               "common/gui/images/simgroupSelectedClosed:";
+      icons =  "^Sandbox/gui/images/default:"
+               "^Sandbox/gui/images/simgroup:"
+               "^Sandbox/gui/images/simgroupClosed:"
+               "^Sandbox/gui/images/simgroupSelected:"
+               "^Sandbox/gui/images/simgroupSelectedClosed:";
    }
 
    // Figure the size of the buffer we need...
@@ -2215,7 +2215,7 @@ bool GuiTreeViewCtrl::onKeyDown( const GuiEvent& event )
 //------------------------------------------------------------------------------
 // on mouse up look at the current item and check to see if it is valid
 // to move the selected item(s) to it.
-void GuiTreeViewCtrl::onMouseUp(const GuiEvent &event)
+void GuiTreeViewCtrl::onTouchUp(const GuiEvent &event)
 {
    if( !mActive || !mAwake || !mVisible )
       return;
@@ -2608,7 +2608,7 @@ void GuiTreeViewCtrl::onMouseUp(const GuiEvent &event)
 }
 
 //------------------------------------------------------------------------------
-void GuiTreeViewCtrl::onMouseDragged(const GuiEvent &event)
+void GuiTreeViewCtrl::onTouchDragged(const GuiEvent &event)
 {
     if(!mSupportMouseDragging) return;
    if( !mActive || !mAwake || !mVisible )
@@ -2700,7 +2700,7 @@ void GuiTreeViewCtrl::onMiddleMouseDown(const GuiEvent & event)
 }
 
 
-void GuiTreeViewCtrl::onMouseDown(const GuiEvent & event)
+void GuiTreeViewCtrl::onTouchDown(const GuiEvent & event)
 {
    if( !mActive || !mAwake || !mVisible )
    {
@@ -2874,7 +2874,7 @@ void GuiTreeViewCtrl::onMouseDown(const GuiEvent & event)
 
 
 //------------------------------------------------------------------------------
-void GuiTreeViewCtrl::onMouseMove( const GuiEvent &event )
+void GuiTreeViewCtrl::onTouchMove( const GuiEvent &event )
 {
    if ( mMouseOverCell.y >= 0 && mVisibleItems.size() > mMouseOverCell.y)
       mVisibleItems[mMouseOverCell.y]->mState.clear( Item::MouseOverBmp | Item::MouseOverText );
@@ -2902,15 +2902,15 @@ void GuiTreeViewCtrl::onMouseMove( const GuiEvent &event )
 
 
 //------------------------------------------------------------------------------
-void GuiTreeViewCtrl::onMouseEnter( const GuiEvent &event )
+void GuiTreeViewCtrl::onTouchEnter( const GuiEvent &event )
 {
    Parent::onTouchEnter( event );
-   onMouseMove( event );
+   onTouchMove( event );
 }
 
 
 //------------------------------------------------------------------------------
-void GuiTreeViewCtrl::onMouseLeave( const GuiEvent &event )
+void GuiTreeViewCtrl::onTouchLeave( const GuiEvent &event )
 {
    if ( mMouseOverCell.y >= 0 && mVisibleItems.size() > mMouseOverCell.y)
       mVisibleItems[mMouseOverCell.y]->mState.clear( Item::MouseOverBmp | Item::MouseOverText );

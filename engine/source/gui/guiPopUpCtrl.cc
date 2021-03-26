@@ -97,7 +97,7 @@ GuiPopUpBackgroundCtrl::GuiPopUpBackgroundCtrl(GuiPopUpMenuCtrl *ctrl, GuiPopupT
    mTextList = textList;
 }
 
-void GuiPopUpBackgroundCtrl::onMouseDown(const GuiEvent &event)
+void GuiPopUpBackgroundCtrl::onTouchDown(const GuiEvent &event)
 {
    //   mTextList->setSelectedCell(Point2I(-1,-1)); // DAW: Removed
    mPopUpCtrl->mBackgroundCancel = true; // DAW: Set that the user didn't click within the text list.  Replaces the line above.
@@ -170,7 +170,7 @@ bool GuiPopupTextListCtrl::onKeyDown(const GuiEvent &event)
    return Parent::onKeyDown(event);
 }
 
-void GuiPopupTextListCtrl::onMouseDown(const GuiEvent &event)
+void GuiPopupTextListCtrl::onTouchDown(const GuiEvent &event)
 {
    // Moved to onMouseUp in order to capture the mouse for the entirety of the click. ADL.
    // This also has the side effect of allowing the mouse to be held down and a selection made.
@@ -178,7 +178,7 @@ void GuiPopupTextListCtrl::onMouseDown(const GuiEvent &event)
    //mPopUpCtrl->closePopUp();
 }
 
-void GuiPopupTextListCtrl::onMouseUp(const GuiEvent &event)
+void GuiPopupTextListCtrl::onTouchUp(const GuiEvent &event)
 {
    Parent::onTouchDown(event);
    mPopUpCtrl->closePopUp();
@@ -1454,7 +1454,7 @@ bool GuiPopUpMenuCtrl::getColoredBox( ColorI &fontColor, S32 id )
 }
 
 //------------------------------------------------------------------------------
-void GuiPopUpMenuCtrl::onMouseDown(const GuiEvent &event)
+void GuiPopUpMenuCtrl::onTouchDown(const GuiEvent &event)
 {
     if ( !mVisible || !mActive || !mAwake )
       return;
@@ -1463,7 +1463,7 @@ void GuiPopUpMenuCtrl::onMouseDown(const GuiEvent &event)
 }
 
 //------------------------------------------------------------------------------
-void GuiPopUpMenuCtrl::onMouseUp(const GuiEvent &event)
+void GuiPopUpMenuCtrl::onTouchUp(const GuiEvent &event)
 {
     if ( !mVisible || !mActive || !mAwake )
       return;
@@ -1471,7 +1471,7 @@ void GuiPopUpMenuCtrl::onMouseUp(const GuiEvent &event)
 
 //------------------------------------------------------------------------------
 // DAW: Added
-void GuiPopUpMenuCtrl::onMouseEnter(const GuiEvent &event)
+void GuiPopUpMenuCtrl::onTouchEnter(const GuiEvent &event)
 {
     if ( !mVisible || !mActive || !mAwake )
       return;
@@ -1480,7 +1480,7 @@ void GuiPopUpMenuCtrl::onMouseEnter(const GuiEvent &event)
 
 //------------------------------------------------------------------------------
 // DAW: Added
-void GuiPopUpMenuCtrl::onMouseLeave(const GuiEvent &)
+void GuiPopUpMenuCtrl::onTouchLeave(const GuiEvent &)
 {
     if ( !mVisible || !mActive || !mAwake )
       return;

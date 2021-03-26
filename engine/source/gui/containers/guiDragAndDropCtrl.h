@@ -52,9 +52,9 @@ public:
 
    void startDragging(Point2I offset = Point2I(0, 0));
 
-   virtual void onMouseDown(const GuiEvent& event);
-   virtual void onMouseDragged(const GuiEvent& event);
-   virtual void onMouseUp(const GuiEvent& event);
+   virtual void onTouchDown(const GuiEvent& event);
+   virtual void onTouchDragged(const GuiEvent& event);
+   virtual void onTouchUp(const GuiEvent& event);
 
    static void initPersistFields();
 

@@ -293,7 +293,7 @@ void GuiFormCtrl::onRender(Point2I offset, const RectI &updateRect)
    renderChildControls(offset, mBounds, updateRect);
 }
 
-void GuiFormCtrl::onMouseDragged(const GuiEvent &event)
+void GuiFormCtrl::onTouchDragged(const GuiEvent &event)
 {
    GuiControl *parent = getParent();
    GuiCanvas *root = getRoot();
@@ -315,7 +315,7 @@ void GuiFormCtrl::onMouseDragged(const GuiEvent &event)
 }
 
 
-void GuiFormCtrl::onMouseMove(const GuiEvent &event)
+void GuiFormCtrl::onTouchMove(const GuiEvent &event)
 {
    Point2I localMove = globalToLocalCoord(event.mousePoint);
 
@@ -326,7 +326,7 @@ void GuiFormCtrl::onMouseMove(const GuiEvent &event)
 
 }
 
-void GuiFormCtrl::onMouseEnter(const GuiEvent &event)
+void GuiFormCtrl::onTouchEnter(const GuiEvent &event)
 {
    setUpdate();
    if(isMouseLocked())
@@ -341,7 +341,7 @@ void GuiFormCtrl::onMouseEnter(const GuiEvent &event)
 
 }
 
-void GuiFormCtrl::onMouseLeave(const GuiEvent &event)
+void GuiFormCtrl::onTouchLeave(const GuiEvent &event)
 {
    setUpdate();
    if(isMouseLocked())
@@ -349,7 +349,7 @@ void GuiFormCtrl::onMouseLeave(const GuiEvent &event)
    mMouseOver = false;
 }
 
-void GuiFormCtrl::onMouseDown(const GuiEvent &event)
+void GuiFormCtrl::onTouchDown(const GuiEvent &event)
 {
    Point2I localClick = globalToLocalCoord(event.mousePoint);
 
@@ -427,7 +427,7 @@ void GuiFormCtrl::onMouseDown(const GuiEvent &event)
 
 }
 
-void GuiFormCtrl::onMouseUp(const GuiEvent &event)
+void GuiFormCtrl::onTouchUp(const GuiEvent &event)
 {
    // Make sure we only get events we ought to be getting...
    if (! mActive)

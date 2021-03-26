@@ -149,7 +149,7 @@ public:
 	const ColorI& getBorderColor(const GuiControlState state); //Returns the correct border color based on the control's state.
 	S32 getPadding(const GuiControlState state); //Returns the padding based on the control's state.
 };
-
+DefineConsoleType(TypeGuiBorderProfile)
 /// A GuiControlProfile is used by every GuiObject and is akin to a
 /// datablock. It is used to control information that does not change
 /// or is unlikely to change during execution of a program. It is also

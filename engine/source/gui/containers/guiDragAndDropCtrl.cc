@@ -61,12 +61,12 @@ void GuiDragAndDropControl::startDragging(Point2I offset)
    mLastTarget=NULL;
 }
 
-void GuiDragAndDropControl::onMouseDown(const GuiEvent& event)
+void GuiDragAndDropControl::onTouchDown(const GuiEvent& event)
 {
    startDragging(event.mousePoint - mBounds.point);
 }
 
-void GuiDragAndDropControl::onMouseDragged(const GuiEvent& event)
+void GuiDragAndDropControl::onTouchDragged(const GuiEvent& event)
 {
    mBounds.point = event.mousePoint - mOffset;
 
@@ -83,7 +83,7 @@ void GuiDragAndDropControl::onMouseDragged(const GuiEvent& event)
    sendDragEvent(dragTarget, "onControlDragged");
 }
 
-void GuiDragAndDropControl::onMouseUp(const GuiEvent& event)
+void GuiDragAndDropControl::onTouchUp(const GuiEvent& event)
 {
    mouseUnlock();
 

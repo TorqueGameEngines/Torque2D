@@ -671,7 +671,7 @@ void GuiEditCtrl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent
        cursor = mMoveCursor;
 }
 
-void GuiEditCtrl::onMouseDown(const GuiEvent &event)
+void GuiEditCtrl::onTouchDown(const GuiEvent &event)
 {
    if (! mActive)
    {
@@ -830,7 +830,7 @@ void GuiEditCtrl::removeSelection(S32 id)
       }
    }
 }
-void GuiEditCtrl::onMouseUp(const GuiEvent &event)
+void GuiEditCtrl::onTouchUp(const GuiEvent &event)
 {
    if (! mActive || !mContentControl || !mCurrentAddSet )
    {
@@ -891,7 +891,7 @@ void GuiEditCtrl::onMouseUp(const GuiEvent &event)
    mMouseDownMode = Selecting;
 }
 
-void GuiEditCtrl::onMouseDragged(const GuiEvent &event)
+void GuiEditCtrl::onTouchDragged(const GuiEvent &event)
 {
    if (! mActive || !mContentControl || !mCurrentAddSet)
    {

@@ -558,7 +558,7 @@ void DbgFileView::onPreRender()
 		Con::executef(2, "DbgSetCursorWatch", "");
 }
 
-void DbgFileView::onMouseDown(const GuiEvent &event)
+void DbgFileView::onTouchDown(const GuiEvent &event)
 {
    if (! mActive)
    {
@@ -624,7 +624,7 @@ void DbgFileView::onMouseDown(const GuiEvent &event)
    }
 }
 
-void DbgFileView::onMouseDragged(const GuiEvent &event)
+void DbgFileView::onTouchDragged(const GuiEvent &event)
 {
    if (mbMouseDragging)
    {
@@ -657,7 +657,7 @@ void DbgFileView::onMouseDragged(const GuiEvent &event)
    }
 }
 
-void DbgFileView::onMouseUp(const GuiEvent &)
+void DbgFileView::onTouchUp(const GuiEvent &)
 {
    //unlock the mouse
    mouseUnlock();

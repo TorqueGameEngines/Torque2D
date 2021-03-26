@@ -131,13 +131,13 @@ class GuiColorPickerCtrl : public GuiControl
    
    /// @name Input Events
    /// @{
-   void onMouseDown(const GuiEvent &);
-   void onMouseUp(const GuiEvent &);
-   void onMouseMove(const GuiEvent &event);
-   void onMouseDragged(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &);
+   void onTouchUp(const GuiEvent &);
+   void onTouchMove(const GuiEvent &event);
+   void onTouchDragged(const GuiEvent &event);
 
-   void onMouseEnter(const GuiEvent &);
-   void onMouseLeave(const GuiEvent &);
+   void onTouchEnter(const GuiEvent &);
+   void onTouchLeave(const GuiEvent &);
    /// @}
 };
 
