@@ -93,6 +93,7 @@ extern void (*m_matF_scale)(F32 *m,const F32* p);
 extern void (*m_matF_normalize)(F32 *m);
 extern F32  (*m_matF_determinant)(const F32 *m);
 extern void (*m_matF_x_matF)(const F32 *a, const F32 *b, F32 *mresult);
+extern void(*m_matF_x_matF_aligned)(const F32 *a, const F32 *b, F32 *mresult);
 // extern void (*m_matF_x_point3F)(const F32 *m, const F32 *p, F32 *presult);
 // extern void (*m_matF_x_vectorF)(const F32 *m, const F32 *v, F32 *vresult);
 extern void (*m_matF_x_point4F)(const F32 *m, const F32 *p, F32 *presult);
