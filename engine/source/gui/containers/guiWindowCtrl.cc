@@ -547,18 +547,6 @@ void GuiWindowCtrl::selectWindow(void)
    setFirstResponder(mFirstResponder);
 }
 
-void GuiWindowCtrl::drawWinRect(const RectI &myRect)
-{
-   Point2I bl = myRect.point;
-   Point2I tr;
-   tr.x = myRect.point.x + myRect.extent.x - 1;
-   tr.y = myRect.point.y + myRect.extent.y - 1;
-   dglDrawRectFill(myRect, mProfile->mFillColor);
-   dglDrawLine(Point2I(bl.x + 1, tr.y), Point2I(bl.x + 1, bl.y), ColorI(255, 255, 255));
-   dglDrawLine(Point2I(bl.x, tr.y + 1), Point2I(tr.x, tr.y + 1), ColorI(255, 255, 255));
-   //dglDrawRect(myRect, ColorI(0, 0, 0)); // Taken out, this is controled via mProfile->mBorder
-}
-
 void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
    if( !mProfile || mProfile->mFont.isNull() || mProfile->mBitmapArrayRects.size() < NumBitmaps )

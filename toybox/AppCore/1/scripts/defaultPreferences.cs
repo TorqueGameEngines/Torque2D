@@ -32,7 +32,7 @@ $pref::iOS::UseMusic            = 0;
 $pref::iOS::UseMoviePlayer      = 0;
 $pref::iOS::UseAutoRotate       = 1;
 $pref::iOS::EnableOrientationRotation = 1;
-$pref::iOS::EnableOtherOrientationRotation = 1;   
+$pref::iOS::EnableOtherOrientationRotation = 1;
 $pref::iOS::StatusBarType       = 0;
 
 /// Audio
@@ -69,3 +69,7 @@ $pref::OpenGL::gammaCorrection = 0.5;
 
 /// Fonts.
 $Gui::fontCacheDirectory = expandPath( "^AppCore/fonts" );
+
+// Gui
+$pref::Gui::noClampTorqueCursorToWindow = 1;
+$pref::Gui::hideCursorWhenTouchEventDetected = 1;

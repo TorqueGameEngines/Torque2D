@@ -95,6 +95,10 @@ GuiCanvas::GuiCanvas()
    mDoubleClickHeight = Input::getDoubleClickHeight();
    mDoubleClickTime = Input::getDoubleClickTime();
 
+   mTouchDetectionSize = 100;
+   mPotentialTouchEvent = false;
+   mHideCursorBecauseOfTouch = false;
+
     /// Background color.
     mBackgroundColor.set( 0.0f, 0.0f, 0.0f, 0.0f );
     mUseBackgroundColor = true;
@@ -275,6 +279,32 @@ void GuiCanvas::processMouseMoveEvent(const MouseMoveEvent *event)
          mMiddleMouseLast = false;
          mRightMouseLast = false;
       }
+
+		//should we try to detect a touch event pretending to be a mouse event?
+		if( Con::getBoolVariable( "$pref::Gui::hideCursorWhenTouchEventDetected", false ))
+		{
+			mPotentialTouchEvent = false;
+			Point2F jump = mPrevMouseMovePosition - cursorPt;
+			if ((mAbs((S32)jump.x) > mTouchDetectionSize) || (mAbs((S32)jump.y) > mTouchDetectionSize))
+			{
+				mPotentialTouchEvent = true;
+				mPotentialMouseEventCount = 0;
+			}
+			else if(mHideCursorBecauseOfTouch && !mMouseButtonDown)
+			{
+				if(mPotentialMouseEventCount > 20) 
+				{
+					//This is our 20th small movement with no click or drag so it must be a mouse!
+					mHideCursorBecauseOfTouch = false;
+					mPotentialMouseEventCount = 0;
+				}
+				else 
+				{
+					mPotentialMouseEventCount++;
+				}
+			}
+			mPrevMouseMovePosition.set(cursorPt.x, cursorPt.y);
+		}
 
         if (mMouseButtonDown)
             rootMouseDragged(mLastEvent);
@@ -475,6 +505,15 @@ bool GuiCanvas::processInputEvent(const InputEvent *event)
                mLastMouseDownTime = curTime;
                mLastEvent.mouseClickCount = mLastMouseClickCount;
 
+			   if(mHideCursorBecauseOfTouch)
+			   {
+					mPotentialMouseEventCount = 0;
+				}
+			   if(mPotentialTouchEvent)
+			   {
+					mHideCursorBecauseOfTouch = true;
+			   }
+
                rootMouseDown(mLastEvent);
             }
             //else button was released
@@ -487,6 +526,7 @@ bool GuiCanvas::processInputEvent(const InputEvent *event)
          }
          else if(event->objInst == KEY_BUTTON1) // right button
          {
+			mHideCursorBecauseOfTouch = false;
             if(event->action == SI_MAKE)
             {
                U32 curTime = Platform::getVirtualMilliseconds();
@@ -517,6 +557,7 @@ bool GuiCanvas::processInputEvent(const InputEvent *event)
          }
          else if(event->objInst == KEY_BUTTON2) // middle button
          {
+			 mHideCursorBecauseOfTouch = false;
             if(event->action == SI_MAKE)
             {
                U32 curTime = Platform::getVirtualMilliseconds();
@@ -1317,7 +1358,7 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
       //   helpCtrl->render(srf);
       //}
 
-      if (cursorON && mouseCursor && mShowCursor)
+      if (cursorON && mouseCursor && mShowCursor && !mHideCursorBecauseOfTouch)
       {
          Point2I pos((S32)cursorPt.x, (S32)cursorPt.y);
          Point2I spot = mouseCursor->getHotSpot();

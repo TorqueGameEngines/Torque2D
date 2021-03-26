@@ -1174,6 +1174,9 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
    StringBuffer textBuffer;
    Point2I drawPoint = drawRect.point;
 
+   RectI old = dglGetClipRect();
+   dglSetClipRect(drawRect);
+
    // Just a little sanity.
    if(mCursorPos > (S32)mTextBuffer.length()) 
       mCursorPos = (S32)mTextBuffer.length();
@@ -1359,6 +1362,8 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
    //draw the cursor
    if (currentState == SelectedState && mCursorOn )
       dglDrawLine( cursorStart, cursorEnd, mProfile->mCursorColor );
+
+   dglSetClipRect(old);
 }
 
 bool GuiTextEditCtrl::hasText()
