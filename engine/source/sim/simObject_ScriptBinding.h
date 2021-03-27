@@ -539,6 +539,18 @@ ConsoleMethodWithDocs(SimObject, setFieldValue, ConsoleBool, 4, 4, (fieldName,va
 
 }
 
+ConsoleMethodWithDocs(SimObject, setEditFieldValue, ConsoleBool, 4, 4, (fieldName, value))
+{
+   const char *fieldName = StringTable->insert(argv[2]);
+   const char *value = argv[3];
+   object->inspectPreApply();
+   object->setDataField(fieldName, NULL, value);
+   object->inspectPostApply();
+
+   return true;
+
+}
+
 /*! return the number of dynamic ("add-on") fields.
 	@return the number of dynamic fields
 

@@ -34,6 +34,25 @@
 #endif
 
 //////////////////////////////////////////////////////////////////////////
+// TypeName
+//////////////////////////////////////////////////////////////////////////
+ConsoleType(string, TypeName, sizeof(const char*), "")
+
+ConsoleGetType(TypeName)
+{
+   return *((const char **)(dptr));
+}
+
+ConsoleSetType(TypeName)
+{
+   if (argc == 1)
+      *((const char **)dptr) = StringTable->insert(argv[0]);
+   else
+      Con::printf("(TypeString) Cannot set multiple args to a single string.");
+}
+
+
+//////////////////////////////////////////////////////////////////////////
 // TypeString
 //////////////////////////////////////////////////////////////////////////
 ConsoleType( string, TypeString, sizeof(const char*), "" )

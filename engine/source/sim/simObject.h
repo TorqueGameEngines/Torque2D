@@ -251,8 +251,27 @@ private:
         Selected  = BIT(4),   ///< This object has been marked as selected. (in editor)
         Expanded  = BIT(5),   ///< This object has been marked as expanded. (in editor)
         ModStaticFields  = BIT(6),    ///< The object allows you to read/modify static fields
-        ModDynamicFields = BIT(7)     ///< The object allows you to read/modify dynamic fields
+        ModDynamicFields = BIT(7),    ///< The object allows you to read/modify dynamic fields
+        Hidden = BIT(8),   ///< Object is hidden in editors.
+        Locked = BIT(9)   ///< Object is locked in editors.
     };
+
+    static const char* _getHidden(void* object, const char* data)
+    {
+       if (static_cast<SimObject*>(object)->isHidden()) return "1"; return "0";
+    }
+    static const char* _getLocked(void* object, const char* data)
+    {
+       if (static_cast<SimObject*>(object)->isLocked()) return "1"; return "0";
+    }
+    static bool _setHidden(void* object, const char* data)
+    {
+       static_cast<SimObject*>(object)->setHidden(dAtob(data)); return false;
+    }
+    static bool _setLocked(void* object, const char* data)
+    {
+       static_cast<SimObject*>(object)->setLocked(dAtob(data)); return false;
+    }
 
 public:
     /// @name Notification
@@ -339,13 +358,14 @@ protected:
 
     static bool setClass(void* obj, const char* data)                                { static_cast<SimObject*>(obj)->setClassNamespace(data); return false; };
     static bool setSuperClass(void* obj, const char* data)                           { static_cast<SimObject*>(obj)->setSuperClassNamespace(data); return false; };
+    static bool writeObjectName(void* obj, StringTableEntry pFieldName)              { SimObject* simObject = static_cast<SimObject*>(obj); return simObject->objectName != NULL && simObject->objectName != StringTable->EmptyString; }
     static bool writeCanSaveDynamicFields( void* obj, StringTableEntry pFieldName )  { return static_cast<SimObject*>(obj)->mCanSaveFieldDictionary == false; }
     static bool writeInternalName( void* obj, StringTableEntry pFieldName )          { SimObject* simObject = static_cast<SimObject*>(obj); return simObject->mInternalName != NULL && simObject->mInternalName != StringTable->EmptyString; }
     static bool setParentGroup(void* obj, const char* data);
     static bool writeParentGroup( void* obj, StringTableEntry pFieldName )           { return static_cast<SimObject*>(obj)->mGroup != NULL; }
     static bool writeSuperclass( void* obj, StringTableEntry pFieldName )            { SimObject* simObject = static_cast<SimObject*>(obj); return simObject->mSuperClassName != NULL && simObject->mSuperClassName != StringTable->EmptyString; }
     static bool writeClass( void* obj, StringTableEntry pFieldName )                 { SimObject* simObject = static_cast<SimObject*>(obj); return simObject->mClassName != NULL && simObject->mClassName != StringTable->EmptyString; }
-
+    static bool setProtectedName(void * obj, const char * data);
     // Accessors
     public:
     StringTableEntry getClassNamespace() const { return mClassName; };
@@ -374,6 +394,7 @@ public:
     /// @param   slotName    Field to access.
     /// @param   array       String containing index into array
     ///                      (if field is an array); if NULL, it is ignored.
+    static bool disableNameChanging;
     const char *getDataField(StringTableEntry slotName, const char *array);
 
     /// Set the value of a field on the object.
@@ -601,9 +622,9 @@ public:
     bool isProperlyAdded() const { return mFlags.test(Added); }
     bool isDeleted() const { return mFlags.test(Deleted); }
     bool isRemoved() const { return mFlags.test(Deleted | Removed); }
-    bool isLocked();
+    bool isLocked() const { return mFlags.test(Locked); }
     void setLocked( bool b );
-    bool isHidden();
+    bool isHidden()const { return mFlags.test(Hidden); }
     void setHidden(bool b);
 
     inline void setProgenitorFile( const char* pFile ) { mProgenitorFile = StringTable->insert( pFile ); }
@@ -730,6 +751,7 @@ public:
     virtual void            dumpClassHierarchy();
 
     static void initPersistFields();
+    
     SimObject* clone( const bool copyDynamicFields );
     virtual void copyTo(SimObject* object);
 

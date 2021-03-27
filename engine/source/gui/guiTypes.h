@@ -226,6 +226,7 @@ public:
    ColorI mCursorColor;                            ///< Color for the blinking cursor in text fields (for example)
 
    Point2I mTextOffset;                            ///< Text offset for the control
+   StringTableEntry  mCategory;                    ///< Category for control in editors.
 
    // imageAsset members
    StringTableEntry mImageAssetID;
@@ -253,6 +254,10 @@ public:
    ~GuiControlProfile();
    static void initPersistFields();
    bool onAdd();
+
+   GuiControlProfile * getChildrenProfile();
+
+   void setChildrenProfile(GuiControlProfile * prof);
 
    /// This method creates an array of bitmaps from one single bitmap with
    /// seperator color. The seperator color is whatever color is in pixel 0,0

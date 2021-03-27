@@ -71,6 +71,28 @@ function SetColorAlpha(%color, %newAlpha)
 
 //-----------------------------------------------------------------------------
 
+if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
+{
+    // fill color
+    fillColor = "0 0 0 0";
+
+    // font
+    fontType = $platformFontType;
+    fontSize = $platformFontSize;
+    fontColor = "255 255 255 255";
+	align = center;
+	vAlign = middle;
+
+	cursorColor = "0 0 0 255";
+
+	borderDefault = GuiDefaultBorderProfile;
+	borderTop = GuiDefaultBorderProfile;
+	borderLeft = GuiDefaultBorderProfile;
+	borderRight = GuiDefaultBorderProfile;
+	borderBottom = GuiDefaultBorderProfile;
+	category = "default";
+};
+
 new GuiCursor(DefaultCursor)
 {
     hotSpot = "3 3";
@@ -162,27 +184,6 @@ if (!isObject(GuiDarkBorderProfile)) new GuiBorderProfile (GuiDarkBorderProfile 
 	borderColorNA = "0 0 0 50";
 };
 
-if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
-{
-    // fill color
-    fillColor = "0 0 0 0";
-
-    // font
-    fontType = $platformFontType;
-    fontSize = $platformFontSize;
-    fontColor = "255 255 255 255";
-	align = center;
-	vAlign = middle;
-
-	cursorColor = "0 0 0 255";
-
-	borderDefault = GuiDefaultBorderProfile;
-	borderTop = GuiDefaultBorderProfile;
-	borderLeft = GuiDefaultBorderProfile;
-	borderRight = GuiDefaultBorderProfile;
-	borderBottom = GuiDefaultBorderProfile;
-};
-
 if(!isObject(GuiPanelProfile)) new GuiControlProfile (GuiPanelProfile : GuiDefaultProfile)
 {
 	fillColor = $color1;
@@ -194,6 +195,7 @@ if(!isObject(GuiPanelProfile)) new GuiControlProfile (GuiPanelProfile : GuiDefau
 	borderBottom = GuiBrightBorderProfile;
 	borderLeft = GuiBrightBorderProfile;
 	borderRight = GuiBrightBorderProfile;
+	category = "defaultPanel";
 };
 
 if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiDefaultProfile)
@@ -206,6 +208,7 @@ if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiD
 	align = left;
 	tab = true;
 	canKeyFocus = true;
+	category = "defaultListBox";
 };
 
 if(!isObject(GuiWindowProfile)) new GuiControlProfile (GuiWindowProfile : GuiDefaultProfile)
@@ -217,11 +220,45 @@ if(!isObject(GuiWindowProfile)) new GuiControlProfile (GuiWindowProfile : GuiDef
    bitmap = "./images/window";
    fillColor = "37 36 35 255";
    fontColor = "white";
+   category = "defaultWindow";
 };
 
 if(!isObject(GuiTransparentProfile)) new GuiControlProfile (GuiTransparentProfile : GuiDefaultProfile);
 if(!isObject(GuiGridProfile)) new GuiControlProfile (GuiGridProfile : GuiDefaultProfile);
 if(!isObject(GuiChainProfile)) new GuiControlProfile (GuiChainProfile : GuiDefaultProfile);
+if(!isObject(GuiTabBookProfile)) new GuiControlProfile (GuiTabBookProfile : GuiDefaultProfile)
+{
+	fillColor = SetColorAlpha($color1, 100);
+	category = "defaultTabBook";
+};
+if(!isObject(GuiTabProfile)) new GuiControlProfile (GuiTabProfile : GuiDefaultProfile)
+{
+	fontColor = "255 255 255 255";
+    fontColorHL = "232 240 248 255";
+    fontColorSL= "255 255 255 255";
+    fontColorNA = "0 0 0 255";
+	fillColor = $color1;
+	fillColorHL = AdjustColorValue($color1, 10);
+	fillColorSL = AdjustColorValue($color1, 15);
+	fillColorNA = SetColorAlpha($color1, 100);
+	borderDefault = GuiDarkBorderProfile;
+	borderTop = GuiBrightBorderProfile;
+	borderBottom = GuiBrightBorderProfile;
+	borderLeft = GuiBrightBorderProfile;
+	borderRight = GuiBrightBorderProfile;
+	align = Center;
+	//bitmap = "./images/tab";
+	category = "defaultTab";
+};
+if(!isObject(GuiTabPageProfile)) new GuiControlProfile (GuiTabPageProfile : GuiDefaultProfile)
+{
+	fillColor = $color1;
+	fillColorHL = AdjustColorValue($color1, 10);
+	fillColorSL = AdjustColorValue($color1, 15);
+	fillColorNA = SetColorAlpha($color1, 100);
+	category = "defaultTabPage";
+};
+
 
 if(!isObject(GuiSpriteProfile)) new GuiControlProfile (GuiSpriteProfile : GuiDefaultProfile)
 {
