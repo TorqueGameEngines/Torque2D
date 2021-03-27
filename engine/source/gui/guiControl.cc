@@ -482,6 +482,14 @@ void GuiControl::onRender(Point2I offset, const RectI &updateRect)
 
 RectI GuiControl::applyMargins(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
 {
+   if (!profile)
+   {
+      SimObject * obj = Sim::findObject("GuiDefaultProfile");
+      if (obj)
+      {
+         profile = dynamic_cast<GuiControlProfile*>(obj);
+      }
+   }
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();
@@ -498,6 +506,14 @@ RectI GuiControl::applyMargins(Point2I offset, Point2I extent, GuiControlState c
 
 RectI GuiControl::applyBorders(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
 {
+   if (!profile)
+   {
+      SimObject * obj = Sim::findObject("GuiDefaultProfile");
+      if (obj)
+      {
+         profile = dynamic_cast<GuiControlProfile*>(obj);
+      }
+   }
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();
@@ -514,6 +530,14 @@ RectI GuiControl::applyBorders(Point2I offset, Point2I extent, GuiControlState c
 
 RectI GuiControl::applyPadding(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
 {
+   if (!profile)
+   {
+      SimObject * obj = Sim::findObject("GuiDefaultProfile");
+      if (obj)
+      {
+         profile = dynamic_cast<GuiControlProfile*>(obj);
+      }
+   }
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();
@@ -530,6 +554,14 @@ RectI GuiControl::applyPadding(Point2I offset, Point2I extent, GuiControlState c
 
 RectI GuiControl::getInnerRect(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
 {
+   if (!profile)
+   {
+      SimObject * obj = Sim::findObject("GuiDefaultProfile");
+      if (obj)
+      {
+         profile = dynamic_cast<GuiControlProfile*>(obj);
+      }
+   }
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();
@@ -546,6 +578,14 @@ RectI GuiControl::getInnerRect(Point2I offset, Point2I extent, GuiControlState c
 
 Point2I GuiControl::getOuterExtent(Point2I innerExtent, GuiControlState currentState, GuiControlProfile *profile)
 {
+   if (!profile)
+   {
+      SimObject * obj = Sim::findObject("GuiDefaultProfile");
+      if (obj)
+      {
+         profile = dynamic_cast<GuiControlProfile*>(obj);
+      }
+   }
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();
@@ -740,9 +780,11 @@ void GuiControl::renderChildControls(Point2I offset, RectI content, const RectI 
 
 			 if (childClip.intersect(clipRect))
 			 {
+				RectI old = dglGetClipRect();
 				dglSetClipRect(clipRect);
 				glDisable(GL_CULL_FACE);
 				ctrl->onRender(childPosition, RectI(childPosition, ctrl->getExtent()));
+				dglSetClipRect(old);
 			 }
 		  }
 		  size_cpy = objectList.size(); //	CHRIS: i know its wierd but the size of the list changes sometimes during execution of this loop
@@ -1670,7 +1712,10 @@ void GuiControl::renderText(Point2I offset, Point2I extent, const char *text, Gu
 		rotation = -90.0f;
 	}
 
+	RectI old = dglGetClipRect();
+	dglSetClipRect(RectI(offset, extent));
 	dglDrawText( font, start + offset + profile->mTextOffset, text, profile->mFontColors, 9, rotation );
+	dglSetClipRect(old);
 }
 
 void GuiControl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent)

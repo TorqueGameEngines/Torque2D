@@ -173,6 +173,34 @@ S32 GuiBorderProfile::getPadding(const GuiControlState state)
 	return getMax(mPadding[getStateIndex(state)], 0);
 }
 
+ConsoleType(GuiProfile, TypeGuiBorderProfile, sizeof(GuiBorderProfile*), "")
+
+ConsoleSetType(TypeGuiBorderProfile)
+{
+   GuiBorderProfile *profile = NULL;
+   if (argc == 1)
+      Sim::findObject(argv[0], profile);
+
+   AssertWarn(profile != NULL, avar("GuiBorderProfile: requested gui profile (%s) does not exist.", argv[0]));
+   if (!profile)
+      profile = dynamic_cast<GuiBorderProfile*>(Sim::findObject("GuiDefaultBorderProfile"));
+
+   AssertFatal(profile != NULL, avar("GuiBorderProfile: unable to find specified profile (%s) and GuiDefaultProfile does not exist!", argv[0]));
+
+   GuiBorderProfile **obj = (GuiBorderProfile **)dptr;
+   if ((*obj) == profile)
+      return;
+}
+
+ConsoleGetType(TypeGuiBorderProfile)
+{
+   static char returnBuffer[256];
+
+   GuiBorderProfile **obj = (GuiBorderProfile**)dptr;
+   dSprintf(returnBuffer, sizeof(returnBuffer), "%s", *obj ? (*obj)->getName() ? (*obj)->getName() : (*obj)->getIdString() : "");
+   return returnBuffer;
+}
+
 //------------------------------------------------------------------------------
 IMPLEMENT_CONOBJECT(GuiControlProfile);
 
@@ -406,7 +434,7 @@ S32 GuiControlProfile::constructBitmapArray()
 
 void GuiControlProfile::incRefCount()
 {
-	if(!mRefCount++)
+	if(!mRefCount)
 	{
 		sFontCacheDirectory = Con::getVariable("$GUI::fontCacheDirectory");
 
@@ -429,11 +457,17 @@ void GuiControlProfile::incRefCount()
 			mImageAsset = mImageAssetID;
 		}
 	}
+
+   mRefCount++;
+
 }
 
 void GuiControlProfile::decRefCount()
 {
-   AssertFatal(mRefCount, "GuiControlProfile::decRefCount: zero ref count");
+   // Not sure why this was being tripped when
+   // switching profiles in guieditor, but...
+
+   //AssertFatal(mRefCount, "GuiControlProfile::decRefCount: zero ref count");
    if(!mRefCount)
 	  return;
 

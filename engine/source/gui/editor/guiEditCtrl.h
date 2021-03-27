@@ -103,9 +103,9 @@ class GuiEditCtrl : public GuiControl
    const GuiControl *getAddSet() const { return mCurrentAddSet; }; //JDD
 
    bool onKeyDown(const GuiEvent &event);
-   void onMouseDown(const GuiEvent &event);
-   void onMouseUp(const GuiEvent &event);
-   void onMouseDragged(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &event);
+   void onTouchUp(const GuiEvent &event);
+   void onTouchDragged(const GuiEvent &event);
    void onRightMouseDown(const GuiEvent &event);
 
    virtual bool onAdd();

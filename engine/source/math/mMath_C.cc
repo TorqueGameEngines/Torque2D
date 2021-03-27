@@ -786,6 +786,7 @@ void (*m_matF_scale)(F32 *m,const F32* p) = m_matF_scale_C;
 void (*m_matF_normalize)(F32 *m) = m_matF_normalize_C;
 F32  (*m_matF_determinant)(const F32 *m) = m_matF_determinant_C;
 void (*m_matF_x_matF)(const F32 *a, const F32 *b, F32 *mresult)    = default_matF_x_matF_C;
+void(*m_matF_x_matF_aligned)(const F32 *a, const F32 *b, F32 *mresult) = default_matF_x_matF_C;
 // void (*m_matF_x_point3F)(const F32 *m, const F32 *p, F32 *presult) = m_matF_x_point3F_C;
 // void (*m_matF_x_vectorF)(const F32 *m, const F32 *v, F32 *vresult) = m_matF_x_vectorF_C;
 void (*m_matF_x_point4F)(const F32 *m, const F32 *p, F32 *presult) = m_matF_x_point4F_C;

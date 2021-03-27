@@ -1,0 +1,10 @@
+<ModuleDefinition
+    ModuleId="GuiEditorToy"
+    VersionId="1"
+	Enabled="1"
+    Description="Gui Editor for T2D MIT."
+    Type="toy"
+    ToyCategoryIndex="2"
+    ScriptFile="main.cs"
+    CreateFunction="create"
+    DestroyFunction="destroy"/>

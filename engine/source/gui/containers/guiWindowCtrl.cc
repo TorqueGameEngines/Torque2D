@@ -183,7 +183,7 @@ void GuiWindowCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
    PositionButtons();
 }
 
-void GuiWindowCtrl::onMouseDown(const GuiEvent &event)
+void GuiWindowCtrl::onTouchDown(const GuiEvent &event)
 {
    setUpdate();
 
@@ -253,7 +253,7 @@ void GuiWindowCtrl::onMouseDown(const GuiEvent &event)
    }
 }
 
-void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
+void GuiWindowCtrl::onTouchDragged(const GuiEvent &event)
 {
    GuiControl *parent = getParent();
    GuiCanvas *root = getRoot();
@@ -298,7 +298,7 @@ void GuiWindowCtrl::onMouseDragged(const GuiEvent &event)
    }
 }
 
-void GuiWindowCtrl::onMouseUp(const GuiEvent &event)
+void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
 {
    bool closing = mPressClose;
    bool maximizing = mPressMaximize;
@@ -545,18 +545,6 @@ void GuiWindowCtrl::selectWindow(void)
 
    //also set the first responder to be the one within this window
    setFirstResponder(mFirstResponder);
-}
-
-void GuiWindowCtrl::drawWinRect(const RectI &myRect)
-{
-   Point2I bl = myRect.point;
-   Point2I tr;
-   tr.x = myRect.point.x + myRect.extent.x - 1;
-   tr.y = myRect.point.y + myRect.extent.y - 1;
-   dglDrawRectFill(myRect, mProfile->mFillColor);
-   dglDrawLine(Point2I(bl.x + 1, tr.y), Point2I(bl.x + 1, bl.y), ColorI(255, 255, 255));
-   dglDrawLine(Point2I(bl.x, tr.y + 1), Point2I(tr.x, tr.y + 1), ColorI(255, 255, 255));
-   //dglDrawRect(myRect, ColorI(0, 0, 0)); // Taken out, this is controled via mProfile->mBorder
 }
 
 void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)

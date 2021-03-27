@@ -28,11 +28,11 @@ function createSandboxWindow()
         // Create the scene window.
         new SceneWindow(SandboxWindow);
 
-        // Set profile.        
+        // Set profile.
         SandboxWindow.Profile = SandboxWindowProfile;
-        
+
         // Push the window.
-        Canvas.setContent( SandboxWindow );                     
+        Canvas.setContent( SandboxWindow );
     }
 
     // Set camera to a canonical state.
@@ -58,7 +58,7 @@ function destroySandboxWindow()
     // Finish if no window available.
     if ( !isObject(SandboxWindow) )
         return;
-    
+
     // Delete the window.
     SandboxWindow.delete();
 }
@@ -70,19 +70,19 @@ function createSandboxScene()
     // Destroy the scene if it already exists.
     if ( isObject(SandboxScene) )
         destroySandboxScene();
-    
+
     // Create the scene.
     new Scene(SandboxScene);
-            
+
     // Sanity!
     if ( !isObject(SandboxWindow) )
     {
         error( "Sandbox: Created scene but no window available." );
         return;
     }
-        
+
     // Set window to scene.
-    setSceneToWindow();    
+    setSceneToWindow();
 }
 
 //-----------------------------------------------------------------------------
@@ -107,7 +107,7 @@ function setSceneToWindow()
         error( "Cannot set Sandbox Scene to Window as the Scene is invalid." );
         return;
     }
-    
+
      // Set scene to window.
     SandboxWindow.setScene( SandboxScene );
 
@@ -125,12 +125,12 @@ function setSceneToWindow()
     SandboxWindow.setCameraSize( 100, 75 );
     SandboxWindow.setCameraZoom( 1 );
     SandboxWindow.setCameraAngle( 0 );
-    
+
     // Update the toolbox options.
     updateToolboxOptions();
-    
+
     // reset the sandbox manipulation modes.
-    Sandbox.resetManipulationModes();       
+    Sandbox.resetManipulationModes();
 }
 
 //-----------------------------------------------------------------------------
@@ -143,13 +143,22 @@ function setCustomScene( %scene )
         error( "Cannot set Sandbox to use an invalid Scene." );
         return;
     }
-   
-    // Destroy the existing scene.  
+
+    // Destroy the existing scene.
     destroySandboxScene();
 
     // The Sandbox needs the scene to be named this.
-    %scene.setName( "SandboxScene" );    
-    
+    %scene.setName( "SandboxScene" );
+
     // Set the scene to the window.
     setSceneToWindow();
+}
+
+function SceneWindow::onExtentChange(%this)
+{
+    %extent = Canvas.extent;
+    %aspect = %extent.x / %extent.y;
+    %cam = SandboxWindow.getCameraSize();
+    %cam.x = %cam.y * %aspect;
+    %this.setCameraSize(%cam);
 }

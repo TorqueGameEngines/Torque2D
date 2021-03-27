@@ -88,8 +88,8 @@ public:
    virtual void childResized(GuiControl *child);
 
    // Mouse Events
-   virtual void onMouseDown( const GuiEvent &event );
-   virtual void onMouseUp( const GuiEvent &event );
+   virtual void onTouchDown( const GuiEvent &event );
+   virtual void onTouchUp( const GuiEvent &event );
 
    // Sizing Helpers
    virtual void calculateHeights();

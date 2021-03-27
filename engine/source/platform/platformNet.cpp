@@ -35,7 +35,7 @@
 //#define TORQUE_DEBUG_LOOKUPS
 
 
-#if defined (TORQUE_OS_WIN32)
+#if defined (TORQUE_OS_WIN)
 #define TORQUE_USE_WINSOCK
 #include <errno.h>
 #include <ws2tcpip.h>

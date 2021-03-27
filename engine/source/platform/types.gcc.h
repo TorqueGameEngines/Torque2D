@@ -55,7 +55,12 @@ typedef unsigned long long  U64;
 
 //--------------------------------------
 // Identify the Operating System
-#if defined(__WIN32__) || defined(_WIN32)
+#if defined(_WIN64)
+#  define TORQUE_OS_STRING "Win64"
+#  define TORQUE_OS_WIN
+#  define TORQUE_OS_WIN64
+#  include "platform/types.win32.h"
+#elif defined(__WIN32__) || defined(_WIN32)
 #  define TORQUE_OS_STRING "Win32"
 #  define TORQUE_OS_WIN32
 #  define TORQUE_SUPPORTS_NASM

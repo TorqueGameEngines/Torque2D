@@ -115,12 +115,12 @@ void GuiRolloutCtrl::removeObject( SimObject *obj )
 //////////////////////////////////////////////////////////////////////////
 // Mouse Events
 //////////////////////////////////////////////////////////////////////////
-void GuiRolloutCtrl::onMouseDown( const GuiEvent &event )
+void GuiRolloutCtrl::onTouchDown( const GuiEvent &event )
 {
    mouseLock();
 }
 
-void GuiRolloutCtrl::onMouseUp( const GuiEvent &event )
+void GuiRolloutCtrl::onTouchUp( const GuiEvent &event )
 {
    Point2I localPoint = globalToLocalCoord( event.mousePoint );
    if( mCanCollapse && mHeader.pointInRect( localPoint ) && !mIsAnimating && isMouseLocked() )
