@@ -278,8 +278,10 @@ LOCAL_SRC_FILES :=  ../../../../../../lib/ljpeg/jcapimin.c \
 					../../../../../../source/Box2D/Collision/Shapes/b2PolygonShape.cpp \
 					../../../../../../source/Box2D/Common/b2BlockAllocator.cpp \
 					../../../../../../source/Box2D/Common/b2Draw.cpp \
+					../../../../../../source/Box2D/Common/b2FreeList.cpp \
 					../../../../../../source/Box2D/Common/b2Math.cpp \
 					../../../../../../source/Box2D/Common/b2Settings.cpp \
+					../../../../../../source/Box2D/Common/b2TrackedBlock.cpp \
 					../../../../../../source/Box2D/Common/b2StackAllocator.cpp \
 					../../../../../../source/Box2D/Common/b2Timer.cpp \
 					../../../../../../source/Box2D/Dynamics/b2Body.cpp \
@@ -309,6 +311,11 @@ LOCAL_SRC_FILES :=  ../../../../../../lib/ljpeg/jcapimin.c \
 					../../../../../../source/Box2D/Dynamics/Joints/b2RopeJoint.cpp \
 					../../../../../../source/Box2D/Dynamics/Joints/b2WeldJoint.cpp \
 					../../../../../../source/Box2D/Dynamics/Joints/b2WheelJoint.cpp \
+					../../../../../../source/Box2D/Particle/b2Particle.cpp \
+					../../../../../../source/Box2D/Particle/b2ParticleAssembly.cpp \
+					../../../../../../source/Box2D/Particle/b2ParticleGroup.cpp \
+					../../../../../../source/Box2D/Particle/b2ParticleSystem.cpp \
+					../../../../../../source/Box2D/Particle/b2VoronoiDiagram.cpp \
 					../../../../../../source/Box2D/Rope/b2Rope.cpp \
 					../../../../../../source/collection/bitTables.cc \
 					../../../../../../source/collection/hashTable.cc \
