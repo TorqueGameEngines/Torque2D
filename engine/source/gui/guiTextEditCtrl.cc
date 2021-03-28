@@ -1237,199 +1237,203 @@ void GuiTextEditCtrl::onPreRender()
 
 void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentState )
 {
-   StringBuffer textBuffer;
-   Point2I drawPoint = drawRect.point;
-
    RectI old = dglGetClipRect();
-   dglSetClipRect(drawRect);
-
-   // Just a little sanity.
-   if(mCursorPos > (S32)mTextBuffer.length()) 
-      mCursorPos = (S32)mTextBuffer.length();
-   if(mCursorPos < 0)
-       mCursorPos = 0;
-
-   // Apply password masking (make the masking char optional perhaps?)
-   if(mPasswordText)
+   RectI clipRect = RectI(drawRect.point, drawRect.extent);
+   if (clipRect.intersect(old))
    {
-      for(U32 i = 0; i<mTextBuffer.length(); i++)
-         textBuffer.append(mPasswordMask);
-   }
-   else
-   {
-      // Or else just copy it over.
-      textBuffer.set(&mTextBuffer);
-   }
+	   dglSetClipRect(clipRect);
 
-   // Center vertically:
-   drawPoint.y += ( ( drawRect.extent.y - mFont->getHeight() ) / 2 );
+	   // Just a little sanity.
+	   if(mCursorPos > (S32)mTextBuffer.length()) 
+		  mCursorPos = (S32)mTextBuffer.length();
+	   if(mCursorPos < 0)
+		   mCursorPos = 0;
 
-   // Align horizontally:
+	   StringBuffer textBuffer;
+	   Point2I drawPoint = drawRect.point;
+
+	   // Apply password masking (make the masking char optional perhaps?)
+	   if(mPasswordText)
+	   {
+		  for(U32 i = 0; i<mTextBuffer.length(); i++)
+			 textBuffer.append(mPasswordMask);
+	   }
+	   else
+	   {
+		  // Or else just copy it over.
+		  textBuffer.set(&mTextBuffer);
+	   }
+
+	   // Center vertically:
+	   drawPoint.y += ( ( drawRect.extent.y - mFont->getHeight() ) / 2 );
+
+	   // Align horizontally:
    
-   S32 textWidth = mFont->getStrNWidth(textBuffer.getPtr(), textBuffer.length());
+	   S32 textWidth = mFont->getStrNWidth(textBuffer.getPtr(), textBuffer.length());
 
-   if ( drawRect.extent.x > textWidth )
-   {
-      switch( mProfile->mAlignment )
-      {
-      case GuiControlProfile::RightAlign:
-         drawPoint.x += ( drawRect.extent.x - textWidth );
-         break;
-      case GuiControlProfile::CenterAlign:
-         drawPoint.x += ( ( drawRect.extent.x - textWidth ) / 2 );
-         break;
-      }
-   }
+	   if ( drawRect.extent.x > textWidth )
+	   {
+		  switch( mProfile->mAlignment )
+		  {
+		  case GuiControlProfile::RightAlign:
+			 drawPoint.x += ( drawRect.extent.x - textWidth );
+			 break;
+		  case GuiControlProfile::CenterAlign:
+			 drawPoint.x += ( ( drawRect.extent.x - textWidth ) / 2 );
+			 break;
+		  }
+	   }
 
-   ColorI fontColor = mActive ? mProfile->mFontColor : mProfile->mFontColorNA;
+	   ColorI fontColor = mActive ? mProfile->mFontColor : mProfile->mFontColorNA;
 
-   // now draw the text
-   Point2I cursorStart, cursorEnd;
-   mTextOffset = drawPoint;
-   if ( mTextOffsetReset )
-   {
-      mTextOffset.x = drawPoint.x;
-      mTextOffsetReset = false;
-   }
+	   // now draw the text
+	   Point2I cursorStart, cursorEnd;
+	   mTextOffset = drawPoint;
+	   if ( mTextOffsetReset )
+	   {
+		  mTextOffset.x = drawPoint.x;
+		  mTextOffsetReset = false;
+	   }
 
-   if ( drawRect.extent.x > textWidth )
-      mTextOffset.x = drawPoint.x;
-   else
-   {
-      // Alignment affects large text
-      if ( mProfile->mAlignment == GuiControlProfile::RightAlign
-         || mProfile->mAlignment == GuiControlProfile::CenterAlign )
-      {
-         if ( mTextOffset.x + textWidth < (drawRect.point.x + drawRect.extent.x))
-            mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - textWidth;
-      }
-   }
+	   if ( drawRect.extent.x > textWidth )
+		  mTextOffset.x = drawPoint.x;
+	   else
+	   {
+		  // Alignment affects large text
+		  if ( mProfile->mAlignment == GuiControlProfile::RightAlign
+			 || mProfile->mAlignment == GuiControlProfile::CenterAlign )
+		  {
+			 if ( mTextOffset.x + textWidth < (drawRect.point.x + drawRect.extent.x))
+				mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - textWidth;
+		  }
+	   }
 
-   // calculate the cursor
-   if ( currentState == SelectedState )
-   {
-      // Where in the string are we?
-      S32 cursorOffset=0, charWidth=0;
-      UTF16 tempChar = mTextBuffer.getChar(mCursorPos);
+	   // calculate the cursor
+	   if ( currentState == SelectedState )
+	   {
+		  // Where in the string are we?
+		  S32 cursorOffset=0, charWidth=0;
+		  UTF16 tempChar = mTextBuffer.getChar(mCursorPos);
 
-      // Alright, we want to terminate things momentarily.
-      if(mCursorPos > 0)
-      {
-         cursorOffset = mFont->getStrNWidth(textBuffer.getPtr(), mCursorPos);
-      }
-      else
-         cursorOffset = 0;
+		  // Alright, we want to terminate things momentarily.
+		  if(mCursorPos > 0)
+		  {
+			 cursorOffset = mFont->getStrNWidth(textBuffer.getPtr(), mCursorPos);
+		  }
+		  else
+			 cursorOffset = 0;
 
-      if ( tempChar )
-         charWidth = mFont->getCharWidth( tempChar );
-      else
-         charWidth = 0;
+		  if ( tempChar )
+			 charWidth = mFont->getCharWidth( tempChar );
+		  else
+			 charWidth = 0;
 
-      if( mTextOffset.x + cursorOffset + charWidth >= (drawRect.point.x + drawRect.extent.x))
-      {
-         // Cursor somewhere beyond the textcontrol,
-         // skip forward roughly 25% of the total width (if possible)
-         S32 skipForward = drawRect.extent.x / 4;
+		  if( mTextOffset.x + cursorOffset + charWidth >= (drawRect.point.x + drawRect.extent.x))
+		  {
+			 // Cursor somewhere beyond the textcontrol,
+			 // skip forward roughly 25% of the total width (if possible)
+			 S32 skipForward = drawRect.extent.x / 4;
 
-         if ( cursorOffset + skipForward > textWidth )
-            mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - textWidth;
-         else
-            mTextOffset.x -= skipForward;
-      }
-      else if( mTextOffset.x + cursorOffset < drawRect.point.x)
-      {
-         // Cursor somewhere before the textcontrol
-         // skip backward roughly 25% of the total width (if possible)
-         S32 skipBackward = drawRect.extent.x / 4;
+			 if ( cursorOffset + skipForward > textWidth )
+				mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - textWidth;
+			 else
+				mTextOffset.x -= skipForward;
+		  }
+		  else if( mTextOffset.x + cursorOffset < drawRect.point.x)
+		  {
+			 // Cursor somewhere before the textcontrol
+			 // skip backward roughly 25% of the total width (if possible)
+			 S32 skipBackward = drawRect.extent.x / 4;
 
-         if ( cursorOffset - skipBackward < 0 )
-            mTextOffset.x = drawRect.point.x;
-         else
-            mTextOffset.x += skipBackward;
-      }
-      cursorStart.x = mTextOffset.x + cursorOffset;
-      cursorEnd.x = cursorStart.x;
+			 if ( cursorOffset - skipBackward < 0 )
+				mTextOffset.x = drawRect.point.x;
+			 else
+				mTextOffset.x += skipBackward;
+		  }
+		  cursorStart.x = mTextOffset.x + cursorOffset;
+		  cursorEnd.x = cursorStart.x;
 
-      S32 cursorHeight = mFont->getHeight();
-      if ( cursorHeight < drawRect.extent.y )
-      {
-         cursorStart.y = drawPoint.y;
-         cursorEnd.y = cursorStart.y + cursorHeight;
-      }
-      else
-      {
-         cursorStart.y = drawRect.point.y;
-         cursorEnd.y = cursorStart.y + drawRect.extent.y;
-      }
-   }
+		  S32 cursorHeight = mFont->getHeight();
+		  if ( cursorHeight < drawRect.extent.y )
+		  {
+			 cursorStart.y = drawPoint.y;
+			 cursorEnd.y = cursorStart.y + cursorHeight;
+		  }
+		  else
+		  {
+			 cursorStart.y = drawRect.point.y;
+			 cursorEnd.y = cursorStart.y + drawRect.extent.y;
+		  }
+	   }
 
-   //draw the text
-   if ( currentState != SelectedState )
-      mBlockStart = mBlockEnd = 0;
+	   //draw the text
+	   if ( currentState != SelectedState )
+		  mBlockStart = mBlockEnd = 0;
 
-   //also verify the block start/end
-   if ((mBlockStart > (S32)textBuffer.length() || (mBlockEnd > (S32)textBuffer.length()) || (mBlockStart > mBlockEnd)))
-      mBlockStart = mBlockEnd = 0;
+	   //also verify the block start/end
+	   if ((mBlockStart > (S32)textBuffer.length() || (mBlockEnd > (S32)textBuffer.length()) || (mBlockStart > mBlockEnd)))
+		  mBlockStart = mBlockEnd = 0;
 
-   Point2I tempOffset = mTextOffset;
+	   Point2I tempOffset = mTextOffset;
 
-   //draw the portion before the highlight
-   if ( mBlockStart > 0 )
-   {
-      dglSetBitmapModulation( fontColor );
+	   //draw the portion before the highlight
+	   if ( mBlockStart > 0 )
+	   {
+		  dglSetBitmapModulation( fontColor );
 
-      const UTF16* preString2 = textBuffer.getPtr();
-      dglDrawTextN( mFont, tempOffset, preString2, mBlockStart, mProfile->mFontColors);
-      tempOffset.x += mFont->getStrNWidth(preString2, mBlockStart);
-   }
+		  const UTF16* preString2 = textBuffer.getPtr();
+		  dglDrawTextN( mFont, tempOffset, preString2, mBlockStart, mProfile->mFontColors);
+		  tempOffset.x += mFont->getStrNWidth(preString2, mBlockStart);
+	   }
 
-   //draw the hilighted portion
-   if ( mBlockEnd > 0 )
-   {
-      const UTF16* highlightBuff = textBuffer.getPtr() + mBlockStart;
-      U32 highlightBuffLen = mBlockEnd-mBlockStart;
+	   //draw the hilighted portion
+	   if ( mBlockEnd > 0 )
+	   {
+		  const UTF16* highlightBuff = textBuffer.getPtr() + mBlockStart;
+		  U32 highlightBuffLen = mBlockEnd-mBlockStart;
 
-      S32 highlightWidth = mFont->getStrNWidth(highlightBuff, highlightBuffLen);
+		  S32 highlightWidth = mFont->getStrNWidth(highlightBuff, highlightBuffLen);
 
-      dglDrawRectFill( Point2I( tempOffset.x, drawRect.point.y + 1 ),
-         Point2I( tempOffset.x + highlightWidth, drawRect.point.y + drawRect.extent.y - 1),
-         mProfile->mFillColorHL );
+		  dglDrawRectFill( Point2I( tempOffset.x, drawRect.point.y + 1 ),
+			 Point2I( tempOffset.x + highlightWidth, drawRect.point.y + drawRect.extent.y - 1),
+			 mProfile->mFillColorHL );
 
-      dglSetBitmapModulation( mProfile->mFontColorHL );
-      dglDrawTextN( mFont, tempOffset, highlightBuff, highlightBuffLen, mProfile->mFontColors );
-      tempOffset.x += highlightWidth;
-   }
+		  dglSetBitmapModulation( mProfile->mFontColorHL );
+		  dglDrawTextN( mFont, tempOffset, highlightBuff, highlightBuffLen, mProfile->mFontColors );
+		  tempOffset.x += highlightWidth;
+	   }
 
-   //draw the portion after the highlite
-   if(mBlockEnd < (S32)mTextBuffer.length())
-   {
-       // Special handling if we are truncating when the ctrl is unfocused
-       if (currentState != SelectedState && mTruncateWhenUnfocused)
-       {
-          StringBuffer terminationString = "...";
-          S32 width = mBounds.extent.x;
-          StringBuffer truncatedBuffer = truncate(textBuffer, terminationString, width);
-          const UTF16* truncatedBufferPtr = truncatedBuffer.getPtr();
-          U32 finalBuffLen = truncatedBuffer.length();
+	   //draw the portion after the highlite
+	   if(mBlockEnd < (S32)mTextBuffer.length())
+	   {
+		   // Special handling if we are truncating when the ctrl is unfocused
+		   if (currentState != SelectedState && mTruncateWhenUnfocused)
+		   {
+			  StringBuffer terminationString = "...";
+			  S32 width = mBounds.extent.x;
+			  StringBuffer truncatedBuffer = truncate(textBuffer, terminationString, width);
+			  const UTF16* truncatedBufferPtr = truncatedBuffer.getPtr();
+			  U32 finalBuffLen = truncatedBuffer.length();
 
-          dglSetBitmapModulation( fontColor );
-          dglDrawTextN( mFont, tempOffset, truncatedBufferPtr, finalBuffLen, mProfile->mFontColors );
-       }
-       else
-       {
-          const UTF16* finalBuff = textBuffer.getPtr() + mBlockEnd;
-          U32 finalBuffLen = mTextBuffer.length() - mBlockEnd;
+			  dglSetBitmapModulation( fontColor );
+			  dglDrawTextN( mFont, tempOffset, truncatedBufferPtr, finalBuffLen, mProfile->mFontColors );
+		   }
+		   else
+		   {
+			  const UTF16* finalBuff = textBuffer.getPtr() + mBlockEnd;
+			  U32 finalBuffLen = mTextBuffer.length() - mBlockEnd;
 
-          dglSetBitmapModulation( fontColor );
-          dglDrawTextN( mFont, tempOffset, finalBuff, finalBuffLen, mProfile->mFontColors );
-       }
-   }
+			  dglSetBitmapModulation( fontColor );
+			  dglDrawTextN( mFont, tempOffset, finalBuff, finalBuffLen, mProfile->mFontColors );
+		   }
+	   }
 
-   //draw the cursor
-   if (currentState == SelectedState && mCursorOn )
-      dglDrawLine( cursorStart, cursorEnd, mProfile->mCursorColor );
+	   //draw the cursor
+	   if (currentState == SelectedState && mCursorOn )
+		  dglDrawLine( cursorStart, cursorEnd, mProfile->mCursorColor );
 
-   dglSetClipRect(old);
+	   dglSetClipRect(old);
+	}
 }
 
 bool GuiTextEditCtrl::hasText()

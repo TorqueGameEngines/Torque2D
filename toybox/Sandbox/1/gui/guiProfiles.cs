@@ -38,6 +38,7 @@ $color[2] = "81 92 102 255";
 $color[3] = "224 224 224 255";
 $color[4] = "54 135 196 255";
 $color[5] = "245 210 50 255";
+$color[6] = "196 54 71 255";
 
 function AdjustColorValue(%color, %percent)
 {
@@ -144,10 +145,10 @@ if (!isObject(GuiDefaultBorderProfile)) new GuiBorderProfile (GuiDefaultBorderPr
 	borderSL = 0;
 	borderNA = 0;
 	//Default border color
-	borderColor   = "100 100 100 255";
-	borderColorHL = "128 128 128";
-	borderColorSL = "255 255 255 50";
-	borderColorNA = "64 64 64";
+	borderColor   = $color1;
+    borderColorHL = AdjustColorValue($color1, 10);
+    borderColorSL = AdjustColorValue($color1, 10);
+    borderColorNA = SetColorAlpha($color1, 100);
 	//Default Padding
 	padding = 0;
 	paddingHL = 0;
@@ -207,16 +208,53 @@ if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiD
 
 if(!isObject(GuiWindowProfile)) new GuiControlProfile (GuiWindowProfile : GuiDefaultProfile)
 {
-   opaque = true;
-   modal = true;
-   justify = "center";
-   textOffset = "10 4";
-   bitmap = "./images/window";
-   fillColor = "37 36 35 255";
-   fontColor = "white";
+   fillColor = $color1;
+   fillColorHL = AdjustColorValue($color1, 10);
+   fillColorSL = $color4;
+   fillColorNA = $color1;
    category = "defaultWindow";
+
+   fontColorSL = $color5;
 };
 
+if(!isObject(GuiWindowContentBorderProfile)) new GuiBorderProfile (GuiWindowContentBorderProfile : GuiDefaultBorderProfile)
+{
+	borderColor = AdjustColorValue($color1, -10);
+	borderColorHL = AdjustColorValue($color1, -10);
+	borderColorSL = AdjustColorValue($color4, -10);
+	borderColorNA = $color5;
+
+	border = 1;
+	borderHL = 1;
+	borderSL = 1;
+	borderNA = 1;
+};
+
+if(!isObject(GuiWindowContentProfile)) new GuiControlProfile (GuiWindowContentProfile : GuiDefaultProfile)
+{
+	fillColor = $color2;
+	fillColorHL = $color2;
+	fillColorSL = $color2;
+	fillColorNA = $color2;
+
+	borderDefault = GuiWindowContentBorderProfile;
+};
+
+if(!isObject(GuiWindowCloseButtonProfile)) new GuiControlProfile (GuiWindowCloseButtonProfile : GuiDefaultProfile)
+{
+   fillColor = $color1;
+   fillColorHL = $color6;
+   fillColorHL = AdjustColorValue($color6, 10);
+   fillColorNA = $color1;
+};
+
+if(!isObject(GuiWindowMinButtonProfile)) new GuiControlProfile (GuiWindowMinButtonProfile : GuiWindowCloseButtonProfile)
+{
+   fillColorHL = $color4;
+   fillColorHL = AdjustColorValue($color4, 10);
+};
+
+if(!isObject(GuiWindowMaxButtonProfile)) new GuiControlProfile (GuiWindowMaxButtonProfile : GuiWindowMinButtonProfile);
 if(!isObject(GuiTransparentProfile)) new GuiControlProfile (GuiTransparentProfile : GuiDefaultProfile);
 if(!isObject(GuiGridProfile)) new GuiControlProfile (GuiGridProfile : GuiDefaultProfile);
 if(!isObject(GuiChainProfile)) new GuiControlProfile (GuiChainProfile : GuiDefaultProfile);
@@ -360,7 +398,6 @@ if(!isObject(GuiTextArrayProfile)) new GuiControlProfile (GuiTextArrayProfile : 
 
 if (!isObject(GuiTextRightProfile)) new GuiControlProfile (GuiTextRightProfile : GuiTextProfile)
 {
-
     align = "right";
 };
 

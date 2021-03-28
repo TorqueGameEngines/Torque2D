@@ -114,28 +114,6 @@ bool GuiScrollCtrl::onWake()
    if (! Parent::onWake())
       return false;
 
-	if(mProfile->mBitmapName != NULL && mProfile->constructBitmapArray() >= 39)
-	{
-	   mTextureHandle = mProfile->mTextureHandle;
-	   mTextureHandle.setFilter(GL_NEAREST);
-
-	   bool result;
-	   result = mProfile->constructBitmapArray() >= BmpStates * BmpCount;
-
-	   //AssertFatal(result, "Failed to create the bitmap array");
-	   if (!result)
-		   Con::warnf("Failed to create the bitmap array for %s", mProfile->mBitmapName);
-
-	   mBitmapBounds = mProfile->mBitmapArrayRects.address();
-
-	   //init
-	   mBaseThumbSize = mBitmapBounds[BmpStates * BmpVThumbTopCap].extent.y +
-						mBitmapBounds[BmpStates * BmpVThumbBottomCap].extent.y;
-
-	   mScrollBarThickness      = mBitmapBounds[BmpStates * BmpVPage].extent.x;
-	   computeSizes();
-   }
-
 	if (mThumbProfile != NULL)
 		mThumbProfile->incRefCount();
 
@@ -151,7 +129,6 @@ bool GuiScrollCtrl::onWake()
 void GuiScrollCtrl::onSleep()
 {
    Parent::onSleep();
-   mTextureHandle = NULL;
 
    if (mThumbProfile != NULL)
 	   mThumbProfile->decRefCount();
@@ -1015,9 +992,11 @@ void GuiScrollCtrl::renderChildControls(Point2I offset, RectI content, const Rec
 
 				if (childClip.intersect(clipRect))
 				{
+					RectI old = dglGetClipRect();
 					dglSetClipRect(clipRect);
 					glDisable(GL_CULL_FACE);
 					ctrl->onRender(childPosition, RectI(childPosition, ctrl->getExtent()));
+					dglSetClipRect(old);
 				}
 			}
 			size_cpy = objectList.size(); //	CHRIS: i know its wierd but the size of the list changes sometimes during execution of this loop

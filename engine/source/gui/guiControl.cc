@@ -1678,9 +1678,13 @@ void GuiControl::renderText(Point2I offset, Point2I extent, const char *text, Gu
 	}
 
 	RectI old = dglGetClipRect();
-	dglSetClipRect(RectI(offset, extent));
-	dglDrawText( font, start + offset + profile->mTextOffset, text, profile->mFontColors, 9, rotation );
-	dglSetClipRect(old);
+	RectI clipRect = RectI(offset, extent);
+	if(clipRect.intersect(old))
+	{
+		dglSetClipRect(clipRect);
+		dglDrawText( font, start + offset + profile->mTextOffset, text, profile->mFontColors, 9, rotation );
+		dglSetClipRect(old);
+	}
 }
 
 void GuiControl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent)

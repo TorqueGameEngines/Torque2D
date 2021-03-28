@@ -34,38 +34,6 @@ private:
 
 protected:
 
-   // the scroll control can use a bitmap array to draw all its
-   // graphics... these are the bitmaps it needs:
-   enum BitmapIndices
-   {
-      BmpUp,
-      BmpDown,
-      BmpVThumbTopCap,
-      BmpVThumb,
-      BmpVThumbBottomCap,
-      BmpVPage,
-      BmpLeft,
-      BmpRight,
-      BmpHThumbLeftCap,
-      BmpHThumb,
-      BmpHThumbRightCap,
-      BmpHPage,
-      BmpResize,
-
-      BmpCount
-   };
-
-   enum BitmapStates
-   {
-      BmpDefault = 0,
-      BmpHilite,
-      BmpDisabled,
-
-      BmpStates
-   };
-   RectI *mBitmapBounds;  //bmp is [3*n], bmpHL is [3*n + 1], bmpNA is [3*n + 2]
-   TextureHandle mTextureHandle;
-
    // note - it is implicit in the scroll view that the buttons all have the same
    // arrow length and that horizontal and vertical scroll bars have the
    // same thickness
@@ -104,9 +72,8 @@ protected:
    RectI mRightArrowRect;
    RectI mHTrackRect;
    RectI mVTrackRect;
-   //--------------------------------------
-   // for determing hit area
-public:      //called by the ComboPopUp class
+ 
+public:      
    enum Region
    {
       UpArrow,
@@ -195,8 +162,8 @@ public:
 
    void onPreRender();
    void onRender(Point2I offset, const RectI &updateRect);
-   RectI GuiScrollCtrl::applyScrollBarSpacing(Point2I offset, Point2I extent);
-   GuiControlState GuiScrollCtrl::getRegionCurrentState(GuiScrollCtrl::Region region);
+   RectI applyScrollBarSpacing(Point2I offset, Point2I extent);
+   GuiControlState getRegionCurrentState(GuiScrollCtrl::Region region);
    void renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile* profile, GuiControlState state, GuiDirection direction);
    void renderVScrollBar(const Point2I& offset);
    void renderHScrollBar(const Point2I& offset);

@@ -700,13 +700,8 @@ void GuiListBoxCtrl::parentResized(const Point2I &oldParentExtent, const Point2I
 //////////////////////////////////////////////////////////////////////////
 void GuiListBoxCtrl::onRender( Point2I offset, const RectI &updateRect )
 {
-   RectI clipRect(updateRect.point, updateRect.extent);
-
    if( !mProfile )
       return;
-
-   // Save our original clip rect
-   RectI oldClipRect = clipRect;
 
    for ( S32 i = 0; i < mItems.size(); i++)
    {
@@ -736,8 +731,6 @@ void GuiListBoxCtrl::onRender( Point2I offset, const RectI &updateRect )
       // Render our item
       onRenderItem( itemRect, mItems[i] );
    }
-
-   dglSetClipRect( oldClipRect );
 }
 
 void GuiListBoxCtrl::onRenderItem( RectI itemRect, LBItem *item )
