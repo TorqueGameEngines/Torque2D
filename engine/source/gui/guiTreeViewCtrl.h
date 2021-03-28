@@ -184,7 +184,6 @@ protected:
          SimGroup2,
          SimGroup3,
          SimGroup4,
-         Audio,
          Camera,
          Hidden,
          Lock1,

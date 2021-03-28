@@ -104,6 +104,18 @@ GuiBorderProfile::GuiBorderProfile()
 		mPadding[i] = 0;
 	}
 
+   GuiBorderProfile *def = dynamic_cast<GuiBorderProfile*>(Sim::findObject("GuiDefaultProfile"));
+   if (def)
+   {
+      for (S32 i = 0; i < 4; i++)
+      {
+         mMargin[i] = def->mMargin[i];
+         mBorder[i] = def->mBorder[i];
+         mBorderColor[i] = def->mBorderColor[i];
+         mPadding[i] = def->mPadding[i];
+      }
+   }
+
 	mUnderfill = true;
 }
 
@@ -294,6 +306,44 @@ GuiControlProfile::GuiControlProfile(void) :
 	mFillColorHL.set(0, 0, 0, 0);
 	mFillColorSL.set(0, 0, 0, 0);
 	mFillColorNA.set(0, 0, 0, 0);
+   mCategory = StringTable->EmptyString;
+
+   GuiControlProfile *def = dynamic_cast<GuiControlProfile*>(Sim::findObject("GuiDefaultProfile"));
+   if (def)
+   {
+      mTabable = def->mTabable;
+      mCanKeyFocus = def->mCanKeyFocus;
+
+      mFillColor = def->mFillColor;
+      mFillColorHL = def->mFillColorHL;
+      mFillColorNA = def->mFillColorNA;
+
+      mBorderDefault = def->mBorderDefault;
+      mBorderLeft = def->mBorderDefault;
+      mBorderRight = def->mBorderDefault;
+      mBorderTop = def->mBorderDefault;
+      mBorderBottom = def->mBorderDefault;
+
+      // default font
+      mFontType = def->mFontType;
+      mFontSize = def->mFontSize;
+      mFontCharset = def->mFontCharset;
+
+      for (U32 i = 0; i < 10; i++)
+         mFontColors[i] = def->mFontColors[i];
+
+      // default bitmap
+      mBitmapName = def->mBitmapName;
+      mTextOffset = def->mTextOffset;
+
+      //used by GuiTextCtrl
+      mAlignment = def->mAlignment;
+      mReturnTab = def->mReturnTab;
+      mNumbersOnly = def->mNumbersOnly;
+      mCursorColor = def->mCursorColor;
+      mProfileForChildren = def->mProfileForChildren;
+      setChildrenProfile(def->mProfileForChildren);
+   }
 }
 
 GuiControlProfile::~GuiControlProfile()
@@ -345,6 +395,8 @@ void GuiControlProfile::initPersistFields()
    addField("soundButtonDown", TypeAudioAssetPtr,  Offset(mSoundButtonDown, GuiControlProfile));
    addField("soundButtonOver", TypeAudioAssetPtr,  Offset(mSoundButtonOver, GuiControlProfile));
    addField("profileForChildren", TypeSimObjectPtr,  Offset(mProfileForChildren, GuiControlProfile));
+
+   addField("category", TypeString, Offset(mCategory, GuiControlProfile));
 }
 
 bool GuiControlProfile::onAdd()
@@ -354,7 +406,43 @@ bool GuiControlProfile::onAdd()
 
    Sim::getGuiDataGroup()->addObject(this);
 
+   getChildrenProfile();
+
    return true;
+}
+
+GuiControlProfile* GuiControlProfile::getChildrenProfile()
+{
+   // We can early out if we still have a valid profile
+   if (mProfileForChildren)
+      return mProfileForChildren;
+
+   // Attempt to find the profile specified
+   if (mProfileForChildren)
+   {
+      GuiControlProfile *profile = dynamic_cast<GuiControlProfile*> (Sim::findObject(mProfileForChildren->getName()));
+
+      if (profile)
+         setChildrenProfile(profile);
+   }
+
+   return mProfileForChildren;
+}
+
+void GuiControlProfile::setChildrenProfile(GuiControlProfile *prof)
+{
+   if (prof == mProfileForChildren)
+      return;
+
+   // Clear the delete notification we previously set up
+   if (mProfileForChildren)
+      clearNotify(mProfileForChildren);
+
+   mProfileForChildren = prof;
+
+   // Make sure that the new profile will notify us when it is deleted
+   if (mProfileForChildren)
+      deleteNotify(mProfileForChildren);
 }
 
 S32 GuiControlProfile::constructBitmapArray()
@@ -460,6 +548,8 @@ void GuiControlProfile::incRefCount()
 
    mRefCount++;
 
+   getChildrenProfile();
+
 }
 
 void GuiControlProfile::decRefCount()
@@ -471,7 +561,9 @@ void GuiControlProfile::decRefCount()
    if(!mRefCount)
 	  return;
 
-   if(!--mRefCount)
+   --mRefCount;
+
+   if(!mRefCount)
    {
 	  mFont = NULL;
 	  mTextureHandle = NULL;
