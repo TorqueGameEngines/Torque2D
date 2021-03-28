@@ -67,6 +67,7 @@ GuiGridCtrl::GuiGridCtrl()
 	mMaxRowCount = 0;
 	mOrderMode = OrderMode::LRTB;
 	mIsExtentDynamic = true;
+   setField("profile", "GuiDefaultProfile");
 }
 
 //------------------------------------------------------------------------------

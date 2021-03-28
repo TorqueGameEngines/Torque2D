@@ -20,6 +20,21 @@ function GuiEditorCtrlProperties::update(%this, %target)
 		}
 		else
 		{
+			// if we are locked update the gui to reflect it.
+			if($currentTarget.getFieldValue("locked"))
+			{
+				$targetprevLocked = true;
+				%this.build($currentTarget);
+			}
+			// if we were prev locked we need to rebuild
+			else if($targetprevLocked)
+			{
+				// just so this isn't always happening
+				// sometimes we only want to updateValues
+				%this.build($currentTarget);
+				$targetprevLocked = false;
+			}
+			// update values of fields.
 			%this.updateValues(%target);
 		}
 	}
@@ -27,6 +42,7 @@ function GuiEditorCtrlProperties::update(%this, %target)
 
 function GuiEditorCtrlProperties::updateValues(%this, %target)
 {
+	// go through every field and updates.
 	%count = %target.getFieldCount();
 	for(%i = 0; %i < %count; %i++)
 	{
@@ -56,12 +72,23 @@ function GuiEditorCtrlProperties::updateValues(%this, %target)
 
 function GuiEditorCtrlProperties::build(%this, %target)
 {
-	$dynSim = new SimSet();
+	// assign target so we can keep track.
 	$currentTarget = %target;
 	GuiEditorCtrlProperties.clear();
+	
+	// every field gets a gui
 	%count = %target.getFieldCount();
 	for(%i = 0; %i < %count; %i++)
 	{
+		%field = %target.getField(%i);
+		// we only want the locked field.
+		if($currentTarget.getFieldValue("locked"))
+		{
+			if(%field !$= "locked")
+			{
+				continue;
+			}
+		}
 		
 		%fieldCtrl = new GuiControl()
 		{
@@ -71,8 +98,6 @@ function GuiEditorCtrlProperties::build(%this, %target)
 			profile = "GuiDefaultProfile";
 			visible = "1";
 		};
-		
-		%field = %target.getField(%i);
 		
 		%fieldLabel = new GuiControl()
 		{
@@ -93,6 +118,14 @@ function GuiEditorCtrlProperties::build(%this, %target)
 
 		GuiEditorCtrlProperties.add(%fieldCtrl);
 	}
+	
+	// we don't want dynamic fields either.
+	if($currentTarget.getFieldValue("locked"))
+	{
+		return;
+	}
+	
+	// build dynamic fields
 	%dynCtrl = new GuiPanelCtrl()
 	{
 		position = "10 0";
@@ -139,14 +172,22 @@ function GuiEditorCtrlProperties::build(%this, %target)
 	%addDyn.add(%label);
 	%addDyn.add(%bttn);
 	%dynCtrl.add(%addDyn);
+	if(isObject(DynamicContainer))
+	{
+		DynamicContainer.clear();
+		DynamicContainer.delete();
+	}
 	
 	%dynChain = new GuiChainCtrl(DynamicContainer)
 	{
 		position = "0 50";
 		extent = "320 30";
 	};
-	
+		
 	%dynCtrl.add(%dynChain);
+	
+	// dynamic fields need to be updated separately.
+	// eventually should separate fields by group.
 	
 	GuiEditorCtrlProperties.updateDynamicFields();
 }
@@ -161,6 +202,7 @@ function GuiEditorCtrlProperties::addDynamic(%this)
 
 function GuiEditorCtrlProperties::removeDynamic(%this, %field)
 {
+	// giving a dynamic field a null value deletes it.
 	$currentTarget.setFieldValue(%field,"");
 	GuiEditorCtrlProperties.updateDynamicFields();
 }
@@ -239,6 +281,7 @@ function GuiEditorCtrlProperties::updateDynamicFields(%this)
 function GuiEditorCtrlProperties::setData(%this,%field, %val)
 {
 	$currentTarget.setEditFieldValue(%field, %val);
+	%this.update($currentTarget);
 }
 
 function GuiEditorCtrlProperties::buildEdit(%this,%field,%fieldType,%fieldVal)
@@ -251,6 +294,7 @@ function GuiEditorCtrlProperties::buildEdit(%this,%field,%fieldType,%fieldVal)
 	
 	%fieldEdit = %field @ "edit";
 	echo(%field TAB %fieldType TAB %fieldVal);
+	
 	switch$(%fieldType)
 	{
 		case "float":
@@ -298,21 +342,6 @@ function GuiEditorCtrlProperties::buildEdit(%this,%field,%fieldType,%fieldVal)
 			%ctrl.setFieldValue("Validate", "GuiEditorCtrlProperties.setData(" @ %field @ "," @ %ctrl.getId() @ ".getText());");
 			return %ctrl;
 			
-		case "string":
-			%ctrl = new GuiTextEditCtrl(%fieldEdit)
-				{
-					Text = %fieldVal;
-					Position = "160 0";
-					extent = "160 30";
-					horizSizing = "right";
-					vertSizing = "bottom";
-					visible = "1";
-					Profile = "GuiTextEditProfile";
-				};
-			%ctrl.setFieldValue("AltCommand", "GuiEditorCtrlProperties.setData(" @ %field @ "," @ %ctrl.getId() @ ".getText());");
-			%ctrl.setFieldValue("Validate", "GuiEditorCtrlProperties.setData(" @ %field @ "," @ %ctrl.getId() @ ".getText());");
-			return %ctrl;
-			
 		case "SimObjectPtr":
 		return	%ctrl = new GuiControl(%fieldEdit)
 				{
@@ -324,22 +353,6 @@ function GuiEditorCtrlProperties::buildEdit(%this,%field,%fieldType,%fieldVal)
 					visible = "1";
 					Profile = "GuiTextProfile";
 				};
-				
-		case "caseString":
-			%ctrl = new GuiTextEditCtrl(%fieldEdit)
-			{
-				Text = %fieldVal;
-				Position = "160 0";
-				extent = "160 30";
-				horizSizing = "right";
-				vertSizing = "bottom";
-				visible = "1";
-				Profile = "GuiTextEditProfile";
-				
-			};
-			%ctrl.setFieldValue("AltCommand", "GuiEditorCtrlProperties.setData(" @ %field @ "," @ %ctrl.getId() @ ".getText());");
-			%ctrl.setFieldValue("Validate", "GuiEditorCtrlProperties.setData(" @ %field @ "," @ %ctrl.getId() @ ".getText());");
-			return %ctrl;
 			
 		case "int":
 			%ctrl = new GuiTextEditCtrl(%fieldEdit)
@@ -400,8 +413,21 @@ function GuiEditorCtrlProperties::buildEdit(%this,%field,%fieldType,%fieldVal)
 			return %ctrl = %this.buildGuiProfileCtrl(%field, %fieldVal);
 			
 		default:
-			echo("Field type not handled");
-			%ctrl = 0;
+			// better lazy than complicated.
+			%ctrl = new GuiTextEditCtrl(%fieldEdit)
+			{
+				Text = %fieldVal;
+				Position = "160 0";
+				extent = "160 30";
+				horizSizing = "right";
+				vertSizing = "bottom";
+				visible = "1";
+				Profile = "GuiTextEditProfile";
+				
+			};
+			%ctrl.setFieldValue("AltCommand", "GuiEditorCtrlProperties.setData(" @ %field @ "," @ %ctrl.getId() @ ".getText());");
+			%ctrl.setFieldValue("Validate", "GuiEditorCtrlProperties.setData(" @ %field @ "," @ %ctrl.getId() @ ".getText());");
+			return %ctrl;
 	}
 	
 }
@@ -427,6 +453,12 @@ function GuiEditorCtrlProperties::buildGuiProfileCtrl(%this,%field,%fieldVal)
 		%obj = GuiDataGroup.getObject(%i);
 		if(%obj.getClassName() $= "GuiControlProfile")
 		{
+			%cat = %obj.category;
+			if(%cat !$= "")
+			{
+				echo(%cat);
+			}
+			
 			if(%obj.getName() !$= "")
 			{
 				%ctrl.add(%obj.getName(), 0);

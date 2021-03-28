@@ -69,6 +69,11 @@ GuiScrollCtrl::GuiScrollCtrl()
 
    mScrollOffset.set(0, 0);
    mContentExt.set(200,200);
+
+   setField("thumbProfile", "GuiScrollThumbProfile");
+   setField("arrowProfile", "GuiScrollArrowProfile");
+   setField("trackProfile", "GuiScrollTrackProfile");
+   setField("profile", "GuiScrollProfile");
 }
 
 void GuiScrollCtrl::initPersistFields()

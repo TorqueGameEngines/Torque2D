@@ -67,6 +67,8 @@ GuiTabBookCtrl::GuiTabBookCtrl()
    mIsContainer = true;
 
    mTabProfile = NULL;
+
+   setField("TabProfile", "GuiTabProfile");
 }
 
 void GuiTabBookCtrl::initPersistFields()

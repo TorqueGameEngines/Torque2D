@@ -1140,7 +1140,10 @@ bool GuiTreeViewCtrl::buildIconTable(const char * icons)
                "^Sandbox/gui/images/simgroup:"
                "^Sandbox/gui/images/simgroupClosed:"
                "^Sandbox/gui/images/simgroupSelected:"
-               "^Sandbox/gui/images/simgroupSelectedClosed:";
+               "^Sandbox/gui/images/simgroupSelectedClosed:"
+               "^Sandbox/gui/images/Camera:"
+               "^Sandbox/gui/images/iconVisible:"
+               "^Sandbox/gui/images/iconLocked:";
    }
 
    // Figure the size of the buffer we need...
@@ -3259,11 +3262,12 @@ void GuiTreeViewCtrl::lockSelection(bool lock)
 }
 void GuiTreeViewCtrl::hideSelection(bool hide)
 {
-   for(U32 i = 0; i < (U32)mSelectedItems.size(); i++)
+   for (U32 i = 0; i < (U32)mSelectedItems.size(); i++)
    {
-      if(mSelectedItems[i]->isInspectorData())
+      if (mSelectedItems[i]->isInspectorData())
          mSelectedItems[i]->getObject()->setHidden(hide);
    }
+
 }
 
 //------------------------------------------------------------------------------
