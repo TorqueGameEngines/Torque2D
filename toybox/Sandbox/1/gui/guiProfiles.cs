@@ -86,10 +86,6 @@ if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
 	cursorColor = "0 0 0 255";
 
 	borderDefault = GuiDefaultBorderProfile;
-	borderTop = GuiDefaultBorderProfile;
-	borderLeft = GuiDefaultBorderProfile;
-	borderRight = GuiDefaultBorderProfile;
-	borderBottom = GuiDefaultBorderProfile;
 	category = "default";
 };
 
@@ -192,9 +188,7 @@ if(!isObject(GuiPanelProfile)) new GuiControlProfile (GuiPanelProfile : GuiDefau
     fillColorNA = SetColorAlpha($color1, 100);
 	borderDefault = GuiDarkBorderProfile;
 	borderTop = GuiBrightBorderProfile;
-	borderBottom = GuiBrightBorderProfile;
 	borderLeft = GuiBrightBorderProfile;
-	borderRight = GuiBrightBorderProfile;
 	category = "defaultPanel";
 };
 
@@ -243,9 +237,7 @@ if(!isObject(GuiTabProfile)) new GuiControlProfile (GuiTabProfile : GuiDefaultPr
 	fillColorNA = SetColorAlpha($color1, 100);
 	borderDefault = GuiDarkBorderProfile;
 	borderTop = GuiBrightBorderProfile;
-	borderBottom = GuiBrightBorderProfile;
 	borderLeft = GuiBrightBorderProfile;
-	borderRight = GuiBrightBorderProfile;
 	align = Center;
 	//bitmap = "./images/tab";
 	category = "defaultTab";
