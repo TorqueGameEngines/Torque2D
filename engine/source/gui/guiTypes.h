@@ -175,9 +175,17 @@ public:
    ColorI mFillColorNA; //Used if the object is not active or disabled.
 
    GuiBorderProfile* mBorderDefault;					//The default border settings.
+   // top profile
+   StringTableEntry mTopProfileName;
    GuiBorderProfile* mBorderTop;
+   // Bottom profile
+   StringTableEntry mBottomProfileName;
    GuiBorderProfile* mBorderBottom;
+   // Left profile
+   StringTableEntry mLeftProfileName;
    GuiBorderProfile* mBorderLeft;
+   // Left profile
+   StringTableEntry mRightProfileName;
    GuiBorderProfile* mBorderRight;
 
    // font members
@@ -255,8 +263,21 @@ public:
    static void initPersistFields();
    bool onAdd();
 
-   GuiControlProfile * getChildrenProfile();
 
+   GuiBorderProfile* getLeftProfile();
+   void setLeftProfile(GuiBorderProfile* prof);
+
+   GuiBorderProfile* getRightProfile();
+   void setRightProfile(GuiBorderProfile* prof);
+
+   GuiBorderProfile* getTopProfile();
+   void setTopProfile(GuiBorderProfile* prof);
+
+   GuiBorderProfile* getBottomProfile();
+   void setBottomProfile(GuiBorderProfile* prof);
+
+   // Get and Set child profile
+   GuiControlProfile * getChildrenProfile();
    void setChildrenProfile(GuiControlProfile * prof);
 
    /// This method creates an array of bitmaps from one single bitmap with
@@ -272,10 +293,10 @@ public:
    const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.
    const ColorI& getFontColor(const GuiControlState state); //Returns the font color based on the state.
 
-   GuiBorderProfile* getLeftBorder() { return ((mBorderLeft) ? mBorderLeft : mBorderDefault); };
-   GuiBorderProfile* getRightBorder() { return ((mBorderRight) ? mBorderRight : mBorderDefault); };
-   GuiBorderProfile* getTopBorder() { return ((mBorderTop) ? mBorderTop : mBorderDefault); };
-   GuiBorderProfile* getBottomBorder() { return ((mBorderBottom) ? mBorderBottom : mBorderDefault); };
+   GuiBorderProfile* getLeftBorder() { return mBorderLeft; }
+   GuiBorderProfile* getRightBorder() { return mBorderRight; }
+   GuiBorderProfile* getTopBorder() { return mBorderTop; }
+   GuiBorderProfile* getBottomBorder() { return mBorderBottom; }
 };
 DefineConsoleType( TypeGuiProfile)
 

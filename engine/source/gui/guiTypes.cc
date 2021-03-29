@@ -280,9 +280,14 @@ GuiControlProfile::GuiControlProfile(void) :
 	mUseInput      = true;
 
 	mBorderDefault = NULL;
+
+   mLeftProfileName = NULL;
 	mBorderLeft = NULL;
+   mRightProfileName = NULL;
 	mBorderRight = NULL;
+   mTopProfileName = NULL;
 	mBorderTop = NULL;
+   mBottomProfileName = NULL;
 	mBorderBottom = NULL;
 	
 	// default font
@@ -323,10 +328,10 @@ GuiControlProfile::GuiControlProfile(void) :
       mFillColorNA = def->mFillColorNA;
 
       mBorderDefault = def->mBorderDefault;
-      mBorderLeft = def->mBorderDefault;
-      mBorderRight = def->mBorderDefault;
-      mBorderTop = def->mBorderDefault;
-      mBorderBottom = def->mBorderDefault;
+      mLeftProfileName = def->mLeftProfileName;
+      mRightProfileName = def->mRightProfileName;
+      mTopProfileName = def->mTopProfileName;
+      mBottomProfileName = def->mBottomProfileName;
 
       // default font
       mFontType = def->mFontType;
@@ -345,6 +350,8 @@ GuiControlProfile::GuiControlProfile(void) :
       mReturnTab = def->mReturnTab;
       mNumbersOnly = def->mNumbersOnly;
       mCursorColor = def->mCursorColor;
+
+      // Child profile
       mProfileForChildrenName = def->mProfileForChildrenName;
       setChildrenProfile(def->mProfileForChildren);
    }
@@ -358,11 +365,12 @@ GuiControlProfile::~GuiControlProfile()
 void GuiControlProfile::initPersistFields()
 {
    Parent::initPersistFields();
-
-   addField("tab",           TypeBool,       Offset(mTabable, GuiControlProfile));
-   addField("canKeyFocus",   TypeBool,       Offset(mCanKeyFocus, GuiControlProfile));
-   addField("useInput",      TypeBool,       Offset(mUseInput, GuiControlProfile));
-   addField("mouseOverSelected", TypeBool,   Offset(mMouseOverSelected, GuiControlProfile));
+   addGroup("Behavior");
+      addField("tab",           TypeBool,       Offset(mTabable, GuiControlProfile));
+      addField("canKeyFocus",   TypeBool,       Offset(mCanKeyFocus, GuiControlProfile));
+      addField("useInput",      TypeBool,       Offset(mUseInput, GuiControlProfile));
+      addField("mouseOverSelected", TypeBool,   Offset(mMouseOverSelected, GuiControlProfile));
+   endGroup("Behavior");
 
    addField("fillColor",     TypeColorI,     Offset(mFillColor, GuiControlProfile));
    addField("fillColorHL",   TypeColorI,     Offset(mFillColorHL, GuiControlProfile));
@@ -370,10 +378,10 @@ void GuiControlProfile::initPersistFields()
    addField("fillColorNA",   TypeColorI,     Offset(mFillColorNA, GuiControlProfile));
 
    addField("borderDefault", TypeGuiBorderProfile, Offset(mBorderDefault, GuiControlProfile));
-   addField("borderLeft",    TypeGuiBorderProfile, Offset(mBorderLeft, GuiControlProfile));
-   addField("borderRight",   TypeGuiBorderProfile, Offset(mBorderRight, GuiControlProfile));
-   addField("borderTop",     TypeGuiBorderProfile, Offset(mBorderTop, GuiControlProfile));
-   addField("borderBottom",  TypeGuiBorderProfile, Offset(mBorderBottom, GuiControlProfile));
+   addField("borderLeft",    TypeString, Offset(mLeftProfileName, GuiControlProfile));
+   addField("borderRight",   TypeString, Offset(mRightProfileName, GuiControlProfile));
+   addField("borderTop",     TypeString, Offset(mTopProfileName, GuiControlProfile));
+   addField("borderBottom",  TypeString, Offset(mBottomProfileName, GuiControlProfile));
 
    addField("fontType",      TypeString,     Offset(mFontType, GuiControlProfile));
    addField("fontSize",      TypeS32,        Offset(mFontSize, GuiControlProfile));
@@ -410,9 +418,174 @@ bool GuiControlProfile::onAdd()
 
    Sim::getGuiDataGroup()->addObject(this);
 
+   getLeftProfile();
+   getRightProfile();
+   getTopProfile();
+   getBottomProfile();
+
    getChildrenProfile();
 
    return true;
+}
+
+GuiBorderProfile * GuiControlProfile::getLeftProfile()
+{
+   // We can early out if we still have a valid profile
+   if (mBorderLeft)
+      return mBorderLeft;
+
+   // Attempt to find the profile specified
+   if (mLeftProfileName)
+   {
+      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mLeftProfileName));
+
+      if (profile)
+      {
+         setLeftProfile(profile);
+      }
+   }
+   else
+   {
+      setLeftProfile(mBorderDefault);
+   }
+
+   return mBorderLeft;
+}
+
+void GuiControlProfile::setLeftProfile(GuiBorderProfile * prof)
+{
+   if (prof == mBorderLeft)
+      return;
+
+   // Clear the delete notification we previously set up
+   if (mBorderLeft)
+      clearNotify(mBorderLeft);
+
+   mBorderLeft = prof;
+
+   // Make sure that the new profile will notify us when it is deleted
+   if (mBorderLeft)
+      deleteNotify(mBorderLeft);
+}
+
+GuiBorderProfile * GuiControlProfile::getRightProfile()
+{
+   // We can early out if we still have a valid profile
+   if (mBorderRight)
+      return mBorderRight;
+
+   // Attempt to find the profile specified
+   if (mRightProfileName)
+   {
+      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mLeftProfileName));
+
+      if (profile)
+      {
+         setRightProfile(profile);
+      }
+   }
+   else
+   {
+      setLeftProfile(mBorderDefault);
+   }
+
+   return mBorderRight;
+}
+
+void GuiControlProfile::setRightProfile(GuiBorderProfile * prof)
+{
+   if (prof == mBorderRight)
+      return;
+
+   // Clear the delete notification we previously set up
+   if (mBorderRight)
+      clearNotify(mBorderRight);
+
+   mBorderRight = prof;
+
+   // Make sure that the new profile will notify us when it is deleted
+   if (mBorderRight)
+      deleteNotify(mBorderRight);
+}
+
+GuiBorderProfile * GuiControlProfile::getTopProfile()
+{
+   // We can early out if we still have a valid profile
+   if (mBorderTop)
+      return mBorderTop;
+
+   // Attempt to find the profile specified
+   if (mTopProfileName)
+   {
+      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mLeftProfileName));
+
+      if (profile)
+      {
+         setTopProfile(profile);
+      }
+   }
+   else
+   {
+      setTopProfile(mBorderDefault);
+   }
+
+   return mBorderTop;
+}
+
+void GuiControlProfile::setTopProfile(GuiBorderProfile * prof)
+{
+   if (prof == mBorderTop)
+      return;
+
+   // Clear the delete notification we previously set up
+   if (mBorderTop)
+      clearNotify(mBorderTop);
+
+   mBorderTop = prof;
+
+   // Make sure that the new profile will notify us when it is deleted
+   if (mBorderTop)
+      deleteNotify(mBorderTop);
+}
+
+GuiBorderProfile * GuiControlProfile::getBottomProfile()
+{
+   // We can early out if we still have a valid profile
+   if (mBorderBottom)
+      return mBorderBottom;
+
+   // Attempt to find the profile specified
+   if (mBottomProfileName)
+   {
+      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mLeftProfileName));
+
+      if (profile)
+      {
+         setBottomProfile(profile);
+      }
+   }
+   else
+   {
+      setBottomProfile(mBorderDefault);
+   }
+
+   return mBorderBottom;
+}
+
+void GuiControlProfile::setBottomProfile(GuiBorderProfile * prof)
+{
+   if (prof == mBorderBottom)
+      return;
+
+   // Clear the delete notification we previously set up
+   if (mBorderBottom)
+      clearNotify(mBorderBottom);
+
+   mBorderBottom = prof;
+
+   // Make sure that the new profile will notify us when it is deleted
+   if (mBorderBottom)
+      deleteNotify(mBorderBottom);
 }
 
 GuiControlProfile* GuiControlProfile::getChildrenProfile()
