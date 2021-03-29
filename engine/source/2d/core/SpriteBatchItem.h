@@ -156,7 +156,7 @@ public:
         // This should be as unique as possible as it is used for hashing.
         operator const U32() const
         {
-#ifdef TORQUE_64
+#ifdef TORQUE_CPU_X64
             return (U32)((U64)(mArgString) * (U32)2654435761);
 #else
             return (U32)(mArgString) * (U32)2654435761;

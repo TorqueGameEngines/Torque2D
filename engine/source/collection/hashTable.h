@@ -41,7 +41,7 @@ namespace Hash
 
    inline U32 hash(const void *data)
    {
-#ifdef TORQUE_64
+#ifdef TORQUE_CPU_X64
       return (U32)((U64)data);
 #else
       return (U32)data;
