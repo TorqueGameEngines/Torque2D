@@ -565,6 +565,14 @@ void GuiScrollCtrl::onTouchMove(const GuiEvent& event)
 	curHitRegion = findHitRegion(globalToLocalCoord(event.mousePoint));
 }
 
+void GuiScrollCtrl::onTouchLeave(const GuiEvent &event)
+{
+	if (!mDepressed)
+	{
+		curHitRegion = None;
+	}
+}
+
 bool GuiScrollCtrl::onKeyDown(const GuiEvent &event)
 {
       switch (event.keyCode)

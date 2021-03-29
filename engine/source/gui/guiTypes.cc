@@ -563,12 +563,15 @@ void GuiControlProfile::decRefCount()
 
    --mRefCount;
 
-   if(!mRefCount)
-   {
-	  mFont = NULL;
-	  mTextureHandle = NULL;
-	  mImageAsset.clear();
-   }
+	if(!mRefCount)
+	{
+		mFont = NULL;
+		mTextureHandle = NULL;
+		if(mImageAsset != NULL)
+		{
+			mImageAsset.clear();
+		}
+	}
 }
 
 void GuiControlProfile::setImageAsset(const char* pImageAssetID)

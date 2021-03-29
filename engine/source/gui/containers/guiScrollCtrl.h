@@ -151,6 +151,7 @@ public:
    void onTouchDown(const GuiEvent &event);
    void onTouchUp(const GuiEvent &event);
    void onTouchDragged(const GuiEvent &event);
+   void onTouchLeave(const GuiEvent &event);
    bool onMouseWheelUp(const GuiEvent &event);
    bool onMouseWheelDown(const GuiEvent &event);
 

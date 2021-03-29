@@ -12,12 +12,17 @@
     isContainer = "1";
     canSave = "1";
     canSaveDynamicFields = "1";
-   
+
 	new GuiWindowCtrl(GuiToolbox) {
 		canSaveDynamicFields = "0";
 		internalName = "toolbox";
 		isContainer = "1";
 		Profile = "GuiWindowProfile";
+		ContentProfile = "GuiWindowContentProfile";
+		CloseButtonProfile = "GuiWindowCloseButtonProfile";
+		MinButtonProfile = "GuiWindowMinButtonProfile";
+		MaxButtonProfile = "GuiWindowMaxButtonProfile";
+		titleHeight = "20";
 		HorizSizing = "left";
 		VertSizing = "bottom";
 		position = "640 40";
@@ -35,7 +40,7 @@
 		canMinimize = "1";
 		canMaximize = "0";
 		minSize = "50 50";
-		
+
 		new GuiScrollCtrl() {
             canSaveDynamicFields = "0";
             isContainer = "1";
@@ -45,8 +50,8 @@
 			ArrowProfile = "GuiScrollArrowProfile";
             HorizSizing = "width";
             VertSizing = "height";
-            position = "0 20";
-            Extent = "220 340";
+            position = "0 0";
+            Extent = "220 360";
             MinExtent = "8 2";
             canSave = "1";
             Visible = "1";
@@ -57,7 +62,7 @@
 			constantThumbHeight="0";
 			showArrowButtons="0";
 			scrollBarThickness="14";
-		
+
 			new GuiListBoxCtrl() {
 				canSaveDynamicFields = "0";
 				internalName = "toolboxList";
@@ -66,7 +71,7 @@
 				Profile = "GuiListBoxProfile";
 				HorizSizing = "width";
 				VertSizing = "height";
-				position = "2 20";
+				position = "2 2";
 				Extent = "218 1260";
 				MinExtent = "8 2";
 				canSave = "1";
@@ -77,11 +82,16 @@
 			};
 		};
 	};
-	
+
 	new GuiWindowCtrl(GuiInspectorWindow) {
 		canSaveDynamicFields = "0";
 		isContainer = "1";
 		Profile = "GuiWindowProfile";
+		ContentProfile = "GuiWindowContentProfile";
+		CloseButtonProfile = "GuiWindowCloseButtonProfile";
+		MinButtonProfile = "GuiWindowMinButtonProfile";
+		MaxButtonProfile = "GuiWindowMaxButtonProfile";
+		titleHeight = "20";
 		HorizSizing = "left";
 		VertSizing = "bottom";
 		position = "60 40";
@@ -99,7 +109,7 @@
 		canMinimize = "1";
 		canMaximize = "0";
 		minSize = "50 50";
-		
+
 		new GuiScrollCtrl() {
             canSaveDynamicFields = "0";
             isContainer = "1";
@@ -109,8 +119,8 @@
 			ArrowProfile = "GuiScrollArrowProfile";
             HorizSizing = "width";
             VertSizing = "height";
-            position = "0 20";
-            Extent = "360 340";
+            position = "0 0";
+            Extent = "360 360";
             MinExtent = "8 2";
             canSave = "1";
             Visible = "1";
@@ -121,21 +131,26 @@
 			constantThumbHeight="0";
 			showArrowButtons="0";
 			scrollBarThickness="14";
-		
+
 			new GuiChainCtrl(GuiEditorCtrlProperties) {
                 isContainer = "1";
-                Position = "0 20";
+                Position = "0 0";
                 Extent = "340 40";
 				HorizSizing = "width";
 				VertSizing = "height";
             };
 		};
 	};
-	
+
 	new GuiWindowCtrl(GuiTreeViewWindow) {
 		canSaveDynamicFields = "0";
 		isContainer = "1";
 		Profile = "GuiWindowProfile";
+		ContentProfile = "GuiWindowContentProfile";
+		CloseButtonProfile = "GuiWindowCloseButtonProfile";
+		MinButtonProfile = "GuiWindowMinButtonProfile";
+		MaxButtonProfile = "GuiWindowMaxButtonProfile";
+		titleHeight = "20";
 		HorizSizing = "left";
 		VertSizing = "bottom";
 		position = "360 40";
@@ -153,7 +168,7 @@
 		canMinimize = "1";
 		canMaximize = "0";
 		minSize = "50 50";
-		
+
 		new GuiScrollCtrl() {
             canSaveDynamicFields = "0";
             isContainer = "1";
@@ -163,8 +178,8 @@
 			ArrowProfile = "GuiScrollArrowProfile";
             HorizSizing = "width";
             VertSizing = "height";
-            position = "0 20";
-            Extent = "220 340";
+            position = "0 0";
+            Extent = "220 360";
             MinExtent = "8 2";
             canSave = "1";
             Visible = "1";
@@ -175,7 +190,7 @@
 			constantThumbHeight="0";
 			showArrowButtons="0";
 			scrollBarThickness="14";
-		
+
 			new GuiTreeViewCtrl(GuiEditorTreeView) {
                canSaveDynamicFields = "0";
                isContainer = "1";
@@ -200,5 +215,5 @@
             };
 		};
 	};
-	
+
 };

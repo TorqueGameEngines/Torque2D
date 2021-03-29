@@ -904,6 +904,7 @@ void dglDrawRectFill(const RectI &rect, const ColorI &color)
    dglDrawRectFill(rect.point, lowerR, color);
 }
 
+//Start in the top left and move counter-clockwise around the quad.
 void dglDrawQuadFill(const Point2I &point1, const Point2I &point2, const Point2I &point3, const Point2I &point4, const ColorI &color)
 {
 	glEnable(GL_BLEND);

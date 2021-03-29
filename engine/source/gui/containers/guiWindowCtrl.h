@@ -36,23 +36,25 @@ class GuiWindowCtrl : public GuiControl
    private:
       typedef GuiControl Parent;
 
+	  //Allow these behaviors.
       bool mResizeWidth;
       bool mResizeHeight;
       bool mCanMove;
       bool mCanClose;
       bool mCanMinimize;
       bool mCanMaximize;
+
+	  //Did the touch down happen inside these buttons?
       bool mPressClose;
       bool mPressMinimize;
       bool mPressMaximize;
-      Point2I mMinSize;
 
-      StringTableEntry mCloseCommand;
+	  //Window settings.
+      S32 mTitleHeight;					//The height of the title bar before appling margin/border/padding.
+      S32 mResizeRightWidth;			//The size of the area inset from the right edge that can be clicked to resize horizontally.
+      S32 mResizeBottomHeight;			//The size of the area inset from the bottom edge that can be clicked to resize vertically.
 
-      S32 mTitleHeight;
-      S32 mResizeRightWidth;
-      S32 mResizeBottomHeight;
-
+	  //Current State
       bool mMouseMovingWin;
       bool mMouseResizeWidth;
       bool mMouseResizeHeight;
@@ -63,51 +65,44 @@ class GuiWindowCtrl : public GuiControl
       RectI mOrigBounds;
       RectI mStandardBounds;
 
+	  //The location of the window parts.
       RectI mCloseButton;
       RectI mMinimizeButton;
       RectI mMaximizeButton;
+	  RectI mTitleBar;
+
       S32 mMinimizeIndex;
       S32 mTabIndex;
 
-      void PositionButtons(void);
-
-   protected:
-      enum BitmapIndices
-      {
-         BmpClose,
-         BmpMaximize,
-         BmpNormal,
-         BmpMinimize,
-
-         BmpCount
-      };
-      enum {
-         BorderTopLeftKey = 12,
-         BorderTopRightKey,
-         BorderTopKey,
-         BorderTopLeftNoKey,
-         BorderTopRightNoKey,
-         BorderTopNoKey,
-         BorderLeft,
-         BorderRight,
-         BorderBottomLeft,
-         BorderBottom,
-         BorderBottomRight,
-         NumBitmaps
-      };
-
-      enum BitmapStates
-      {
-         BmpDefault = 0,
-         BmpHilite,
-         BmpDisabled,
-
-         BmpStates
-      };
-      RectI *mBitmapBounds;  //bmp is [3*n], bmpHL is [3*n + 1], bmpNA is [3*n + 2]
-      TextureHandle mTextureHandle;
+	  //Additional profiles used by the window.
+	  GuiControlProfile *mContentProfile; //Used to render the content section of the window.
+	  GuiControlProfile *mCloseButtonProfile; //Used to render the close button.
+	  GuiControlProfile *mMinButtonProfile; //Used to render the close button.
+	  GuiControlProfile *mMaxButtonProfile; //Used to render the close button.
 
    public:
+	   enum Region
+	   {
+		   TitleBar,
+		   CloseButton,
+		   MinButton,
+		   MaxButton,
+		   None
+	   };
+
+	   enum Icon
+	   {
+		   Close,
+		   Min,
+		   Max
+	   };
+
+	   bool mDepressed;
+	   Region curHitRegion;
+
+	   Region findHitRegion(const Point2I &);
+	   GuiControlState getRegionCurrentState(GuiWindowCtrl::Region region);
+
       GuiWindowCtrl();
       DECLARE_CONOBJECT(GuiWindowCtrl);
       static void initPersistFields();
@@ -119,14 +114,14 @@ class GuiWindowCtrl : public GuiControl
 
       virtual void getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent);
 
-      void setFont(S32 fntTag);
-
       GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1);
       void resize(const Point2I &newPosition, const Point2I &newExtent);
 
+	  void onTouchMove(const GuiEvent &event);
       void onTouchDown(const GuiEvent &event);
       void onTouchDragged(const GuiEvent &event);
       void onTouchUp(const GuiEvent &event);
+	  void onTouchLeave(const GuiEvent &event);
 
       //only cycle tabs through the current window, so overwrite the method
       GuiControl* findNextTabable(GuiControl *curResponder, bool firstCall = true);
@@ -138,6 +133,8 @@ class GuiWindowCtrl : public GuiControl
       void selectWindow(void);
 
       void onRender(Point2I offset, const RectI &updateRect);
+	  RectI renderButtons(const RectI &contentRect);
+	  RectI renderButton(const RectI &contentRect, S32 distanceFromEdge, GuiControlState buttonState, GuiControlProfile *profile, Icon defaultIcon);
 };
 /// @}
 
