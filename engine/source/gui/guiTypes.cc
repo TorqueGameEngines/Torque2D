@@ -185,7 +185,8 @@ S32 GuiBorderProfile::getPadding(const GuiControlState state)
 	return getMax(mPadding[getStateIndex(state)], 0);
 }
 
-ConsoleType(GuiProfile, TypeGuiBorderProfile, sizeof(GuiBorderProfile*), "")
+// Setup the type, this will keep Border profiles from being listed with normal profiles.
+ConsoleType(GuiBProfile, TypeGuiBorderProfile, sizeof(GuiBorderProfile*), "")
 
 ConsoleSetType(TypeGuiBorderProfile)
 {
@@ -202,6 +203,8 @@ ConsoleSetType(TypeGuiBorderProfile)
    GuiBorderProfile **obj = (GuiBorderProfile **)dptr;
    if ((*obj) == profile)
       return;
+
+   *obj = profile;
 }
 
 ConsoleGetType(TypeGuiBorderProfile)
@@ -299,6 +302,7 @@ GuiControlProfile::GuiControlProfile(void) :
 	mVAlignment    = MiddleVAlign;
 	mReturnTab     = false;
 	mNumbersOnly   = false;
+   mProfileForChildrenName = NULL;
 	mProfileForChildren = NULL;
 
 	//fill color
@@ -341,7 +345,7 @@ GuiControlProfile::GuiControlProfile(void) :
       mReturnTab = def->mReturnTab;
       mNumbersOnly = def->mNumbersOnly;
       mCursorColor = def->mCursorColor;
-      mProfileForChildren = def->mProfileForChildren;
+      mProfileForChildrenName = def->mProfileForChildrenName;
       setChildrenProfile(def->mProfileForChildren);
    }
 }
@@ -365,11 +369,11 @@ void GuiControlProfile::initPersistFields()
    addField("fillColorSL",   TypeColorI,     Offset(mFillColorSL, GuiControlProfile));
    addField("fillColorNA",   TypeColorI,     Offset(mFillColorNA, GuiControlProfile));
 
-   addField("borderDefault", TypeSimObjectPtr, Offset(mBorderDefault, GuiControlProfile));
-   addField("borderLeft",    TypeSimObjectPtr, Offset(mBorderLeft, GuiControlProfile));
-   addField("borderRight",   TypeSimObjectPtr, Offset(mBorderRight, GuiControlProfile));
-   addField("borderTop",     TypeSimObjectPtr, Offset(mBorderTop, GuiControlProfile));
-   addField("borderBottom",  TypeSimObjectPtr, Offset(mBorderBottom, GuiControlProfile));
+   addField("borderDefault", TypeGuiBorderProfile, Offset(mBorderDefault, GuiControlProfile));
+   addField("borderLeft",    TypeGuiBorderProfile, Offset(mBorderLeft, GuiControlProfile));
+   addField("borderRight",   TypeGuiBorderProfile, Offset(mBorderRight, GuiControlProfile));
+   addField("borderTop",     TypeGuiBorderProfile, Offset(mBorderTop, GuiControlProfile));
+   addField("borderBottom",  TypeGuiBorderProfile, Offset(mBorderBottom, GuiControlProfile));
 
    addField("fontType",      TypeString,     Offset(mFontType, GuiControlProfile));
    addField("fontSize",      TypeS32,        Offset(mFontSize, GuiControlProfile));
@@ -378,7 +382,7 @@ void GuiControlProfile::initPersistFields()
    addField("fontColor",     TypeColorI,     Offset(mFontColors[BaseColor], GuiControlProfile));
    addField("fontColorHL",   TypeColorI,     Offset(mFontColors[ColorHL], GuiControlProfile));
    addField("fontColorNA",   TypeColorI,     Offset(mFontColors[ColorNA], GuiControlProfile));
-   addField("fontColorSL",  TypeColorI,     Offset(mFontColors[ColorSL], GuiControlProfile));
+   addField("fontColorSL",   TypeColorI,     Offset(mFontColors[ColorSL], GuiControlProfile));
    addField("fontColorLink", TypeColorI,     Offset(mFontColors[ColorUser0], GuiControlProfile));
    addField("fontColorLinkHL", TypeColorI,     Offset(mFontColors[ColorUser1], GuiControlProfile));
 
@@ -394,7 +398,7 @@ void GuiControlProfile::initPersistFields()
 
    addField("soundButtonDown", TypeAudioAssetPtr,  Offset(mSoundButtonDown, GuiControlProfile));
    addField("soundButtonOver", TypeAudioAssetPtr,  Offset(mSoundButtonOver, GuiControlProfile));
-   addField("profileForChildren", TypeSimObjectPtr,  Offset(mProfileForChildren, GuiControlProfile));
+   addField("profileForChildren", TypeString,      Offset(mProfileForChildrenName, GuiControlProfile));
 
    addField("category", TypeString, Offset(mCategory, GuiControlProfile));
 }
@@ -418,9 +422,9 @@ GuiControlProfile* GuiControlProfile::getChildrenProfile()
       return mProfileForChildren;
 
    // Attempt to find the profile specified
-   if (mProfileForChildren)
+   if (mProfileForChildrenName)
    {
-      GuiControlProfile *profile = dynamic_cast<GuiControlProfile*> (Sim::findObject(mProfileForChildren->getName()));
+      GuiControlProfile *profile = dynamic_cast<GuiControlProfile*> (Sim::findObject(mProfileForChildrenName));
 
       if (profile)
          setChildrenProfile(profile);

@@ -174,11 +174,11 @@ public:
    ColorI mFillColorSL;	//Color used when the control is selected.
    ColorI mFillColorNA; //Used if the object is not active or disabled.
 
-   GuiBorderProfile *mBorderDefault;					//The default border settings.
-   GuiBorderProfile *mBorderTop;
-   GuiBorderProfile *mBorderBottom;
-   GuiBorderProfile *mBorderLeft;
-   GuiBorderProfile *mBorderRight;
+   GuiBorderProfile* mBorderDefault;					//The default border settings.
+   GuiBorderProfile* mBorderTop;
+   GuiBorderProfile* mBorderBottom;
+   GuiBorderProfile* mBorderLeft;
+   GuiBorderProfile* mBorderRight;
 
    // font members
    StringTableEntry  mFontType;                    ///< Font face name for the control
@@ -246,7 +246,7 @@ public:
    // sound members
    AssetPtr<AudioAsset> mSoundButtonDown;                 ///< Sound played when the object is "down" ie a button is pushed
    AssetPtr<AudioAsset> mSoundButtonOver;                 ///< Sound played when the mouse is over the object
-
+   StringTableEntry mProfileForChildrenName;
    GuiControlProfile* mProfileForChildren;         ///< Profile used with children controls (such as the scroll bar on a popup menu) when defined.
 public:
    DECLARE_CONOBJECT(GuiControlProfile);
