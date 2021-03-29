@@ -517,7 +517,7 @@ GuiBorderProfile * GuiControlProfile::getTopProfile()
    // Attempt to find the profile specified
    if (mTopProfileName)
    {
-      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mLeftProfileName));
+      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mTopProfileName));
 
       if (profile)
       {
@@ -557,7 +557,7 @@ GuiBorderProfile * GuiControlProfile::getBottomProfile()
    // Attempt to find the profile specified
    if (mBottomProfileName)
    {
-      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mLeftProfileName));
+      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mBottomProfileName));
 
       if (profile)
       {
