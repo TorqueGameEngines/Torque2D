@@ -477,7 +477,7 @@ GuiBorderProfile * GuiControlProfile::getRightProfile()
    // Attempt to find the profile specified
    if (mRightProfileName)
    {
-      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mLeftProfileName));
+      GuiBorderProfile *profile = dynamic_cast<GuiBorderProfile*> (Sim::findObject(mRightProfileName));
 
       if (profile)
       {
@@ -486,7 +486,7 @@ GuiBorderProfile * GuiControlProfile::getRightProfile()
    }
    else
    {
-      setLeftProfile(mBorderDefault);
+      setRightProfile(mBorderDefault);
    }
 
    return mBorderRight;
@@ -733,11 +733,12 @@ void GuiControlProfile::decRefCount()
 {
    // Not sure why this was being tripped when
    // switching profiles in guieditor, but...
+   // following the way this works, it seems that a profile
+   // is being removed before it is added =/
 
-   //AssertFatal(mRefCount, "GuiControlProfile::decRefCount: zero ref count");
+   AssertFatal(mRefCount, "GuiControlProfile::%s::decRefCount: zero ref count", this->getName());
    if(!mRefCount)
 	  return;
-
    --mRefCount;
 
 	if(!mRefCount)
