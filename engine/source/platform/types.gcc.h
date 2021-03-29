@@ -52,7 +52,6 @@ typedef unsigned long long  U64;
 #  define TORQUE_COMPILER_STRING "GCC "
 #endif
 
-
 //--------------------------------------
 // Identify the Operating System
 #if defined(_WIN64)
@@ -130,7 +129,7 @@ typedef unsigned long long  U64;
 #  define TORQUE_CPU_STRING "Intel x86-64"
 #  define TORQUE_CPU_X86_64
 #  define TORQUE_LITTLE_ENDIAN
-#  define TORQUE_64
+#  define TORQUE_CPU_X64
 
 #elif defined(__ppc__)
 #  define TORQUE_CPU_STRING "PowerPC"
@@ -146,7 +145,7 @@ typedef unsigned long long  U64;
 #  define TORQUE_CPU_STRING "ARM"
 #  define TORQUE_CPU_ARM
 #  define TORQUE_LITTLE_ENDIAN
-#  define TORQUE_64
+#  define TORQUE_CPU_X64
 
 #elif defined(EMSCRIPTEN)
 
