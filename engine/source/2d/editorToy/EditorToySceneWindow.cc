@@ -4,7 +4,6 @@
 #include "console/consoleTypes.h"
 #include "graphics/dgl.h"
 #include "platform/event.h"
-#include "2d/editorToy/EditorToySelection.h"
 #include "2d/editorToy/EditorToyTool.h"
 
 #include "2d/editorToy/EditorToySceneWindow_ScriptBinding.h"
@@ -192,7 +191,7 @@ S32 EditorToySceneWindow::getDirNutHit(const Point2I & pt, SceneObject * obj)
    // right
    Vector2 right = right.getVecFromAng(pos, ang, (size.x*0.5f));
    // top
-   Vector2 top = top.getVecFromAng(pos, (ang + mDegToRad(90.0f)), (size.y*0.5f));
+   Vector2 top = top.getVecFromAng(pos, ang + mDegToRad(90.0f), (size.y*0.5f));
    // left
    Vector2 left = left.getVecFromAng(pos, ang - mDegToRad(180.0f), (size.x*0.5f));
    // bottom
@@ -855,61 +854,123 @@ void EditorToySceneWindow::scaleObject(Vector2 size, Vector2 pos, Vector2 mouseP
          mousePos.y = closeY;
    }
 
-
-   if (mSizeMode == SizingLeft)
-   {
-      sizeDelt.x = mousePos.x - (pos.x - (size.x * 0.5f));
-      newSize.x -= sizeDelt.x;
-      newPos.x += sizeDelt.x * 0.5f;
-   }
-   else if (mSizeMode == SizingRight)
-   {
-      sizeDelt.x = mousePos.x - (pos.x + (size.x * 0.5f));
-      newSize.x += sizeDelt.x;
-      newPos.x += sizeDelt.x * 0.5f;
-   }
-   
-   if (mSizeMode == SizingTop)
-   {
-      sizeDelt.y = mousePos.y - (pos.y + (size.y * 0.5f));
-      newSize.y += sizeDelt.y;
-      newPos.y += sizeDelt.y * 0.5f;
-   }
-   else if (mSizeMode == SizingBottom)
-   {
-      sizeDelt.y = mousePos.y - (pos.y - (size.y * 0.5f));
-      newSize.y -= sizeDelt.y;
-      newPos.y += sizeDelt.y * 0.5f;
-   }
-
-   // flip the sizing calcs.
-   if (newSize.x < 0.0f)
+   if (ang == 90.0f || ang == -90.0f)
    {
       if (mSizeMode == SizingLeft)
       {
-         mSizeMode = SizingRight;
+         sizeDelt.x = mousePos.x - (pos.x - (size.y * 0.5f));
+         newSize.y -= sizeDelt.x;
+         newPos.x += sizeDelt.x * 0.5f;
       }
       else if (mSizeMode == SizingRight)
       {
-         mSizeMode = SizingLeft;
+         sizeDelt.x = mousePos.x - (pos.x + (size.y * 0.5f));
+         newSize.y += sizeDelt.x;
+         newPos.x += sizeDelt.x * 0.5f;
       }
-      flipX = true;
-      newSize.x = -newSize.x;
-   }
 
-   if (newSize.y < 0.0f)
-   {
       if (mSizeMode == SizingTop)
       {
-         mSizeMode = SizingBottom;
+         sizeDelt.y = mousePos.y - (pos.y + (size.x * 0.5f));
+         newSize.x += sizeDelt.y;
+         newPos.y += sizeDelt.y * 0.5f;
       }
       else if (mSizeMode == SizingBottom)
       {
-         mSizeMode = SizingTop;
+         sizeDelt.y = mousePos.y - (pos.y - (size.x * 0.5f));
+         newSize.x -= sizeDelt.y;
+         newPos.y += sizeDelt.y * 0.5f;
       }
-      flipY = true;
-      newSize.y = -newSize.y;
+
+      // flip the sizing calcs.
+      if (newSize.y < 0.0f)
+      {
+         if (mSizeMode == SizingLeft)
+         {
+            mSizeMode = SizingRight;
+         }
+         else if (mSizeMode == SizingRight)
+         {
+            mSizeMode = SizingLeft;
+         }
+         flipX = true;
+         newSize.y = -newSize.y;
+      }
+
+      if (newSize.x < 0.0f)
+      {
+         if (mSizeMode == SizingTop)
+         {
+            mSizeMode = SizingBottom;
+         }
+         else if (mSizeMode == SizingBottom)
+         {
+            mSizeMode = SizingTop;
+         }
+         flipY = true;
+         newSize.x = -newSize.x;
+      }
    }
+   else
+   {
+      if (mSizeMode == SizingLeft)
+      {
+         sizeDelt.x = mousePos.x - (pos.x - (size.x * 0.5f));
+         newSize.x -= sizeDelt.x;
+         newPos.x += sizeDelt.x * 0.5f;
+      }
+      else if (mSizeMode == SizingRight)
+      {
+         sizeDelt.x = mousePos.x - (pos.x + (size.x * 0.5f));
+         newSize.x += sizeDelt.x;
+         newPos.x += sizeDelt.x * 0.5f;
+      }
+
+      if (mSizeMode == SizingTop)
+      {
+         sizeDelt.y = mousePos.y - (pos.y + (size.y * 0.5f));
+         newSize.y += sizeDelt.y;
+         newPos.y += sizeDelt.y * 0.5f;
+      }
+      else if (mSizeMode == SizingBottom)
+      {
+         sizeDelt.y = mousePos.y - (pos.y - (size.y * 0.5f));
+         newSize.y -= sizeDelt.y;
+         newPos.y += sizeDelt.y * 0.5f;
+      }
+
+      // flip the sizing calcs.
+      if (newSize.x < 0.0f)
+      {
+         if (mSizeMode == SizingLeft)
+         {
+            mSizeMode = SizingRight;
+         }
+         else if (mSizeMode == SizingRight)
+         {
+            mSizeMode = SizingLeft;
+         }
+         flipX = true;
+         newSize.x = -newSize.x;
+      }
+
+      if (newSize.y < 0.0f)
+      {
+         if (mSizeMode == SizingTop)
+         {
+            mSizeMode = SizingBottom;
+         }
+         else if (mSizeMode == SizingBottom)
+         {
+            mSizeMode = SizingTop;
+         }
+         flipY = true;
+         newSize.y = -newSize.y;
+      }
+
+   }
+
+   
 
    //-----------------------
 
@@ -921,7 +982,7 @@ void EditorToySceneWindow::scaleObject(Vector2 size, Vector2 pos, Vector2 mouseP
 
       if (newAr < oldAr)
       {
-         if ((newSize.x < size.x) && !(mSizeMode == SizingBottom) && !(mSizeMode == SizingTop))
+         if ((newSize.x < size.x))
          {
             newSize.y *= newAr / oldAr;
          }
@@ -932,7 +993,7 @@ void EditorToySceneWindow::scaleObject(Vector2 size, Vector2 pos, Vector2 mouseP
       }
       else
       {
-         if ((newSize.y < size.y) && !(mSizeMode == SizingLeft) && !(mSizeMode == SizingRight))
+         if ((newSize.y < size.y) )
          {
             newSize.x *= oldAr / newAr;
          }
@@ -942,22 +1003,46 @@ void EditorToySceneWindow::scaleObject(Vector2 size, Vector2 pos, Vector2 mouseP
          }
       }
 
-      if (mSizeMode == SizingLeft)
+      if (ang == 90.0f || ang == -90.0f)
       {
-         newPos.x -= (newSize.x - prevResize.x) * 0.5f;
-      }
-      else if (mSizeMode == SizingRight)
-      {
-         newPos.x += (newSize.x - prevResize.x) * 0.5f;
-      }
+         if (mSizeMode == SizingLeft)
+         {
+            newPos.x -= (newSize.y - prevResize.y) * 0.5f;
+         }
+         else if (mSizeMode == SizingRight)
+         {
+            newPos.x += (newSize.y - prevResize.y) * 0.5f;
+         }
 
-      if (mSizeMode == SizingTop)
-      {
-         newPos.y += (newSize.y - prevResize.y) * 0.5f;
+         if (mSizeMode == SizingTop)
+         {
+            newPos.y -= (newSize.x - prevResize.x) * 0.5f;
+         }
+         else if (mSizeMode == SizingBottom)
+         {
+            newPos.y += (newSize.x - prevResize.x) * 0.5f;
+         }
       }
-      else if (mSizeMode == SizingBottom)
+      else
       {
-         newPos.y -= (newSize.y - prevResize.y) * 0.5f;
+         if (mSizeMode == SizingLeft)
+         {
+            newPos.x -= (newSize.x - prevResize.x) * 0.5f;
+         }
+         else if (mSizeMode == SizingRight)
+         {
+            newPos.x += (newSize.x - prevResize.x) * 0.5f;
+         }
+
+         if (mSizeMode == SizingTop)
+         {
+            newPos.y += (newSize.y - prevResize.y) * 0.5f;
+         }
+         else if (mSizeMode == SizingBottom)
+         {
+            newPos.y -= (newSize.y - prevResize.y) * 0.5f;
+         }
+
       }
    }
 
