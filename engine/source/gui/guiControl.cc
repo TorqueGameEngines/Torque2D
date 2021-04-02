@@ -1407,6 +1407,14 @@ bool GuiControl::ControlIsChild(GuiControl *child)
    return false;
 }
 
+void GuiControl::onFocus()
+{
+	//bubble the focus up
+	GuiControl *parent = getParent();
+	if (parent)
+		parent->onFocus();
+}
+
 bool GuiControl::isFirstResponder()
 {
    GuiCanvas *root = getRoot();

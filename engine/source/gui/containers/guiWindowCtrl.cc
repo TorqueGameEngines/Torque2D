@@ -27,6 +27,8 @@
 #include "gui/containers/guiWindowCtrl.h"
 #include "gui/guiDefaultControlRender.h"
 
+#include "guiWindowCtrl_ScriptBinding.h"
+
 IMPLEMENT_CONOBJECT(GuiWindowCtrl);
 
 GuiWindowCtrl::GuiWindowCtrl(void)
@@ -71,6 +73,10 @@ GuiWindowCtrl::GuiWindowCtrl(void)
    setField("minButtonProfile", "GuiWindowMinButtonProfile");
    setField("maxButtonProfile", "GuiWindowMaxButtonProfile");
    setField("profile", "GuiWindowProfile");
+
+   mLeftRightCursor = NULL;
+   mUpDownCursor = NULL;
+   mNWSECursor = NULL;
 }
 
 void GuiWindowCtrl::initPersistFields()
@@ -88,6 +94,9 @@ void GuiWindowCtrl::initPersistFields()
    addField("closeButtonProfile", TypeGuiProfile, Offset(mCloseButtonProfile, GuiWindowCtrl));
    addField("minButtonProfile", TypeGuiProfile, Offset(mMinButtonProfile, GuiWindowCtrl));
    addField("maxButtonProfile", TypeGuiProfile, Offset(mMaxButtonProfile, GuiWindowCtrl));
+   addField("leftRightCursor", TypeGuiCursor, Offset(mLeftRightCursor, GuiWindowCtrl));
+   addField("upDownCursor", TypeGuiCursor, Offset(mUpDownCursor, GuiWindowCtrl));
+   addField("nWSECursor", TypeGuiCursor, Offset(mNWSECursor, GuiWindowCtrl));
 }
 
 bool GuiWindowCtrl::isMinimized(S32 &index)
@@ -209,13 +218,12 @@ void GuiWindowCtrl::onTouchDown(const GuiEvent &event)
       else if (curHitRegion == TitleBar)
       {
          mMouseMovingWin = mCanMove;
-         mMouseResizeWidth = false;
-         mMouseResizeHeight = false;
+         ResizeComplete();
       }
    }
    else
    {
-      mMouseMovingWin = false;
+      MoveComplete();
 
       //see if we clicked on the right edge
       if (mResizeWidth && (localPoint.x > mBounds.extent.x - mResizeRightWidth))
@@ -306,9 +314,8 @@ void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
    mouseUnlock();
    setUpdate();
 
-   mMouseMovingWin = false;
-   mMouseResizeWidth = false;
-   mMouseResizeHeight = false;
+   MoveComplete();
+   ResizeComplete();
 
    GuiControl *parent = getParent();
    if (! parent)
@@ -318,7 +325,10 @@ void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
    Point2I localPoint = globalToLocalCoord(event.mousePoint);
    if (closing && mCloseButton.pointInRect(localPoint))
    {
-      //Con::evaluate(mCloseCommand);
+		if(isMethod("onClose"))
+		{
+			Con::executef(this, 1, "onClose");
+		}
    }
    else if (maximizing && mMaximizeButton.pointInRect(localPoint))
    {
@@ -330,6 +340,11 @@ void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
                         mStandardBounds.extent);
          //set the flag
          mMaximized = false;
+
+		 if (isMethod("onRestore"))
+		 {
+			 Con::executef(this, 1, "onRestore");
+		 }
       }
       else
       {
@@ -348,6 +363,11 @@ void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
 
          //set the flag
          mMaximized = true;
+
+		 if (isMethod("onMaximize"))
+		 {
+			 Con::executef(this, 1, "onMaximize");
+		 }
       }
    }
    else if (minimizing && mMinimizeButton.pointInRect(localPoint))
@@ -360,6 +380,11 @@ void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
                         mStandardBounds.extent);
          //set the flag
          mMinimized = false;
+
+		 if (isMethod("onRestore"))
+		 {
+			 Con::executef(this, 1, "onRestore");
+		 }
       }
       else
       {
@@ -419,6 +444,11 @@ void GuiWindowCtrl::onTouchUp(const GuiEvent &event)
 
          //set the flag
          mMinimized = true;
+
+		 if (isMethod("onMinimize"))
+		 {
+			 Con::executef(this, 1, "onMinimize");
+		 }
       }
    }
 
@@ -552,6 +582,19 @@ bool GuiWindowCtrl::onKeyDown(const GuiEvent &event)
    return Parent::onKeyDown(event);
 }
 
+void GuiWindowCtrl::onFocus()
+{
+	//bubble the focus up
+	GuiControl *parent = getParent();
+	if (parent)
+	{
+		parent->pushObjectToBack(this);
+		parent->onFocus();
+	}
+
+	setFirstResponder(mFirstResponder);
+}
+
 void GuiWindowCtrl::selectWindow(void)
 {
    //first make sure this window is the front most of its siblings
@@ -563,6 +606,27 @@ void GuiWindowCtrl::selectWindow(void)
 
    //also set the first responder to be the one within this window
    setFirstResponder(mFirstResponder);
+}
+
+void GuiWindowCtrl::ResizeComplete()
+{
+	if ((mMouseResizeWidth || mMouseResizeHeight) && isMethod("onResize"))
+	{
+		Con::executef(this, 1, "onResize");
+	}
+
+	mMouseResizeWidth = false;
+	mMouseResizeHeight = false;
+}
+
+void GuiWindowCtrl::MoveComplete()
+{
+	if (mMouseMovingWin && isMethod("onMove"))
+	{
+		Con::executef(this, 1, "onMove");
+	}
+
+	mMouseMovingWin = false;
 }
 
 void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
@@ -608,7 +672,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 
 	if (contentRectTitle.isValidRect())
 	{
-		RectI textRect = renderButtons(contentRectTitle);
+		RectI textRect = renderButtons(offset, contentRectTitle);
 		renderText(textRect.point, textRect.extent, mText, mProfile);
 	}
 
@@ -634,7 +698,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 	}
 }
 
-RectI GuiWindowCtrl::renderButtons(const RectI &contentRect)
+RectI GuiWindowCtrl::renderButtons(const Point2I &offset, const RectI &contentRect)
 {
 	S32 distanceFromEdge = 0;
 
@@ -642,7 +706,7 @@ RectI GuiWindowCtrl::renderButtons(const RectI &contentRect)
 	{
 		GuiControlState state = getRegionCurrentState(Region::CloseButton);
 		RectI content = renderButton(contentRect,  distanceFromEdge, state, mCloseButtonProfile, Icon::Close);
-		mCloseButton.set(Point2I(content.point.x - contentRect.point.x, content.point.y - contentRect.point.y), content.extent);
+		mCloseButton.set(Point2I(content.point.x - offset.x, content.point.y - offset.y), content.extent);
 		distanceFromEdge += content.extent.x;
 
 		GuiBorderProfile *leftProfile = mCloseButtonProfile->getLeftBorder();
@@ -657,7 +721,7 @@ RectI GuiWindowCtrl::renderButtons(const RectI &contentRect)
 	{
 		GuiControlState state = getRegionCurrentState(Region::MaxButton);
 		RectI content = renderButton(contentRect, distanceFromEdge, state, mMaxButtonProfile, Icon::Max);
-		mMaximizeButton.set(Point2I(content.point.x - contentRect.point.x, content.point.y - contentRect.point.y), content.extent);
+		mMaximizeButton.set(Point2I(content.point.x - offset.x, content.point.y - offset.y), content.extent);
 		distanceFromEdge += content.extent.x;
 
 		GuiBorderProfile *leftProfile = mMaxButtonProfile->getLeftBorder();
@@ -672,7 +736,7 @@ RectI GuiWindowCtrl::renderButtons(const RectI &contentRect)
 	{
 		GuiControlState state = getRegionCurrentState(Region::MinButton);
 		RectI content = renderButton(contentRect, distanceFromEdge, state, mMinButtonProfile, Icon::Min);
-		mMinimizeButton.set(Point2I(content.point.x - contentRect.point.x, content.point.y - contentRect.point.y), content.extent);
+		mMinimizeButton.set(Point2I(content.point.x - offset.x, content.point.y - offset.y), content.extent);
 		distanceFromEdge += content.extent.x;
 
 		GuiBorderProfile *leftProfile = mMinButtonProfile->getLeftBorder();
@@ -704,16 +768,16 @@ RectI GuiWindowCtrl::renderButton(const RectI &contentRect, S32 distanceFromEdge
 		//get the right margin and add it to the distance from the edge
 		GuiBorderProfile *rightProfile = profile->getRightBorder();
 		S32 rightSize = (rightProfile) ? rightProfile->getMargin(buttonState) : 0;
-		distanceFromEdge += rightSize;
 		finalButtonRect.point.x = contentRect.point.x + (contentRect.extent.x - finalButtonRect.extent.x) - distanceFromEdge;
+		distanceFromEdge += rightSize;
 	}
 	else
 	{
 		//get the left margin and add it to the disance from the edge
 		GuiBorderProfile *leftProfile = profile->getLeftBorder();
 		S32 leftSize = (leftProfile) ? leftProfile->getMargin(buttonState) : 0;
+		finalButtonRect.point.x = contentRect.point.x + distanceFromEdge;
 		distanceFromEdge += leftSize;
-		finalButtonRect.point.x = distanceFromEdge;
 	}
 	RectI finalButtonContent = applyMargins(finalButtonRect.point, finalButtonRect.extent, buttonState, profile);
 	renderUniversalRect(finalButtonContent, profile, buttonState);
@@ -728,7 +792,17 @@ RectI GuiWindowCtrl::renderButton(const RectI &contentRect, S32 distanceFromEdge
 		//draw the icon
 		if (defaultIcon == Icon::Close)
 		{
+			Point2I p1 = Point2I(contentRect.point.x + 1, contentRect.point.y);
+			Point2I p2 = Point2I(contentRect.point.x, contentRect.point.y + 1);
+			Point2I p3 = Point2I(contentRect.point.x + contentRect.extent.x - 1, contentRect.point.y + contentRect.extent.y);
+			Point2I p4 = Point2I(contentRect.point.x + contentRect.extent.x, contentRect.point.y + contentRect.extent.y - 1);
+			dglDrawQuadFill(p1, p2, p3, p4, profile->getFontColor(buttonState));
 
+			Point2I p5 = Point2I(contentRect.point.x, contentRect.point.y + contentRect.extent.y - 1);
+			Point2I p6 = Point2I(contentRect.point.x + 1, contentRect.point.y + contentRect.extent.y);
+			Point2I p7 = Point2I(contentRect.point.x + contentRect.extent.x, contentRect.point.y + 1);
+			Point2I p8 = Point2I(contentRect.point.x + contentRect.extent.x - 1, contentRect.point.y);
+			dglDrawQuadFill(p5, p6, p7, p8, profile->getFontColor(buttonState));
 		}
 		else if (defaultIcon == Icon::Min)
 		{
@@ -741,7 +815,34 @@ RectI GuiWindowCtrl::renderButton(const RectI &contentRect, S32 distanceFromEdge
 		}
 		else if (defaultIcon == Icon::Max)
 		{
+			//left side
+			S32 h = (contentRect.len_y() / 2) - 1;
+			Point2I p1 = Point2I(contentRect.point.x, contentRect.point.y);
+			Point2I p2 = Point2I(contentRect.point.x, contentRect.point.y + contentRect.extent.y);
+			Point2I p3 = Point2I(contentRect.point.x + 2, contentRect.point.y + contentRect.extent.y);
+			Point2I p4 = Point2I(contentRect.point.x + 2, contentRect.point.y);
+			dglDrawQuadFill(p1, p2, p3, p4, profile->getFontColor(buttonState));
 
+			//right side
+			p1.set(contentRect.point.x + contentRect.extent.x - 2, contentRect.point.y);
+			p2.set(contentRect.point.x + contentRect.extent.x - 2, contentRect.point.y + contentRect.extent.y);
+			p3.set(contentRect.point.x + contentRect.extent.x, contentRect.point.y + contentRect.extent.y);
+			p4.set(contentRect.point.x + contentRect.extent.x, contentRect.point.y);
+			dglDrawQuadFill(p1, p2, p3, p4, profile->getFontColor(buttonState));
+
+			//top
+			p1.set(contentRect.point.x + 2, contentRect.point.y);
+			p2.set(contentRect.point.x + 2, contentRect.point.y + 2);
+			p3.set(contentRect.point.x + contentRect.extent.x - 2, contentRect.point.y + 2);
+			p4.set(contentRect.point.x + contentRect.extent.x - 2, contentRect.point.y);
+			dglDrawQuadFill(p1, p2, p3, p4, profile->getFontColor(buttonState));
+
+			//bottom
+			p1.set(contentRect.point.x + 2, contentRect.point.y + contentRect.extent.y - 2);
+			p2.set(contentRect.point.x + 2, contentRect.point.y + contentRect.extent.y);
+			p3.set(contentRect.point.x + contentRect.extent.x - 2, contentRect.point.y + contentRect.extent.y);
+			p4.set(contentRect.point.x + contentRect.extent.x - 2, contentRect.point.y + contentRect.extent.y - 2);
+			dglDrawQuadFill(p1, p2, p3, p4, profile->getFontColor(buttonState));
 		}
 	}
 
@@ -768,77 +869,124 @@ GuiControlState GuiWindowCtrl::getRegionCurrentState(GuiWindowCtrl::Region regio
 
 void GuiWindowCtrl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent)
 {
-   Point2I mousePos  = lastGuiEvent.mousePoint;
-   RectI winRect   = mBounds;
-   RectI rightRect = RectI( ( ( winRect.extent.x + winRect.point.x ) - mResizeRightWidth), winRect.point.y, mResizeRightWidth, winRect.extent.y );
-   RectI bottomRect = RectI( winRect.point.x, ( ( winRect.point.y + winRect.extent.y ) - mResizeBottomHeight), winRect.extent.x , mResizeBottomHeight );
+	Point2I mousePos  = lastGuiEvent.mousePoint;
+	RectI winRect   = mBounds;
+	RectI rightRect = RectI( ( ( winRect.extent.x + winRect.point.x ) - mResizeRightWidth), winRect.point.y, mResizeRightWidth, winRect.extent.y );
+	RectI bottomRect = RectI( winRect.point.x, ( ( winRect.point.y + winRect.extent.y ) - mResizeBottomHeight), winRect.extent.x , mResizeBottomHeight );
 
-   bool resizeRight = rightRect.pointInRect( mousePos );
-   bool resizeBottom = bottomRect.pointInRect( mousePos );
+	bool resizeRight = rightRect.pointInRect( mousePos );
+	bool resizeBottom = bottomRect.pointInRect( mousePos );
 
-   if ( resizeRight && resizeBottom && mResizeHeight && mResizeWidth )
-   {
-      if(GuiControl::smCursorChanged != CursorManager::curResizeNWSE)
-      {
-         // We've already changed the cursor, 
-         // so set it back before we change it again.
-         if(GuiControl::smCursorChanged != -1)
-            Input::popCursor();
-
-         // Now change the cursor shape
-         Input::pushCursor(CursorManager::curResizeNWSE);
-         GuiControl::smCursorChanged = CursorManager::curResizeNWSE;
-      }
-
-      //cursor = mNWSECursor;
-   }
+	if ( resizeRight && resizeBottom && mResizeHeight && mResizeWidth )
+	{
+		if (mNWSECursor == NULL)
+		{
+			SimObject *obj;
+			obj = Sim::findObject("NWSECursor");
+			mNWSECursor = dynamic_cast<GuiCursor*>(obj);
+		}
+		if(mNWSECursor != NULL)
+		{
+			cursor = mNWSECursor;
+		}
+	}
       
-   else if ( resizeBottom && mResizeHeight )
-   {
-      if(GuiControl::smCursorChanged != CursorManager::curResizeHorz)
-      {
-         // We've already changed the cursor, 
-         // so set it back before we change it again.
-         if(GuiControl::smCursorChanged != -1)
-            Input::popCursor();
-
-         // Now change the cursor shape
-         Input::pushCursor(CursorManager::curResizeHorz);
-         GuiControl::smCursorChanged = CursorManager::curResizeHorz;
-      }
-
-      //cursor = mUpDownCursor;
-   }
-   else if ( resizeRight && mResizeWidth )
-   {
-      if(GuiControl::smCursorChanged != CursorManager::curResizeVert)
-      {
-         // We've already changed the cursor, 
-         // so set it back before we change it again.
-         if(GuiControl::smCursorChanged != -1)
-            Input::popCursor();
-
-         // Now change the cursor shape
-         Input::pushCursor(CursorManager::curResizeVert);
-         GuiControl::smCursorChanged = CursorManager::curResizeVert;
-      }
-
-      //cursor = mLeftRightCursor;
-   }
-   else
-   {
-      if(GuiControl::smCursorChanged != -1)
-      {
-         // We've already changed the cursor, 
-         // so set it back before we change it again.
-         Input::popCursor();
-
-         // We haven't changed it
-         GuiControl::smCursorChanged = -1;
-      }
-
-      return;
-   }
+	else if ( resizeBottom && mResizeHeight )
+	{
+		if(mUpDownCursor == NULL)
+		{
+			SimObject *obj;
+			obj = Sim::findObject("UpDownCursor");
+			mUpDownCursor = dynamic_cast<GuiCursor*>(obj);
+		}
+		if (mUpDownCursor != NULL)
+		{
+			cursor = mUpDownCursor;
+		}
+	}
+	else if ( resizeRight && mResizeWidth )
+	{
+		if (mLeftRightCursor == NULL)
+		{
+			SimObject *obj;
+			obj = Sim::findObject("LeftRightCursor");
+			mLeftRightCursor = dynamic_cast<GuiCursor*>(obj);
+		}
+		if (mLeftRightCursor != NULL)
+		{
+			cursor = mLeftRightCursor;
+		}
+	}
 }
 
+void GuiWindowCtrl::setControlContentProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiWindowCtrl::setControlContentProfile: invalid content profile");
+	if (prof == mContentProfile)
+		return;
+	if (mAwake)
+		mContentProfile->decRefCount();
+	mContentProfile = prof;
+	if (mAwake)
+		mContentProfile->incRefCount();
+}
 
+void GuiWindowCtrl::setControlCloseButtonProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiWindowCtrl::setControlCloseButtonProfile: invalid close button profile");
+	if (prof == mCloseButtonProfile)
+		return;
+	if (mAwake)
+		mCloseButtonProfile->decRefCount();
+	mCloseButtonProfile = prof;
+	if (mAwake)
+		mCloseButtonProfile->incRefCount();
+}
+
+void GuiWindowCtrl::setControlMinButtonProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiWindowCtrl::setControlMinButtonProfile: invalid minimize button profile");
+	if (prof == mMinButtonProfile)
+		return;
+	if (mAwake)
+		mMinButtonProfile->decRefCount();
+	mMinButtonProfile = prof;
+	if (mAwake)
+		mMinButtonProfile->incRefCount();
+}
+
+void GuiWindowCtrl::setControlMaxButtonProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiWindowCtrl::setControlMaxButtonProfile: invalid maximize button profile");
+	if (prof == mMaxButtonProfile)
+		return;
+	if (mAwake)
+		mMaxButtonProfile->decRefCount();
+	mMaxButtonProfile = prof;
+	if (mAwake)
+		mMaxButtonProfile->incRefCount();
+}
+
+void GuiWindowCtrl::setControlLeftRightCursor(GuiCursor* cursor)
+{
+	AssertFatal(cursor, "GuiWindowCtrl::setControlLeftRightCursor: invalid cursor");
+	if (cursor == mLeftRightCursor)
+		return;
+	mLeftRightCursor = cursor;
+}
+
+void GuiWindowCtrl::setControlUpDownCursor(GuiCursor* cursor)
+{
+	AssertFatal(cursor, "GuiWindowCtrl::setControlUpDownCursor: invalid cursor");
+	if (cursor == mUpDownCursor)
+		return;
+	mUpDownCursor = cursor;
+}
+
+void GuiWindowCtrl::setControlNWSECursor(GuiCursor* cursor)
+{
+	AssertFatal(cursor, "GuiWindowCtrl::setControlNWSECursor: invalid cursor");
+	if (cursor == mNWSECursor)
+		return;
+	mNWSECursor = cursor;
+}

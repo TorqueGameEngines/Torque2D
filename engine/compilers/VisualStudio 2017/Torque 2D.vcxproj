@@ -1152,6 +1152,7 @@
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h" />

@@ -91,6 +91,37 @@ void GuiCursor::render(const Point2I &pos)
    dglDrawBitmap(mTextureHandle, renderPos);
 }
 
+// Setup the type, this will keep Border profiles from being listed with normal profiles.
+ConsoleType(GuiCursor, TypeGuiCursor, sizeof(GuiCursor*), "")
+
+ConsoleSetType(TypeGuiCursor)
+{
+	GuiCursor *profile = NULL;
+	if (argc == 1)
+		Sim::findObject(argv[0], profile);
+
+	AssertWarn(profile != NULL, avar("GuiCursor: requested gui cursor (%s) does not exist.", argv[0]));
+	if (!profile)
+		profile = dynamic_cast<GuiCursor*>(Sim::findObject("DefaultCursor"));
+
+	AssertFatal(profile != NULL, avar("GuiCursor: unable to find specified cursor (%s) and DefaultCursor does not exist!", argv[0]));
+
+	GuiCursor **obj = (GuiCursor **)dptr;
+	if ((*obj) == profile)
+		return;
+
+	*obj = profile;
+}
+
+ConsoleGetType(TypeGuiCursor)
+{
+	static char returnBuffer[256];
+
+	GuiCursor **obj = (GuiCursor**)dptr;
+	dSprintf(returnBuffer, sizeof(returnBuffer), "%s", *obj ? (*obj)->getName() ? (*obj)->getName() : (*obj)->getIdString() : "");
+	return returnBuffer;
+}
+
 //------------------------------------------------------------------------------
 IMPLEMENT_CONOBJECT(GuiBorderProfile);
 
