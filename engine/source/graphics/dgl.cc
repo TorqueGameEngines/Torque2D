@@ -927,6 +927,17 @@ void dglDrawQuadFill(const Point2I &point1, const Point2I &point2, const Point2I
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 }
 
+void dglDrawDot(const Point2F &screenPoint,const ColorI &color)
+{
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glBegin(GL_POINTS);
+   glColor4ub(color.red, color.green, color.blue, color.alpha);
+   glVertex2f(screenPoint.x, screenPoint.y);
+   glDisable(GL_BLEND);
+   glEnd();
+}
+
 void dglDraw2DSquare( const Point2F &screenPoint, F32 width, F32 spinAngle )
 {
    width *= 0.5;

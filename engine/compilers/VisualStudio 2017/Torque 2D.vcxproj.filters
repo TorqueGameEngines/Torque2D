@@ -202,6 +202,9 @@
     <Filter Include="Box2D\Particle">
       <UniqueIdentifier>{b2903a96-6c49-4961-82a8-f1832989d4a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2d\editorToy">
+      <UniqueIdentifier>{598766e4-7dc1-45b8-8acf-f133f4fced82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\audio\audio.cc">
@@ -1476,6 +1479,12 @@
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc">
       <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToySceneWindow.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToyTool.cc">
+      <Filter>2d\editorToy</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -3318,6 +3327,15 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h">
       <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow_ScriptBinding.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToyTool.h">
+      <Filter>2d\editorToy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

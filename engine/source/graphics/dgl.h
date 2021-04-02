@@ -189,6 +189,8 @@ void dglDrawRectFill(const Point2I &upperL, const Point2I &lowerR, const ColorI 
 void dglDrawRectFill(const RectI &rect, const ColorI &color);
 /// draws an UNTEXTURED filled quad in specified color
 void dglDrawQuadFill(const Point2I &point1, const Point2I &point2, const Point2I &point3, const Point2I &point4, const ColorI &color);
+/// draws a dot.
+void dglDrawDot(const Point2F &screenPoint, const ColorI &color);
 /// draws a square, with center point "screenPoint", width of "width" on an angle of "spinAngle" in 2d
 void dglDraw2DSquare( const Point2F &screenPoint, F32 width, F32 spinAngle );
 /// draws a square, with center point "position", width of "width" on an angle of "spinAngle" in 3d
