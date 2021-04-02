@@ -150,7 +150,6 @@ void GuiScrollCtrl::setControlThumbProfile(GuiControlProfile* prof)
 	mThumbProfile = prof;
 	if (mAwake)
 		mThumbProfile->incRefCount();
-
 }
 
 void GuiScrollCtrl::setControlTrackProfile(GuiControlProfile* prof)
@@ -163,7 +162,6 @@ void GuiScrollCtrl::setControlTrackProfile(GuiControlProfile* prof)
 	mTrackProfile = prof;
 	if (mAwake)
 		mTrackProfile->incRefCount();
-
 }
 
 void GuiScrollCtrl::setControlArrowProfile(GuiControlProfile* prof)
@@ -176,7 +174,6 @@ void GuiScrollCtrl::setControlArrowProfile(GuiControlProfile* prof)
 	mArrowProfile = prof;
 	if (mAwake)
 		mArrowProfile->incRefCount();
-
 }
 
 GuiControl* GuiScrollCtrl::findHitControl(const Point2I& pt, S32 initialLayer)

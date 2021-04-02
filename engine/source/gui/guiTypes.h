@@ -121,6 +121,7 @@ public:
    void onRemove();
    void render(const Point2I &pos);
 };
+DefineConsoleType(TypeGuiCursor)
 
 /// A GuiBorderProfile holds on the information needed for a single border of a GuiControl.
 /// GuiBorderProfiles can be assigned to a GuiControlProfile to cover one or all of the borders.

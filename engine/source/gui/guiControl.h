@@ -547,6 +547,10 @@ public:
     virtual void onMiddleMouseDragged(const GuiEvent &event);
 
     /// @}
+
+	//Called just before onTouch down for the hit control. The focus should then bubble up through the 
+	//controls allowing windows to move to the front.
+	virtual void onFocus();
     
     /// @name Editor Mouse Events
     ///

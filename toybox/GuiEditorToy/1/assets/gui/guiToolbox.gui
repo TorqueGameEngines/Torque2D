@@ -27,19 +27,17 @@
 		VertSizing = "bottom";
 		position = "640 40";
 		Extent = "220 380";
-		MinExtent = "8 2";
+		MinExtent = "100 100";
 		canSave = "1";
 		Visible = "1";
 		hovertime = "1000";
 		text = "GUI Toolbox";
-		maxLength = "1024";
-		resizeWidth = "1";
-		resizeHeight = "1";
+		resizeWidth = "3";
+		resizeHeight = "3";
 		canMove = "1";
 		canClose = "0";
 		canMinimize = "1";
 		canMaximize = "0";
-		minSize = "50 50";
 
 		new GuiScrollCtrl() {
             canSaveDynamicFields = "0";
@@ -51,7 +49,7 @@
             HorizSizing = "width";
             VertSizing = "height";
             position = "0 0";
-            Extent = "220 360";
+            Extent = "214 357";
             MinExtent = "8 2";
             canSave = "1";
             Visible = "1";
@@ -96,7 +94,7 @@
 		VertSizing = "bottom";
 		position = "60 40";
 		Extent = "360 380";
-		MinExtent = "8 2";
+		MinExtent = "100 100";
 		canSave = "1";
 		Visible = "1";
 		hovertime = "1000";
@@ -120,7 +118,7 @@
             HorizSizing = "width";
             VertSizing = "height";
             position = "0 0";
-            Extent = "360 360";
+            Extent = "354 357";
             MinExtent = "8 2";
             canSave = "1";
             Visible = "1";
@@ -155,7 +153,7 @@
 		VertSizing = "bottom";
 		position = "360 40";
 		Extent = "220 380";
-		MinExtent = "8 2";
+		MinExtent = "100 100";
 		canSave = "1";
 		Visible = "1";
 		hovertime = "1000";
@@ -179,7 +177,7 @@
             HorizSizing = "width";
             VertSizing = "height";
             position = "0 0";
-            Extent = "220 360";
+            Extent = "214 357";
             MinExtent = "8 2";
             canSave = "1";
             Visible = "1";

@@ -204,6 +204,14 @@ if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiD
 	category = "defaultListBox";
 };
 
+if(!isObject(GuiWindowBorderProfile)) new GuiBorderProfile (GuiWindowBorderProfile : GuiDefaultBorderProfile)
+{
+	padding = 10;
+	paddingHL = 10;
+	paddingSL = 10;
+	paddingNA = 4;
+};
+
 if(!isObject(GuiWindowProfile)) new GuiControlProfile (GuiWindowProfile : GuiDefaultProfile)
 {
    fillColor = AdjustColorValue($color1, 10);
@@ -211,8 +219,11 @@ if(!isObject(GuiWindowProfile)) new GuiControlProfile (GuiWindowProfile : GuiDef
    fillColorSL = $color4;
    fillColorNA = $color1;
    category = "defaultWindow";
+   align = "Left";
 
    fontColorSL = $color5;
+
+   borderLeft = GuiWindowBorderProfile;
 };
 
 if(!isObject(GuiWindowContentBorderProfile)) new GuiBorderProfile (GuiWindowContentBorderProfile : GuiDefaultBorderProfile)
@@ -220,8 +231,8 @@ if(!isObject(GuiWindowContentBorderProfile)) new GuiBorderProfile (GuiWindowCont
 	borderColor = AdjustColorValue($color1, 10);
 	borderColorSL = AdjustColorValue($color4, -10);
 
-	border = 1;
-	borderSL = 1;
+	border = 3;
+	borderSL = 3;
 };
 
 if(!isObject(GuiWindowContentProfile)) new GuiControlProfile (GuiWindowContentProfile : GuiDefaultProfile)
@@ -240,10 +251,10 @@ if(!isObject(GuiWindowButtonBorderProfile)) new GuiBorderProfile (GuiWindowButto
 	marginSL = 1;
 	marginNA = 1;
 
-	padding = 2;
-	paddingHL = 2;
-	paddingSL = 2;
-	paddingNA = 2;
+	padding = 3;
+	paddingHL = 3;
+	paddingSL = 3;
+	paddingNA = 3;
 };
 
 if(!isObject(GuiWindowCloseButtonProfile)) new GuiControlProfile (GuiWindowCloseButtonProfile : GuiDefaultProfile)

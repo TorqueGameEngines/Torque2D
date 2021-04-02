@@ -611,6 +611,9 @@ void GuiCanvas::rootMouseDown(const GuiEvent &event)
          GuiControl *ctrl = static_cast<GuiControl *>(*i);
          GuiControl *controlHit = ctrl->findHitControl(event.mousePoint);
 
+		 //Regardless of what the control does, it has the user's focus.
+		 controlHit->onFocus();
+
          if (controlHit->mProfile->mUseInput)
          {
             controlHit->onTouchDown(event);
@@ -660,16 +663,13 @@ void GuiCanvas::rootScreenTouchDown(const GuiEvent &event)
               
             //If the control we hit is not the same one that is locked,  
             // then unlock the existing control.  
-            if (bool(mMouseCapturedControl))  
+            if (bool(mMouseCapturedControl) && mMouseCapturedControl->isMouseLocked() && mMouseCapturedControl != controlHit)  
             {  
-                if(mMouseCapturedControl->isMouseLocked())  
-                {  
-                    if(mMouseCapturedControl != controlHit)  
-                    {  
-                        mMouseCapturedControl->onTouchLeave(event);  
-                    }  
-                }  
-            }  
+                mMouseCapturedControl->onTouchLeave(event);   
+            } 
+			
+			//Regardless of what the control does, it has the user's focus.
+			controlHit->onFocus();
               
 			if (controlHit->mProfile->mUseInput)
 			{
