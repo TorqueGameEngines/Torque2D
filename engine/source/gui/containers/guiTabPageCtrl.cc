@@ -178,3 +178,25 @@ void GuiTabPageCtrl::selectWindow(void)
    //also set the first responder to be the one within this window
    setFirstResponder(mFirstResponder);
 }
+
+void GuiTabPageCtrl::onRender(Point2I offset, const RectI &updateRect)
+{
+	RectI ctrlRect = applyMargins(offset, mBounds.extent, NormalState, mProfile);
+
+	if (!ctrlRect.isValidRect())
+	{
+		return;
+	}
+
+	renderUniversalRect(ctrlRect, mProfile, NormalState);
+
+	//Render Text
+	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
+	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, NormalState, mProfile);
+
+	if (contentRect.isValidRect())
+	{
+		//Render the childen
+		renderChildControls(offset, contentRect, updateRect);
+	}
+}

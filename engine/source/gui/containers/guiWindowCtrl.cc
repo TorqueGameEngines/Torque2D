@@ -644,12 +644,6 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 	else if (hasFocus)
 	{
 		currentState = SelectedState;
-
-		GuiControl *parent = getParent();
-		if (parent)
-		{
-			parent->pushObjectToBack(this);
-		}
 	}
 	else if (curHitRegion == TitleBar)
 	{
