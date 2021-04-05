@@ -52,6 +52,7 @@ class GuiTabPageCtrl : public GuiControl
       void selectWindow(void);               ///< Select this window
 
       virtual void setText(const char *txt = NULL); ///< Override setText function to signal parent we need to update.
+	  void onRender(Point2I offset, const RectI &updateRect);
 };
 
 #endif //_GUITABPAGECTRL_H_
