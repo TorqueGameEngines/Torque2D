@@ -89,7 +89,9 @@ void GuiWindowCtrl::initPersistFields()
    addField("canClose",          TypeBool,         Offset(mCanClose, GuiWindowCtrl));
    addField("canMinimize",       TypeBool,         Offset(mCanMinimize, GuiWindowCtrl));
    addField("canMaximize",       TypeBool,         Offset(mCanMaximize, GuiWindowCtrl));
-   addField("titleHeight",		TypeS32,           Offset(mTitleHeight, GuiWindowCtrl));
+   addField("titleHeight",			TypeS32,		Offset(mTitleHeight, GuiWindowCtrl));
+   addField("resizeRightWidth",		TypeS32,		Offset(mResizeRightWidth, GuiWindowCtrl));
+   addField("resizeBottomHeight",	TypeS32,		Offset(mResizeBottomHeight, GuiWindowCtrl));
    addField("contentProfile", TypeGuiProfile, Offset(mContentProfile, GuiWindowCtrl));
    addField("closeButtonProfile", TypeGuiProfile, Offset(mCloseButtonProfile, GuiWindowCtrl));
    addField("minButtonProfile", TypeGuiProfile, Offset(mMinButtonProfile, GuiWindowCtrl));
