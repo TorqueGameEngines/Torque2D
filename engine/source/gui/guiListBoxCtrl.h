@@ -92,6 +92,7 @@ public:
 
    void              setItemColor(S32 index, ColorF color);
    void              clearItemColor(S32 index);
+   void				 clearAllColors();
 
    void              deleteItem( S32 index );
    void              clearItems();
@@ -100,27 +101,23 @@ public:
    void              removeSelection( S32 index );
    void              addSelection( LBItem *item, S32 index );
    void              addSelection( S32 index );
-   inline void       setMultipleSelection( bool allowMultipleSelect = true ) { mMultipleSelections = allowMultipleSelect; };
+   inline void       setMultipleSelection(bool allowMultipleSelect = true) { mMultipleSelections = allowMultipleSelect; };
+   inline bool       getMultipleSelection() { return mMultipleSelections; };
 
    // Sizing
    void              updateSize();
    virtual void      parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
    virtual bool      onWake();
+   virtual void		 addObject(SimObject *obj);
 
    // Rendering
    virtual void      onRender( Point2I offset, const RectI &updateRect );
-   virtual void      onRenderItem( RectI itemRect, LBItem *item );
-   void              drawBox( const Point2I &box, S32 size, ColorI &outlineColor, ColorI &boxColor );
+   virtual void      onRenderItem( RectI &itemRect, LBItem *item );
+   void              drawBox( RectI &box, ColorI &boxColor );
 
    // Mouse Events
    virtual void      onTouchDown( const GuiEvent &event );
    virtual void      onTouchDragged(const GuiEvent &event);
-
-   // String Utility
-   static U32        getStringElementCount( const char *string );
-   static const char* getStringElement( const char* inString, const U32 index );
-   
-
 };
 
 #endif

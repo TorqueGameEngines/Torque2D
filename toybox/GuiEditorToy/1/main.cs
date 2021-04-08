@@ -29,28 +29,28 @@ function GuiEditorToy::create( %this )
     // Set the sandbox drag mode availability.
     Sandbox.allowManipulation( pan );
     Sandbox.allowManipulation( pull );
-    
+
     // Set the manipulation mode.
     Sandbox.useManipulation( pull );
 	SandboxScene.clear();
     //SandboxWindow.delete();
 	GuiEditor.blankGui = new GuiControl();
-	
+
 	// Init menu
 	GuiEditorToy.initMenus();
-	
+
     // Reset the toy initially.
     GuiEditorToy.reset();
-	
+
 }
 
 function GuiEditorToy::initMenus( %this )
 {
    if( isObject( %this.menuGroup ) )
       %this.menuGroup.delete();
-      
+
    %this.menuGroup = new SimGroup();
-   
+
    //set up %cmdctrl variable so that it matches OS standards
    %cmdCtrl = $platform $= "macos" ? "Cmd" : "Ctrl";
 
@@ -59,7 +59,7 @@ function GuiEditorToy::initMenus( %this )
       superClass = "MenuBuilder";
       barPosition = 0;
       barName = "File";
-      
+
       item[0] = "New Gui..." TAB %cmdCtrl SPC "N" TAB "GuiEditorStartCreate();";
       item[1] = "Open Gui..." TAB %cmdCtrl SPC "O" TAB "GuiEditorOpenGui();";
       item[2] = "-";
@@ -71,7 +71,7 @@ function GuiEditorToy::initMenus( %this )
       superClass = "MenuBuilder";
       barPosition = 1;
       barName = "Layout";
-      
+
       item[0] = "Align Left" TAB %cmdCtrl SPC "L" TAB "GuiEditor.Justify(0);";
       item[1] = "Align Right" TAB %cmdCtrl SPC "R" TAB "GuiEditor.Justify(2);";
       item[2] = "Align Top" TAB %cmdCtrl SPC "T" TAB "GuiEditor.Justify(3);";
@@ -86,33 +86,33 @@ function GuiEditorToy::initMenus( %this )
       item[11] = "Lock Selection" TAB "" TAB "GuiEditorTreeView.lockSelection(true);";
       item[12] = "Unlock Selection" TAB "" TAB "GuiEditorTreeView.lockSelection(false);";
    };
-   
+
    %movemenu = new PopupMenu()
    {
       superClass = "MenuBuilder";
       barPosition = 2;
       barName = "Move";
-      
+
       item[0] = "Nudge Up" TAB "Up" TAB "GuiEditor.moveSelection(0,-1);";
       item[1] = "Nudge Down" TAB "Down" TAB "GuiEditor.moveSelection(0,1);";
 	  item[2] = "Nudge Right" TAB "Right" TAB "GuiEditor.moveSelection(1,0);";
 	  item[3] = "Nudge Left" TAB "Left" TAB "GuiEditor.moveSelection(-1,0);";
    };
-   
+
    // add menus to a group
    %this.menuGroup.add(%fileMenu);
    %this.menuGroup.add(%layoutmenu);
    %this.menuGroup.add(%movemenu);
-   
+
    for( %i = 0; %i < %this.menuGroup.getCount(); %i++ )
      %this.menuGroup.getObject( %i ).attachToMenuBar();
-   
+
 }
 
 //-----------------------------------------------------------------------------
 
 function GuiEditorToy::destroy( %this )
-{   
+{
 }
 
 //-----------------------------------------------------------------------------
@@ -120,27 +120,27 @@ function GuiEditorToy::destroy( %this )
 function GuiEditorToy::reset(%this)
 {
     // Clear the scene.
-    
+
 	Canvas.setContent(GuiEditorCtrl);
-	
+
 	GuiEditorContent.add(GuiEditor.blankGui);
 	GuiEditorCtrl.add(GuiTreeViewWindow);
-	
+
 	$GuiRootElement = GuiBlank;
 	%rootSize = $GuiRootElement.extent;
-	
+
 	GuiEditor.setRoot(GuiBlank);
 	GuiEditorTreeView.open(GuiBlank);
-	
+
 	GuiEditor.setFirstResponder();
-	
+
 	GuiEditor.setSnapToGrid("8");
-	
+
     GuiEditorCtrl.add(GuiToolbox);
     GuiEditorCtrl.add(GuiInspectorWindow);
-    
+
     //GuiEditorCtrl.add(CBBWindow);
-	
+
 }
 
 function GuiEditorToy::save(%this)
@@ -150,7 +150,7 @@ function GuiEditorToy::save(%this)
 	{
 		return;
 	}
-	
+
 	if(%guiObj.getName() !$= "")
 	{
 		%name = %guiObj.getName() @ ".gui";
@@ -159,7 +159,7 @@ function GuiEditorToy::save(%this)
 	{
 		%name = "untitled.gui";
 	}
-	
+
 	%fo = new FileObject();
 	%fo.openForWrite(%name);
 	%fo.writeLine("//--- Created With GUIEDITORTOY ---//");
@@ -167,7 +167,7 @@ function GuiEditorToy::save(%this)
 	%fo.writeLine("//--- GUIEDITORTOY END ---//");
 	%fo.close();
 	%fo.delete();
-	
+
 }
 
 //-----------------------------------------------------------------------------
@@ -185,23 +185,23 @@ function GuiToolbox::onWake(%this)
 
 //-----------------------------------------------------------------------------
 
-function GuiEditorToolboxDrag::onTouchDragged(%this)
+function GuiEditorToolboxDrag::onTouchDragged(%this, %index, %text)
 {
 	%position = %this.getGlobalPosition();
 	%cursorpos = Canvas.getCursorPos();
-   
+
 	%class = %this.getItemText(%this.getSelectedItem());
 	%payload = eval("return new " @ %class @ "();");
 	if(!isObject(%payload))
 		return;
-      
+
 	%xOffset = getWord(%payload.extent, 0) / 2;
-	%yOffset = getWord(%payload.extent, 1) / 2; 
-	
+	%yOffset = getWord(%payload.extent, 1) / 2;
+
 	// position where the drag will start, to prevent visible jumping.
 	%xPos = getWord(%cursorpos, 0) - %xOffset;
 	%yPos = getWord(%cursorpos, 1) - %yOffset;
-	   
+
 	%dragCtrl = new GuiDragAndDropControl() {
 		canSaveDynamicFields = "0";
 		Profile = "GuiDefaultProfile";
@@ -218,7 +218,7 @@ function GuiEditorToolboxDrag::onTouchDragged(%this)
 
 	%dragCtrl.add(%payload);
 	Canvas.getContent().add(%dragCtrl);
-	   
+
 	%dragCtrl.startDragging(%xOffset, %yOffset);
 }
 
@@ -230,12 +230,12 @@ function GuiEditor::onControlDragged(%this, %payload, %position)
 	%x = getWord(%pos, 0);
 	%y = getWord(%pos, 1);
 	%target = GuiEditorContent.findHitControl(%x, %y);
-	
+
 	while(! %target.isContainer )
 	{
 		%target = %target.getParent();
 	}
-	
+
 	if(%target != %this.getCurrentAddset())
 	{
 		%this.setCurrentAddSet(%target);
@@ -246,19 +246,19 @@ function GuiEditor::onControlDragged(%this, %payload, %position)
 //-----------------------------------------------------------------------------
 
 function GuiEditor::onControlDropped(%this, %payload, %position)
-{  
+{
    %pos = %payload.getGlobalPosition();
    %x = getWord(%pos, 0);
    %y = getWord(%pos, 1);
-   
+
    if(%x > $GuiRootElement.extent.x || %y > $GuiRootElement.extent.y)
    {
       messageBox("Error", "Cannot add a control outside the root gui element!");
       return;
    }
-   
+
    %this.addNewCtrl(%payload);
-   
+
    %payload.setPositionGlobal(%x, %y);
    %this.setFirstResponder();
 }
@@ -279,7 +279,7 @@ function GuiEditor::onSelectionMoved(%this, %ctrl)
 }
 
 function GuiEditor::onClearSelected(%this)
-{ 
+{
    GuiEditorTreeView.clearSelection();
 }
 
@@ -302,7 +302,7 @@ function GuiEditor::onAddSelected(%this,%ctrl)
 
 function GuiEditor::onRemoveSelected(%this,%ctrl)
 {
-   GuiEditorTreeView.removeSelection(%ctrl); 
+   GuiEditorTreeView.removeSelection(%ctrl);
 }
 
 //-----------------------------------------------------------------------------
@@ -310,7 +310,7 @@ function GuiEditor::onRemoveSelected(%this,%ctrl)
 function GuiEditorTreeView::update(%this)
 {
 	%obj = GuiEditorContent.getObject(0);
-	
+
 	if(!isObject(%obj))
 	{
 		GuiEditorTreeView.clear();
@@ -340,7 +340,7 @@ function GuiEditorTreeView::onRemoveSelection(%this, %ctrl)
 }
 
 function GuiEditorTreeView::onDeleteSelection(%this)
-{ 
+{
    GuiEditor.clearSelection();
 }
 
@@ -353,8 +353,3 @@ function GuiEditorTreeView::onSelect(%this, %obj)
       GuiEditor.select(%obj);
    }
 }
-
-
-
-
-

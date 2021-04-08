@@ -1166,6 +1166,7 @@
     <ClInclude Include="..\..\source\gui\guiDefaultControlRender.h" />
     <ClInclude Include="..\..\source\gui\guiInputCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMLTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMLTextEditCtrl.h" />
