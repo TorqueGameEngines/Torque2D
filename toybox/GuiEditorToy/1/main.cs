@@ -202,9 +202,9 @@ function GuiEditorToolboxDrag::onTouchDragged(%this, %index, %text)
 	%xPos = getWord(%cursorpos, 0) - %xOffset;
 	%yPos = getWord(%cursorpos, 1) - %yOffset;
 
-	%dragCtrl = new GuiDragAndDropControl() {
+	%dragCtrl = new GuiDragAndDropCtrl() {
 		canSaveDynamicFields = "0";
-		Profile = "GuiDefaultProfile";
+		Profile = "GuiDragAndDropProfile";
 		HorizSizing = "right";
 		VertSizing = "bottom";
 		Position = %xPos SPC %yPos;
@@ -213,6 +213,7 @@ function GuiEditorToolboxDrag::onTouchDragged(%this, %index, %text)
 		canSave = "1";
 		Visible = "1";
 		hovertime = "1000";
+		Text = %text;
 		deleteOnMouseUp = true;
 	};
 

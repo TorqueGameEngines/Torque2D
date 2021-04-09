@@ -731,3 +731,9 @@ if (!isObject(GuiLabelProfile)) new GuiControlProfile (GuiLabelProfile : GuiDefa
 	fontSize = $platformFontSize;
 	align = "left";
 };
+
+if(!isObject(GuiDragAndDropProfile)) new GuiControlProfile (GuiDragAndDropProfile : GuiDefaultProfile)
+{
+   fillColor = SetColorAlpha($color4, 50);
+   fontColor = $color5;
+};
