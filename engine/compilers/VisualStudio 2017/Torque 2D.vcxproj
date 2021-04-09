@@ -1150,6 +1150,7 @@
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiChainCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h" />
@@ -1173,6 +1174,7 @@
     <ClInclude Include="..\..\source\gui\guiDefaultControlRender.h" />
     <ClInclude Include="..\..\source\gui\guiInputCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMLTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMLTextEditCtrl.h" />

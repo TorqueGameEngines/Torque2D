@@ -348,7 +348,7 @@ public:
 
     /// Adds an object as a child of this object.
     /// @param   obj   New child object of this control
-    void addObject(SimObject *obj);
+    virtual void addObject(SimObject *obj);
 
     /// Removes a child object from this control.
     /// @param   obj Object to remove from this control

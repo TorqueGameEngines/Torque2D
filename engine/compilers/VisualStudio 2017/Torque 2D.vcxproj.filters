@@ -3344,6 +3344,12 @@
     <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />

@@ -191,17 +191,38 @@ if(!isObject(GuiPanelProfile)) new GuiControlProfile (GuiPanelProfile : GuiDefau
 	category = "defaultPanel";
 };
 
+if (!isObject(GuiListBoxBorderProfile)) new GuiBorderProfile (GuiListBoxBorderProfile : GuiDefaultBorderProfile)
+{
+	margin = 1;
+	marginHL = 1;
+	marginSL = 1;
+	MarginNA = 1;
+
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+};
+
 if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiDefaultProfile)
 {
     // fill color
     fillColor = $color1;
     fillColorHL = AdjustColorValue($color1, 10);
-    fillColorSL = AdjustColorValue($color1, 15);
+    fillColorSL = $color4;
     fillColorNA = SetColorAlpha($color1, 100);
 	align = left;
-	tab = true;
-	canKeyFocus = true;
+
+	tab = false;
+	canKeyFocus = false;
 	category = "defaultListBox";
+
+	fontColor = $color3;
+	fontColorHL = AdjustColorValue($color3, 20);
+	fontColorSL = AdjustColorValue($color3, 20);
+	fontColorNA = AdjustColorValue($color3, -30);
+
+	borderDefault = GuiListBoxBorderProfile;
 };
 
 if(!isObject(GuiWindowBorderProfile)) new GuiBorderProfile (GuiWindowBorderProfile : GuiDefaultBorderProfile)
@@ -709,4 +730,10 @@ if (!isObject(GuiLabelProfile)) new GuiControlProfile (GuiLabelProfile : GuiDefa
 	fontColor = "255 255 255 255";
 	fontSize = $platformFontSize;
 	align = "left";
+};
+
+if(!isObject(GuiDragAndDropProfile)) new GuiControlProfile (GuiDragAndDropProfile : GuiDefaultProfile)
+{
+   fillColor = SetColorAlpha($color4, 50);
+   fontColor = $color5;
 };

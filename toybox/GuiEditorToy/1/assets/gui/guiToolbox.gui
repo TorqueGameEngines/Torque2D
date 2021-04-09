@@ -69,7 +69,7 @@
 				Profile = "GuiListBoxProfile";
 				HorizSizing = "width";
 				VertSizing = "height";
-				position = "2 2";
+				position = "0 0";
 				Extent = "218 1260";
 				MinExtent = "8 2";
 				canSave = "1";

@@ -23,29 +23,24 @@
 #include "gui/containers/guiDragAndDropCtrl.h"
 #include "gui/guiCanvas.h"
 
-IMPLEMENT_CONOBJECT(GuiDragAndDropControl);
+#include "guiDragAndDropCtrl_ScriptBinding.h"
 
-void GuiDragAndDropControl::initPersistFields()
+IMPLEMENT_CONOBJECT(GuiDragAndDropCtrl);
+
+GuiDragAndDropCtrl::GuiDragAndDropCtrl()
+{
+	mDeleteOnMouseUp = false;
+
+	setField("profile", "GuiDefaultProfile");
+}
+
+void GuiDragAndDropCtrl::initPersistFields()
 {
    Parent::initPersistFields();
-   addField("deleteOnMouseUp", TypeBool, Offset(mDeleteOnMouseUp, GuiDragAndDropControl));
+   addField("deleteOnMouseUp", TypeBool, Offset(mDeleteOnMouseUp, GuiDragAndDropCtrl));
 }
 
-ConsoleMethod(GuiDragAndDropControl, startDragging, void, 2, 4, "( int x, int y ) "
-			  "@param x X coordinate relative to the point on the object on which you are clicking\n"
-			  "@param y Y coordinate relative to the point on the object on which you are clicking\n"
-			  "@note If no point is passed, or only one coordinate is passed, the method defaults to (0,0)")
-{
-   Point2I offset = Point2I(0, 0);
-   if (argc > 3)
-   {
-      offset.x = dAtoi(argv[2]);
-      offset.y = dAtoi(argv[3]);
-   }
-   object->startDragging(offset);
-}
-
-void GuiDragAndDropControl::startDragging(Point2I offset)
+void GuiDragAndDropCtrl::startDragging(Point2I offset)
 {
    GuiCanvas* canvas = getRoot();
    AssertFatal(canvas, "DragAndDropControl wasn't added to the gui before the drag started.");
@@ -61,12 +56,12 @@ void GuiDragAndDropControl::startDragging(Point2I offset)
    mLastTarget=NULL;
 }
 
-void GuiDragAndDropControl::onTouchDown(const GuiEvent& event)
+void GuiDragAndDropCtrl::onTouchDown(const GuiEvent& event)
 {
    startDragging(event.mousePoint - mBounds.point);
 }
 
-void GuiDragAndDropControl::onTouchDragged(const GuiEvent& event)
+void GuiDragAndDropCtrl::onTouchDragged(const GuiEvent& event)
 {
    mBounds.point = event.mousePoint - mOffset;
 
@@ -83,7 +78,7 @@ void GuiDragAndDropControl::onTouchDragged(const GuiEvent& event)
    sendDragEvent(dragTarget, "onControlDragged");
 }
 
-void GuiDragAndDropControl::onTouchUp(const GuiEvent& event)
+void GuiDragAndDropCtrl::onTouchUp(const GuiEvent& event)
 {
    mouseUnlock();
 
@@ -94,7 +89,7 @@ void GuiDragAndDropControl::onTouchUp(const GuiEvent& event)
       deleteObject();
 }
 
-void GuiDragAndDropControl::sendDragEvent(GuiControl* target, const char* event)
+void GuiDragAndDropCtrl::sendDragEvent(GuiControl* target, const char* event)
 {
    if(!target || !target->isMethod(event))
       return;
@@ -105,7 +100,7 @@ void GuiDragAndDropControl::sendDragEvent(GuiControl* target, const char* event)
    Con::executef(target, 3, event, Con::getIntArg(at(0)->getId()), position);
 }
 
-GuiControl* GuiDragAndDropControl::findDragTarget(Point2I mousePoint, const char* method)
+GuiControl* GuiDragAndDropCtrl::findDragTarget(Point2I mousePoint, const char* method)
 {
    // If there are any children and we have a parent.
    GuiControl* parent = getParent();
