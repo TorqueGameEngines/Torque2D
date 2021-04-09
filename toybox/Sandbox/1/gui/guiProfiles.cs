@@ -220,7 +220,7 @@ if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiD
 	fontColor = $color3;
 	fontColorHL = AdjustColorValue($color3, 20);
 	fontColorSL = AdjustColorValue($color3, 20);
-	fontColorNA = SetColorAlpha($color1, 100);
+	fontColorNA = AdjustColorValue($color3, -30);
 
 	borderDefault = GuiListBoxBorderProfile;
 };

@@ -614,6 +614,11 @@ void GuiListBoxCtrl::drawBox(RectI &box, ColorI &boxColor)
 #pragma region InputEvents
 void GuiListBoxCtrl::onTouchDragged(const GuiEvent &event)
 {
+	if (!mActive)
+	{
+		return;
+	}
+
    Parent::onTouchDragged(event);
 
    Point2I localPoint = globalToLocalCoord(event.mousePoint);
@@ -632,6 +637,11 @@ void GuiListBoxCtrl::onTouchDragged(const GuiEvent &event)
 
 void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
 {
+	if (!mActive)
+	{
+		return;
+	}
+
    Point2I localPoint = globalToLocalCoord(event.mousePoint);
    S32 itemHit = ( localPoint.y < 0 ) ? -1 : (S32)mFloor( (F32)localPoint.y / (F32)mItemSize.y );
 

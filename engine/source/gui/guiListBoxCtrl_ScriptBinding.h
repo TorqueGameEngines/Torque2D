@@ -57,10 +57,10 @@ ConsoleMethodWithDocs(GuiListBoxCtrl, clearSelection, ConsoleVoid, 2, 2, "()")
 
 /*! Sets an item to selected or unselected using an index.
 	@param index The zero-based index of the item that should be selected.
-	@param setting If true, the item is selected. If false, it is unselected.
+	@param isSelected If true, the item is selected. If false, it is unselected. If omitted, will default to true.
 	@return No return value.
 */
-ConsoleMethodWithDocs(GuiListBoxCtrl, setSelected, ConsoleVoid, 3, 4, "(S32 index, bool setting)")
+ConsoleMethodWithDocs(GuiListBoxCtrl, setSelected, ConsoleVoid, 3, 4, "(S32 index, [bool isSelected])")
 {
 	bool value = true;
 	if (argc == 4)
@@ -97,7 +97,7 @@ ConsoleMethodWithDocs(GuiListBoxCtrl, getSelectedItem, ConsoleInt, 2, 2, "()")
 }
 
 /*! Returns a list of selected item indexes.
-	@return A spaced-delimited list of selected item indexes or -1 if no items are selected.
+	@return A space-delimited list of selected item indexes or -1 if no items are selected.
 */
 ConsoleMethodWithDocs(GuiListBoxCtrl, getSelectedItems, ConsoleString, 2, 2, "()")
 {
@@ -126,10 +126,10 @@ ConsoleMethodWithDocs(GuiListBoxCtrl, getSelectedItems, ConsoleString, 2, 2, "()
 	return retBuffer;
 }
 
-/*! Finds an item with the given text.
+/*! Finds all items with the given text.
 	@param itemText The text to search for.
-	@param caseSensitive If true, a cases sensitive search will be performed.
-	@return A spaced-delimited list of matching item indexes or -1 if no items are found.
+	@param caseSensitive If true, a case-sensitive search will be performed.
+	@return A space-delimited list of matching item indexes or -1 if no items are found.
 */
 ConsoleMethodWithDocs(GuiListBoxCtrl, findItemText, ConsoleInt, 3, 4, "(string itemText, bool caseSensitive)")
 {
