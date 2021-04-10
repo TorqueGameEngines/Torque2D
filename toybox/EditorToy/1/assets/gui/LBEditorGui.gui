@@ -1,0 +1,41 @@
+//--- Created With GUIEDITORTOY ---//
+%guiContent = new GuiControl(LBEditorGui) {
+   Name = "LBEditorGui";
+   canSaveDynamicFields = "0";
+   hidden = "0";
+   locked = "0";
+   isContainer = "1";
+   Profile = "GuiDefaultProfile";
+   HorizSizing = "right";
+   VertSizing = "bottom";
+   Position = "0 0";
+   Extent = "1024 768";
+   MinExtent = "8 2";
+   canSave = "1";
+   Visible = "1";
+   Active = "0";
+   tooltipWidth = "250";
+   hovertime = "1000";
+
+   new EditorToySceneWindow(LBEditorGuiSceneWindow) {
+      canSaveDynamicFields = "0";
+      hidden = "0";
+      locked = "0";
+      isContainer = "0";
+      Profile = "SandboxWindowProfile";
+      HorizSizing = "width";
+      VertSizing = "height";
+      Position = "0 0";
+      Extent = "1024 768";
+      MinExtent = "8 2";
+      canSave = "1";
+      Visible = "1";
+      Active = "1";
+      tooltipWidth = "250";
+      hovertime = "1000";
+      lockMouse = "0";
+      UseWindowInputEvents = "1";
+      UseObjectInputEvents = "0";
+   };
+};
+//--- GUIEDITORTOY END ---//

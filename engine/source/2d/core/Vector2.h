@@ -88,6 +88,7 @@ struct Vector2 : b2Vec2
     /// Utility.
     inline void setAngle(const F32 radians)                             { x = mCos(radians); y = mSin(radians); }
     inline void setPolar(const F32 radians,F32 length)                  { x = mCos(radians)*length; y = mSin(radians)*length; }
+    inline Vector2 getVecFromAng(Vector2 curPos, F32 radians, F32 length) { F32 o = mSin(radians)*length; F32 a = mCos(radians)*length; return curPos + Vector2(a, o); }
     inline void setString(const char* pString )
     {
         const U32 elementCount = Utility::mGetStringElementCount(pString);
