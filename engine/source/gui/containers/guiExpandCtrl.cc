@@ -185,4 +185,4 @@ void GuiExpandCtrl::processTick()
 	{
 		setProcessTicks(false);
 	}
-};
+}

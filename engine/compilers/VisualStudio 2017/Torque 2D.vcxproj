@@ -1175,6 +1175,7 @@
     <ClInclude Include="..\..\source\gui\guiPopUpCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiPopUpCtrlEx.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h" />

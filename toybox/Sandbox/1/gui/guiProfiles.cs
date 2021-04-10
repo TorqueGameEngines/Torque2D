@@ -737,3 +737,42 @@ if(!isObject(GuiDragAndDropProfile)) new GuiControlProfile (GuiDragAndDropProfil
    fillColor = SetColorAlpha($color4, 50);
    fontColor = $color5;
 };
+
+if (!isObject(GuiProgressBorderProfile)) new GuiBorderProfile (GuiProgressBorderProfile : GuiDefaultBorderProfile)
+{
+	padding = 2;
+	paddingHL = 0;
+	paddingSL = 0;
+
+	border = 2;
+	borderHL = 2;
+	borderSL = 2;
+
+	margin = 0;
+	marginHL = 3;
+	marginSL = 3;
+
+	borderColor = AdjustColorValue($color1, -10);
+	borderColorHL = "255 255 255 50";
+	borderColorSL = "255 255 255 50";
+};
+
+if (!isObject(GuiProgressDarkBorderProfile)) new GuiBorderProfile (GuiProgressDarkBorderProfile : GuiProgressBorderProfile)
+{
+	borderColorHL = "0 0 0 50";
+	borderColorSL = "0 0 0 50";
+};
+
+if(!isObject(GuiProgressProfile)) new GuiControlProfile (GuiProgressProfile : GuiDefaultProfile)
+{
+   fillColor = $color1;
+   fillColorHL = $color4;
+   fillColorSL = AdjustColorValue($color4, 10);
+
+   fontColorHL = $color3;
+   fontColorSL = $color5;
+
+   borderDefault = GuiProgressBorderProfile;
+   borderBottom = GuiProgressDarkBorderProfile;
+   borderRight = GuiProgressDarkBorderProfile;
+};

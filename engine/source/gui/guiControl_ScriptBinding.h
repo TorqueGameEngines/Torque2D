@@ -108,7 +108,7 @@ ConsoleMethodWithDocs( GuiControl, getValue, ConsoleString, 2, 2, ())
 }
 
 /*! Use the setActive method to (de)activate this control. Once active, a control can accept inputs. Controls automatically re-shade/skin themselves to reflect their active/inactive state.
-    @param isActive A boolean value. f isActive is true, this control is activated, else it is set to inactive.
+    @param isActive A boolean value. If isActive is true, this control is activated, else it is set to inactive.
     @return No return value
 */
 ConsoleMethodWithDocs( GuiControl, setActive, ConsoleVoid, 3, 3, ( isActive ))
