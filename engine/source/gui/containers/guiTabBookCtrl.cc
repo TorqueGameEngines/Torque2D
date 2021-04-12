@@ -158,7 +158,7 @@ void GuiTabBookCtrl::onChildAdded( GuiControl *child )
    // Calculate Page Information
    calculatePageTabs();
 
-   child->resize( mPageRect.point, mPageRect.extent );
+   child->resize( Point2I(0, 0), mPageRect.extent );
 }
 
 
@@ -224,15 +224,13 @@ void GuiTabBookCtrl::resize(const Point2I &newPosition, const Point2I &newExtent
    for(i = begin(); i != end(); i++)
    {
       GuiControl *ctrl = static_cast<GuiControl *>(*i);
-      ctrl->resize( mPageRect.point, mPageRect.extent );
+      ctrl->resize( Point2I(0, 0), mPageRect.extent );
    }
 }
 
 void GuiTabBookCtrl::childResized(GuiControl *child)
 {
-   //Parent::childResized( child );
-
-   child->resize( mPageRect.point, mPageRect.extent );
+   child->resize( Point2I(0,0), mPageRect.extent );
 }
 
 Point2I GuiTabBookCtrl::getTabLocalCoord(const Point2I &src)
@@ -344,7 +342,7 @@ void GuiTabBookCtrl::onRender(Point2I offset, const RectI &updateRect)
 	if(mPageRect.isValidRect())
 	{
 		// Render Children
-		renderChildControls(offset, mBounds, updateRect);
+		renderChildControls(offset, RectI(offset + mPageRect.point, mPageRect.extent), updateRect);
 	}
 }
 

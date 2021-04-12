@@ -53,7 +53,7 @@ GuiWindowCtrl::GuiWindowCtrl(void)
    mMouseMovingWin = false;
    mMouseResizeWidth = false;
    mMouseResizeHeight = false;
-   mBounds.extent.set(100, 200);
+   mBounds.extent.set(300, 240);
    mMinimizeIndex = -1;
    mTabIndex = -1;
 

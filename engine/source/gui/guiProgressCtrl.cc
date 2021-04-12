@@ -33,6 +33,7 @@ IMPLEMENT_CONOBJECT(GuiProgressCtrl);
 
 GuiProgressCtrl::GuiProgressCtrl()
 {
+	mBounds.extent.set(230, 24);
    mCurrent = 0.0f;
    mStart = 0.0f;
    mEnd = 0.0f;
