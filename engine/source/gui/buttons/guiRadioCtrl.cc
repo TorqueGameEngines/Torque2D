@@ -45,7 +45,7 @@ void GuiRadioCtrl::renderInnerControl(RectI &boxRect, const GuiControlState curr
 {
 	U8 stateIndex = currentState;
 
-	if ((mProfile->mImageAsset->isAssetValid() && mProfile->mImageAsset->getFrameCount() > stateIndex) 
+	if ((mProfile->mImageAsset != NULL && mProfile->mImageAsset->isAssetValid() && mProfile->mImageAsset->getFrameCount() > stateIndex) 
 		|| (mProfile->mBitmapName != NULL && mProfile->constructBitmapArray() > stateIndex))
 	{
 		renderUniversalRect(boxRect, mProfile, currentState);
