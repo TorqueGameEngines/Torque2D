@@ -3332,6 +3332,8 @@
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow.h">
       <Filter>2d\editorToy</Filter>
     </ClInclude>
