@@ -57,11 +57,11 @@
 			text="Background Color:"
 			maxLength="255"
 			truncate="0" />
-		<GuiPopUpMenuCtrl
+		<GuiDropDownCtrl
 			Name="BackgroundColorSelectList"
 			canSaveDynamicFields="0"
 			isContainer="0"
-			Profile="GuiPopUpMenuProfile"
+			Profile="GuiDropDownProfile"
 			HorizSizing="relative"
 			VertSizing="relative"
 			Position="0 22"
@@ -74,11 +74,7 @@
 			toolTipProfile="GuiToolTipProfile"
 			toolTip="Selects the background color for the scene."
 			tooltipWidth="250"
-			maxLength="1024"
-			maxPopupHeight="200"
-			sbUsesNAColor="0"
-			reverseTextList="0"
-			bitmapBounds="16 16" />
+			scrollBarThickness="12" />
 
 		<!-- Resolution -->
 		<GuiControl
@@ -100,11 +96,11 @@
 			text="Resolution:"
 			maxLength="255"
 			truncate="0" />
-		<GuiPopUpMenuCtrl
+		<GuiDropDownCtrl
 			Name="ResolutionSelectList"
 			canSaveDynamicFields="0"
 			isContainer="0"
-			Profile="GuiPopUpMenuProfile"
+			Profile="GuiDropDownProfile"
 			HorizSizing="relative"
 			VertSizing="relative"
 			Position="0 78"
@@ -116,12 +112,7 @@
 			hovertime="1000"
 			toolTipProfile="GuiToolTipProfile"
 			toolTip="Selects the screen resolution for the window."
-			tooltipWidth="250"
-			maxLength="1024"
-			maxPopupHeight="200"
-			sbUsesNAColor="0"
-			reverseTextList="0"
-			bitmapBounds="16 16" />
+			tooltipWidth="250" />
 
 		<!-- Fullscreen Option -->
 		<GuiCheckBoxCtrl

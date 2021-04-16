@@ -844,6 +844,21 @@ const ColorI& GuiControlProfile::getFontColor(const GuiControlState state)
 	}
 }
 
+bool GuiControlProfile::usesAssetRendering(const GuiControlState state)
+{
+	return mImageAsset != NULL && mImageAsset->isAssetValid() && mImageAsset->getFrameCount() > state;
+}
+
+bool GuiControlProfile::usesBitmapRendering(const GuiControlState state)
+{
+	return !usesAssetRendering(state) && mBitmapName != NULL && constructBitmapArray() > state;
+}
+
+bool GuiControlProfile::usesDefaultRendering(const GuiControlState state)
+{
+	return !usesAssetRendering(state) && !usesBitmapRendering(state);
+}
+
 ConsoleType( GuiProfile, TypeGuiProfile, sizeof(GuiControlProfile*), "" )
 
 ConsoleSetType( TypeGuiProfile )

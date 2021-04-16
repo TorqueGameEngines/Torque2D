@@ -293,6 +293,9 @@ public:
 
    const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.
    const ColorI& getFontColor(const GuiControlState state); //Returns the font color based on the state.
+   bool usesAssetRendering(const GuiControlState state);
+   bool usesBitmapRendering(const GuiControlState state);
+   bool usesDefaultRendering(const GuiControlState state);
 
    GuiBorderProfile* getLeftBorder() { return mBorderLeft; }
    GuiBorderProfile* getRightBorder() { return mBorderRight; }

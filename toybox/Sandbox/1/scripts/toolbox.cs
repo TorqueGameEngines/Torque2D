@@ -119,13 +119,13 @@ function initializeToolbox()
         %colorName = getStockColorName(%i);
 
         // Add to the list.
-        BackgroundColorSelectList.add( getStockColorName(%i), %i );
+		%colorName = getStockColorName(%i);
+        BackgroundColorSelectList.addItem( %colorName, getStockColorI(%colorName) );
 
         // Select the color if it's the default one.
         if ( %colorName $= $pref::Sandbox::defaultBackgroundColor )
             BackgroundColorSelectList.setSelected( %i );
     }
-    BackgroundColorSelectList.sort();
 
     ToyCategorySelectList.initialize();
 
@@ -165,7 +165,7 @@ function initializeToolbox()
             $sandboxResolutions[%outputIndex] = %width SPC %height SPC %bpp;
 
             // Add to the list.
-            ResolutionSelectList.add( %width @ "x" @ %height SPC "(" @ %bpp @ ")", %outputIndex );
+            ResolutionSelectList.addItem( %width @ "x" @ %height SPC "(" @ %bpp @ ")" );
 
             // Select the resolution if it's the default one.
             if ( %width == %activeWidth && %height == %activeHeight && %bpp == %activeBpp )
@@ -192,7 +192,7 @@ function toggleToolbox(%make)
 
     // Finish if the console is awake.
     //if ( ConsoleDialog.isAwake() )
-    //    return;       
+    //    return;
 
     // Is the toolbox awake?
     if ( ToolboxDialog.isAwake() )
@@ -218,7 +218,7 @@ function toggleToolbox(%make)
 function BackgroundColorSelectList::onSelect(%this)
 {
     // Fetch the index.
-    $activeBackgroundColor = %this.getSelected();
+    $activeBackgroundColor = %this.getSelectedItem();
 
     // Finish if the sandbox scene is not available.
     if ( !isObject(SandboxScene) )
@@ -238,7 +238,7 @@ function ResolutionSelectList::onSelect(%this)
         return;
 
     // Fetch the index.
-    %index = %this.getSelected();
+    %index = %this.getSelectedItem();
 
     // Fetch resolution.
     %resolution = $sandboxResolutions[%index];

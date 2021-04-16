@@ -36,6 +36,7 @@ GuiListBoxCtrl::GuiListBoxCtrl()
    mLastClickItem = NULL;
    mIsContainer = false;
    mActive = true;
+   caller = this;
 
    setField("profile", "GuiListBoxProfile");
 }
@@ -117,7 +118,7 @@ void GuiListBoxCtrl::removeSelection( LBItem *item, S32 index )
       {
          mSelectedItems.erase( &mSelectedItems[i] );
          item->isSelected = false;
-         Con::executef(this, 3, "onUnSelect", Con::getIntArg( index ), item->itemText);
+         Con::executef(caller, 3, "onUnSelect", Con::getIntArg( index ), item->itemText, item->ID);
          return;
       }
    }
@@ -163,8 +164,8 @@ void GuiListBoxCtrl::addSelection( LBItem *item, S32 index )
    item->isSelected = true;
    mSelectedItems.push_front( item );
 
-   if(isMethod("onSelect"))
-		Con::executef(this, 3, "onSelect", Con::getIntArg( index ), item->itemText);
+   if(caller->isMethod("onSelect"))
+		Con::executef(caller, 3, "onSelect", Con::getIntArg( index ), item->itemText, item->ID);
 
 }
 
@@ -297,6 +298,13 @@ S32 GuiListBoxCtrl::addItemWithColor( StringTableEntry text, ColorF color, void 
    return insertItemWithColor( mItems.size(), text, color, itemData );
 }
 
+S32	GuiListBoxCtrl::addItemWithID(StringTableEntry text, S32 ID, void *itemData)
+{
+	S32 index = insertItem( mItems.size(), text, itemData);
+	setItemID(index, ID);
+	return index;
+}
+
 void GuiListBoxCtrl::setItemColor( S32 index, ColorF color )
 {
    if ((index >= mItems.size()) || index < 0)
@@ -332,6 +340,109 @@ void GuiListBoxCtrl::clearAllColors()
 		(*i)->hasColor = false;
 }
 
+ColorF GuiListBoxCtrl::getItemColor(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::getItemColor - invalid index");
+		return ColorF(0,0,0,0);
+	}
+
+	LBItem* item = mItems[index];
+	return item->color;
+}
+
+bool GuiListBoxCtrl::getItemHasColor(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::getItemHasColor - invalid index");
+		return false;
+	}
+
+	LBItem* item = mItems[index];
+	return item->hasColor;
+}
+
+void GuiListBoxCtrl::setItemID(S32 index, S32 ID)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemID - invalid index");
+		return;
+	}
+
+	LBItem* item = mItems[index];
+	item->ID = ID;
+}
+
+S32 GuiListBoxCtrl::getItemID(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemID - invalid index");
+		return 0;
+	}
+
+	LBItem* item = mItems[index];
+	return item->ID;
+}
+
+S32 GuiListBoxCtrl::findItemID(S32 ID)
+{
+	// Check Items Exist.
+	if (mItems.empty())
+		return -1;
+
+	// Lookup the index of an item in our list, by the pointer to the item
+	for (S32 i = 0; i < mItems.size(); i++)
+	{
+		if (mItems[i]->ID == ID)
+		{
+			return i;
+		}
+	}
+
+	// Not Found!
+	return -1;
+}
+
+void GuiListBoxCtrl::setItemActive(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemActive - invalid index");
+		return;
+	}
+
+	LBItem* item = mItems[index];
+	item->isActive = true;
+}
+
+void GuiListBoxCtrl::setItemInactive(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemInactive - invalid index");
+		return;
+	}
+
+	LBItem* item = mItems[index];
+	item->isActive = false;
+}
+
+bool GuiListBoxCtrl::getItemActive(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::getItemActive - invalid index");
+		return true;
+	}
+
+	LBItem* item = mItems[index];
+	return item->isActive;
+}
+
 S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData )
 {
    // If the index is greater than our list size, insert it at the end
@@ -353,10 +464,12 @@ S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData
    }
 
    // Assign item data
-   newItem->itemText    = StringTable->insert(text);
-   newItem->itemData    = itemData;
-   newItem->isSelected  = false;
-   newItem->hasColor    = false;
+   newItem->itemText = StringTable->insert(text);
+   newItem->isSelected = false;
+   newItem->isActive = true;
+   newItem->ID = 0;
+   newItem->itemData = itemData;
+   newItem->hasColor = false;
 
    // Add to list
    mItems.insert(index);
@@ -367,52 +480,25 @@ S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData
 
    // Return our index in list (last)
    return index;
-
 }
 
 S32 GuiListBoxCtrl::insertItemWithColor( S32 index, StringTableEntry text, ColorF color, void *itemData )
 {
-   // If the index is greater than our list size, insert it at the end
-   if( index >= mItems.size() )
-      index = mItems.size();
+	if( color == ColorF(-1, -1, -1) )
+	{
+		Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL color" );
+			return -1;
+	}
 
-   // Sanity checking
-   if( !text )
-   {
-      Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL string" );
-      return -1;
-   }
+	index = insertItem(index, text, itemData);
 
-   if( color == ColorF(-1, -1, -1) )
-   {
-      Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL color" );
-      return -1;
-   }
+	if(index != -1)
+	{
+		setItemColor(index, color);
+	}
 
-   LBItem *newItem = new LBItem;
-   if( !newItem )
-   {
-      Con::warnf("GuiListBoxCtrl::insertItem - error allocating item memory!" );
-      return -1;
-   }
-
-   // Assign item data
-   newItem->itemText    = StringTable->insert(text);
-   newItem->itemData    = itemData;
-   newItem->isSelected  = false;
-   newItem->hasColor    = true;
-   newItem->color       = color;
-
-   // Add to list
-   mItems.insert(index);
-   mItems[index] = newItem;
-
-   // Resize our list to fit our items
-   updateSize();
-
-   // Return our index in list (last)
-   return index;
-
+	// Return our index in list (last)
+	return index;
 }
 
 void  GuiListBoxCtrl::deleteItem( S32 index )
@@ -564,7 +650,7 @@ void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
 	   cursorPt = root->getCursorPos();
    }
    GuiControlState currentState = GuiControlState::NormalState;
-   if (!mActive)
+   if (!mActive || !item->isActive)
 	   currentState = GuiControlState::DisabledState;
    else if (item->isSelected)
 	   currentState = GuiControlState::SelectedState;
@@ -584,30 +670,17 @@ void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
    RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
    RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 
-   // Render color box if needed
+   // Render color bullet if needed
    if (item->hasColor)
    {
-	   RectI drawArea = RectI(contentRect.point.x + 1, contentRect.point.y + 1, contentRect.extent.y - 2, contentRect.extent.y - 2);
-	   drawBox(drawArea, ColorI(item->color));
+	   RectI drawArea = RectI(contentRect.point.x, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
+	   renderColorBullet(drawArea, ColorI(item->color), 5);
 
 	   contentRect.point.x += contentRect.extent.y;
 	   contentRect.extent.x -= contentRect.extent.y;
    }
 
    renderText(contentRect.point, contentRect.extent, item->itemText, mProfile);
-}
-
-void GuiListBoxCtrl::drawBox(RectI &box, ColorI &boxColor)
-{
-	const S32 max = 5;
-	if (box.extent.x > max)
-	{
-		S32 delta = mCeil((box.extent.x - max) / 2);
-		box.inset(delta, delta);
-	}
-	dglDrawRectFill(box, ColorI(0,0,0, 100));
-	box.inset(1, 1);
-	dglDrawRectFill(box, boxColor);
 }
 #pragma endregion
 
@@ -628,11 +701,11 @@ void GuiListBoxCtrl::onTouchDragged(const GuiEvent &event)
 	   return;
 
    LBItem *hitItem = mItems[itemHit];
-   if (hitItem == NULL)
+   if (hitItem == NULL || !hitItem->isActive)
 	   return;
 
-   if(isMethod("onTouchDragged"))
-      Con::executef(this, 3, "onTouchDragged", Con::getIntArg(itemHit), hitItem->itemText);
+   if(caller->isMethod("onTouchDragged"))
+      Con::executef(caller, 3, "onTouchDragged", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
 }
 
 void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
@@ -649,7 +722,7 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
       return;
 
    LBItem *hitItem = mItems[ itemHit ];
-   if ( hitItem == NULL )
+   if ( hitItem == NULL || !hitItem->isActive)
       return;
 
    // If we're not a multiple selection listbox, we simply select/unselect an item
@@ -666,12 +739,12 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
 
 		if( itemHit == selItem && event.mouseClickCount == 2)
 		{
-			if(isMethod("onDoubleClick") )
-				Con::executef( this, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText);
+			if(caller->isMethod("onDoubleClick") )
+				Con::executef(caller, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
 		}
-		else if (isMethod("onClick"))
+		else if (caller->isMethod("onClick"))
 		{
-			Con::executef(this, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText);
+			Con::executef(caller, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
 		}
 
       // Store the clicked item
@@ -715,12 +788,12 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
 
    if( hitItem == mLastClickItem && event.mouseClickCount == 2)
    {
-		if(isMethod("onDoubleClick") )
-			Con::executef( this, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText);
+		if(caller->isMethod("onDoubleClick") )
+			Con::executef(caller, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
 	}
-   else if (isMethod("onClick"))
+   else if (caller->isMethod("onClick"))
    {
-	   Con::executef(this, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText);
+	   Con::executef(caller, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
    }
 
    mLastClickItem = hitItem;

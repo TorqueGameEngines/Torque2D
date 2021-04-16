@@ -776,3 +776,39 @@ if(!isObject(GuiProgressProfile)) new GuiControlProfile (GuiProgressProfile : Gu
    borderBottom = GuiProgressDarkBorderProfile;
    borderRight = GuiProgressDarkBorderProfile;
 };
+
+if (!isObject(GuiDropDownDarkBorderProfile)) new GuiBorderProfile (GuiDropDownDarkBorderProfile : GuiDarkBorderProfile)
+{
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+};
+
+if (!isObject(GuiDropDownBrightBorderProfile)) new GuiBorderProfile (GuiDropDownBrightBorderProfile : GuiBrightBorderProfile)
+{
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+};
+
+if(!isObject(GuiDropDownProfile)) new GuiControlProfile (GuiDropDownProfile : GuiDefaultProfile)
+{
+    // fill color
+    fillColor = AdjustColorValue($color3, -15);
+	fillColorHL = AdjustColorValue($color3, -8);
+	fillColorSL = $color4;
+	fillColorNA = SetColorAlpha($color3, 100);
+
+    fontColor = $color1;
+	fontColorHL = $color1;
+	fontColorSL = $color3;
+	fontColorNA = SetColorAlpha($color1, 100);
+	align = "left";
+
+	borderDefault = GuiDropDownBrightBorderProfile;
+	borderRight = GuiDropDownDarkBorderProfile;
+	borderBottom = GuiDropDownDarkBorderProfile;
+	category = "dropDown";
+};

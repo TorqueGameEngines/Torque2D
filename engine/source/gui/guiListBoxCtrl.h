@@ -57,6 +57,8 @@ public:
    {
       StringTableEntry  itemText;
       bool              isSelected;
+	  bool				isActive;
+	  int				ID;
       void*             itemData;
       ColorF            color;
       bool              hasColor;
@@ -86,6 +88,7 @@ public:
 
    S32               addItem( StringTableEntry text, void *itemData = NULL );
    S32               addItemWithColor( StringTableEntry text, ColorF color = ColorF(-1, -1, -1), void *itemData = NULL);
+   S32				 addItemWithID(StringTableEntry text, S32 ID = 0, void *itemData = NULL);
    S32               insertItem( S32 index, StringTableEntry text, void *itemData = NULL );
    S32               insertItemWithColor( S32 index, StringTableEntry text, ColorF color = ColorF(-1, -1, -1), void *itemData = NULL);
    S32               findItemText( StringTableEntry text, bool caseSensitive = false );
@@ -93,13 +96,23 @@ public:
    void              setItemColor(S32 index, ColorF color);
    void              clearItemColor(S32 index);
    void				 clearAllColors();
+   ColorF			 getItemColor(S32 index);
+   bool				 getItemHasColor(S32 index);
+
+   void				 setItemID(S32 index, S32 ID);
+   S32				 getItemID(S32 index);
+   S32				 findItemID(S32 ID);
+
+   void				 setItemActive(S32 index);
+   void				 setItemInactive(S32 index);
+   bool				 getItemActive(S32 index);
 
    void              deleteItem( S32 index );
    void              clearItems();
    void              clearSelection();
    void              removeSelection( LBItem *item, S32 index );
    void              removeSelection( S32 index );
-   void              addSelection( LBItem *item, S32 index );
+   virtual void      addSelection( LBItem *item, S32 index );
    void              addSelection( S32 index );
    inline void       setMultipleSelection(bool allowMultipleSelect = true) { mMultipleSelections = allowMultipleSelect; };
    inline bool       getMultipleSelection() { return mMultipleSelections; };
@@ -113,11 +126,12 @@ public:
    // Rendering
    virtual void      onRender( Point2I offset, const RectI &updateRect );
    virtual void      onRenderItem( RectI &itemRect, LBItem *item );
-   void              drawBox( RectI &box, ColorI &boxColor );
 
    // Mouse Events
    virtual void      onTouchDown( const GuiEvent &event );
    virtual void      onTouchDragged(const GuiEvent &event);
+protected:
+	GuiControl		*caller;
 };
 
 #endif

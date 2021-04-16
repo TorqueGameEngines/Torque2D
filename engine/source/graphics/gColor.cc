@@ -163,7 +163,7 @@ StockColorItem StockColorTable[] =
     StockColorItem( "PapayaWhip", 255, 239, 213 ),
     StockColorItem( "PeachPuff", 255, 218, 185 ),
     StockColorItem( "Peru", 205, 133, 63 ),
-    StockColorItem( "Pink", 55, 192, 203 ),
+    StockColorItem( "Pink", 255, 192, 203 ),
     StockColorItem( "Plum", 221, 160, 221 ),
     StockColorItem( "PowderBlue", 176, 224, 230 ),
     StockColorItem( "Purple", 128, 0, 128 ),

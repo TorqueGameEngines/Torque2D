@@ -1489,6 +1489,9 @@
     <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc">
+      <Filter>gui\buttons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -3354,6 +3357,12 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl_ScriptBinding.h">
+      <Filter>gui\buttons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

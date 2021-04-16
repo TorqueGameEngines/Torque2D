@@ -56,15 +56,15 @@ public:
 	void acceleratorKeyPress(U32 index);
 	void acceleratorKeyRelease(U32 index);
 
-	void onTouchDown(const GuiEvent &);
-	void onTouchUp(const GuiEvent &);
-	void onRightMouseUp(const GuiEvent &);
+	virtual void onTouchDown(const GuiEvent &);
+	virtual void onTouchUp(const GuiEvent &);
+	virtual void onRightMouseUp(const GuiEvent &);
 
-	void onTouchEnter(const GuiEvent &);
-	void onTouchLeave(const GuiEvent &);
+	virtual void onTouchEnter(const GuiEvent &);
+	virtual void onTouchLeave(const GuiEvent &);
 
-	bool onKeyDown(const GuiEvent &event);
-	bool onKeyUp(const GuiEvent &event);
+	virtual bool onKeyDown(const GuiEvent &event);
+	virtual bool onKeyUp(const GuiEvent &event);
 
 	virtual void setScriptValue(const char *value);
 	virtual const char *getScriptValue();

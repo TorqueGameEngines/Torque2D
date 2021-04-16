@@ -38,14 +38,12 @@ protected:
    // arrow length and that horizontal and vertical scroll bars have the
    // same thickness
 
-	S32 mScrollBarThickness;        // determined by the width of the vertical page bmp
 	S32 mScrollBarDragTolerance;    // maximal distance from scrollbar at which a scrollbar drag is still valid
 
 	bool mHBarEnabled;				//True if the children extent is greater than the content area.
 	bool mVBarEnabled;
 	bool mHasHScrollBar;			//The final word on if the bar should be shown. Adjusted internally.
 	bool mHasVScrollBar;
-	bool mShowArrowButtons;			//True if the arrow buttons should appear
 
 	Point2I mChildExt;				//The furthest reaches of the child controls.
 	Point2I mContentExt;			//The content area length and width in pixels.
@@ -103,6 +101,8 @@ public:
 
    bool mUseConstantHeightThumb;
    Point2I mScrollOffset;			//The offset of the children
+   S32 mScrollBarThickness;        // determined by the width of the vertical page bmp
+   bool mShowArrowButtons;			//True if the arrow buttons should appear
 
    Region findHitRegion(const Point2I &);
 

@@ -353,3 +353,57 @@ void renderStretchedImageAsset(RectI &bounds, U8 frame, GuiControlProfile *profi
 	}
 }
 
+//Renders a color bullet at or one pixel smaller than maxSize.
+//It shrinks the given box until it is less than or equal to the 
+//maxSize in the x direction.
+void renderColorBullet(RectI &bounds, ColorI &color, S32 maxSize)
+{
+	if (bounds.extent.x > maxSize)
+	{
+		S32 delta = mCeil((bounds.extent.x - maxSize) / 2);
+		bounds.inset(delta, delta);
+	}
+	if (!bounds.isValidRect())
+	{
+		return;
+	}
+	dglDrawRectFill(bounds, ColorI(0, 0, 0, 100));
+	bounds.inset(1, 1);
+	if (!bounds.isValidRect())
+	{
+		return;
+	}
+	dglDrawRectFill(bounds, color);
+}
+
+void renderTriangleIcon(RectI &bounds, ColorI &color, bool pointsUp, S32 maxSize)
+{
+	if (bounds.extent.x > maxSize)
+	{
+		S32 delta = mCeil((bounds.extent.x - maxSize) / 2);
+		bounds.inset(delta, delta);
+	}
+	if (!bounds.isValidRect())
+	{
+		return;
+	}
+
+	if (pointsUp)
+	{
+		dglDrawTriangleFill(
+			Point2I(bounds.point.x, bounds.point.y + bounds.extent.y),
+			Point2I(bounds.point.x + bounds.extent.x, bounds.point.y + bounds.extent.y),
+			Point2I(bounds.point.x + (bounds.extent.x / 2), bounds.point.y),
+			color
+		);
+	}
+	else
+	{
+		dglDrawTriangleFill(
+			bounds.point,
+			Point2I(bounds.point.x + (bounds.extent.x / 2), bounds.point.y + bounds.extent.y),
+			Point2I(bounds.point.x + bounds.extent.x, bounds.point.y),
+			color
+		);
+	}
+}

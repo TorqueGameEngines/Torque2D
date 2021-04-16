@@ -612,6 +612,7 @@
     <ClCompile Include="..\..\source\graphics\TextureDictionary.cc" />
     <ClCompile Include="..\..\source\graphics\TextureHandle.cc" />
     <ClCompile Include="..\..\source\graphics\TextureManager.cc" />
+    <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
@@ -1148,6 +1149,8 @@
     <ClInclude Include="..\..\source\graphics\TextureObject.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl.h" />
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiChainCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h" />
