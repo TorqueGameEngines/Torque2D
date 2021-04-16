@@ -91,6 +91,8 @@ public:
    GuiControlState getCurrentState();
    void onRender(Point2I offset, const RectI &updateRect);
 
+   virtual void onAction();
+   void itemSelected();
    void openDropDown();
    void closeDropDown();
 
