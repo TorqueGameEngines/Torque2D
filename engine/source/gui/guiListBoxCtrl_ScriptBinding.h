@@ -400,4 +400,32 @@ ConsoleMethodWithDocs(GuiListBoxCtrl, setItemText, ConsoleVoid, 4, 4, "(S32 inde
 	object->setItemText(dAtoi(argv[2]), argv[3]);
 }
 
+/*! Sorts the items in the list by their text values.
+	@param ascending An optional direction. If true, text will be sorted ascending (A-Z). If false, text will be sorted descending (Z-A). Defaults to Ascending.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiListBoxCtrl, sortByText, ConsoleVoid, 2, 3, "([bool ascending = true])")
+{
+	bool direction = true;
+	if (argc >= 3)
+	{
+		direction = dAtob(argv[3]);
+	}
+	object->sortByText(direction);
+}
+
+/*! Sorts the items in the list by their IDs.
+	@param ascending An optional direction. If true, IDs will be sorted ascending (1, 2, 3...). If false, IDs will be sorted descending (3, 2, 1...). Defaults to Ascending.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiListBoxCtrl, sortByID, ConsoleVoid, 2, 3, "([bool ascending = true])")
+{
+	bool direction = true;
+	if (argc >= 3)
+	{
+		direction = dAtob(argv[3]);
+	}
+	object->sortByID(direction);
+}
+
 ConsoleMethodGroupEndWithDocs(GuiListBoxCtrl)

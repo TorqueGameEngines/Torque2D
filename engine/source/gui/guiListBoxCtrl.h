@@ -53,8 +53,9 @@ public:
    ~GuiListBoxCtrl();
    DECLARE_CONOBJECT(GuiListBoxCtrl);
 
-   struct LBItem
+   class LBItem
    {
+   public:
       StringTableEntry  itemText;
       bool              isSelected;
 	  bool				isActive;
@@ -62,6 +63,27 @@ public:
       void*             itemData;
       ColorF            color;
       bool              hasColor;
+
+	  static bool sIncreasing;
+
+	  // Compare Functions
+	  static bool compByID(const LBItem *a, const LBItem *b)
+	  {
+		  bool res = a->ID < b->ID;
+		  return (sIncreasing ? res : !res);
+	  }
+	  static bool compByText(const LBItem *a, const LBItem *b)
+	  {
+		  char buf[512];
+		  char bufB[512];
+
+		  dSprintf(buf, 512, "%s", a->itemText);
+		  dSprintf(bufB, 512, "%s", b->itemText);
+
+		  S32 res = dStricmp(buf, bufB);
+		  bool result = res <= 0;
+		  return (sIncreasing ? result : !result);
+	  }
    };
 
    VectorPtr<LBItem*>   mItems;
@@ -70,6 +92,8 @@ public:
    Point2I              mItemSize;
    bool                 mFitParentWidth;
    LBItem*              mLastClickItem;
+
+   
 
    // Persistence
    static void       initPersistFields();   
@@ -130,6 +154,11 @@ public:
    // Mouse Events
    virtual void      onTouchDown( const GuiEvent &event );
    virtual void      onTouchDragged(const GuiEvent &event);
+
+   // Sorting
+   virtual void		 sortByText(bool increasing = true);
+   virtual void		 sortByID(bool increasing = true);
+
 protected:
 	GuiControl		*caller;
 };

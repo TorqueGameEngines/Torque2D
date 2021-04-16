@@ -121,11 +121,13 @@ function initializeToolbox()
         // Add to the list.
 		%colorName = getStockColorName(%i);
         BackgroundColorSelectList.addItem( %colorName, getStockColorI(%colorName) );
+		BackgroundColorSelectList.setItemID(%i, %i+1);
 
         // Select the color if it's the default one.
         if ( %colorName $= $pref::Sandbox::defaultBackgroundColor )
             BackgroundColorSelectList.setSelected( %i );
     }
+	BackgroundColorSelectList.sortByText();
 
     ToyCategorySelectList.initialize();
 

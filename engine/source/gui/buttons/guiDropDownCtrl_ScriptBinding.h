@@ -433,4 +433,32 @@ ConsoleMethodWithDocs(GuiDropDownCtrl, setArrowProfile, ConsoleVoid, 3, 3, (GuiC
 		object->setControlArrowProfile(profile);
 }
 
+/*! Sorts the items in the list by their text values.
+	@param ascending An optional direction. If true, text will be sorted ascending (A-Z). If false, text will be sorted descending (Z-A). Defaults to Ascending.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiDropDownCtrl, sortByText, ConsoleVoid, 2, 3, "([bool ascending = true])")
+{
+	bool direction = true;
+	if (argc >= 3)
+	{
+		direction = dAtob(argv[3]);
+	}
+	object->getList()->sortByText(direction);
+}
+
+/*! Sorts the items in the list by their IDs.
+	@param ascending An optional direction. If true, IDs will be sorted ascending (1, 2, 3...). If false, IDs will be sorted descending (3, 2, 1...). Defaults to Ascending.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiDropDownCtrl, sortByID, ConsoleVoid, 2, 3, "([bool ascending = true])")
+{
+	bool direction = true;
+	if (argc >= 3)
+	{
+		direction = dAtob(argv[3]);
+	}
+	object->getList()->sortByID(direction);
+}
+
 ConsoleMethodGroupEndWithDocs(GuiDropDownCtrl)

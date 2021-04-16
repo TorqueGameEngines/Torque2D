@@ -19,8 +19,10 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
+#include "platform/platform.h"
 #include "gui/guiListBoxCtrl.h"
 #include "gui/guiCanvas.h"
+#include <algorithm>
 
 #include "guiListBoxCtrl_ScriptBinding.h"
 
@@ -134,7 +136,6 @@ void GuiListBoxCtrl::addSelection( S32 index )
    }
 
    addSelection( mItems[index], index );
-
 }
 void GuiListBoxCtrl::addSelection( LBItem *item, S32 index )
 {
@@ -799,5 +800,27 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
    mLastClickItem = hitItem;
 
 
+}
+#pragma endregion
+
+#pragma region sorting
+bool GuiListBoxCtrl::LBItem::sIncreasing = true;
+
+void GuiListBoxCtrl::sortByText(bool increasing)
+{
+	if (mItems.size() < 2)
+		return;
+
+	LBItem::sIncreasing = increasing;
+	std::sort(mItems.begin(), mItems.end(), LBItem::compByText);
+}
+
+void GuiListBoxCtrl::sortByID(bool increasing)
+{
+	if (mItems.size() < 2)
+		return;
+
+	LBItem::sIncreasing = increasing;
+	std::sort(mItems.begin(), mItems.end(), LBItem::compByID);
 }
 #pragma endregion
