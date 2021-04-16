@@ -50,6 +50,9 @@ void GuiDropDownListBoxCtrl::addSelection(LBItem *item, S32 index)
 {
 	Parent::addSelection(item, index);
 
+	if (mConsoleCommand[0])
+		Con::evaluate(mConsoleCommand, false);
+
 	mDropDownCtrl->closeDropDown();
 }
 #pragma endregion

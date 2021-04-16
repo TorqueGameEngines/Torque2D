@@ -338,6 +338,14 @@ ConsoleMethodWithDocs(GuiDropDownCtrl, getItemText, ConsoleString, 3, 3, "(S32 i
 	return object->getList()->getItemText(dAtoi(argv[2]));
 }
 
+/*! Returns the text of the selected item.
+	@return The text of the selected item.
+*/
+ConsoleMethodWithDocs(GuiDropDownCtrl, getText, ConsoleString, 3, 3, "()")
+{
+	return object->getList()->getItemText(object->getList()->getSelectedItem());
+}
+
 /*! Sets the text of the item at the given item index.
 	@param index The zero-based index of the item that will be updated.
 	@param text The text value to update with.
