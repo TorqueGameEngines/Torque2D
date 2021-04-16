@@ -444,7 +444,7 @@ void GuiEditCtrl::drawNuts(RectI &box, ColorI &outlineColor, ColorI &nutColor)
    if(rx < extent.x && ty < extent.y)
       dglDrawLine(rx, ty, extent.x, ty, lightGreenLine);
 
-   // adjust nuts, so they dont straddle the controlslx -= NUT_SIZE;
+   // adjust nuts, so they dont straddle the controls
    lx -= NUT_SIZE;
    ty -= NUT_SIZE;
    rx += NUT_SIZE;
@@ -489,15 +489,15 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
          RectI box(ctOffset.x, ctOffset.y, cext.x, cext.y);
 
             box.inset(-5, -5);
-         dglDrawRect(box, ColorI(50, 101, 152,160));
+         dglDrawRect(box, ColorI(0, 101, 0,160));
             box.inset(1,1);
-         dglDrawRect(box, ColorI(50, 101, 152,170));
+         dglDrawRect(box, ColorI(0, 101, 0,170));
             box.inset(1,1);
-         dglDrawRect(box, ColorI(50, 101, 152,180));
+         dglDrawRect(box, ColorI(0, 101, 0,180));
             box.inset(1,1);
-         dglDrawRect(box, ColorI(50, 101, 152,190));
+         dglDrawRect(box, ColorI(0, 101, 0,190));
             box.inset(1,1);
-            dglDrawRect(box, ColorI(50, 101, 152,200));
+            dglDrawRect(box, ColorI(0, 101, 0,200));
       }
       Vector<GuiControl *>::iterator i;
       bool multisel = mSelectedControls.size() > 1;
