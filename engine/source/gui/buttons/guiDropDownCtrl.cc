@@ -50,8 +50,7 @@ void GuiDropDownListBoxCtrl::addSelection(LBItem *item, S32 index)
 {
 	Parent::addSelection(item, index);
 
-	if (mConsoleCommand[0])
-		Con::evaluate(mConsoleCommand, false);
+	mDropDownCtrl->itemSelected();
 
 	mDropDownCtrl->closeDropDown();
 }
@@ -198,6 +197,20 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 		}
 		renderText(contentRect.point, contentRect.extent, mListBox->getItemText(index), mProfile);
 	}
+}
+
+void GuiDropDownCtrl::onAction() //called when the button is clicked.
+{
+	if (!mActive)
+		return;
+
+	setUpdate();
+}
+
+void GuiDropDownCtrl::itemSelected()
+{
+	if (mConsoleCommand[0])
+		Con::evaluate(mConsoleCommand, false);
 }
 
 void GuiDropDownCtrl::openDropDown()

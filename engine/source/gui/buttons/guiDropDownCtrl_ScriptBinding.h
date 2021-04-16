@@ -341,9 +341,14 @@ ConsoleMethodWithDocs(GuiDropDownCtrl, getItemText, ConsoleString, 3, 3, "(S32 i
 /*! Returns the text of the selected item.
 	@return The text of the selected item.
 */
-ConsoleMethodWithDocs(GuiDropDownCtrl, getText, ConsoleString, 3, 3, "()")
+ConsoleMethodWithDocs(GuiDropDownCtrl, getText, ConsoleString, 2, 2, "()")
 {
-	return object->getList()->getItemText(object->getList()->getSelectedItem());
+	S32 index = object->getList()->getSelectedItem();
+	if(index != -1)
+	{
+		return object->getList()->getItemText(index);
+	}
+	return "";
 }
 
 /*! Sets the text of the item at the given item index.
