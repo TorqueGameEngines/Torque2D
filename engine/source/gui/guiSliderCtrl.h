@@ -66,11 +66,11 @@ public:
    //Parental methods
    bool onWake();
 
-   void onMouseDown(const GuiEvent &event);
-   void onMouseDragged(const GuiEvent &event);
-   void onMouseUp(const GuiEvent &);
-   void onMouseLeave(const GuiEvent &);
-   void onMouseEnter(const GuiEvent &);
+   void onTouchDown(const GuiEvent &event);
+   void onTouchDragged(const GuiEvent &event);
+   void onTouchUp(const GuiEvent &);
+   void onTouchLeave(const GuiEvent &);
+   void onTouchEnter(const GuiEvent &);
    F32 getValue() { return mValue; }
    void setScriptValue(const char *val);
 

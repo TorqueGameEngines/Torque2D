@@ -37,13 +37,10 @@ private:
    typedef GuiExpandCtrl Parent;
    GuiButtonCtrl*      mHeader;
 
-protected:
-	virtual bool calcExpandedExtent();
-
 public:
 	GuiPanelCtrl();
 	virtual ~GuiPanelCtrl();
-
+   virtual bool calcExpandedExtent();
 	bool onAdd();
 	virtual void onRender(Point2I offset, const RectI &updateRect);
 
