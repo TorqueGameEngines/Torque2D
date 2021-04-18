@@ -531,7 +531,7 @@ void GuiScrollCtrl::scrollRectVisible(RectI rect)
 
 	// Determine the points bounding the actual visible area...
 	Point2I visUpperLeft = mScrollOffset;
-	Point2I visLowerRight = mContentExt;
+	Point2I visLowerRight = mContentExt + mScrollOffset;
 	Point2I delta(0, 0);
 
 	// We basically try to make sure that first the top left of the given

@@ -56,6 +56,7 @@ protected:
 public:
 	GuiDropDownListBoxCtrl(GuiDropDownCtrl *ctrl);
 	void addSelection(LBItem *item, S32 index);
+	void setCurSel(S32 index);
 };
 
 class GuiDropDownCtrl : public GuiButtonCtrl
@@ -91,6 +92,7 @@ public:
    GuiControlState getCurrentState();
    void onRender(Point2I offset, const RectI &updateRect);
 
+   bool onKeyDown(const GuiEvent &event);
    virtual void onAction();
    void itemSelected();
    void openDropDown();

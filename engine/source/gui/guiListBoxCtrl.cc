@@ -165,6 +165,8 @@ void GuiListBoxCtrl::addSelection( LBItem *item, S32 index )
    item->isSelected = true;
    mSelectedItems.push_front( item );
 
+   ScrollToIndex(index);
+
    if(caller->isMethod("onSelect"))
 		Con::executef(caller, 3, "onSelect", Con::getIntArg( index ), item->itemText, item->ID);
 
@@ -683,6 +685,13 @@ void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
 
    renderText(contentRect.point, contentRect.extent, item->itemText, mProfile);
 }
+
+void GuiListBoxCtrl::ScrollToIndex(const S32 targetIndex)
+{
+	GuiScrollCtrl* parent = dynamic_cast<GuiScrollCtrl *>(getParent());
+	if (parent)
+		parent->scrollRectVisible(RectI(0, mItemSize.y * targetIndex, mItemSize.x, mItemSize.y));
+}
 #pragma endregion
 
 #pragma region InputEvents
@@ -715,6 +724,8 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
 	{
 		return;
 	}
+
+	setFirstResponder();
 
    Point2I localPoint = globalToLocalCoord(event.mousePoint);
    S32 itemHit = ( localPoint.y < 0 ) ? -1 : (S32)mFloor( (F32)localPoint.y / (F32)mItemSize.y );
@@ -752,7 +763,6 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
       mLastClickItem = hitItem;
 
       return;
-
    }
    
    // Deal with multiple selections
@@ -798,8 +808,59 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
    }
 
    mLastClickItem = hitItem;
+}
 
+bool GuiListBoxCtrl::onKeyDown(const GuiEvent &event)
+{
+	//if this control is a dead end, make sure the event stops here
+	if (!mVisible || !mActive || !mAwake || mItems.size() == 0)
+		return true;
 
+	S32 index = getSelectedItem();
+	switch (event.keyCode)
+	{
+	case KEY_RETURN:
+		if (mAltConsoleCommand[0])
+			Con::evaluate(mAltConsoleCommand, false);
+		break;
+	case KEY_LEFT:
+	case KEY_UP:
+		if (index == -1)
+		{
+			//Select the bottom item
+			addSelection(mItems.size() - 1);
+		}
+		else if(index != 0)
+		{
+			addSelection(index - 1);
+		}
+		break;
+	case KEY_DOWN:
+	case KEY_RIGHT:
+		if (index == -1)
+		{
+			//Select the top item
+			addSelection(0);
+		}
+		else if (index != (mItems.size() - 1))
+		{
+			addSelection(index + 1);
+		}
+		break;
+	case KEY_HOME:
+		addSelection(0);
+		break;
+	case KEY_END:
+		addSelection(mItems.size() - 1);
+		break;
+	case KEY_DELETE:
+		if (index != -1 && isMethod("onDeleteKey"))
+			Con::executef(caller, 3, "onDeleteKey", Con::getIntArg(index), getItemText(index), getItemID(index));
+		break;
+	default:
+		return(Parent::onKeyDown(event));
+		break;
+	};
 }
 #pragma endregion
 

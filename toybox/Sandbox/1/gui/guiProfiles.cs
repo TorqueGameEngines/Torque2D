@@ -214,7 +214,7 @@ if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiD
 	align = left;
 
 	tab = false;
-	canKeyFocus = false;
+	canKeyFocus = true;
 	category = "defaultListBox";
 
 	fontColor = $color3;
@@ -806,6 +806,9 @@ if(!isObject(GuiDropDownProfile)) new GuiControlProfile (GuiDropDownProfile : Gu
 	fontColorSL = $color3;
 	fontColorNA = SetColorAlpha($color1, 100);
 	align = "left";
+
+	tab = true;
+	canKeyFocus = true;
 
 	borderDefault = GuiDropDownBrightBorderProfile;
 	borderRight = GuiDropDownDarkBorderProfile;

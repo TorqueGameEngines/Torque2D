@@ -106,7 +106,7 @@ public:
    S32               getItemIndex( LBItem *item );
    StringTableEntry  getItemText( S32 index );
    
-   void              setCurSel( S32 index );
+   virtual void      setCurSel( S32 index );
    void              setCurSelRange( S32 start, S32 stop );
    void              setItemText( S32 index, StringTableEntry text );
 
@@ -150,10 +150,12 @@ public:
    // Rendering
    virtual void      onRender( Point2I offset, const RectI &updateRect );
    virtual void      onRenderItem( RectI &itemRect, LBItem *item );
+   virtual void		 ScrollToIndex(const S32 targetIndex);
 
    // Mouse Events
    virtual void      onTouchDown( const GuiEvent &event );
    virtual void      onTouchDragged(const GuiEvent &event);
+   virtual bool		 GuiListBoxCtrl::onKeyDown(const GuiEvent &event);
 
    // Sorting
    virtual void		 sortByText(bool increasing = true);

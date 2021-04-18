@@ -46,12 +46,16 @@ GuiDropDownListBoxCtrl::GuiDropDownListBoxCtrl(GuiDropDownCtrl *ctrl)
 	mBounds.point.set(0, 0);
 	caller = ctrl;
 }
+
 void GuiDropDownListBoxCtrl::addSelection(LBItem *item, S32 index)
 {
 	Parent::addSelection(item, index);
-
 	mDropDownCtrl->itemSelected();
+}
 
+void GuiDropDownListBoxCtrl::setCurSel(S32 index)
+{
+	Parent::setCurSel(index);
 	mDropDownCtrl->closeDropDown();
 }
 #pragma endregion
@@ -199,6 +203,33 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 	}
 }
 
+bool GuiDropDownCtrl::onKeyDown(const GuiEvent &event)
+{
+	//if the control is a dead end, don't process the input:
+	if (!mVisible || !mActive || !mAwake)
+		return false;
+
+	//see if the key down is a <return> or not
+	if (event.keyCode == KEY_RETURN && event.modifier == 0)
+	{
+		if(!mIsOpen)
+		{
+			openDropDown();
+		}
+		else
+		{
+			closeDropDown();
+		}
+		return true;
+	}
+	else if (mIsOpen)
+	{
+		return mListBox->onKeyDown(event);
+	}
+
+	return false;
+}
+
 void GuiDropDownCtrl::onAction() //called when the button is clicked.
 {
 	if (!mActive)
@@ -263,7 +294,11 @@ void GuiDropDownCtrl::openDropDown()
 
 	root->pushDialogControl(mBackground, 99);
 
+	mListBox->ScrollToIndex(mListBox->getSelectedItem());
+
 	mIsOpen = true;
+
+	setFirstResponder();
 
 	if (isMethod("onOpen"))
 		Con::executef(this, 1, "onOpen");
