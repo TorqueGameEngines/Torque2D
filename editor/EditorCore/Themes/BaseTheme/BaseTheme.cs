@@ -2,15 +2,47 @@ function BaseTheme::onAdd(%this)
 {
 	%this.init();
 
+	%this.emptyBorder = new GuiBorderProfile()
+	{
+		// Default margin
+		margin = 0;
+		marginHL = 0;
+		marginSL = 0;
+		marginNA = 0;
+		//Default Border
+		border = 0;
+		borderHL = 0;
+		borderSL = 0;
+		borderNA = 0;
+		//Default border color
+		borderColor   = $color1;
+	    borderColorHL = AdjustColorValue($color1, 10);
+	    borderColorSL = AdjustColorValue($color1, 10);
+	    borderColorNA = SetColorAlpha($color1, 100);
+		//Default Padding
+		padding = 0;
+		paddingHL = 0;
+		paddingSL = 0;
+		paddingNA = 0;
+		//Default underfill
+		underfill = true;
+	};
+
 	%this.emptyProfile = new GuiControlProfile()
 	{
 		fillColor = "0 0 0 0";
+		fillColorHL = "0 0 0 0";
+		fillColorSL = "0 0 0 0";
+		fillColorNA = "0 0 0 0";
 
-		fontType = %this.font;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
 		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		align = center;
 		vAlign = middle;
+
+		borderDefault = %this.emptyBorder;
 	};
 
 	%this.makeTipProfile();
@@ -27,21 +59,12 @@ function BaseTheme::init(%this)
 {
 	%this.name = "Construction Vest";
 	//fonts and font sizes
-	%this.font = "monaco";
-	%this.fontSize = 12;
-	if ($platform $= "windows")
-	{
-		%this.font = "lucida console";
-	}
-	else if ($platform $= "Android")
-	{
-		%this.font = "Droid";
-		%this.fontSize = 14;
-	}
-	else if($platform $= "ios")
-	{
-		%this.fontSize = 18;
-	}
+	%this.fontCount = 3;
+	%this.font[1] = "raleway";//Most common font
+	%this.font[2] = "black ops one";//Title fontType
+	%this.font[3] = "fira code semibold";//Code and console font
+	%this.fontDirectory = expandPath("^EditorCore/Themes/BaseTheme/Fonts");
+	%this.fontSize = 20;
 
 	%this.color1 = "10 10 10 255";//Most commonly used for backgrounds
 	%this.color2 = "70 70 70 255";//Normally used for things that stand off the background but are still background
@@ -70,8 +93,9 @@ function BaseTheme::makeTipProfile(%this)
 	{
 		fillColor = %this.setAlpha(%this.color3, 220);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
 		fontColor = %this.color1;
 
 		borderDefault = %tipBorder;
@@ -85,8 +109,9 @@ function BaseTheme::makeGeneralProfiles(%this)
 	{
 		fillColor = %this.setAlpha(%this.color1, 150);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
 		fontColor = %this.color4;
 	};
 
@@ -101,8 +126,9 @@ function BaseTheme::makeGeneralProfiles(%this)
 	{
 		fillColor = %this.color1;
 
-		fontType = %this.font;
-		fontSize = %this.fontSize;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
 		fontColor = %this.color4;
 		align = center;
 		vAlign = middle;
@@ -121,8 +147,9 @@ function BaseTheme::makeGeneralProfiles(%this)
 	{
 		fillColor = %this.color1;
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		align = center;
 		vAlign = middle;
@@ -149,11 +176,6 @@ function BaseTheme::makePanelProfile(%this)
 
 	%panelBorderV = new GuiBorderProfile()
 	{
-		padding = 4;
-		paddingHL = 4;
-		paddingSL = 4;
-		paddingNA = 4;
-
 		border = 1;
 		borderHL = 1;
 		borderSL = 1;
@@ -172,8 +194,9 @@ function BaseTheme::makePanelProfile(%this)
 		fillColorSL = %this.adjustValue(%this.color2, 5);
 		fillColorNA = %this.setAlpha(%this.color2, 80);
 
-		fontType = %this.font;
-		fontSize = 14;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 1;
 		fontColor = %this.color5;
 		fontColorHL = %this.adjustValue(%this.color5, 10);
 		fontColorSL = %this.adjustValue(%this.color5, 20);
@@ -229,7 +252,8 @@ function BaseTheme::makePanelProfile(%this)
 		fillColorSL = %this.color2;
 		fillColorNA = %this.setAlpha(%this.color2, 50);
 
-		fontType = %this.font;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
 		fontColor = %this.color3;
 		fontColorHL = %this.adjustValue(%this.color3, 10);
 		fontColorSL = %this.color5;
@@ -292,8 +316,9 @@ function BaseTheme::makeButtonProfile(%this)
 		fillColorSL = %this.color3;
 		fillColorNA = %this.setAlpha(%this.color2, 80);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = "0 0 0 255";
@@ -320,10 +345,10 @@ function BaseTheme::makeTabProfile(%this)
 		borderSL = 2;
 		borderNA = 2;
 
-		padding = 5;
-		paddingHL = 6;
-		paddingSL = 7;
-		paddingNA = 5;
+		padding = 3;
+		paddingHL = 4;
+		paddingSL = 5;
+		paddingNA = 3;
 
 		borderColor = "255 255 255 90";
 		borderColorHL = "255 255 255 90";
@@ -343,10 +368,10 @@ function BaseTheme::makeTabProfile(%this)
 		borderSL = 2;
 		borderNA = 2;
 
-		padding = 5;
-		paddingHL = 6;
-		paddingSL = 7;
-		paddingNA = 5;
+		padding = 3;
+		paddingHL = 4;
+		paddingSL = 5;
+		paddingNA = 3;
 
 		borderColor = "0 0 0 90";
 		borderColorHL = "0 0 0 90";
@@ -415,13 +440,15 @@ function BaseTheme::makeTabProfile(%this)
 		fillColorSL = %this.color5;
 		fillColorNA = %this.setAlpha(%this.color3, 150);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
 		fontColorNA = %this.setAlpha(%this.color4, 100);
 		align = Center;
+		vAlign = Middle;
 
 		borderTop = %tabBorderTop;
 		borderLeft = %tabBorderLeft;
@@ -436,8 +463,9 @@ function BaseTheme::makeTabProfile(%this)
 		fillColorSL = %this.color5;
 		fillColorNA = %this.setAlpha(%this.color3, 150);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
@@ -457,8 +485,9 @@ function BaseTheme::makeTabProfile(%this)
 		fillColorSL = %this.color5;
 		fillColorNA = %this.setAlpha(%this.color3, 150);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
@@ -478,8 +507,9 @@ function BaseTheme::makeTabProfile(%this)
 		fillColorSL = %this.color5;
 		fillColorNA = %this.setAlpha(%this.color3, 150);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
@@ -541,6 +571,24 @@ function BaseTheme::makeTabProfile(%this)
 
 function BaseTheme::makeTextEditProfile(%this)
 {
+	%labelBorder = new GuiBorderProfile()
+	{
+		padding = 2;
+	};
+	%this.labelProfile = new GuiControlProfile()
+	{
+		fillColor = "0 0 0 0";
+
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
+		fontColor = %this.color4;
+		align = "left";
+		vAlign = "top";
+
+		borderDefault = %labelBorder;
+	};
+
 	//border for text boxes never use the HL state.
 	%textBorderV = new GuiBorderProfile()
 	{
@@ -579,8 +627,9 @@ function BaseTheme::makeTextEditProfile(%this)
 		fillColorSL = %this.color4;
 		fillColorNA = %this.setAlpha(%this.color4, 80);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.setAlpha(%this.color1, 220);
 		fontColorHL = %this.adjustValue(%this.color1, 10);
 		fontColorSL = %this.color1;
@@ -675,7 +724,8 @@ function BaseTheme::makeScrollProfile(%this)
 		fillColorSL = %this.color5;
 		fillColorNA = %this.setAlpha(%this.color3, 80);
 
-		fontType = %this.font;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
 		fontColor = %this.color2;
 		fontColorHL = %this.color2;
 		fontColorSL = %this.color4;
@@ -705,7 +755,9 @@ function BaseTheme::makeConsoleProfile(%this)
 {
 	%this.consoleProfile = new GuiControlProfile()
 	{
-		fontType = %this.font;
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize + 2;
 		fontColor = %this.color4; //Normal text
 		fontColorHL = %this.setAlpha(%this.color4, 140); //Warnings
 		fontColorNA = "255 0 0 255"; //Errors

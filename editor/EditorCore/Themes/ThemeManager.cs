@@ -22,6 +22,11 @@
 
 function ThemeManager::onAdd(%this)
 {
+	exec("./BaseTheme/BaseTheme.cs");
+	exec("./LabCoat/LabCoatTheme.cs");
+	exec("./ForestRobe/ForestRobeTheme.cs");
+	exec("./TorqueSuit/TorqueSuitTheme.cs");
+
 	%this.themeList = new SimSet();
 	%this.controlList = new SimSet();
 
@@ -134,4 +139,24 @@ function ThemeManager::createProfile(%this, %profileName, %parentName, %settings
 	}
 
 	%this.themeList.callOnChildren("createProfile", %profileName, %parentName, %settings);
+}
+
+function ThemeManager::populateFonts(%this)
+{
+	echo("ThemeManager: Populating fonts...");
+	%oldPath = $GUI::fontCacheDirectory;
+	$GUI::fontCacheDirectory = %this.activeTheme.fontDirectory;
+	echo("  Path set to" SPC $GUI::fontCacheDirectory);
+
+	for(%i = 1; %i <= %this.activeTheme.fontCount; %i++)
+	{
+		echo("  Populating" SPC %this.activeTheme.font[%i]);
+		populateFontCacheRange(%this.activeTheme.font[%i],12,0,65535);
+		populateFontCacheRange(%this.activeTheme.font[%i],14,0,65535);
+		populateFontCacheRange(%this.activeTheme.font[%i],16,0,65535);
+		populateFontCacheRange(%this.activeTheme.font[%i],18,0,65535);
+		populateFontCacheRange(%this.activeTheme.font[%i],24,0,65535);
+		writeSingleFontCache(%this.activeTheme.font[%i]);
+	}
+	$GUI::fontCacheDirectory = %oldPath;
 }

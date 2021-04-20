@@ -146,9 +146,6 @@ bool GuiTextEditCtrl::onWake()
    if (! Parent::onWake())
       return false;
 
-   mFont = mProfile->mFont;
-   AssertFatal(mFont, "GuiTextCtrl::onWake: invalid font in profile");
-
    if (mConsoleVariable[0])
    {
 	   const char *txt = Con::getVariable(mConsoleVariable);
@@ -178,7 +175,6 @@ bool GuiTextEditCtrl::onWake()
 void GuiTextEditCtrl::onSleep()
 {
    Parent::onSleep();
-   mFont = NULL;
 
    // If this is the last awake text edit control, disable keyboard translation
    --smNumAwake;
@@ -249,10 +245,9 @@ void GuiTextEditCtrl::setText( const UTF8 *txt )
 
 	//Make sure we have a font
 	mProfile->incRefCount();
-	mFont = mProfile->mFont;
 
 	//If the font isn't found, we want to decrement the profile usage and return now or we may crash!
-	if (mFont.isNull())
+	if (mProfile->mFont.isNull())
 	{
 		//decrement the profile referrence
 		mProfile->decRefCount();
@@ -366,13 +361,13 @@ S32 GuiTextEditCtrl::setCursorPos( const Point2I &offset )
    for(count=0; count< (S32)mTextBuffer.length(); count++)
    {
       UTF16 c = mTextBuffer.getChar(count);
-      if(!mPasswordText && !mFont->isValidChar(c))
+      if(!mPasswordText && !mProfile->mFont->isValidChar(c))
          continue;
          
       if(mPasswordText)
-         charLength += mFont->getCharXIncrement( mPasswordMask[0] );
+         charLength += mProfile->mFont->getCharXIncrement( mPasswordMask[0] );
       else
-         charLength += mFont->getCharXIncrement( c );
+         charLength += mProfile->mFont->getCharXIncrement( c );
 
       if ( charLength > curX )
          break;      
@@ -1041,10 +1036,10 @@ dealWithBackspace:
          return Parent::onKeyDown( event );
    }
 
-   if(mFont.isNull())
+   if(mProfile->mFont.isNull())
        return false;
 
-   if ( mFont->isValidChar( event.ascii ) )
+   if ( mProfile->mFont->isValidChar( event.ascii ) )
    {
       // Get the character ready to add to a UTF8 string.
       UTF16 convertedChar[2] = { event.ascii, 0 };
@@ -1265,11 +1260,12 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
 	   }
 
 	   // Center vertically:
-	   drawPoint.y += ( ( drawRect.extent.y - mFont->getHeight() ) / 2 );
+	   S32 h = mProfile->mFont->getHeight();
+	   drawPoint.y += ( ( drawRect.extent.y - h ) / 2 );
 
 	   // Align horizontally:
    
-	   S32 textWidth = mFont->getStrNWidth(textBuffer.getPtr(), textBuffer.length());
+	   S32 textWidth = mProfile->mFont->getStrNWidth(textBuffer.getPtr(), textBuffer.length());
 
 	   if ( drawRect.extent.x > textWidth )
 	   {
@@ -1318,13 +1314,13 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
 		  // Alright, we want to terminate things momentarily.
 		  if(mCursorPos > 0)
 		  {
-			 cursorOffset = mFont->getStrNWidth(textBuffer.getPtr(), mCursorPos);
+			 cursorOffset = mProfile->mFont->getStrNWidth(textBuffer.getPtr(), mCursorPos);
 		  }
 		  else
 			 cursorOffset = 0;
 
 		  if ( tempChar )
-			 charWidth = mFont->getCharWidth( tempChar );
+			 charWidth = mProfile->mFont->getCharWidth( tempChar );
 		  else
 			 charWidth = 0;
 
@@ -1353,7 +1349,7 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
 		  cursorStart.x = mTextOffset.x + cursorOffset;
 		  cursorEnd.x = cursorStart.x;
 
-		  S32 cursorHeight = mFont->getHeight();
+		  S32 cursorHeight = mProfile->mFont->getHeight();
 		  if ( cursorHeight < drawRect.extent.y )
 		  {
 			 cursorStart.y = drawPoint.y;
@@ -1382,8 +1378,8 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
 		  dglSetBitmapModulation( fontColor );
 
 		  const UTF16* preString2 = textBuffer.getPtr();
-		  dglDrawTextN( mFont, tempOffset, preString2, mBlockStart, mProfile->mFontColors);
-		  tempOffset.x += mFont->getStrNWidth(preString2, mBlockStart);
+		  dglDrawTextN( mProfile->mFont, tempOffset, preString2, mBlockStart, mProfile->mFontColors);
+		  tempOffset.x += mProfile->mFont->getStrNWidth(preString2, mBlockStart);
 	   }
 
 	   //draw the hilighted portion
@@ -1392,14 +1388,14 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
 		  const UTF16* highlightBuff = textBuffer.getPtr() + mBlockStart;
 		  U32 highlightBuffLen = mBlockEnd-mBlockStart;
 
-		  S32 highlightWidth = mFont->getStrNWidth(highlightBuff, highlightBuffLen);
+		  S32 highlightWidth = mProfile->mFont->getStrNWidth(highlightBuff, highlightBuffLen);
 
 		  dglDrawRectFill( Point2I( tempOffset.x, drawRect.point.y + 1 ),
 			 Point2I( tempOffset.x + highlightWidth, drawRect.point.y + drawRect.extent.y - 1),
 			 mProfile->mFillColorHL );
 
 		  dglSetBitmapModulation( mProfile->mFontColorHL );
-		  dglDrawTextN( mFont, tempOffset, highlightBuff, highlightBuffLen, mProfile->mFontColors );
+		  dglDrawTextN( mProfile->mFont, tempOffset, highlightBuff, highlightBuffLen, mProfile->mFontColors );
 		  tempOffset.x += highlightWidth;
 	   }
 
@@ -1416,7 +1412,7 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
 			  U32 finalBuffLen = truncatedBuffer.length();
 
 			  dglSetBitmapModulation( fontColor );
-			  dglDrawTextN( mFont, tempOffset, truncatedBufferPtr, finalBuffLen, mProfile->mFontColors );
+			  dglDrawTextN( mProfile->mFont, tempOffset, truncatedBufferPtr, finalBuffLen, mProfile->mFontColors );
 		   }
 		   else
 		   {
@@ -1424,7 +1420,7 @@ void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentSt
 			  U32 finalBuffLen = mTextBuffer.length() - mBlockEnd;
 
 			  dglSetBitmapModulation( fontColor );
-			  dglDrawTextN( mFont, tempOffset, finalBuff, finalBuffLen, mProfile->mFontColors );
+			  dglDrawTextN( mProfile->mFont, tempOffset, finalBuff, finalBuffLen, mProfile->mFontColors );
 		   }
 	   }
 
@@ -1490,7 +1486,7 @@ StringBuffer GuiTextEditCtrl::truncate(StringBuffer buffer, StringBuffer termina
 			break;
 
 		UTF16 c = buffer.getChar(i);
-		currentWidth += mFont->getCharXIncrement(c);
+		currentWidth += mProfile->mFont->getCharXIncrement(c);
 		count++;
 	}
 
@@ -1510,10 +1506,10 @@ S32 GuiTextEditCtrl::textBufferWidth(StringBuffer buffer)
 	for (S32 count = 0; count < (S32)buffer.length(); count++)
 	{
 		UTF16 c = buffer.getChar(count);
-		if (!mFont->isValidChar(c))
+		if (!mProfile->mFont->isValidChar(c))
 			continue;
 
-		charLength += mFont->getCharXIncrement(c);
+		charLength += mProfile->mFont->getCharXIncrement(c);
 	}
 
 	return charLength;

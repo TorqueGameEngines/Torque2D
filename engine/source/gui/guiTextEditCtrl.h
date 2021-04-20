@@ -40,7 +40,6 @@ private:
 protected:
 
 	S32 mMaxStrLen;   // max string len, must be less then or equal to 255
-	Resource<GFont> mFont;
 	bool     mTruncateWhenUnfocused;
    StringBuffer mTextBuffer;
 

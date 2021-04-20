@@ -23,10 +23,6 @@
 function EditorCore::create( %this )
 {
 	exec("./Themes/ThemeManager.cs");
-	exec("./Themes/BaseTheme.cs");
-	exec("./Themes/LabCoatTheme.cs");
-	exec("./Themes/ForestRobeTheme.cs");
-	exec("./Themes/TorqueSuitTheme.cs");
 
 	new ScriptObject(ThemeManager);
 

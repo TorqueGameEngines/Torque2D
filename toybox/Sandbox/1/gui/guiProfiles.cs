@@ -147,6 +147,7 @@ if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
 
     // font
     fontType = $platformFontType;
+	fontDirectory = expandPath( "^AppCore/fonts" );
     fontSize = $platformFontSize;
     fontColor = "255 255 255 255";
 	align = center;

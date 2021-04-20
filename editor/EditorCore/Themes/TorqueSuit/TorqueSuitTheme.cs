@@ -1,23 +1,13 @@
 function TorqueSuitTheme::init(%this)
 {
 	%this.name = "Torque Suit";
-
 	//fonts and font sizes
-	%this.font = "monaco";
-	%this.fontSize = 12;
-	if ($platform $= "windows")
-	{
-		%this.font = "lucida console";
-	}
-	else if ($platform $= "Android")
-	{
-		%this.font = "Droid";
-		%this.fontSize = 14;
-	}
-	else if($platform $= "ios")
-	{
-		%this.fontSize = 18;
-	}
+	%this.fontCount = 3;
+	%this.font[1] = "raleway";//Most common font
+	%this.font[2] = "Audiowide";//Title fontType
+	%this.font[3] = "vt323";//Code and console font
+	%this.fontDirectory = expandPath("^EditorCore/Themes/TorqueSuit/Fonts");
+	%this.fontSize = 22;
 
 	%this.color1 = "34 19 30 255";
 	%this.color2 = "62 32 52 255";
@@ -45,8 +35,9 @@ function TorqueSuitTheme::makeButtonProfile(%this)
 		fillColorSL = %this.adjustValue(%this.color2, -20);
 		fillColorNA = %this.setAlpha(%this.color2, 80);
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = "255 255 255 150";
@@ -110,8 +101,9 @@ function TorqueSuitTheme::makeTabProfile(%this)
 		fillColorSL = %this.color4;
 		fillColorNA = %this.color2;
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
@@ -131,8 +123,9 @@ function TorqueSuitTheme::makeTabProfile(%this)
 		fillColorSL = %this.color4;
 		fillColorNA = %this.color2;
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
@@ -152,8 +145,9 @@ function TorqueSuitTheme::makeTabProfile(%this)
 		fillColorSL = %this.color4;
 		fillColorNA = %this.color2;
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
@@ -173,8 +167,9 @@ function TorqueSuitTheme::makeTabProfile(%this)
 		fillColorSL = %this.color4;
 		fillColorNA = %this.color2;
 
-		fontType = %this.font;
-		fontSize = %this.fontSize + 2;
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
@@ -249,6 +244,24 @@ function TorqueSuitTheme::makeTabProfile(%this)
 
 function TorqueSuitTheme::makeTextEditProfile(%this)
 {
+	%labelBorder = new GuiBorderProfile()
+	{
+		padding = 2;
+	};
+	%this.labelProfile = new GuiControlProfile()
+	{
+		fillColor = "0 0 0 0";
+
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
+		fontColor = %this.color4;
+		align = "left";
+		vAlign = "top";
+
+		borderDefault = %labelBorder;
+	};
+
 	//border for text boxes never use the HL state.
 	%textBorderV = new GuiBorderProfile()
 	{
@@ -311,7 +324,8 @@ function TorqueSuitTheme::makeTextEditProfile(%this)
 		fillColorSL = %this.color1;
 		fillColorNA = %this.setAlpha(%this.color1, 80);
 
-		fontType = %this.font;
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
 		fontSize = %this.fontSize + 2;
 		fontColor = %this.setAlpha(%this.color4, 220);
 		fontColorHL = %this.adjustValue(%this.color4, 10);
@@ -341,11 +355,11 @@ function TorqueSuitTheme::makeScrollProfile(%this)
 
 	%this.trackProfile = new GuiControlProfile()
 	{
-			fillColor = %this.setAlpha(%this.color2, 150);
-			fillColorHL = %this.setAlpha(%this.color2, 100);
-			fillColorSL = %this.setAlpha(%this.adjustValue(%this.color2, 10), 150);
-			fillColorNA = %this.setAlpha(%this.color2, 50);
-			borderDefault = %trackBorder;
+		fillColor = %this.setAlpha(%this.color2, 150);
+		fillColorHL = %this.setAlpha(%this.color2, 100);
+		fillColorSL = %this.setAlpha(%this.adjustValue(%this.color2, 10), 150);
+		fillColorNA = %this.setAlpha(%this.color2, 50);
+		borderDefault = %trackBorder;
 	};
 
 	%thumbBorder = new GuiBorderProfile()
@@ -381,7 +395,8 @@ function TorqueSuitTheme::makeScrollProfile(%this)
 		fillColorSL = %this.color5;
 		fillColorNA = %this.setAlpha(%this.color3, 80);
 
-		fontType = %this.font;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
 		fontColor = %this.color2;
 		fontColorHL = %this.color2;
 		fontColorSL = %this.adjustValue(%this.color5, -20);
@@ -409,7 +424,9 @@ function TorqueSuitTheme::makeConsoleProfile(%this)
 {
 	%this.consoleProfile = new GuiControlProfile()
 	{
-		fontType = %this.font;
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize + 2;
 		fontColor = %this.color4; //Normal text
 		fontColorHL = %this.setAlpha(%this.color4, 140); //Warnings
 		fontColorNA = %this.color5; //Errors

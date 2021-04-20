@@ -166,7 +166,6 @@ public:
    S32  mRefCount;                                 ///< Used to determine if any controls are using this profile
    bool mTabable;                                  ///< True if this object is accessable from using the tab key
 
-   static StringTableEntry  sFontCacheDirectory;
    bool mCanKeyFocus;                              ///< True if the object can be given keyboard focus (in other words, made a first responder @see GuiControl)
    bool mUseInput;                                 ///< True if input events like a click can be passed to this object. False will pass events to the parent and this object and its children will not be evaluated.
 
@@ -190,7 +189,8 @@ public:
    GuiBorderProfile* mBorderRight;
 
    // font members
-   StringTableEntry  mFontType;                    ///< Font face name for the control
+   StringTableEntry  mFontType;
+   StringTableEntry  mFontDirectory;                    ///< Font face name for the control
    S32               mFontSize;                    ///< Font size for the control
    enum {
       BaseColor = 0,

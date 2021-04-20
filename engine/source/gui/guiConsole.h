@@ -32,8 +32,6 @@ class GuiConsole : public GuiArrayCtrl
    private:
       typedef GuiArrayCtrl Parent;
 
-      Resource<GFont> mFont;
-
       S32 getMaxWidth(S32 startIndex, S32 endIndex);
 
    public:

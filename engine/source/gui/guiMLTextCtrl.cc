@@ -936,7 +936,7 @@ GuiMLTextCtrl::Font *GuiMLTextCtrl::allocFont(const char *faceName, U32 faceName
    ret->faceNameLen = faceNameLen;
    ret->size = size;
    ret->next = mFontList;
-   ret->fontRes = GFont::create(ret->faceName, size, GuiControlProfile::sFontCacheDirectory);
+   ret->fontRes = GFont::create(ret->faceName, size, mProfile->mFontDirectory);
    if(bool(ret->fontRes))
    {
       ret->next = mFontList;

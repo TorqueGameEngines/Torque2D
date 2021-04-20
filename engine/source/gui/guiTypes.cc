@@ -293,8 +293,6 @@ static EnumTable::Enums charsetEnums[]=
 
 static EnumTable gCharsetTable(NUMCHARSETENUMS, &charsetEnums[0]);
 
-StringTableEntry GuiControlProfile::sFontCacheDirectory = "";
-
 GuiControlProfile::GuiControlProfile(void) :
    mFontColor(mFontColors[BaseColor]),
    mFontColorHL(mFontColors[ColorHL]),
@@ -323,6 +321,7 @@ GuiControlProfile::GuiControlProfile(void) :
 	
 	// default font
 	mFontType      = StringTable->EmptyString;
+	mFontDirectory = StringTable->EmptyString;
 	mFontSize      = 12;
 	mFontCharset   = TGE_ANSI_CHARSET;
 	mFontColors[BaseColor].set(255,255,255,255);
@@ -366,6 +365,7 @@ GuiControlProfile::GuiControlProfile(void) :
 
       // default font
       mFontType = def->mFontType;
+	  mFontDirectory = def->mFontDirectory;
       mFontSize = def->mFontSize;
       mFontCharset = def->mFontCharset;
 
@@ -414,8 +414,10 @@ void GuiControlProfile::initPersistFields()
    addField("borderTop",     TypeString, Offset(mTopProfileName, GuiControlProfile));
    addField("borderBottom",  TypeString, Offset(mBottomProfileName, GuiControlProfile));
 
+   addGroup("Font");
    addField("fontType",      TypeString,     Offset(mFontType, GuiControlProfile));
    addField("fontSize",      TypeS32,        Offset(mFontSize, GuiControlProfile));
+   addField("fontDirectory", TypeString,	 Offset(mFontDirectory, GuiControlProfile));
    addField("fontCharset",   TypeEnum,       Offset(mFontCharset, GuiControlProfile), 1, &gCharsetTable);
    addField("fontColors",    TypeColorI,     Offset(mFontColors, GuiControlProfile), 10);
    addField("fontColor",     TypeColorI,     Offset(mFontColors[BaseColor], GuiControlProfile));
@@ -424,6 +426,7 @@ void GuiControlProfile::initPersistFields()
    addField("fontColorSL",   TypeColorI,     Offset(mFontColors[ColorSL], GuiControlProfile));
    addField("fontColorLink", TypeColorI,     Offset(mFontColors[ColorUser0], GuiControlProfile));
    addField("fontColorLinkHL", TypeColorI,     Offset(mFontColors[ColorUser1], GuiControlProfile));
+   endGroup("Font");
 
    addField("align", TypeEnum, Offset(mAlignment, GuiControlProfile), 1, &gAlignTable);
    addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControlProfile), 1, &gVAlignTable);
@@ -732,10 +735,11 @@ void GuiControlProfile::incRefCount()
 {
 	if(!mRefCount)
 	{
-		sFontCacheDirectory = Con::getVariable("$GUI::fontCacheDirectory");
+		if(mFontDirectory == StringTable->EmptyString)
+			mFontDirectory = Con::getVariable("$GUI::fontCacheDirectory");
 
 		//verify the font
-		mFont = GFont::create(mFontType, mFontSize, sFontCacheDirectory);
+		mFont = GFont::create(mFontType, mFontSize, mFontDirectory);
 		if (mFont.isNull())
 			Con::errorf("Failed to load/create profile font (%s/%d)", mFontType, mFontSize);
 

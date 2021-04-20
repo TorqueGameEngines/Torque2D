@@ -1,23 +1,13 @@
 function LabCoatTheme::init(%this)
 {
 	%this.name = "Lab Coat";
-
 	//fonts and font sizes
-	%this.font = "monaco";
-	%this.fontSize = 12;
-	if ($platform $= "windows")
-	{
-		%this.font = "lucida console";
-	}
-	else if ($platform $= "Android")
-	{
-		%this.font = "Droid";
-		%this.fontSize = 14;
-	}
-	else if($platform $= "ios")
-	{
-		%this.fontSize = 18;
-	}
+	%this.fontCount = 3;
+	%this.font[1] = "roboto";//Most common font
+	%this.font[2] = "zen dots";//Title fontType
+	%this.font[3] = "share tech mono";//Code and console font
+	%this.fontDirectory = expandPath("^EditorCore/Themes/LabCoat/Fonts");
+	%this.fontSize = 20;
 
 	%this.color1 = "255 255 255 255";
 	%this.color2 = "203 217 222 255";
