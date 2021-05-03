@@ -14,8 +14,9 @@
    isContainer = "1";
    canSave = "1";
    canSaveDynamicFields = "1";
-   
-    new GuiBitmapCtrl() {
+
+    new GuiSpriteCtrl() {
+		Profile = "GuiDefaultProfile";
 		HorizSizing = "width";
         VertSizing = "height";
         Position = "0 0";
@@ -24,10 +25,16 @@
         canSave = "1";
         Visible = "1";
         hovertime = "1000";
+		imageColor = "255 255 255 255";
         bitmap = "./images/gridTiny2";
-        wrap = "1";
+		singleFrameBitmap = "1";
+		tileImage = "1";
+		positionOffset = "0 0";
+		imageSize = "128 128";
+		fullSize = "0";
+		constrainProportions = "1";
 	};
-   
+
     new GuiControl(GuiEditorContent) {
         canSaveDynamicFields = "0";
         isContainer = "1";
@@ -40,7 +47,7 @@
         canSave = "1";
         Visible = "1";
         hovertime = "1000";
-				  
+
 		new GuiControl(GuiBlank) {
             canSaveDynamicFields = "0";
             isContainer = "1";
@@ -55,7 +62,7 @@
             hovertime = "1000";
 		};
 	};
-		
+
 	new GuiEditCtrl(GuiEditor) {
 		canSaveDynamicFields = "0";
 		isContainer = "0";

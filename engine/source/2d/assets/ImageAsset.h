@@ -90,6 +90,7 @@ public:
                 mPixelHeight = pixelFrameHeight;
                 mRegionName = StringTable->insert(regionName);
             };
+			inline RectI toRectI(void) const { return RectI(mPixelOffset, Point2I(mPixelWidth, mPixelHeight)); }
 
             Point2I mPixelOffset;
             U32 mPixelWidth;

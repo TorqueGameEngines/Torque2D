@@ -207,7 +207,7 @@ void renderSizableBorderedImageAsset(RectI &bounds, U8 frame, ImageAsset *imageA
 		const ImageAsset::FrameArea::PixelArea& pixelArea9 = imageAsset->getImageFrameArea((U32)i+8).mPixelArea;
 
 		renderSizableBorderedTexture(bounds, imageAsset->getImageTexture(), 
-			RectI(pixelArea1.mPixelOffset, Point2I(pixelArea1.mPixelWidth, pixelArea1.mPixelHeight)),
+			pixelArea1.toRectI(),
 			RectI(pixelArea2.mPixelOffset, Point2I(pixelArea2.mPixelWidth, pixelArea2.mPixelHeight)),
 			RectI(pixelArea3.mPixelOffset, Point2I(pixelArea3.mPixelWidth, pixelArea3.mPixelHeight)), 
 			RectI(pixelArea4.mPixelOffset, Point2I(pixelArea4.mPixelWidth, pixelArea4.mPixelHeight)), 

@@ -619,7 +619,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiBitmapCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiCanvas.cc" />
     <ClCompile Include="..\..\source\gui\guiColorPicker.cc" />
@@ -627,7 +626,6 @@
     <ClCompile Include="..\..\source\gui\guiConsoleEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiControl.cc" />
     <ClCompile Include="..\..\source\gui\guiDefaultControlRender.cc" />
-    <ClCompile Include="..\..\source\gui\guiFadeinBitmapCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiListBoxCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc" />
@@ -1165,7 +1163,6 @@
     <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas_ScriptBinding.h" />

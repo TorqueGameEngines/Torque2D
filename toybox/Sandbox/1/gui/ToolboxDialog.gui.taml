@@ -1,13 +1,15 @@
 <GuiSpriteCtrl
     Name="ToolboxDialog"
-    Profile="GuiToolboxProfile"
+    Profile="GuiDefaultProfile"
     HorizSizing="relative"
     VertSizing="relative"
     Position="0 0"
     Extent="1024 768"
     MinExtent="320 320"
     Visible="1"
-	Image="@asset=Sandbox:blueGradient">
+	Image="@asset=Sandbox:blueGradient"
+	imageColor="255 255 255 220"
+	constrainProportions="0">
 
 	<!-- Close Toolbox -->
 	<GuiButtonCtrl

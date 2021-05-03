@@ -21,7 +21,19 @@
 //-----------------------------------------------------------------------------
 
 #include "platform/platform.h"
+#include "platform/types.h"
+#include "console/consoleTypes.h"
+#include "console/console.h"
+#include "console/consoleInternal.h"
 #include "math/mFluid.h"
+
+#ifndef _TICKABLE_H_
+#include "platform/Tickable.h"
+#endif
+
+#ifndef _STRINGUNIT_H_
+#include "string/stringUnit.h"
+#endif
 
 Fluid::Fluid()
 {
@@ -74,6 +86,14 @@ const char* Fluid::getEasingFunctionDescription(const EasingFunction ease)
 
 //------------------------------------------------------------------------
 
+FluidColorI::FluidColorI(ColorI &color)
+{
+	red = color.red;
+	green = color.green;
+	blue = color.blue;
+	alpha = color.alpha;
+}
+
 void FluidColorI::startFluidAnimation(const ColorI &color)
 {
 	mAnimationProgress = 0.0f;
@@ -115,4 +135,86 @@ void FluidColorI::set(const ColorI& in_rCopy)
 	green = in_rCopy.green;
 	blue = in_rCopy.blue;
 	alpha = in_rCopy.alpha;
+}
+
+void FluidColorI::set(U8 red, U8 green, U8 blue, U8 alpha)
+{
+	red = red;
+	green = green;
+	blue = blue;
+	alpha = alpha;
+}
+
+//-----------------------------------------------------------------------------
+
+ConsoleType(FluidColorI, TypeFluidColorI, sizeof(FluidColorI), "")
+
+//-----------------------------------------------------------------------------
+
+ConsoleGetType(TypeFluidColorI)
+{
+	// Fetch color.
+	FluidColorI* color = (FluidColorI*)dptr;
+
+	// Fetch stock color name.
+	StringTableEntry colorName = StockColor::name(*color);
+
+	// Write as color name if was found.
+	if (colorName != StringTable->EmptyString)
+		return colorName;
+
+	// Format as color components.
+	char* returnBuffer = Con::getReturnBuffer(256);
+	dSprintf(returnBuffer, 256, "%d %d %d %d", color->red, color->green, color->blue, color->alpha);
+	return returnBuffer;
+}
+
+//-----------------------------------------------------------------------------
+
+ConsoleSetType(TypeFluidColorI)
+{
+	FluidColorI* color = (FluidColorI*)dptr;
+	if (argc == 1)
+	{
+		// Is only a single argument passed?
+		if (StringUnit::getUnitCount(argv[0], " ") == 1)
+		{
+			// Is this a stock color name?
+			if (!StockColor::isColor(argv[0]))
+			{
+				// No, so warn.
+				Con::warnf("FluidColorI() - Invalid single argument of '%s' could not be interpreted as a stock color name.  Using default.", argv[0]);
+			}
+
+			// Set stock color (if it's invalid we'll get the default.
+			color->set(argv[0]);
+
+			return;
+		}
+
+		color->set(0, 0, 0, 255);
+		S32 r, g, b, a;
+		const S32 args = dSscanf(argv[0], "%d %d %d %d", &r, &g, &b, &a);
+		color->red = r;
+		color->green = g;
+		color->blue = b;
+		if (args == 4)
+			color->alpha = a;
+	}
+	else if (argc == 3)
+	{
+		color->red = dAtoi(argv[0]);
+		color->green = dAtoi(argv[1]);
+		color->blue = dAtoi(argv[2]);
+		color->alpha = 255;
+	}
+	else if (argc == 4)
+	{
+		color->red = dAtoi(argv[0]);
+		color->green = dAtoi(argv[1]);
+		color->blue = dAtoi(argv[2]);
+		color->alpha = dAtoi(argv[3]);
+	}
+	else
+		Con::printf("Color must be set as { r, g, b [,a] }, { r g b [b] }  or { stockColorName }");
 }

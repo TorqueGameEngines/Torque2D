@@ -35,6 +35,8 @@
 #include "graphics/gColor.h"
 #endif
 
+DefineConsoleType(TypeFluidColorI)
+
 class Fluid
 {
 protected:
@@ -78,9 +80,17 @@ protected:
 	U8 alphaTarget;
 
 public:
+	FluidColorI() { }
+	FluidColorI(ColorI &color);
+	FluidColorI(const U8 in_r,
+		const U8 in_g,
+		const U8 in_b,
+		const U8 in_a = U8(255)) : ColorI(in_r, in_g, in_b, in_a) { };
+
 	virtual void startFluidAnimation(const ColorI &color);
 	virtual bool processTick(); //Returns true if we should continue to processTicks
 	void set(const ColorI& in_rCopy);
+	void set(U8 red, U8 green, U8 blue, U8 alpha = 255);
 };
 
 #endif // _MFLUID_H_

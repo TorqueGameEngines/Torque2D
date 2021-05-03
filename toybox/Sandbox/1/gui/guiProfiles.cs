@@ -334,10 +334,7 @@ if(!isObject(GuiTabPageProfile)) new GuiControlProfile (GuiTabPageProfile : GuiD
 };
 
 
-if(!isObject(GuiSpriteProfile)) new GuiControlProfile (GuiSpriteProfile : GuiDefaultProfile)
-{
-	FillColor = "255 255 255 255";
-};
+if(!isObject(GuiSpriteProfile)) new GuiControlProfile (GuiSpriteProfile : GuiDefaultProfile);
 
 // ----------------------------------------------------------------------------
 if (!isObject(GuiTreeViewProfile)) new GuiControlProfile (GuiTreeViewProfile : GuiDefaultProfile)
@@ -562,13 +559,6 @@ if(!isObject(GuiScrollProfile)) new GuiControlProfile (GuiScrollProfile)
 if(!isObject(GuiTransparentScrollProfile)) new GuiControlProfile (GuiTransparentScrollProfile : GuiScrollProfile)
 {
    fillColor = "255 255 255 0";
-};
-
-//-----------------------------------------------------------------------------
-
-if(!isObject(GuiToolboxProfile)) new GuiControlProfile( GuiToolboxProfile : GuiScrollProfile )
-{
-    fillColor = "255 255 255 220";
 };
 
 //-----------------------------------------------------------------------------

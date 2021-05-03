@@ -744,9 +744,6 @@
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBitmapCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -766,9 +763,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiDefaultControlRender.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiFadeinBitmapCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc">
@@ -2092,9 +2086,6 @@
       <Filter>input</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h">
