@@ -26,6 +26,19 @@
 #include "gui/editor/guiInspector.h"
 #endif
 
+#ifndef _ANIMATION_ASSET_H_
+#include "2d/assets/AnimationAsset.h"
+#endif
+
+#ifndef _FONT_ASSET_H_
+#include "2d/assets/FontAsset.h"
+#endif // !_FONT_ASSET_H_
+
+#ifndef _PARTICLE_ASSET_H_
+#include "2d/assets/ParticleAsset.h"
+#endif // !_PARTICLE_ASSET_H_
+
+
 #ifndef _GUICONTROL_H_
 #include "gui/guiControl.h"
 #endif
@@ -46,9 +59,18 @@
 #include "gui/guiPopUpCtrl.h"
 #endif
 
+#ifndef _GUIGRIDCTRL_H_
+#include "gui/containers/guiGridCtrl.h"
+#endif
+
 #ifndef _GUICHECKBOXCTRL_H_
 #include "gui/buttons/guiCheckBoxCtrl.h"
 #endif
+
+#ifndef _GUICOLORPICKERCTRL_H_
+#include "gui/guiColorPicker.h"
+#endif // !_GUICOLORPICKERCTRL_H_
+
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -106,6 +128,23 @@ public:
    virtual GuiControl* constructEditControl();
 };
 
+//////////////////////////////////////////////////////////////////////////
+// GuiInspectorTypeGuiBorderProfile Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeGuiBorderProfile : public GuiInspectorTypeEnum
+{
+private:
+   typedef GuiInspectorTypeEnum Parent;
+public:
+   DECLARE_CONOBJECT(GuiInspectorTypeGuiBorderProfile);
+   static void consoleInit();
+
+   //////////////////////////////////////////////////////////////////////////
+   // Override able methods for custom edit fields (Both are REQUIRED)
+   //////////////////////////////////////////////////////////////////////////
+   virtual GuiControl* constructEditControl();
+};
+
 
 //////////////////////////////////////////////////////////////////////////
 // TypeFileName GuiInspectorField Class
@@ -139,13 +178,12 @@ public:
    DECLARE_CONOBJECT(GuiInspectorTypeColor);
 
    StringTableEntry  mColorFunction;
-   SimObjectPtr<GuiButtonCtrl>   mBrowseButton;
 
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
    virtual GuiControl*        constructEditControl();
-   virtual void               resize(const Point2I &newPosition, const Point2I &newExtent);
+   virtual void               updateValue(StringTableEntry newValue);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -173,6 +211,185 @@ public:
    GuiInspectorTypeColorF();
 
    DECLARE_CONOBJECT(GuiInspectorTypeColorF);
+   static void consoleInit();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeSimObjectPtr GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeSimObjectPtr : public GuiInspectorField
+{
+private:
+   typedef GuiInspectorField Parent;
+public:
+   DECLARE_CONOBJECT(GuiInspectorTypeSimObjectPtr);
+   static void consoleInit();
+
+   //////////////////////////////////////////////////////////////////////////
+   // Override able methods for custom edit fields
+   //////////////////////////////////////////////////////////////////////////
+   virtual GuiControl*        constructEditControl();
+   virtual StringTableEntry   getData();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeS32 GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeS32 : public GuiInspectorField
+{
+private:
+   typedef GuiInspectorField Parent;
+public:
+   DECLARE_CONOBJECT(GuiInspectorTypeS32);
+   static void consoleInit();
+
+   //////////////////////////////////////////////////////////////////////////
+   // Override able methods for custom edit fields
+   //////////////////////////////////////////////////////////////////////////
+   virtual GuiControl*        constructEditControl();
+   virtual const char*        getData();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypePoint2I GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypePoint2I : public GuiInspectorField
+{
+private:
+   typedef GuiInspectorField Parent;
+public:
+   DECLARE_CONOBJECT(GuiInspectorTypePoint2I);
+   static void consoleInit();
+
+   //////////////////////////////////////////////////////////////////////////
+   // Override able methods for custom edit fields
+   //////////////////////////////////////////////////////////////////////////
+   virtual GuiControl*        constructEditControl();
+   virtual void               updateValue(StringTableEntry newValue);
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypePoint2F GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypePoint2F : public GuiInspectorField
+{
+private:
+   typedef GuiInspectorField Parent;
+public:
+   DECLARE_CONOBJECT(GuiInspectorTypePoint2F);
+   static void consoleInit();
+
+   //////////////////////////////////////////////////////////////////////////
+   // Override able methods for custom edit fields
+   //////////////////////////////////////////////////////////////////////////
+   virtual GuiControl*        constructEditControl();
+   virtual void               updateValue(StringTableEntry newValue);
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeVector2 GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeVector2 : public GuiInspectorField
+{
+private:
+   typedef GuiInspectorField Parent;
+public:
+   DECLARE_CONOBJECT(GuiInspectorTypeVector2);
+   static void consoleInit();
+
+   //////////////////////////////////////////////////////////////////////////
+   // Override able methods for custom edit fields
+   //////////////////////////////////////////////////////////////////////////
+   virtual GuiControl*        constructEditControl();
+   virtual void               updateValue(StringTableEntry newValue);
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeAsset GuiInspectorField Class Base for Assets
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeAsset : public GuiInspectorField
+{
+private:
+   typedef GuiInspectorField Parent;
+public:
+   DECLARE_CONOBJECT(GuiInspectorTypeAsset);
+
+   StringTableEntry mAssetType;
+
+   SimObjectPtr<GuiButtonCtrl>   mBrowseButton;
+   //////////////////////////////////////////////////////////////////////////
+   // Override able methods for custom edit fields
+   //////////////////////////////////////////////////////////////////////////
+   virtual GuiControl*        constructEditControl();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeImageAssetPtr GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeImageAssetPtr : public GuiInspectorTypeAsset
+{
+private:
+   typedef GuiInspectorTypeAsset Parent;
+public:
+   GuiInspectorTypeImageAssetPtr();
+
+   DECLARE_CONOBJECT(GuiInspectorTypeImageAssetPtr);
+   static void consoleInit();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeAnimationAssetPtr GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeAnimationAssetPtr : public GuiInspectorTypeAsset
+{
+private:
+   typedef GuiInspectorTypeAsset Parent;
+public:
+   GuiInspectorTypeAnimationAssetPtr();
+
+   DECLARE_CONOBJECT(GuiInspectorTypeAnimationAssetPtr);
+   static void consoleInit();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeAudioAssetPtr GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeAudioAssetPtr : public GuiInspectorTypeAsset
+{
+private:
+   typedef GuiInspectorTypeAsset Parent;
+public:
+   GuiInspectorTypeAudioAssetPtr();
+
+   DECLARE_CONOBJECT(GuiInspectorTypeAudioAssetPtr);
+   static void consoleInit();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeFontAssetPtr GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeFontAssetPtr : public GuiInspectorTypeAsset
+{
+private:
+   typedef GuiInspectorTypeAsset Parent;
+public:
+   GuiInspectorTypeFontAssetPtr();
+
+   DECLARE_CONOBJECT(GuiInspectorTypeFontAssetPtr);
+   static void consoleInit();
+};
+
+//////////////////////////////////////////////////////////////////////////
+// TypeParticleAssetPtr GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeParticleAssetPtr : public GuiInspectorTypeAsset
+{
+private:
+   typedef GuiInspectorTypeAsset Parent;
+public:
+   GuiInspectorTypeParticleAssetPtr();
+
+   DECLARE_CONOBJECT(GuiInspectorTypeParticleAssetPtr);
    static void consoleInit();
 };
 

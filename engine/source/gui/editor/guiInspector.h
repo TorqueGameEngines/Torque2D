@@ -54,11 +54,11 @@
 #include "gui/guiPopUpCtrl.h"
 #endif
 
-#ifndef _GUIGRIDCTRL_H_
-#include "gui/containers/guiGridCtrl.h"
+#ifndef _GUICHAINCTRL_H_
+#include "gui/containers/guiChainCtrl.h"
 #endif
 
-#include "gui/containers/guiRolloutCtrl.h"
+#include "gui/containers/guiPanelCtrl.h"
 
 
 // Forward Declare GuiInspectorGroup
@@ -68,10 +68,10 @@ class GuiInspectorField;
 // Forward Declare GuiInspectorDatablockField
 class GuiInspectorDatablockField;
 
-class GuiInspector : public GuiGridCtrl
+class GuiInspector : public GuiChainCtrl
 {
 private:
-   typedef GuiGridCtrl Parent;
+   typedef GuiChainCtrl Parent;
 public:
    // Members
    Vector<GuiInspectorGroup*>    mGroups;
@@ -131,16 +131,16 @@ public:
    virtual void onRender(Point2I offset, const RectI &updateRect);
 };
 
-class GuiInspectorGroup : public GuiRolloutCtrl
+class GuiInspectorGroup : public GuiPanelCtrl
 {
 private:
-   typedef GuiRolloutCtrl Parent;
+   typedef GuiPanelCtrl Parent;
 public:
    // Members
    SimObjectPtr<SimObject>             mTarget;
    SimObjectPtr<GuiInspector>          mParent;
    Vector<GuiInspectorField*>          mChildren;
-   GuiGridCtrl*						   mStack;
+   GuiChainCtrl*						      mStack;
 
    // Constructor/Destructor/Conobject Declaration
    GuiInspectorGroup();
@@ -152,7 +152,7 @@ public:
    virtual GuiInspectorField* findField( StringTableEntry fieldName );
 
    // Publicly Accessible Information about this group
-   StringTableEntry getGroupName() { return mCaption; };
+   StringTableEntry getGroupName() { return mText; };
    SimObjectPtr<SimObject> getGroupTarget() { return mTarget; };
    SimObjectPtr<GuiInspector> getContentCtrl() { return mParent; };
 
@@ -205,7 +205,7 @@ private:
 public:
    DECLARE_CONOBJECT(GuiInspectorDynamicGroup);
    GuiInspectorDynamicGroup() { /*mNeedScroll=false;*/ };
-   GuiInspectorDynamicGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> parent ) : GuiInspectorGroup( target, groupName, parent) { /*mNeedScroll=false;*/};
+   GuiInspectorDynamicGroup(SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> parent) : GuiInspectorGroup(target, groupName, parent) {};
    
    //////////////////////////////////////////////////////////////////////////
    // inspectGroup is overridden in GuiInspectorDynamicGroup to inspect an 

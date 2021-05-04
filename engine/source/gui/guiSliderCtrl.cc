@@ -91,7 +91,7 @@ bool GuiSliderCtrl::onWake()
 }
 
 //----------------------------------------------------------------------------
-void GuiSliderCtrl::onMouseDown(const GuiEvent &event)
+void GuiSliderCtrl::onTouchDown(const GuiEvent &event)
 {
     if (!mActive || !mAwake || !mVisible)
         return;
@@ -111,7 +111,7 @@ void GuiSliderCtrl::onMouseDown(const GuiEvent &event)
 }
 
 //----------------------------------------------------------------------------
-void GuiSliderCtrl::onMouseDragged(const GuiEvent &event)
+void GuiSliderCtrl::onTouchDragged(const GuiEvent &event)
 {
     if (!mActive || !mAwake || !mVisible)
         return;
@@ -147,7 +147,7 @@ void GuiSliderCtrl::onMouseDragged(const GuiEvent &event)
 }
 
 //----------------------------------------------------------------------------
-void GuiSliderCtrl::onMouseUp(const GuiEvent &)
+void GuiSliderCtrl::onTouchUp(const GuiEvent &)
 {
     if (!mActive || !mAwake || !mVisible)
         return;
@@ -156,7 +156,7 @@ void GuiSliderCtrl::onMouseUp(const GuiEvent &)
     execConsoleCallback();
 }
 
-void GuiSliderCtrl::onMouseEnter(const GuiEvent &event)
+void GuiSliderCtrl::onTouchEnter(const GuiEvent &event)
 {
     setUpdate();
     if (isMouseLocked())
@@ -176,7 +176,7 @@ void GuiSliderCtrl::onMouseEnter(const GuiEvent &event)
     }
 }
 
-void GuiSliderCtrl::onMouseLeave(const GuiEvent &)
+void GuiSliderCtrl::onTouchLeave(const GuiEvent &)
 {
     setUpdate();
     if (isMouseLocked())
