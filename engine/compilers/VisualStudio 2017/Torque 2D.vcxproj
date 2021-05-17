@@ -618,6 +618,7 @@
     <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiCanvas.cc" />
@@ -867,7 +868,6 @@
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc" />
@@ -880,7 +880,6 @@
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiMenuBar.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformFileIoTests.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformMemoryTests.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformStringTests.cc" />
@@ -1162,6 +1161,8 @@
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas.h" />
@@ -1499,7 +1500,6 @@
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h" />
@@ -1511,7 +1511,6 @@
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiMenuBar.h" />
     <ClInclude Include="..\..\source\testing\unitTesting.h" />
     <ClInclude Include="..\..\source\testing\unitTesting_ScriptBinding.h" />
     <ClInclude Include="..\..\source\torqueConfig.h" />

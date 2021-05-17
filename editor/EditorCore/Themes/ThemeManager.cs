@@ -97,7 +97,7 @@ function ThemeManager::refreshProfiles(%this)
 				error("ThemeManager::setProfile - Unable to find profile" SPC %obj.profileName SPC "for theme" SPC %this.activeTheme.name @ "!");
 			}
 
-			%obj.gui.setFieldValue(%obj.profileTag, %this.activeTheme.getFieldValue(%obj.profileName));
+			%obj.gui.setEditFieldValue(%obj.profileTag, %this.activeTheme.getFieldValue(%obj.profileName));
 		}
 		else
 		{
@@ -120,7 +120,7 @@ function ThemeManager::setProfile(%this, %gui, %profileName, %profileTag)
 		error("ThemeManager::setProfile - Unable to find profile" SPC %profileName SPC "for theme" SPC %this.activeTheme.name @ "!");
 	}
 
-	%gui.setFieldValue(%profileTag, %this.activeTheme.getFieldValue(%profileName));
+	%gui.setEditFieldValue(%profileTag, %this.activeTheme.getFieldValue(%profileName));
 	%this.controlList.add(
 		new ScriptObject()
 		{

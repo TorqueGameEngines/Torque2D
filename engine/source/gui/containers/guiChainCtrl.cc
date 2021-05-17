@@ -94,6 +94,33 @@ void GuiChainCtrl::calculateExtent()
 {
 	RectI innerRect = getInnerRect(mBounds.point.Zero, getExtent(), NormalState, mProfile);
 
+	S32 length = positionChildren(innerRect);
+
+	if (!mIsVertical)
+	{
+		innerRect.extent.x = length;
+	}
+	else
+	{
+		innerRect.extent.y = length;
+	}
+
+	//call set update both before and after
+	setUpdate();
+
+	Point2I oldExtent = getExtent();
+	mBounds.extent = getOuterExtent(innerRect.extent, NormalState, mProfile);
+	GuiControl *parent = getParent();
+
+	if(oldExtent != getExtent() && parent)
+	{
+		parent->childResized(this);
+	}
+	setUpdate();
+}
+
+S32 GuiChainCtrl::positionChildren(RectI &innerRect)
+{
 	iterator i;
 	S32 length = 0;
 	for (i = begin(); i != end(); i++)
@@ -119,25 +146,5 @@ void GuiChainCtrl::calculateExtent()
 		}
 	}
 
-	if (!mIsVertical)
-	{
-		innerRect.extent.x = length;
-	}
-	else
-	{
-		innerRect.extent.y = length;
-	}
-
-	//call set update both before and after
-	setUpdate();
-
-	Point2I oldExtent = getExtent();
-	mBounds.extent = getOuterExtent(innerRect.extent, NormalState, mProfile);
-	GuiControl *parent = getParent();
-
-	if(oldExtent != getExtent() && parent)
-	{
-		parent->childResized(this);
-	}
-	setUpdate();
+	return length;
 }

@@ -178,7 +178,7 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 	if(mProfile->usesDefaultRendering(currentState))
 	{
 		RectI drawArea = RectI(contentRect.point.x + contentRect.extent.x - contentRect.extent.y, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
-		renderTriangleIcon(drawArea, ColorI(mProfile->getFontColor(currentState)), false, 8);
+		renderTriangleIcon(drawArea, ColorI(mProfile->getFontColor(currentState)), GuiDirection::Down, 8);
 		contentRect.extent.x -= contentRect.extent.y;
 	}
 

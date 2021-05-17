@@ -356,7 +356,7 @@ void renderStretchedImageAsset(RectI &bounds, U8 frame, GuiControlProfile *profi
 //Renders a color bullet at or one pixel smaller than maxSize.
 //It shrinks the given box until it is less than or equal to the 
 //maxSize in the x direction.
-void renderColorBullet(RectI &bounds, ColorI &color, S32 maxSize)
+void renderColorBullet(RectI &bounds, ColorI &color, S32 maxSize, bool useCircle)
 {
 	if (bounds.extent.x > maxSize)
 	{
@@ -367,16 +367,27 @@ void renderColorBullet(RectI &bounds, ColorI &color, S32 maxSize)
 	{
 		return;
 	}
-	dglDrawRectFill(bounds, ColorI(0, 0, 0, 100));
-	bounds.inset(1, 1);
-	if (!bounds.isValidRect())
+
+	if(!useCircle)
 	{
-		return;
+		dglDrawRectFill(bounds, ColorI(0, 0, 0, 100));
+		bounds.inset(1, 1);
+		if (!bounds.isValidRect())
+		{
+			return;
+		}
+		dglDrawRectFill(bounds, color);
 	}
-	dglDrawRectFill(bounds, color);
+	else
+	{
+		Point2I center = Point2I(bounds.point.x + (bounds.extent.x / 2), bounds.point.y + (bounds.extent.y / 2));
+		F32 radius = (F32)(bounds.extent.x / 2);
+		dglDrawCircleFill(center, radius, ColorI(0, 0, 0, 100));
+		dglDrawCircleFill(center, radius-1, color);
+	}
 }
 
-void renderTriangleIcon(RectI &bounds, ColorI &color, bool pointsUp, S32 maxSize)
+void renderTriangleIcon(RectI &bounds, ColorI &color, GuiDirection pointsToward, S32 maxSize)
 {
 	if (bounds.extent.x > maxSize)
 	{
@@ -388,7 +399,7 @@ void renderTriangleIcon(RectI &bounds, ColorI &color, bool pointsUp, S32 maxSize
 		return;
 	}
 
-	if (pointsUp)
+	if (pointsToward == GuiDirection::Up)
 	{
 		dglDrawTriangleFill(
 			Point2I(bounds.point.x, bounds.point.y + bounds.extent.y),
@@ -397,12 +408,30 @@ void renderTriangleIcon(RectI &bounds, ColorI &color, bool pointsUp, S32 maxSize
 			color
 		);
 	}
-	else
+	else if (pointsToward == GuiDirection::Down)
 	{
 		dglDrawTriangleFill(
 			bounds.point,
 			Point2I(bounds.point.x + (bounds.extent.x / 2), bounds.point.y + bounds.extent.y),
 			Point2I(bounds.point.x + bounds.extent.x, bounds.point.y),
+			color
+		);
+	}
+	else if (pointsToward == GuiDirection::Right)
+	{
+		dglDrawTriangleFill(
+			bounds.point,
+			Point2I(bounds.point.x, bounds.point.y + bounds.extent.y),
+			Point2I(bounds.point.x + bounds.extent.x, bounds.point.y + (bounds.extent.y / 2)),
+			color
+		);
+	}
+	else if (pointsToward == GuiDirection::Left)
+	{
+		dglDrawTriangleFill(
+			Point2I(bounds.point.x + bounds.extent.x, bounds.point.y),
+			Point2I(bounds.point.x, bounds.point.y + (bounds.extent.y / 2)),
+			Point2I(bounds.point.x + bounds.extent.x, bounds.point.y + bounds.extent.y),
 			color
 		);
 	}

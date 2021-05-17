@@ -39,7 +39,7 @@ void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &
 void renderFixedBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile);
 void renderStretchedBitmap(RectI &bounds, U8 frame, GuiControlProfile *profile);
 void renderStretchedImageAsset(RectI &bounds, U8 frame, GuiControlProfile *profile);
-void renderColorBullet(RectI &bounds, ColorI &color, S32 maxSize);
-void renderTriangleIcon(RectI &bounds, ColorI &color, bool pointsUp, S32 maxSize);
+void renderColorBullet(RectI &bounds, ColorI &color, S32 maxSize, bool useCircle = false);
+void renderTriangleIcon(RectI &bounds, ColorI &color, GuiDirection pointsToward, S32 maxSize);
 
 #endif

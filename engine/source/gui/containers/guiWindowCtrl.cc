@@ -636,7 +636,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 	//Does this window have focus (does it or a child receive key events)?
 	GuiCanvas *root = getRoot();
 	GuiControl *firstResponder = root ? root->getFirstResponder() : NULL;
-	bool hasFocus = (!firstResponder || ControlIsChild(firstResponder));
+	bool hasFocus = (firstResponder && ControlIsChild(firstResponder));
 
 	GuiControlState currentState = NormalState;
 	if (mMinimized)

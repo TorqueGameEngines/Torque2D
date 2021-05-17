@@ -729,8 +729,8 @@ public:
 	/// Returns the extent of the outer rect given the extent of the inner rect.
 	Point2I getOuterExtent(Point2I innerExtent, GuiControlState currentState, GuiControlProfile *profile);
 
-    void inspectPostApply();
-    void inspectPreApply();
+    virtual void inspectPostApply();
+    virtual void inspectPreApply();
 
 protected:
 	virtual void interpolateTick(F32 delta) {};

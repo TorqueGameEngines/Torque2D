@@ -23,10 +23,6 @@
 #ifndef _GUIWINDOWCTRL_H_
 #define _GUIWINDOWCTRL_H_
 
-#ifndef _GUITEXTCTRL_H_
-#include "gui/guiTextCtrl.h"
-#endif
-
 /// @addtogroup gui_container_group Containers
 ///
 /// @ingroup gui_group Gui System

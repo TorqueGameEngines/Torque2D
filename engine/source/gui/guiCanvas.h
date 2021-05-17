@@ -160,6 +160,15 @@ protected:
       U32 index;
       U32 keyCode;
       U32 modifier;
+
+	  inline bool IsKeyCodeEqual(U32 testCode)
+	  {
+		  return (testCode == keyCode ||
+			  (keyCode == KEY_ALT && (testCode == KEY_RALT || testCode == KEY_LALT)) ||
+			  (keyCode == KEY_SHIFT && (testCode == KEY_RSHIFT || testCode == KEY_LSHIFT)) || 
+			  (keyCode == KEY_CONTROL && (testCode == KEY_RCONTROL || testCode == KEY_LCONTROL)) || 
+			  (keyCode == KEY_MAC_OPT && (testCode == KEY_MAC_ROPT || testCode == KEY_MAC_LOPT)));
+	  }
    };
    Vector <AccKeyMap> mAcceleratorMap;
 

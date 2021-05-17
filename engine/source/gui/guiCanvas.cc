@@ -371,7 +371,7 @@ bool GuiCanvas::processInputEvent(const InputEvent *event)
          //if not handled, search for an accelerator
          for (U32 i = 0; i < (U32)mAcceleratorMap.size(); i++)
          {
-            if ((U32)mAcceleratorMap[i].keyCode == (U32)event->objInst && (U32)mAcceleratorMap[i].modifier == eventModifier)
+            if ((U32)mAcceleratorMap[i].IsKeyCodeEqual(event->objInst) && (U32)mAcceleratorMap[i].modifier == eventModifier)
             {
                mAcceleratorMap[i].ctrl->acceleratorKeyPress(mAcceleratorMap[i].index);
                return true;

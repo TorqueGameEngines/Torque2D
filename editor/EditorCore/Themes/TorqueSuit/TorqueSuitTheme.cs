@@ -432,3 +432,174 @@ function TorqueSuitTheme::makeConsoleProfile(%this)
 		fontColorNA = %this.color5; //Errors
 	};
 }
+
+function TorqueSuitTheme::makeMenuProfile(%this)
+{
+	%menuBarBorder = new GuiBorderProfile()
+	{
+		padding = 2;
+	};
+
+	%this.menuBarProfile = new GuiControlProfile()
+	{
+		fillColor = %this.adjustValue(%this.color1, -7);
+		canKeyFocus = true;
+		borderDefault = %menuBarBorder;
+	};
+
+	%menuBorder = new GuiBorderProfile()
+	{
+		margin = 2;
+		marginHL = 0;
+		marginSL = 0;
+		marginNA = 2;
+
+		border = 0;
+		borderHL = 2;
+		borderSL = 2;
+		borderNA = 0;
+
+		borderColorHL = "255 255 255 30";
+		borderColorSL = %this.color5;
+	};
+
+	%menuBottomBorder = new GuiBorderProfile()
+	{
+		paddingSL = 2;
+
+		margin = 2;
+		marginHL = 0;
+		marginSL = 0;
+		marginNA = 2;
+
+		border = 0;
+		borderHL = 2;
+		borderSL = 2;
+		borderNA = 0;
+
+		borderColorHL = "255 255 255 30";
+		borderColorSL = %this.color5;
+	};
+
+	%menuSideBorder = new GuiBorderProfile()
+	{
+		border = 0;
+		borderHL = 2;
+		borderSL = 2;
+		borderNA = 0;
+
+		padding = 10;
+		paddingHL = 8;
+		paddingSL = 8;
+		paddingNA = 10;
+
+		borderColorHL = "255 255 255 30";
+		borderColorSL = %this.color5;
+	};
+
+	%this.menuProfile = new GuiControlProfile()
+	{
+		fillColor = "0 0 0 0";
+		fillColorHL = "255 255 255 10";
+		fillColorSL = %this.adjustValue(%this.color5, -15);
+		fillColorNA = "0 0 0 0";
+
+		borderDefault = %menuBorder;
+		borderLeft = %menuSideBorder;
+		borderRight = %menuSideBorder;
+		borderBottom = %menuBottomBorder;
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.adjustValue(%this.color4, 100);
+
+		canKeyFocus = true;
+	};
+
+	%menuContentVertBorder = new GuiBorderProfile()
+	{
+		border = 2;
+		padding = 4;
+		borderColor = %this.color5;
+	};
+
+	%menuContentSideBorder = new GuiBorderProfile()
+	{
+		border = 2;
+		padding = 0;
+		borderColor = %this.color5;
+	};
+
+	%this.menuContentProfile = new GuiControlProfile()
+	{
+		fillColor = %this.adjustValue(%this.color1, -5);
+
+		borderDefault = %menuContentSideBorder;
+		borderTop = %menuContentVertBorder;
+		borderBottom = %menuContentVertBorder;
+	};
+
+	%menuItemBorderTop = new GuiBorderProfile()
+	{
+		padding = 6;
+		paddingHL = 6;
+		paddingSL = 0;
+		paddingNA = 6;
+
+		marginSL = 4;
+		borderSL = 1;
+		borderColorSL = "0 0 0 50";
+	};
+
+	%menuItemBorderBottom = new GuiBorderProfile()
+	{
+		padding = 6;
+		paddingHL = 6;
+		paddingSL = 0;
+		paddingNA = 6;
+
+		marginSL = 4;
+		borderSL = 1;
+		borderColorSL = "255 255 255 50";
+	};
+
+	%menuItemBorderSide = new GuiBorderProfile()
+	{
+		padding = 6;
+		paddingHL = 6;
+		paddingSL = 0;
+		paddingNA = 6;
+
+		marginSL = 0;
+		borderSL = 0;
+		paddingSL = 6;
+	};
+
+	%this.menuItemProfile = new GuiControlProfile()
+	{
+		fillColor = %this.adjustValue(%this.color1, -5);
+		fillColorHL = %this.adjustValue(%this.color5, -15);
+		fillColorNA = %this.color1;
+		align = left;
+
+		tab = false;
+		canKeyFocus = true;
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color1, 10);
+		fontColorNA = %this.setAlpha(%this.color1, 150);
+
+		borderDefault = %menuItemBorderSide;
+		borderTop = %menuItemBorderTop;
+		borderBottom = %menuItemBorderBottom;
+	};
+}

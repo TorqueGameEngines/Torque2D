@@ -146,6 +146,7 @@ class ActionMap : public SimObject
    void dumpActionMap(const char* fileName, const bool append) const;
 
    static bool createEventDescriptor(const char* pEventString, EventDescriptor* pDescriptor);
+   static const char* swapCtrlForCmd(const char* input); ///< A simple helper function that takes Ctrl and turns it to Cmd on Mac
 
    bool processBind(const U32 argc, const char** argv, SimObject* object = NULL);
    bool processBindCmd(const char *device, const char *action, const char *makeCmd, const char *breakCmd);

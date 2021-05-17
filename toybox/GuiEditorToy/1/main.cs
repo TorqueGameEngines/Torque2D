@@ -36,77 +36,8 @@ function GuiEditorToy::create( %this )
     //SandboxWindow.delete();
 	GuiEditor.blankGui = new GuiControl();
 
-	// Init menu
-	GuiEditorToy.initMenus();
-
     // Reset the toy initially.
     GuiEditorToy.reset();
-
-}
-
-function GuiEditorToy::initMenus( %this )
-{
-   if( isObject( %this.menuGroup ) )
-      %this.menuGroup.delete();
-
-   %this.menuGroup = new SimGroup();
-
-   //set up %cmdctrl variable so that it matches OS standards
-   %cmdCtrl = $platform $= "macos" ? "Cmd" : "Ctrl";
-
-   %filemenu = new PopupMenu()
-   {
-      superClass = "MenuBuilder";
-      barPosition = 0;
-      barName = "File";
-
-      item[0] = "New Gui..." TAB %cmdCtrl SPC "N" TAB "GuiEditorStartCreate();";
-      item[1] = "Open Gui..." TAB %cmdCtrl SPC "O" TAB "GuiEditorOpenGui();";
-      item[2] = "-";
-      item[3] = "Save Gui..." TAB %cmdCtrl SPC "S" TAB "GuiEditorToy.save();";
-   };
-
-   %layoutmenu = new PopupMenu()
-   {
-      superClass = "MenuBuilder";
-      barPosition = 1;
-      barName = "Layout";
-
-      item[0] = "Align Left" TAB %cmdCtrl SPC "L" TAB "GuiEditor.Justify(0);";
-      item[1] = "Align Right" TAB %cmdCtrl SPC "R" TAB "GuiEditor.Justify(2);";
-      item[2] = "Align Top" TAB %cmdCtrl SPC "T" TAB "GuiEditor.Justify(3);";
-      item[3] = "Align Bottom" TAB %cmdCtrl SPC "B" TAB "GuiEditor.Justify(4);";
-      item[4] = "-";
-      item[5] = "Center Horizontally" TAB "" TAB "GuiEditor.Justify(1);";
-      item[6] = "Space Vertically" TAB "" TAB "GuiEditor.Justify(5);";
-      item[7] = "Space Horizontally" TAB "" TAB "GuiEditor.Justify(6);";
-      item[8] = "-";
-      item[9] = "Bring to Front" TAB "" TAB "GuiEditor.BringToFront();";
-      item[10] = "Send to Back" TAB "" TAB "GuiEditor.PushToBack();";
-      item[11] = "Lock Selection" TAB "" TAB "GuiEditorTreeView.lockSelection(true);";
-      item[12] = "Unlock Selection" TAB "" TAB "GuiEditorTreeView.lockSelection(false);";
-   };
-
-   %movemenu = new PopupMenu()
-   {
-      superClass = "MenuBuilder";
-      barPosition = 2;
-      barName = "Move";
-
-      item[0] = "Nudge Up" TAB "Up" TAB "GuiEditor.moveSelection(0,-1);";
-      item[1] = "Nudge Down" TAB "Down" TAB "GuiEditor.moveSelection(0,1);";
-	  item[2] = "Nudge Right" TAB "Right" TAB "GuiEditor.moveSelection(1,0);";
-	  item[3] = "Nudge Left" TAB "Left" TAB "GuiEditor.moveSelection(-1,0);";
-   };
-
-   // add menus to a group
-   %this.menuGroup.add(%fileMenu);
-   %this.menuGroup.add(%layoutmenu);
-   %this.menuGroup.add(%movemenu);
-
-   for( %i = 0; %i < %this.menuGroup.getCount(); %i++ )
-     %this.menuGroup.getObject( %i ).attachToMenuBar();
-
 }
 
 //-----------------------------------------------------------------------------

@@ -17,10 +17,13 @@ class GuiChainCtrl : public GuiControl
 {
 private:
 	typedef GuiControl Parent;
+
+protected:
 	S32 mChildSpacing;
 	bool mIsVertical;
 
-	void calculateExtent();
+	virtual void calculateExtent();
+	virtual S32 positionChildren(RectI &innerRect);
 
 public:
 	GuiChainCtrl();

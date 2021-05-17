@@ -806,3 +806,137 @@ if(!isObject(GuiDropDownProfile)) new GuiControlProfile (GuiDropDownProfile : Gu
 	borderBottom = GuiDropDownDarkBorderProfile;
 	category = "dropDown";
 };
+
+if (!isObject(GuiMenuBarBorderProfile)) new GuiBorderProfile (GuiMenuBarBorderProfile : GuiDefaultBorderProfile)
+{
+	padding = 2;
+};
+
+if(!isObject(GuiMenuBarProfile)) new GuiControlProfile (GuiMenuBarProfile : GuiDefaultProfile)
+{
+	fillColor = AdjustColorValue($color1, -7);
+	canKeyFocus = true;
+	borderDefault = GuiMenuBarBorderProfile;
+	category = "defaultMenuBar";
+};
+
+if (!isObject(GuiMenuBorderProfile)) new GuiBorderProfile (GuiMenuBorderProfile : GuiDefaultBorderProfile)
+{
+	margin = 2;
+	marginHL = 0;
+	marginSL = 0;
+	marginNA = 2;
+
+	border = 0;
+	borderHL = 2;
+	borderSL = 2;
+	borderNA = 0;
+
+	borderColorHL = "255 255 255 30";
+	borderColorSL = $color4;
+};
+
+if (!isObject(GuiMenuBottomBorderProfile)) new GuiBorderProfile (GuiMenuBottomBorderProfile : GuiMenuBorderProfile)
+{
+	paddingSL = 2;
+	marginSL = 0;
+	borderSL = 0;
+};
+
+if (!isObject(GuiMenuSideBorderProfile)) new GuiBorderProfile (GuiMenuSideBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 0;
+	borderHL = 2;
+	borderSL = 2;
+	borderNA = 0;
+
+	padding = 10;
+	paddingHL = 8;
+	paddingSL = 8;
+	paddingNA = 10;
+
+	borderColorHL = "255 255 255 30";
+	borderColorSL = $color4;
+};
+
+if(!isObject(GuiMenuProfile)) new GuiControlProfile (GuiMenuProfile : GuiDefaultProfile)
+{
+	fillColor = "0 0 0 0";
+	fillColorHL = "255 255 255 10";
+	fillColorSL = AdjustColorValue($color4, -15);
+	fillColorNA = "0 0 0 0";
+
+	borderDefault = GuiMenuBorderProfile;
+	borderLeft = GuiMenuSideBorderProfile;
+	borderRight = GuiMenuSideBorderProfile;
+	borderBottom = GuiMenuBottomBorderProfile;
+	category = "defaultMenuBar";
+
+	fontColor = $color3;
+	fontColorHL = AdjustColorValue($color3, 10);
+	fontColorSL = $color3;
+	fontColorNA = SetColorAlpha($color3, 100);
+};
+
+if (!isObject(GuiMenuContentVertBorderProfile)) new GuiBorderProfile (GuiMenuContentVertBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 2;
+	padding = 4;
+	borderColor = $color4;
+};
+
+if (!isObject(GuiMenuContentSideBorderProfile)) new GuiBorderProfile (GuiMenuContentSideBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 2;
+	padding = 0;
+	borderColor = $color4;
+};
+
+if(!isObject(GuiMenuContentProfile)) new GuiControlProfile (GuiMenuContentProfile : GuiDefaultBorderProfile)
+{
+	fillColor = AdjustColorValue($color1, -5);
+
+	borderDefault = GuiMenuContentSideBorderProfile;
+	borderTop = GuiMenuContentVertBorderProfile;
+	borderBottom = GuiMenuContentVertBorderProfile;
+};
+
+if (!isObject(GuiMenuItemBorderTopProfile)) new GuiBorderProfile (GuiMenuItemBorderTopProfile : GuiDefaultBorderProfile)
+{
+	padding = 6;
+	paddingHL = 6;
+	paddingSL = 0;
+	paddingNA = 6;
+
+	marginSL = 4;
+	borderSL = 1;
+	borderColorSL = "0 0 0 50";
+};
+
+if (!isObject(GuiMenuItemBorderBottomProfile)) new GuiBorderProfile (GuiMenuItemBorderBottomProfile : GuiMenuItemBorderTopProfile)
+{
+	borderColorSL = "255 255 255 50";
+};
+
+if (!isObject(GuiMenuItemBorderSideProfile)) new GuiBorderProfile (GuiMenuItemBorderSideProfile : GuiMenuItemBorderTopProfile)
+{
+	marginSL = 0;
+	borderSL = 0;
+	paddingSL = 6;
+};
+
+if(!isObject(GuiMenuItemProfile)) new GuiControlProfile (GuiMenuItemProfile : GuiDefaultProfile)
+{
+	fillColor = AdjustColorValue($color1, -5);
+	fillColorHL = AdjustColorValue($color4, -15);
+	fillColorNA = $color1;
+	align = left;
+
+	fontColor = $color3;
+	fontColorHL = AdjustColorValue($color3, 10);
+	fontColorNA = SetColorAlpha($color3, 150);
+
+	borderDefault = GuiMenuItemBorderSideProfile;
+	borderTop = GuiMenuItemBorderTopProfile;
+	borderBottom = GuiMenuItemBorderBottomProfile;
+};

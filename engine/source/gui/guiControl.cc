@@ -151,7 +151,6 @@ void GuiControl::initPersistFields()
 {
    Parent::initPersistFields();
 
-
    // Things relevant only to the editor.
    addGroup("Gui Editing");
    addField("isContainer",       TypeBool,      Offset(mIsContainer, GuiControl));

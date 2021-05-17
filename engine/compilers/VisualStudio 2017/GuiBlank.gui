@@ -1,0 +1,51 @@
+//--- Created With GUIEDITORTOY ---//
+%guiContent = new GuiControl(GuiBlank) {
+   Name = "GuiBlank";
+   canSaveDynamicFields = "0";
+   hidden = "0";
+   locked = "0";
+   isContainer = "1";
+   Profile = "GuiDefaultProfile";
+   HorizSizing = "width";
+   VertSizing = "height";
+   Position = "0 0";
+   Extent = "1920 1017";
+   MinExtent = "8 2";
+   canSave = "1";
+   Visible = "1";
+   Active = "0";
+   tooltipWidth = "250";
+   hovertime = "1000";
+
+   new GuiWindowCtrl() {
+      canSaveDynamicFields = "0";
+      hidden = "0";
+      locked = "0";
+      isContainer = "1";
+      Profile = "GuiWindowProfile";
+      HorizSizing = "right";
+      VertSizing = "bottom";
+      Position = "256 456";
+      Extent = "300 240";
+      MinExtent = "8 2";
+      canSave = "1";
+      Visible = "1";
+      Active = "1";
+      tooltipWidth = "250";
+      hovertime = "1000";
+      resizeWidth = "1";
+      resizeHeight = "1";
+      canMove = "1";
+      canClose = "1";
+      canMinimize = "1";
+      canMaximize = "1";
+      titleHeight = "20";
+      resizeRightWidth = "10";
+      resizeBottomHeight = "10";
+      contentProfile = "GuiWindowContentProfile";
+      closeButtonProfile = "GuiWindowCloseButtonProfile";
+      minButtonProfile = "GuiWindowMinButtonProfile";
+      maxButtonProfile = "GuiWindowMaxButtonProfile";
+   };
+};
+//--- GUIEDITORTOY END ---//

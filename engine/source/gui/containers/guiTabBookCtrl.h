@@ -143,10 +143,6 @@ private:
    /// @param   tabRect   the rectangle to render the tab into
    /// @param   tab   pointer to the tab page control for which to render the tab
    void renderTab( RectI tabRect, GuiTabPageCtrl* tab );
-
-   void renderJustifiedTextRot(Point2I offset, Point2I extent, const char *text, F32 rot );
-
-
    /// @}
 
    /// @name Page Management

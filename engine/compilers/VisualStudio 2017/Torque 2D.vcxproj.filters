@@ -471,9 +471,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
@@ -505,9 +502,6 @@
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiMenuBar.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Collision\b2BroadPhase.cpp">
@@ -1486,6 +1480,9 @@
     <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc">
       <Filter>gui\buttons</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc">
+      <Filter>gui\editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -1773,9 +1770,6 @@
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
@@ -1804,9 +1798,6 @@
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiMenuBar.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Box2D.h">
@@ -3354,6 +3345,12 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl_ScriptBinding.h">
       <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl_ScriptBinding.h">
+      <Filter>gui\editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -69,6 +69,7 @@ bool GuiListBoxCtrl::onWake()
 void GuiListBoxCtrl::addObject(SimObject *obj)
 {
 	AssertWarn(0, "GuiListBoxCtrl::addObject: cannot add children to the GuiListBoxCtrl. It is not a container. Child was not added.");
+	removeObject(obj);
 }
 
 #pragma region ItemAccessors
@@ -627,8 +628,6 @@ void GuiListBoxCtrl::onRender( Point2I offset, const RectI &updateRect )
 
 	for ( S32 i = 0; i < mItems.size(); i++)
 	{
-		S32 colorBoxSize = 0;
-		ColorI boxColor = ColorI(0, 0, 0);
 		// Only render visible items
 		if ((i + 1) * mItemSize.y + offset.y < updateRect.point.y)
 		continue;

@@ -27,11 +27,6 @@
 #include "gui/guiControl.h"
 #endif
 
-#ifndef _GUITEXTCTRL_H_
-#include "gui/guiTextCtrl.h"
-#endif
-
-
 class GuiProgressCtrl : public GuiControl, public Fluid
 {
 private:

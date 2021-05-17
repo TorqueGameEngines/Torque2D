@@ -41,24 +41,88 @@ function EditorCore::destroy( %this )
 
 function EditorCore::initGui(%this)
 {
+	%this.baseGui = new GuiControl()
+	{
+		HorizSizing = width;
+		VertSizing = height;
+		Position = "0 0";
+		Extent = "1024 768";
+	};
+	ThemeManager.setProfile(%this.baseGui, "emptyProfile");
+
+	%this.menuBar = new GuiMenuBarCtrl()
+	{
+		new GuiMenuItemCtrl() {
+			Text = "Tools";
+
+			new GuiMenuItemCtrl() {
+				Text = "Close Tools";
+				Command = "EditorCore.close();";
+			};
+		};
+		new GuiMenuItemCtrl() {
+			Text = "Theme";
+
+			new GuiMenuItemCtrl() {
+				Text = "Construction Vest";
+				Radio = true;
+				IsOn = true;
+				Command = "ThemeManager.setTheme(0);";
+				Accelerator = "Ctrl 1";
+			};
+
+			new GuiMenuItemCtrl() {
+				Text = "Lab Coat";
+				Radio = true;
+				Command = "ThemeManager.setTheme(1);";
+				Accelerator = "Ctrl 2";
+			};
+
+			new GuiMenuItemCtrl() {
+				Text = "Forest Robe";
+				Radio = true;
+				Command = "ThemeManager.setTheme(2);";
+				Accelerator = "Ctrl 3";
+			};
+
+			new GuiMenuItemCtrl() {
+				Text = "Torque Suit";
+				Radio = true;
+				Command = "ThemeManager.setTheme(3);";
+				Accelerator = "Ctrl 4";
+			};
+		};
+	};
+	ThemeManager.setProfile(%this.menuBar, "menuBarProfile");
+	ThemeManager.setProfile(%this.menuBar, "menuProfile", "MenuProfile");
+	ThemeManager.setProfile(%this.menuBar, "menuItemProfile", "MenuItemProfile");
+	ThemeManager.setProfile(%this.menuBar, "menuContentProfile", "MenuContentProfile");
+	ThemeManager.setProfile(%this.menuBar, "scrollingPanelThumbProfile", "ThumbProfile");
+	ThemeManager.setProfile(%this.menuBar, "scrollingPanelArrowProfile", "ArrowProfile");
+	ThemeManager.setProfile(%this.menuBar, "scrollingPanelTrackProfile", "TrackProfile");
+
+	%this.baseGui.add(%this.menuBar);
+
 	%this.tabBook = new GuiTabBookCtrl()
 	{
 		Class = EditorCoreTabBook;
 		HorizSizing = width;
 		VertSizing = height;
-		Position = "0 0";
-		Extent = "1024 768";
+		Position = "0 26";
+		Extent = "1024 742";
 		TabPosition = top;
 		Core = %this;
 	};
 	ThemeManager.setProfile(%this.tabBook, "tabBookProfileTop");
 	ThemeManager.setProfile(%this.tabBook, "tabProfileTop", "TabProfile");
+
+	%this.baseGui.add(%this.tabBook);
 }
 
 function EditorCore::toggleEditor(%this)
 {
     // Is the console awake?
-    if ( %this.tabBook.isAwake() )
+    if ( %this.baseGui.isAwake() )
     {
         // Yes, so deactivate it.
         %this.close();
@@ -74,7 +138,7 @@ function EditorCore::open(%this)
 	if ( $enableDirectInput )
         deactivateKeyboard();
 
-    Canvas.pushDialog(%this.tabBook);
+    Canvas.pushDialog(%this.baseGui);
 
 	%this.tabBook.selectPage(0);
 }
@@ -83,7 +147,7 @@ function EditorCore::close(%this)
 {
 	if ( $enableDirectInput )
 		activateKeyboard();
-	Canvas.popDialog(%this.tabBook);
+	Canvas.popDialog(%this.baseGui);
 }
 
 function EditorCore::RegisterEditor(%this, %name, %editor)
