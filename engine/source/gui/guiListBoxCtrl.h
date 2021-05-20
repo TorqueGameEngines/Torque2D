@@ -106,6 +106,7 @@ public:
    S32               getItemIndex( LBItem *item );
    StringTableEntry  getItemText( S32 index );
    
+   void				 setSelectionInternal(StringTableEntry text);
    virtual void      setCurSel( S32 index );
    void              setCurSelRange( S32 start, S32 stop );
    void              setItemText( S32 index, StringTableEntry text );

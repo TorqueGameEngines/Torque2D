@@ -28,17 +28,16 @@ IMPLEMENT_CONOBJECT(GuiInspectorTypeEnum);
 
 GuiControl* GuiInspectorTypeEnum::constructEditControl()
 {
-   GuiControl* retCtrl = new GuiPopUpMenuCtrl();
+   GuiControl* retCtrl = new GuiDropDownCtrl();
 
    // If we couldn't construct the control, bail!
    if( retCtrl == NULL )
       return retCtrl;
 
-   GuiPopUpMenuCtrl *menu = dynamic_cast<GuiPopUpMenuCtrl*>(retCtrl);
+   GuiDropDownCtrl *menu = dynamic_cast<GuiDropDownCtrl*>(retCtrl);
 
    // Let's make it look pretty.
-   retCtrl->setField( "profile", "GuiPopUpMenuProfile2" );
-   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 18));
+   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 24));
    menu->setField("text", getData());
 
    registerEditControl( retCtrl );
@@ -50,7 +49,7 @@ GuiControl* GuiInspectorTypeEnum::constructEditControl()
 
    //now add the entries
    for(S32 i = 0; i < mField->table->size; i++)
-      menu->addEntry(mField->table->table[i].label, mField->table->table[i].index);
+      menu->getList()->addItemWithID(mField->table->table[i].label, mField->table->table[i].index);
 
    return retCtrl;
 }
@@ -64,9 +63,11 @@ void GuiInspectorTypeEnum::consoleInit()
 
 void GuiInspectorTypeEnum::updateValue( StringTableEntry newValue )
 {
-   GuiPopUpMenuCtrl *ctrl = dynamic_cast<GuiPopUpMenuCtrl*>( mEdit );
-   if( ctrl != NULL )
-      ctrl->setText( newValue );
+	GuiDropDownCtrl *ctrl = dynamic_cast<GuiDropDownCtrl*>( mEdit );
+	if (ctrl != NULL)
+	{
+		ctrl->getList()->setSelectionInternal(newValue);
+	}
 }
 
 void GuiInspectorTypeEnum::setData( StringTableEntry data )
@@ -151,17 +152,16 @@ static S32 QSORT_CALLBACK stringCompare(const void *a,const void *b)
 
 GuiControl* GuiInspectorTypeGuiProfile::constructEditControl()
 {
-   GuiControl* retCtrl = new GuiPopUpMenuCtrl();
+   GuiControl* retCtrl = new GuiDropDownCtrl();
 
    // If we couldn't construct the control, bail!
    if( retCtrl == NULL )
       return retCtrl;
 
-   GuiPopUpMenuCtrl *menu = dynamic_cast<GuiPopUpMenuCtrl*>(retCtrl);
+   GuiDropDownCtrl *menu = dynamic_cast<GuiDropDownCtrl*>(retCtrl);
 
    // Let's make it look pretty.
-   retCtrl->setField( "profile", "GuiPopUpMenuProfile2" );
-   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 18));
+   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 24));
    menu->setField("text", getData());
 
    registerEditControl( retCtrl );
@@ -183,11 +183,9 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl()
       }
    }
 
-   menu->sort();
-   // sort the entries
-   //dQsort(entries.address(), entries.size(), sizeof(StringTableEntry), stringCompare);
+   menu->getList()->sortByText();
    for(U32 j = 0; j < (U32)entries.size(); j++)
-      menu->addEntry(entries[j], 0);
+      menu->getList()->addItem(entries[j]);
 
    return retCtrl;
 }
@@ -206,17 +204,16 @@ void GuiInspectorTypeGuiBorderProfile::consoleInit()
 
 GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl()
 {
-   GuiControl* retCtrl = new GuiPopUpMenuCtrl();
+   GuiControl* retCtrl = new GuiDropDownCtrl();
 
    // If we couldn't construct the control, bail!
    if (retCtrl == NULL)
       return retCtrl;
 
-   GuiPopUpMenuCtrl *menu = dynamic_cast<GuiPopUpMenuCtrl*>(retCtrl);
+   GuiDropDownCtrl *menu = dynamic_cast<GuiDropDownCtrl*>(retCtrl);
 
    // Let's make it look pretty.
-   retCtrl->setField("profile", "GuiPopUpMenuProfile2");
-   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 18));
+   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 24));
    menu->setField("text", getData());
 
    registerEditControl(retCtrl);
@@ -238,9 +235,9 @@ GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl()
       }
    }
 
-   menu->sort();
+   menu->getList()->sortByText();
    for (U32 j = 0; j < (U32)entries.size(); j++)
-      menu->addEntry(entries[j], 0);
+      menu->getList()->addItem(entries[j]);
 
    return retCtrl;
 }

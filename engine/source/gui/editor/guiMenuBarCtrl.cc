@@ -56,7 +56,7 @@ GuiMenuBarCtrl::GuiMenuBarCtrl()
 	setField("ThumbProfile", "GuiScrollThumbProfile");
 
 	mArrowProfile = NULL;
-	setField("ArrowProfile", "GuiSrollArrowProfile");
+	setField("ArrowProfile", "GuiScrollArrowProfile");
 
 	mTrackProfile = NULL;
 	setField("TrackProfile", "GuiScrollTrackProfile");
@@ -184,13 +184,13 @@ void GuiMenuBarCtrl::processHover(const GuiEvent &event)
 
 void GuiMenuBarCtrl::setHoverTarget(GuiMenuItemCtrl *ctrl)
 {
-	if (mHoverTarget != ctrl) 
+	if (mHoverTarget != ctrl)
 	{
-		if (mHoverTarget != NULL) 
+		if (mHoverTarget != NULL)
 		{
 			mHoverTarget->mIsHover = false;
 		}
-		if(ctrl != NULL) 
+		if(ctrl != NULL)
 		{
 			ctrl->mIsHover = true;
 		}
@@ -422,7 +422,7 @@ bool GuiMenuBarCtrl::onKeyDown(const GuiEvent &event)
 			return true;
 		}
 	}
-		
+
 	return false;
 }
 
@@ -712,7 +712,7 @@ void GuiMenuItemCtrl::onChildAdded(GuiControl *child)
 		}
 
 		if(mList == NULL)
-		{ 
+		{
 			mList = new GuiMenuListCtrl(this);
 			AssertFatal(mList, "GuiMenuItemCtrl::onChildAdded Failed to initialize GuiMenuListCtrl!");
 			mScroll->addObject(mList);
@@ -1171,7 +1171,7 @@ void GuiMenuListCtrl::onPreRender()
 	U32 currentTime = Platform::getVirtualMilliseconds();
 	if (mArmSubMenu && mHoveredItem != NULL && mHoveredItem != mMenu->mOpenSubMenu && (currentTime - mEnterItemTime) > mSubMenuStallTime)
 	{
-		//Close an open sub menu 
+		//Close an open sub menu
 		if (mMenu->mOpenSubMenu != NULL)
 		{
 			mMenu->mOpenSubMenu->closeMenu();
@@ -1277,7 +1277,7 @@ bool GuiMenuListCtrl::onRenderItem(RectI &itemRect, GuiMenuItemCtrl *item)
 		currentState = GuiControlState::DisabledState;
 	else if (item->mDisplayType == GuiMenuItemCtrl::DisplayType::Spacer)
 		currentState = GuiControlState::SelectedState;
-	else if (mHoveredItem == item || 
+	else if (mHoveredItem == item ||
 		(item->mIsOpen && (mMenu->mMenuBar->mUseKeyMode || !mMenu->mScroll->mBounds.pointInRect(cursorPt) || mMenu->mOpenSubMenu->mScroll->mBounds.pointInRect(cursorPt))))
 		currentState = GuiControlState::HighlightState;
 	RectI ctrlRect = applyMargins(itemRect.point, itemRect.extent, currentState, profile);
@@ -1375,7 +1375,7 @@ void GuiMenuListCtrl::updateSize()
 				width += font->getStrWidth(hotKey) + 30;
 			}
 		}
-		
+
 		if (width > maxWidth)
 			maxWidth = width;
 
@@ -1393,7 +1393,7 @@ void GuiMenuListCtrl::updateSize()
 
 	mItemSize = this->getOuterExtent(contentSize, NormalState, profile);
 	mSpacerSize = this->getOuterExtent(spacerSize, SelectedState, profile);
-	
+
 	//Add a square of space at both ends for icons
 	mItemSize.x += (2 * mItemSize.y);
 	mSpacerSize.x += (2 * mItemSize.y);

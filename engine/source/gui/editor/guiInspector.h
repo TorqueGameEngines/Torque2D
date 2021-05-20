@@ -50,8 +50,8 @@
 #include "gui/buttons/guiButtonCtrl.h"
 #endif
 
-#ifndef _GUIPOPUPCTRL_H_
-#include "gui/guiPopUpCtrl.h"
+#ifndef _GUIDROPDOWNCTRL_H_
+#include "gui/buttons/guiDropDownCtrl.h"
 #endif
 
 #ifndef _GUICHAINCTRL_H_
@@ -163,8 +163,6 @@ public:
 protected:
    // overridable method that creates our inner controls.
    virtual bool createContent();
-
-
 };
 
 class GuiInspectorDynamicField : public GuiInspectorField

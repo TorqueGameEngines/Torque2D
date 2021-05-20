@@ -249,6 +249,18 @@ S32 GuiListBoxCtrl::findItemText( StringTableEntry text, bool caseSensitive )
    return -1;
 }
 
+void GuiListBoxCtrl::setSelectionInternal(StringTableEntry text)
+{
+	S32 index = findItemText(text);
+	if (index != -1)
+	{
+		mSelectedItems.clear();
+		LBItem *item = mItems[index];
+		item->isSelected = true;
+		mSelectedItems.push_front(item);
+	}
+}
+
 void GuiListBoxCtrl::setCurSel( S32 index )
 {
    // Range Check
@@ -267,7 +279,6 @@ void GuiListBoxCtrl::setCurSel( S32 index )
 
    // Add the selection
    addSelection( mItems[ index ], index );
-
 }
 
 void GuiListBoxCtrl::setCurSelRange( S32 start, S32 stop )

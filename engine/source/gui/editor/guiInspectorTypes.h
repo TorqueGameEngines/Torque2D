@@ -55,8 +55,8 @@
 #include "gui/guiTextEditCtrl.h"
 #endif
 
-#ifndef _GUIPOPUPCTRL_H_
-#include "gui/guiPopUpCtrl.h"
+#ifndef _GUIDROPDOWNCTRL_H_
+#include "gui/buttons/guiDropDownCtrl.h"
 #endif
 
 #ifndef _GUIGRIDCTRL_H_

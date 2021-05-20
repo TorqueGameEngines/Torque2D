@@ -26,11 +26,6 @@
 //////////////////////////////////////////////////////////////////////////
 // GuiInspector
 //////////////////////////////////////////////////////////////////////////
-// The GuiInspector Control houses the body of the inspector.
-// It is not exposed as a conobject because it merely does the grunt work
-// and is only meant to be used when housed by a scroll control.  Therefore
-// the GuiInspector control is a scroll control that creates it's own 
-// content.  That content being of course, the GuiInspector control.
 IMPLEMENT_CONOBJECT(GuiInspector);
 
 GuiInspector::GuiInspector()
@@ -50,9 +45,6 @@ bool GuiInspector::onAdd()
 {
    if( !Parent::onAdd() )
       return false;
-
-   // we only need to worry about the width.
-   setWidth(getExtent().x);
 
    return true;
 }
@@ -1110,22 +1102,19 @@ void GuiInspectorDatablockField::setClassName( StringTableEntry className )
 
 GuiControl* GuiInspectorDatablockField::constructEditControl()
 {
-   GuiControl* retCtrl = new GuiPopUpMenuCtrl();
+   GuiControl* retCtrl = new GuiDropDownCtrl();
 
    // If we couldn't construct the control, bail!
    if( retCtrl == NULL )
       return retCtrl;
 
-   GuiPopUpMenuCtrl *menu = dynamic_cast<GuiPopUpMenuCtrl*>(retCtrl);
-
-   // Let's make it look pretty.
-   retCtrl->setField( "profile", "GuiPopUpMenuProfile2" );
+   GuiDropDownCtrl *menu = dynamic_cast<GuiDropDownCtrl*>(retCtrl);
 
    menu->setField("text", getData());
 
    registerEditControl( retCtrl );
 
-   // Configure it to update our value when the popup is closed
+   // Configure it to update our value when the dropdown is closed
    char szBuffer[512];
    dSprintf( szBuffer, 512, "%d.%s = %d.getText();%d.inspect(%d);",mTarget->getId(), mField->pFieldname, menu->getId(), mParent->mParent->getId(), mTarget->getId() );
    menu->setField("Command", szBuffer );
@@ -1151,7 +1140,7 @@ GuiControl* GuiInspectorDatablockField::constructEditControl()
 
    // add them to our enum
    for(U32 j = 0; j < (U32)entries.size(); j++)
-      menu->addEntry(entries[j], 0);
+      menu->getList()->addItem(entries[j]);
 
    return retCtrl;
 }
