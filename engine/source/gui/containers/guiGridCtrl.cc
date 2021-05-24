@@ -132,38 +132,29 @@ void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	AdjustGrid(innerRect.extent);
 
 	iterator i;
-	U16 num = 0;
-	for (i = begin(); i != end(); i++, num++)
+	U16 cellNumber = 0;
+	mChainNumber = 0;
+	mRunningChainHeight = 0;
+	mCurrentChainHeight = 0;
+	for (i = begin(); i != end(); i++, cellNumber++)
 	{
 		GuiControl *ctrl = static_cast<GuiControl *>(*i);
-		ctrl->resize(getCellPosition(num, innerRect.extent), mCalcCellExt);
+		Point2I cellPos = getCellPosition(cellNumber, innerRect.extent, ctrl);
+		Point2I cellExt = getCellExtent(ctrl);
+		ctrl->resize(cellPos, cellExt);
 	}
+	mRunningChainHeight += mCurrentChainHeight;
 
 	Point2I actualNewPosition = Point2I(newPosition);
 	if(mIsExtentDynamic)
 	{
-		F32 h = mCeil((F32)size() / (F32)mCalcChainLength);
-		if (mOrderMode == LRTB || mOrderMode == RLTB)
+		if (IsVertical())
 		{
-			h = (h * mCalcCellExt.y) + ((h-1) * mCalcCellSpace.y);
-			innerRect.extent.y = h;
+			innerRect.extent.y = mRunningChainHeight;
 		}
-		else if (mOrderMode == TBLR || mOrderMode == BTLR)
+		else
 		{
-			h = (h * mCalcCellExt.x) + ((h - 1) * mCalcCellSpace.x);
-			innerRect.extent.x = h;
-		}
-		else if (mOrderMode == LRBT || mOrderMode == RLBT)
-		{
-			h = (h * mCalcCellExt.y) + ((h - 1) * mCalcCellSpace.y);
-			actualNewPosition.y += innerRect.extent.y - h;
-			innerRect.extent.y = h;
-		}
-		else if (mOrderMode == TBRL || mOrderMode == BTRL)
-		{
-			h = (h * mCalcCellExt.x) + ((h - 1) * mCalcCellSpace.x);
-			actualNewPosition.x += innerRect.extent.x - h;
-			innerRect.extent.x = h;
+			innerRect.extent.x = mRunningChainHeight;
 		}
 		actualNewExtent = getOuterExtent(innerRect.extent, NormalState, mProfile);
 	}
@@ -178,59 +169,75 @@ void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 
 //------------------------------------------------------------------------------
 
-Point2I GuiGridCtrl::getCellPosition(const U16 num, const Point2I &innerExtent)
+Point2I GuiGridCtrl::getCellPosition(const U16 cellNumber, const Point2I &innerExtent, GuiControl *ctrl)
 {
 	Point2I result(0,0);
-	U16 y = (U16)mFloor(num / mCalcChainLength);
-	U16 x = (U16)(num % mCalcChainLength);
+	U16 y = (U16)mFloor(cellNumber / mCalcChainLength);
+	U16 x = (U16)(cellNumber % mCalcChainLength);
 	F32 ChainCount = mCeil((F32)size() / (F32)mCalcChainLength);
+
+	if (y != mChainNumber)
+	{
+		mRunningChainHeight += (mCurrentChainHeight + (U32)(IsVertical() ? mCalcCellSpace.y : mCalcCellSpace.x));
+		mCurrentChainHeight = 0;
+		mChainNumber = y;
+	}
 
 	if (mOrderMode == LRTB)
 	{
-		result.set(x * (mCalcCellExt.x + mCalcCellSpace.x), y * (mCalcCellExt.y + mCalcCellSpace.y));
+		result.set(x * (mCalcCellExt.x + mCalcCellSpace.x), mRunningChainHeight);
 	}
 	else if (mOrderMode == RLTB)
 	{
 		x = (mCalcChainLength - 1) - x;
 		S32 delta = innerExtent.x - ((mCalcChainLength * mCalcCellExt.x) + ((mCalcChainLength - 1) * mCalcCellSpace.x));
-		result.set((x * (mCalcCellExt.x + mCalcCellSpace.x)) + delta, y * (mCalcCellExt.y + mCalcCellSpace.y));
+		result.set((x * (mCalcCellExt.x + mCalcCellSpace.x)) + delta, mRunningChainHeight);
 	}
 	else if (mOrderMode == TBLR)
 	{
-		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), x * (mCalcCellExt.y + mCalcCellSpace.y));
+		result.set(mRunningChainHeight, x * (mCalcCellExt.y + mCalcCellSpace.y));
 	}
 	else if (mOrderMode == BTLR)
 	{
 		x = (mCalcChainLength - 1) - x;
 		S32 delta = innerExtent.y - ((mCalcChainLength * mCalcCellExt.y) + ((mCalcChainLength - 1) * mCalcCellSpace.y));
-		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), (x * (mCalcCellExt.y + mCalcCellSpace.y)) + delta);
+		result.set(mRunningChainHeight, (x * (mCalcCellExt.y + mCalcCellSpace.y)) + delta);
 	}
 	else if (mOrderMode == LRBT)
 	{
-		y = (ChainCount - 1) - y;
-		result.set(x * (mCalcCellExt.x + mCalcCellSpace.x), y * (mCalcCellExt.y + mCalcCellSpace.y));
+		result.set(x * (mCalcCellExt.x + mCalcCellSpace.x), (innerExtent.y - (HasVariableChainHeight() ? ctrl->getExtent().y : mCalcCellExt.y)) - (S32)mRunningChainHeight);
 	}
 	else if (mOrderMode == RLBT)
 	{
-		y = (ChainCount - 1) - y;
 		x = (mCalcChainLength - 1) - x;
 		S32 delta = innerExtent.x - ((mCalcChainLength * mCalcCellExt.x) + ((mCalcChainLength - 1) * mCalcCellSpace.x));
-		result.set((x * (mCalcCellExt.x + mCalcCellSpace.x)) + delta, y * (mCalcCellExt.y + mCalcCellSpace.y));
+		result.set((x * (mCalcCellExt.x + mCalcCellSpace.x)) + delta, (innerExtent.y - (HasVariableChainHeight() ? ctrl->getExtent().y : mCalcCellExt.y)) - (S32)mRunningChainHeight);
 	}
 	else if (mOrderMode == TBRL)
 	{
-		y = (ChainCount - 1) - y;
-		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), x * (mCalcCellExt.y + mCalcCellSpace.y));
+		result.set((innerExtent.x - (HasVariableChainHeight() ? ctrl->getExtent().x : mCalcCellExt.x)) - (S32)mRunningChainHeight, x * (mCalcCellExt.y + mCalcCellSpace.y));
 	}
 	else if (mOrderMode == BTRL)
 	{
-		y = (ChainCount - 1) - y;
 		x = (mCalcChainLength - 1) - x;
 		S32 delta = innerExtent.y - ((mCalcChainLength * mCalcCellExt.y) + ((mCalcChainLength - 1) * mCalcCellSpace.y));
-		result.set(y * (mCalcCellExt.x + mCalcCellSpace.x), (x * (mCalcCellExt.y + mCalcCellSpace.y)) + delta);
+		result.set((innerExtent.x - (HasVariableChainHeight() ? ctrl->getExtent().x : mCalcCellExt.x)) - (S32)mRunningChainHeight, (x * (mCalcCellExt.y + mCalcCellSpace.y)) + delta);
 	}
 
 	return result;
+}
+
+Point2I GuiGridCtrl::getCellExtent(GuiControl *ctrl)
+{
+	if (!HasVariableChainHeight())
+	{
+		mCurrentChainHeight = (U32)(IsVertical() ? mCalcCellExt.y : mCalcCellExt.x);
+		return mCalcCellExt;
+	}
+
+	S32 CellHeight = getMax(IsVertical() ? ctrl->getExtent().y : ctrl->getExtent().x, IsVertical() ? mCalcCellExt.y : mCalcCellExt.x);
+	mCurrentChainHeight = getMax(mCurrentChainHeight, (U32)CellHeight);
+	return IsVertical() ? Point2I(mCalcCellExt.x, CellHeight) : Point2I(CellHeight, mCalcCellExt.y);
 }
 
 //------------------------------------------------------------------------------
@@ -238,7 +245,7 @@ Point2I GuiGridCtrl::getCellPosition(const U16 num, const Point2I &innerExtent)
 void GuiGridCtrl::AdjustGrid(const Point2I& innerExtent)
 {
 	Point2F cellExtX, cellExtY;
-	if (mOrderMode == LRTB || mOrderMode == LRBT || mOrderMode == RLTB || mOrderMode == RLBT)
+	if (IsVertical())
 	{
 		cellExtX = GetGridItemWidth(innerExtent.x, mMaxColCount, mCellSizeX, mCellSpacingX, mCellModeX);
 		cellExtY = GetGridItemHeight(innerExtent.y, mMaxRowCount, mCellSizeY, mCellSpacingY, mCellModeY);

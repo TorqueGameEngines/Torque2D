@@ -20,6 +20,9 @@ private:
 	Point2I mCalcCellExt;
 	Point2I mCalcCellSpace;
 	U16 mCalcChainLength;
+	U32 mRunningChainHeight;
+	U32 mCurrentChainHeight;
+	U8 mChainNumber;
 
 public:
 	enum CellMode
@@ -52,7 +55,10 @@ private:
 	void AdjustGrid(const Point2I& innerExtent);
 	Point2F GetGridItemWidth(const S32 totalArea, const S32 maxChainLength, const F32 itemSize, const F32 spaceSize, const CellMode cellMode);
 	Point2F GetGridItemHeight(const S32 totalArea, const S32 maxChainLength, const F32 itemSize, const F32 spaceSize, const CellMode cellMode);
-	Point2I getCellPosition(U16 num, const Point2I &innerExtent);
+	Point2I getCellPosition(U16 num, const Point2I &innerExtent, GuiControl *ctrl);
+	Point2I getCellExtent(GuiControl *ctrl);
+	inline bool IsVertical() { return mOrderMode == LRTB || mOrderMode == RLTB || mOrderMode == LRBT || mOrderMode == RLBT; }
+	inline bool HasVariableChainHeight() { return (mCellModeX == Variable && !IsVertical()) || (mCellModeY == Variable && IsVertical()); }
 
 public:
 	GuiGridCtrl();
