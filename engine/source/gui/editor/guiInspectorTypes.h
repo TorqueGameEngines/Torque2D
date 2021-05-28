@@ -87,7 +87,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual void               setData( StringTableEntry data );
    virtual StringTableEntry   getData();
    virtual void               updateValue( StringTableEntry newValue );
@@ -108,7 +108,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields (Both are REQUIRED)
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl* constructEditControl();
+   virtual GuiControl* constructEditControl(S32 width);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -125,7 +125,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields (Both are REQUIRED)
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl* constructEditControl();
+   virtual GuiControl* constructEditControl(S32 width);
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -142,7 +142,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields (Both are REQUIRED)
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl* constructEditControl();
+   virtual GuiControl* constructEditControl(S32 width);
 };
 
 
@@ -162,7 +162,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual void               resize(const Point2I &newPosition, const Point2I &newExtent);
 };
 
@@ -182,7 +182,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual void               updateValue(StringTableEntry newValue);
 };
 
@@ -228,7 +228,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual StringTableEntry   getData();
 };
 
@@ -246,7 +246,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual const char*        getData();
 };
 
@@ -264,7 +264,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual void               updateValue(StringTableEntry newValue);
 };
 
@@ -282,7 +282,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual void               updateValue(StringTableEntry newValue);
 };
 
@@ -300,7 +300,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
    virtual void               updateValue(StringTableEntry newValue);
 };
 
@@ -320,7 +320,7 @@ public:
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
-   virtual GuiControl*        constructEditControl();
+   virtual GuiControl*        constructEditControl(S32 width);
 };
 
 //////////////////////////////////////////////////////////////////////////

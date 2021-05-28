@@ -23,6 +23,7 @@
 #include "gui/buttons/guiButtonCtrl.h"
 #include "memory/frameAllocator.h"
 
+#pragma region GuiInspector
 //////////////////////////////////////////////////////////////////////////
 // GuiInspector
 //////////////////////////////////////////////////////////////////////////
@@ -32,33 +33,201 @@ GuiInspector::GuiInspector()
 {
    mGroups.clear();
    mTarget = NULL;
-   setField("ChildSpacing", "4");
-}
 
+   mGroupPanelProfile = NULL;
+   setField("GroupPanelProfile", "GuiPanelProfile");
+
+   mGroupGridProfile = NULL;
+   setField("GroupGridProfile", "GuiDefaultProfile");
+
+   mLabelProfile = NULL;
+   setField("LabelProfile", "GuiDefaultProfile");
+
+   mTextEditProfile = NULL;
+   setField("TextEditProfile", "GuiTextEditProfile");
+
+   mDropDownProfile = NULL;
+   setField("DropDownProfile", "GuiDropDownProfile");
+
+   mDropDownItemProfile = NULL;
+   setField("DropDownItemProfile", "GuiListBoxProfile");
+
+   mScrollProfile = NULL;
+   setField("ScrollProfile", "GuiScrollProfile");
+
+   mBackgroundProfile = NULL;
+   setField("BackgroundProfile", "GuiDefaultProfile");
+
+   mThumbProfile = NULL;
+   setField("ThumbProfile", "GuiScrollThumbProfile");
+
+   mArrowProfile = NULL;
+   setField("ArrowProfile", "GuiScrollArrowProfile");
+
+   mTrackProfile = NULL;
+   setField("TrackProfile", "GuiScrollTrackProfile");
+
+   mCheckboxProfile = NULL;
+   setField("CheckboxProfile", "GuiCheckboxProfile");
+
+   mButtonProfile = NULL;
+   setField("ButtonProfile", "GuiButtonProfile");
+
+   mUseConstantHeightThumb = false;
+   mScrollBarThickness = 12;
+   mShowArrowButtons = true;
+
+   mFieldCellSize.set(300, 30);
+   mControlOffset.set(10, 16);
+}
 
 GuiInspector::~GuiInspector()
 {
    clearGroups();
 }
 
-bool GuiInspector::onAdd()
+void GuiInspector::initPersistFields()
 {
-   if( !Parent::onAdd() )
-      return false;
+	Parent::initPersistFields();
 
-   return true;
+	addField("GroupPanelProfile", TypeGuiProfile, Offset(mGroupPanelProfile, GuiInspector));
+	addField("GroupGridProfile", TypeGuiProfile, Offset(mGroupGridProfile, GuiInspector));
+	addField("LabelProfile", TypeGuiProfile, Offset(mLabelProfile, GuiInspector));
+	addField("TextEditProfile", TypeGuiProfile, Offset(mTextEditProfile, GuiInspector));
+	addField("DropDownProfile", TypeGuiProfile, Offset(mDropDownProfile, GuiInspector));
+	addField("DropDownItemProfile", TypeGuiProfile, Offset(mDropDownItemProfile, GuiInspector));
+	addField("ScrollProfile", TypeGuiProfile, Offset(mScrollProfile, GuiInspector));
+	addField("backgroundProfile", TypeGuiProfile, Offset(mBackgroundProfile, GuiInspector));
+	addField("thumbProfile", TypeGuiProfile, Offset(mThumbProfile, GuiInspector));
+	addField("trackProfile", TypeGuiProfile, Offset(mTrackProfile, GuiInspector));
+	addField("arrowProfile", TypeGuiProfile, Offset(mArrowProfile, GuiInspector));
+	addField("CheckboxProfile", TypeGuiProfile, Offset(mCheckboxProfile, GuiInspector));
+	addField("ButtonProfile", TypeGuiProfile, Offset(mButtonProfile, GuiInspector));
+
+	addField("constantThumbHeight", TypeBool, Offset(mUseConstantHeightThumb, GuiInspector));
+	addField("scrollBarThickness", TypeS32, Offset(mScrollBarThickness, GuiInspector));
+	addField("showArrowButtons", TypeBool, Offset(mShowArrowButtons, GuiInspector));
+
+	addField("FieldCellSize", TypePoint2I, Offset(mFieldCellSize, GuiInspector));
+	addField("ControlOffset", TypePoint2I, Offset(mControlOffset, GuiInspector));
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Handle Parent Sizing (We constrain ourself to our parents width)
-//////////////////////////////////////////////////////////////////////////
+bool GuiInspector::onWake()
+{
+	if (!Parent::onWake())
+		return false;
+
+	if (mGroupPanelProfile != NULL)
+		mGroupPanelProfile->incRefCount();
+
+	if (mGroupGridProfile != NULL)
+		mGroupGridProfile->incRefCount();
+
+	if (mLabelProfile != NULL)
+		mLabelProfile->incRefCount();
+
+	if (mTextEditProfile != NULL)
+		mTextEditProfile->incRefCount();
+
+	if (mDropDownProfile != NULL)
+		mDropDownProfile->incRefCount();
+
+	if (mDropDownItemProfile != NULL)
+		mDropDownItemProfile->incRefCount();
+
+	if (mScrollProfile != NULL)
+		mScrollProfile->incRefCount();
+
+	if (mBackgroundProfile != NULL)
+		mBackgroundProfile->incRefCount();
+
+	if (mThumbProfile != NULL)
+		mThumbProfile->incRefCount();
+
+	if (mTrackProfile != NULL)
+		mTrackProfile->incRefCount();
+
+	if (mArrowProfile != NULL)
+		mArrowProfile->incRefCount();
+
+	if (mCheckboxProfile != NULL)
+		mCheckboxProfile->incRefCount();
+
+	if (mButtonProfile != NULL)
+		mButtonProfile->incRefCount();
+
+	return true;
+}
+
+void GuiInspector::onSleep()
+{
+	Parent::onSleep();
+
+	if (mGroupPanelProfile != NULL)
+		mGroupPanelProfile->decRefCount();
+
+	if (mGroupGridProfile != NULL)
+		mGroupGridProfile->decRefCount();
+
+	if (mLabelProfile != NULL)
+		mLabelProfile->decRefCount();
+
+	if (mTextEditProfile != NULL)
+		mTextEditProfile->decRefCount();
+
+	if (mDropDownProfile != NULL)
+		mDropDownProfile->decRefCount();
+
+	if (mDropDownItemProfile != NULL)
+		mDropDownItemProfile->decRefCount();
+
+	if (mScrollProfile != NULL)
+		mScrollProfile->decRefCount();
+
+	if (mBackgroundProfile != NULL)
+		mBackgroundProfile->decRefCount();
+
+	if (mThumbProfile != NULL)
+		mThumbProfile->decRefCount();
+
+	if (mTrackProfile != NULL)
+		mTrackProfile->decRefCount();
+
+	if (mArrowProfile != NULL)
+		mArrowProfile->decRefCount();
+
+	if (mCheckboxProfile != NULL)
+		mCheckboxProfile->decRefCount();
+
+	if (mButtonProfile != NULL)
+		mButtonProfile->decRefCount();
+}
+
+void GuiInspector::inspectPostApply()
+{
+	Parent::inspectPostApply();
+
+	if (mTarget)
+	{
+		SimObjectPtr<SimObject> oldTarget = mTarget;
+		mTarget = NULL;
+		inspectObject(oldTarget);
+	}
+}
+
+void GuiInspector::resize(const Point2I &newPosition, const Point2I &newExtent)
+{
+	Parent::resize(Point2I(0, 0), newExtent);
+}
+
 void GuiInspector::parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent)
 {
    GuiControl *parent = getParent();
    if( parent && dynamic_cast<GuiScrollCtrl*>(parent) != NULL )
    {
+	   // Handle Parent Sizing (We constrain ourself to our parent's width)
       GuiScrollCtrl *scroll = dynamic_cast<GuiScrollCtrl*>(parent);
-      setWidth( ( newParentExtent.x - ( scroll->scrollBarThickness() + 4  ) ) );
+      setWidth(newParentExtent.x - scroll->scrollBarThickness());
    }
    else
       Parent::parentResized(oldParentExtent,newParentExtent);
@@ -135,10 +304,7 @@ void GuiInspector::inspectObject( SimObject *object )
    {
       general->registerObject();
       mGroups.push_back( general );
-      general->setPosition(Point2I(10, 0));
-      general->setExtent(Point2I((getExtent().x - 20), 20));
       addObject( general );
-      
    }
 
    // Grab this objects field list
@@ -155,8 +321,6 @@ void GuiInspector::inspectObject( SimObject *object )
          {
             group->registerObject();
             mGroups.push_back( group );
-            group->setPosition(Point2I(10, 0));
-            group->setExtent(Point2I((getExtent().x - 20), 20));
             addObject( group );
          }            
       }
@@ -168,16 +332,13 @@ void GuiInspector::inspectObject( SimObject *object )
    {
       dynGroup->registerObject();
       mGroups.push_back( dynGroup );
-      dynGroup->setPosition(Point2I(10, 0));
-      dynGroup->setExtent(Point2I((getExtent().x - 20), 20));
       addObject( dynGroup );
-      
    }
 
    // If the general group is still empty at this point, kill it.
    for(S32 i=0; i<mGroups.size(); i++)
    {
-      if(mGroups[i] == general && general->mStack->size() == 0)
+      if(mGroups[i] == general && general->mGrid->size() == 0)
       {
          mGroups.erase(i);
          general->deleteObject();
@@ -233,8 +394,9 @@ ConsoleMethod( GuiInspector, setName, void, 3, 3, "(NewObjectName) Set object na
 {
    object->setName(argv[2]);
 }
+#pragma endregion
 
-
+#pragma region GuiInspectorField
 //////////////////////////////////////////////////////////////////////////
 // GuiInspectorField
 //////////////////////////////////////////////////////////////////////////
@@ -250,17 +412,14 @@ ConsoleMethod( GuiInspector, setName, void, 3, 3, "(NewObjectName) Set object na
 //        parent.  
 IMPLEMENT_CONOBJECT(GuiInspectorField);
 
-// Caption width is in percentage of total width
-S32 GuiInspectorField::smCaptionWidth = 50;
-
 GuiInspectorField::GuiInspectorField( GuiInspectorGroup* parent, SimObjectPtr<SimObject> target, AbstractClassRep::Field* field )
 {
    if( field != NULL )
-      mCaption    = StringTable->insert( field->pFieldname );
+      mText    = StringTable->insert( field->pFieldname );
    else
-      mCaption    = StringTable->EmptyString;
+      mText    = StringTable->EmptyString;
 
-   mParent     = parent;
+   mGroup     = parent;
    mTarget     = target;
    mField      = field;
    mCanSave    = false;
@@ -269,8 +428,8 @@ GuiInspectorField::GuiInspectorField( GuiInspectorGroup* parent, SimObjectPtr<Si
 
 GuiInspectorField::GuiInspectorField()
 {
-   mCaption       = StringTable->EmptyString;
-   mParent        = NULL;
+   mText       = StringTable->EmptyString;
+   mGroup        = NULL;
    mTarget        = NULL;
    mField         = NULL;
    mFieldArrayIndex = NULL;
@@ -319,10 +478,10 @@ void GuiInspectorField::setInspectorField( AbstractClassRep::Field *field, const
       FrameTemp<char> valCopy( frameTempSize );
       dSprintf( (char *)valCopy, frameTempSize, "%s%s", field->pFieldname, arrayIndex );
 
-      mCaption = StringTable->insert( valCopy ); 
+      mText = StringTable->insert( valCopy ); 
    }
    else
-      mCaption = StringTable->insert( field->pFieldname );
+	   mText = StringTable->insert( field->pFieldname );
 }
 
 
@@ -349,7 +508,7 @@ StringTableEntry GuiInspectorField::getFieldName()
 //////////////////////////////////////////////////////////////////////////
 // Overrideables for custom edit fields
 //////////////////////////////////////////////////////////////////////////
-GuiControl* GuiInspectorField::constructEditControl()
+GuiControl* GuiInspectorField::constructEditControl(S32 width)
 {
    GuiControl* retCtrl = new GuiTextEditCtrl();
    
@@ -358,7 +517,7 @@ GuiControl* GuiInspectorField::constructEditControl()
       return retCtrl;
 
    // Let's make it look pretty.
-   retCtrl->setField( "profile", "GuiTextEditProfile" );
+   retCtrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
 
    // Don't forget to register ourselves
    registerEditControl( retCtrl );
@@ -367,7 +526,7 @@ GuiControl* GuiInspectorField::constructEditControl()
    dSprintf( szBuffer, 512, "%d.apply(%d.getText());",getId(), retCtrl->getId() );
    retCtrl->setField("AltCommand", szBuffer );
    retCtrl->setField("Validate", szBuffer );
-   retCtrl->setExtent(Point2I((getExtent().x / 2) - 40, 30));
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
 
    return retCtrl;
 }
@@ -378,51 +537,39 @@ void GuiInspectorField::registerEditControl( GuiControl *ctrl )
       return;
         
    char szName[512];
-   dSprintf( szName, 512, "IE_%s_%d_%s_Field", ctrl->getClassName(), mTarget->getId(),mCaption);
+   dSprintf( szName, 512, "IE_%s_%d_%s_Field", ctrl->getClassName(), mTarget->getId(),mText);
 
    // Register the object
    ctrl->registerObject( szName );
 }
 
-void GuiInspectorField::onRender(Point2I offset, const RectI &updateRect)
-{
-
-   Parent::onRender( offset, updateRect );
-}
-
 bool GuiInspectorField::onAdd()
 {
-   if( !Parent::onAdd() )
-      return false;
+	if( !Parent::onAdd() )
+		return false;
 
-   if( !mTarget )
-      return false;
+	if( !mTarget )
+		return false;
 
-   mEdit = constructEditControl();
+	setControlProfile(mGroup->mInspector->mLabelProfile);
 
-   if( mEdit == NULL )
-      return false;
+	//Find the target width
+	RectI innerRect = getInnerRect(Point2I(0,0), mGroup->mInspector->mFieldCellSize, NormalState, mProfile);
+	mEdit = constructEditControl(innerRect.extent.x);
 
-   GuiControl* capCtrl = new GuiControl();
-   capCtrl->setField("position", "0 0");
-   capCtrl->setExtent(Point2I((getExtent().x / 2) - 10, 30));
-   capCtrl->setField("profile", "GuiTextProfile");
-   capCtrl->setField("text", mCaption);
+	if( mEdit == NULL )
+		return false;
 
-   mEdit->setPosition(Point2I((getExtent().x / 2), 0));
-   addObject(capCtrl);
-   setExtent(Point2I(getExtent().x, (mEdit->getExtent().y) + 10));
-   // Add our edit as a child
-   addObject( mEdit );
+	innerRect.extent.y = mGroup->mInspector->mControlOffset.y + mEdit->getExtent().y;
+	Point2I outerExt = getOuterExtent(innerRect.extent, NormalState, mProfile);
+	mBounds.extent.y = outerExt.y;
 
-   //
-   setField( "profile", "GuiDefaultProfile" );
+	addObject( mEdit );
 
+	// Force our editField to set it's value
+	updateValue( getData() );
 
-   // Force our editField to set it's value
-   updateValue( getData() );
-
-   return true;
+	return true;
 }
 
 void GuiInspectorField::updateValue( const char* newValue )
@@ -437,22 +584,17 @@ ConsoleMethod( GuiInspectorField, apply, void, 3,3, "(newValue) Applies the give
 {
    object->setData( argv[2] );
 }
+#pragma endregion
 
-void GuiInspectorField::resize(const Point2I &newPosition, const Point2I &newExtent)
-{
-   
-   Parent::resize(newPosition, newExtent);
-
-}
-
+#pragma region GuiInspectorGroup
 //////////////////////////////////////////////////////////////////////////
 // GuiInspectorGroup
 //////////////////////////////////////////////////////////////////////////
 //
 // The GuiInspectorGroup control is a helper control that the inspector
-// makes use of which houses a collapsible pane type control for separating
+// makes use of which houses a collapsible panel type control for separating
 // inspected objects fields into groups.  The content of the inspector is 
-// made up of zero or more GuiInspectorGroup controls inside of a GuiStackControl
+// made up of zero or more GuiInspectorGroup controls inside of a GuiChainControl
 //
 //
 //
@@ -460,47 +602,37 @@ IMPLEMENT_CONOBJECT(GuiInspectorGroup);
 
 GuiInspectorGroup::GuiInspectorGroup()
 {
-
    mChildren.clear();
 
-   mTarget              = NULL;
-   mParent              = NULL;
-   mCanSave             = false;
+   mTarget = NULL;
+   mInspector = NULL;
+   mCanSave = false;
 
-   // Make sure we receive our ticks.
-   setProcessTicks();
+   mHorizSizing = horizSizingOptions::horizResizeWidth;
+   mVertSizing = vertSizingOptions::vertResizeTop;
+   mBounds.set(10, 0, (mInspector->getExtent().x - 20), 24);
 }
 
-GuiInspectorGroup::GuiInspectorGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> parent )
+GuiInspectorGroup::GuiInspectorGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> inspector )
 {
-
    mChildren.clear();
 
-   mText                = StringTable->insert(groupName);
-   mTarget              = target;
-   mParent              = parent;
-   mCanSave             = false;
+   mText = StringTable->insert(groupName);
+   mTarget = target;
+   mInspector = inspector;
+   mCanSave = false;
+
+   mHorizSizing = horizSizingOptions::horizResizeWidth;
+   mVertSizing = vertSizingOptions::vertResizeTop;
+   mBounds.set(10, 0, (mInspector->getExtent().x - 20), 24);
 }
 
-GuiInspectorGroup::~GuiInspectorGroup()
-{
-   if( !mChildren.empty() )
-   {
-      Vector<GuiInspectorField*>::iterator i = mChildren.begin();
-      for( ; i != mChildren.end(); i++ );
-         
-   } 
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Scene Events
-//////////////////////////////////////////////////////////////////////////
 bool GuiInspectorGroup::onAdd()
 {
-   setField( "profile", "GuiPanelProfile" );
-
    if( !Parent::onAdd() )
       return false;
+
+	setControlProfile(mInspector->mGroupPanelProfile);
 
    // Create our inner controls. Allow subclasses to provide other content.
    if(!createContent())
@@ -514,30 +646,27 @@ bool GuiInspectorGroup::onAdd()
 bool GuiInspectorGroup::createContent()
 {
    // Create our field stack control
-   mStack = new GuiChainCtrl();
-   if( !mStack )
+   mGrid = new GuiGridCtrl();
+   if( !mGrid)
       return false;
 
-   setWidth(mParent->getExtent().x);
 
-   // Prefer GuiTransperantProfile for the stack.
-   mStack->setField( "profile", "GuiDefaultProfile" );
-   mStack->registerObject();
-   mStack->setExtent(Point2I(getExtent().x - 20, 10));
-   mStack->setField("position", "0 30");
-   addObject( mStack );
-   
+   mGrid->setControlProfile(mInspector->mGroupGridProfile);
+   mGrid->setCellSize(mInspector->mFieldCellSize.x, mInspector->mFieldCellSize.y);
+   mGrid->setCellSpacing(0,0);
+   mGrid->setCellModeX(GuiGridCtrl::CellMode::Variable);
+   mGrid->setCellModeY(GuiGridCtrl::CellMode::Variable);
+   mGrid->setMaxColCount(0);
+   mGrid->mIsExtentDynamic = true;
+   mGrid->mOrderMode = GuiGridCtrl::OrderMode::LRTB;
+   mGrid->setWidth(getExtent().x - 20);
+   mGrid->setPosition(Point2I(10, getExtent().y));
+   mGrid->setField("horizSizing", "width");
+   mGrid->setField("vertSizing", "bottom");
+   mGrid->registerObject();
+   addObject( mGrid );
 
    return true;
-}
-
-//////////////////////////////////////////////////////////////////////////
-// Control Sizing Animation Functions
-//////////////////////////////////////////////////////////////////////////
-void GuiInspectorGroup::animateToContents()
-{
-   setExpanded(0);
-   setExpanded(1);
 }
 
 GuiInspectorField* GuiInspectorGroup::constructField( S32 fieldType )
@@ -681,12 +810,12 @@ bool GuiInspectorGroup::inspectGroup()
                {
                   field->setExtent(Point2I(this->getExtent().x, 30));
                   field->setTarget( mTarget );
-                  field->setParent( this );
+                  field->setInspectorGroup( this );
                   field->setInspectorField( itr, intToStr );
                }
                field->registerObject();
                mChildren.push_back( field );
-               mStack->addObject( field );
+               mGrid->addObject( field );
             }
          }
          else
@@ -707,13 +836,13 @@ bool GuiInspectorGroup::inspectGroup()
             else
             {
                field->setTarget( mTarget );
-               field->setParent( this );
+               field->setInspectorGroup( this );
                field->setInspectorField( itr );
             }
             field->setExtent(Point2I(this->getExtent().x, 30));
             field->registerObject();
             mChildren.push_back( field );
-            mStack->addObject( field );
+            mGrid->addObject( field );
 
          }       
       }
@@ -729,8 +858,9 @@ bool GuiInspectorGroup::inspectGroup()
 
    return true;
 }
+#pragma endregion
 
-
+#pragma region GuiInspectorDynamicGroup
 IMPLEMENT_CONOBJECT(GuiInspectorDynamicGroup);
 
 //////////////////////////////////////////////////////////////////////////
@@ -768,7 +898,7 @@ bool GuiInspectorDynamicGroup::createContent()
    shell->addObject(addFieldBtn);
    // save off the shell control, so we can push it to the bottom of the stack in inspectGroup()
    mAddCtrl = shell;
-   mStack->addObject(shell);
+   mGrid->addObject(shell);
 
    return true;
 }
@@ -814,11 +944,11 @@ bool GuiInspectorDynamicGroup::inspectGroup()
          field->setExtent(Point2I(this->getExtent().x, 30));
          field->registerObject();
          mChildren.push_back( field );
-         mStack->addObject( field );
+         mGrid->addObject( field );
       }
    }
    
-   mStack->pushObjectToBack(mAddCtrl);
+   mGrid->pushObjectToBack(mAddCtrl);
 
    setUpdate();
 
@@ -835,11 +965,11 @@ void GuiInspectorDynamicGroup::clearFields()
    // save mAddCtrl
    Sim::getGuiGroup()->addObject(mAddCtrl);
    // delete everything else
-   mStack->clear();
+   mGrid->clear();
    // clear the mChildren list.
    mChildren.clear();
    // and restore.
-   mStack->addObject(mAddCtrl);
+   mGrid->addObject(mAddCtrl);
 }
 
 SimFieldDictionary::Entry* GuiInspectorDynamicGroup::findDynamicFieldInDictionary( StringTableEntry fieldName )
@@ -863,7 +993,7 @@ SimFieldDictionary::Entry* GuiInspectorDynamicGroup::findDynamicFieldInDictionar
 void GuiInspectorDynamicGroup::addDynamicField()
 {
    // We can't add a field without a target
-   if( !mTarget || !mStack )
+   if( !mTarget || !mGrid)
    {
       Con::warnf("GuiInspectorDynamicGroup::addDynamicField - no target SimObject to add a dynamic field to.");
       return;
@@ -885,14 +1015,16 @@ void GuiInspectorDynamicGroup::addDynamicField()
 
    // now we simply re-inspect the object, to see the new field.
    this->inspectGroup();
-   animateToContents();
+   //animateToContents();
 }
 
 ConsoleMethod( GuiInspectorDynamicGroup, addDynamicField, void, 2, 2, "obj.addDynamicField();" )
 {
    object->addDynamicField();
 }
+#pragma endregion
 
+#pragma region GuiInspectorDynamicField
 //////////////////////////////////////////////////////////////////////////
 // GuiInspectorDynamicField - Child class of GuiInspectorField 
 //////////////////////////////////////////////////////////////////////////
@@ -900,9 +1032,7 @@ IMPLEMENT_CONOBJECT(GuiInspectorDynamicField);
 
 GuiInspectorDynamicField::GuiInspectorDynamicField( GuiInspectorGroup* parent, SimObjectPtr<SimObject> target, SimFieldDictionary::Entry* field )
 {
-   mCaption    = NULL;
-
-   mParent     = parent;
+   mGroup     = parent;
    mTarget     = target;
    mDynField   = field;
    mRenameCtrl = NULL;
@@ -935,7 +1065,7 @@ const char* GuiInspectorDynamicField::getData()
 
 void GuiInspectorDynamicField::renameField( StringTableEntry newFieldName )
 {
-   if( mTarget == NULL || mDynField == NULL || mParent == NULL || mEdit == NULL )
+   if( mTarget == NULL || mDynField == NULL || mGroup == NULL || mEdit == NULL )
    {
       Con::warnf("GuiInspectorDynamicField::renameField - No target object or dynamic field data found!" );
       return;
@@ -952,7 +1082,7 @@ void GuiInspectorDynamicField::renameField( StringTableEntry newFieldName )
       return;
 
    // Grab a pointer to our parent and cast it to GuiInspectorDynamicGroup
-   GuiInspectorDynamicGroup *group = dynamic_cast<GuiInspectorDynamicGroup*>(mParent);
+   GuiInspectorDynamicGroup *group = dynamic_cast<GuiInspectorDynamicGroup*>(mGroup);
 
    if( group == NULL )
    {
@@ -1041,7 +1171,7 @@ GuiControl* GuiInspectorDynamicField::constructRenameControl()
    GuiButtonCtrl * delButt = new GuiButtonCtrl();
    if( delButt != NULL )
    {
-      dSprintf(szBuffer, 512, "%d.%s = \"\";%d.inspectGroup();", mTarget->getId(), getFieldName(), mParent->getId());
+      dSprintf(szBuffer, 512, "%d.%s = \"\";%d.inspectGroup();", mTarget->getId(), getFieldName(), mGroup->getId());
 
       delButt->setField("profile", "GuiButtonDynProfile");
       delButt->setField("Text", "X");
@@ -1060,7 +1190,9 @@ void GuiInspectorDynamicField::resize( const Point2I &newPosition, const Point2I
 {
    Parent::resize( newPosition, newExtent );
 }
+#pragma endregion
 
+#pragma region GuiInspectorDatablockField
 //////////////////////////////////////////////////////////////////////////
 // GuiInspectorDatablockField 
 // Field construction for datablock types
@@ -1116,7 +1248,7 @@ GuiControl* GuiInspectorDatablockField::constructEditControl()
 
    // Configure it to update our value when the dropdown is closed
    char szBuffer[512];
-   dSprintf( szBuffer, 512, "%d.%s = %d.getText();%d.inspect(%d);",mTarget->getId(), mField->pFieldname, menu->getId(), mParent->mParent->getId(), mTarget->getId() );
+   dSprintf( szBuffer, 512, "%d.%s = %d.getText();%d.inspect(%d);",mTarget->getId(), mField->pFieldname, menu->getId(), mGroup->mInspector->getId(), mTarget->getId() );
    menu->setField("Command", szBuffer );
 
    Vector<StringTableEntry> entries;
@@ -1144,3 +1276,4 @@ GuiControl* GuiInspectorDatablockField::constructEditControl()
 
    return retCtrl;
 }
+#pragma endregion

@@ -265,6 +265,7 @@ void GuiDropDownCtrl::openDropDown()
 	mScroll->mShowArrowButtons = mShowArrowButtons;
 
 	//Set the size of the scroll control.
+	mListBox->updateSize();
 	S32 width = mClamp(mListBox->mBounds.extent.x, mBounds.extent.x, mBounds.extent.x * 2);
 	S32 height = mClamp(mListBox->mBounds.extent.y, 10, mMaxHeight);
 
@@ -309,7 +310,12 @@ void GuiDropDownCtrl::closeDropDown()
 	if(!mIsOpen)
 		return;
 
-	getRoot()->popDialogControl(mBackground);
+	GuiCanvas *root = mBackground->getRoot();
+	if (!root)
+	{
+		return;
+	}
+	root->popDialogControl(mBackground);
 
 	mIsOpen = false;
 

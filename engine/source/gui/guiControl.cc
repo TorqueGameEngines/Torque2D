@@ -441,7 +441,6 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
       newPosition.y += deltaY;
    else if(mVertSizing == vertResizeRelative && oldParentExtent.y != 0)
    {
-
       S32 newTop = (newPosition.y * newParentExtent.y) / oldParentExtent.y;
       S32 newBottom = ((newPosition.y + newExtent.y) * newParentExtent.y) / oldParentExtent.y;
 

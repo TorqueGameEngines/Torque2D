@@ -106,6 +106,9 @@ public:
    void setControlThumbProfile(GuiControlProfile* prof);
    void setControlTrackProfile(GuiControlProfile* prof);
    void setControlArrowProfile(GuiControlProfile* prof);
+   void setConstantThumbHeight(bool isConstant) { mUseConstantHeightThumb = isConstant; }
+   void setShowArrowButtons(bool show) { mShowArrowButtons = show; }
+   void setScrollBarThickness(S32 thickness) { mScrollBarThickness = thickness; }
 
    inline GuiListBoxCtrl* getList() { return mListBox; }
 

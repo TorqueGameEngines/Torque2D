@@ -431,9 +431,6 @@ bool GuiMenuBarCtrl::onWake()
 	if (!Parent::onWake())
 		return false;
 
-	if (mBackgroundProfile != NULL)
-		mBackgroundProfile->incRefCount();
-
 	if (mMenuProfile != NULL)
 		mMenuProfile->incRefCount();
 
@@ -461,9 +458,6 @@ bool GuiMenuBarCtrl::onWake()
 void GuiMenuBarCtrl::onSleep()
 {
 	Parent::onSleep();
-
-	if (mBackgroundProfile != NULL)
-		mBackgroundProfile->decRefCount();
 
 	if (mMenuProfile != NULL)
 		mMenuProfile->decRefCount();

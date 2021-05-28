@@ -197,7 +197,7 @@ if (!isObject(GuiListBoxBorderProfile)) new GuiBorderProfile (GuiListBoxBorderPr
 	margin = 1;
 	marginHL = 1;
 	marginSL = 1;
-	MarginNA = 1;
+	marginNA = 1;
 
 	padding = 4;
 	paddingHL = 4;

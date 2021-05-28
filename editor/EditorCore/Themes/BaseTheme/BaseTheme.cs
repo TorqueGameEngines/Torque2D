@@ -48,12 +48,15 @@ function BaseTheme::onAdd(%this)
 	%this.makeTipProfile();
 	%this.makeGeneralProfiles();
 	%this.makePanelProfile();
+	%this.makeItemSelectProfile();
 	%this.makeButtonProfile();
+	%this.makeCheckboxProfile();
 	%this.makeTabProfile();
 	%this.makeTextEditProfile();
 	%this.makeScrollProfile();
 	%this.makeConsoleProfile();
 	%this.makeMenuProfile();
+	%this.makeDropDownProfile();
 }
 
 function BaseTheme::init(%this)
@@ -267,7 +270,7 @@ function BaseTheme::makePanelProfile(%this)
 	};
 }
 
-function BaseTheme::makeButtonProfile(%this)
+function BaseTheme::makeItemSelectProfile(%this)
 {
 	%buttonBorderV = new GuiBorderProfile()
 	{
@@ -309,7 +312,7 @@ function BaseTheme::makeButtonProfile(%this)
 		underfill = false;
 	};
 
-	%this.buttonProfile = new GuiControlProfile()
+	%this.itemSelectProfile = new GuiControlProfile()
 	{
 		fillColor = %this.color2;
 		fillColorHL = %this.adjustValue(%this.color2, 10);
@@ -328,6 +331,164 @@ function BaseTheme::makeButtonProfile(%this)
 		borderDefault = %buttonBorderV;
 		borderRight = %buttonBorderH;
 		borderLeft = %buttonBorderH;
+	};
+}
+
+function BaseTheme::makeButtonProfile(%this)
+{
+	%borderLightH = new GuiBorderProfile()
+	{
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "255 255 255 80";
+		borderColorHL = "255 255 255 80";
+		borderColorSL = "0 0 0 80";
+		borderColorNA = "255 255 255 80";
+
+		underfill = true;
+	};
+
+	%borderLightV = new GuiBorderProfile()
+	{
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "255 255 255 80";
+		borderColorHL = "255 255 255 80";
+		borderColorSL = "0 0 0 80";
+		borderColorNA = "255 255 255 80";
+
+		underfill = true;
+	};
+
+	%borderDarkH = new GuiBorderProfile()
+	{
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "0 0 0 80";
+		borderColorHL = "0 0 0 80";
+		borderColorSL = "255 255 255 80";
+		borderColorNA = "0 0 0 80";
+
+		underfill = true;
+	};
+
+	%borderDarkV = new GuiBorderProfile()
+	{
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "0 0 0 80";
+		borderColorHL = "0 0 0 80";
+		borderColorSL = "255 255 255 80";
+		borderColorNA = "0 0 0 80";
+
+		underfill = true;
+	};
+
+	%this.buttonProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color4;
+		fillColorHL = %this.adjustValue(%this.color4, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.setAlpha(%this.color4, 80);
+
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+		fontColor = %this.color1;
+		fontColorHL = %this.adjustValue(%this.color1, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.setAlpha(%this.color1, 100);
+		align = center;
+		vAlign = middle;
+
+		borderLeft = %borderLightH;
+		borderRight = %borderDarkH;
+		borderTop = %borderLightV;
+		borderBottom = %borderDarkV;
+
+		canKeyFocus = true;
+		tab = true;
+	};
+}
+
+function BaseTheme::makeCheckboxProfile(%this)
+{
+	%borderLight = new GuiBorderProfile()
+	{
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "255 255 255 80";
+		borderColorHL = "255 255 255 80";
+		borderColorSL = "0 0 0 80";
+		borderColorNA = "255 255 255 0";
+
+		underfill = true;
+	};
+
+	%borderDark = new GuiBorderProfile()
+	{
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "0 0 0 80";
+		borderColorHL = "0 0 0 80";
+		borderColorSL = "255 255 255 80";
+		borderColorNA = "0 0 0 0";
+
+		underfill = true;
+	};
+
+	%this.checkboxProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color4;
+		fillColorHL = %this.adjustValue(%this.color4, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.setAlpha(%this.color4, 80);
+
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		fontColorHL = %this.color5;
+		fontColorSL = %this.color4;
+		fontColorNA = %this.setAlpha(%this.color4, 100);
+		align = left;
+		vAlign = middle;
+
+		borderLeft = %borderLight;
+		borderRight = %borderDark;
+		borderTop = %borderLight;
+		borderBottom = %borderDark;
+
+		canKeyFocus = true;
+		tab = true;
 	};
 }
 
@@ -644,6 +805,7 @@ function BaseTheme::makeTextEditProfile(%this)
 		tab = false;
 		canKeyFocus = true;
 		returnTab = true;
+		useInput = true;
 	};
 }
 
@@ -932,6 +1094,153 @@ function BaseTheme::makeMenuProfile(%this)
 		borderDefault = %menuItemBorderSide;
 		borderTop = %menuItemBorderTop;
 		borderBottom = %menuItemBorderBottom;
+	};
+}
+
+function BaseTheme::makeDropDownProfile(%this)
+{
+	%borderLightH = new GuiBorderProfile()
+	{
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "255 255 255 80";
+		borderColorHL = "255 255 255 80";
+		borderColorSL = "0 0 0 80";
+		borderColorNA = "255 255 255 80";
+
+		underfill = true;
+	};
+
+	%borderLightV = new GuiBorderProfile()
+	{
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "255 255 255 80";
+		borderColorHL = "255 255 255 80";
+		borderColorSL = "0 0 0 80";
+		borderColorNA = "255 255 255 80";
+
+		underfill = true;
+	};
+
+	%borderDarkH = new GuiBorderProfile()
+	{
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "0 0 0 80";
+		borderColorHL = "0 0 0 80";
+		borderColorSL = "255 255 255 80";
+		borderColorNA = "0 0 0 80";
+
+		underfill = true;
+	};
+
+	%borderDarkV = new GuiBorderProfile()
+	{
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = "0 0 0 80";
+		borderColorHL = "0 0 0 80";
+		borderColorSL = "255 255 255 80";
+		borderColorNA = "0 0 0 80";
+
+		underfill = true;
+	};
+
+	%this.DropDownProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color4;
+		fillColorHL = %this.adjustValue(%this.color4, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.setAlpha(%this.color4, 80);
+
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+		fontColor = %this.color1;
+		fontColorHL = %this.adjustValue(%this.color1, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.setAlpha(%this.color1, 100);
+		align = left;
+		vAlign = middle;
+
+		borderLeft = %borderLightH;
+		borderRight = %borderDarkH;
+		borderTop = %borderLightV;
+		borderBottom = %borderDarkV;
+
+		canKeyFocus = true;
+		tab = true;
+	};
+
+	%borderItem = new GuiBorderProfile()
+	{
+		margin = 1;
+		marginHL = 1;
+		marginSL = 0;
+		marginNA = 1;
+
+		padding = 3;
+		paddingHL = 3;
+		paddingSL = 4;
+		paddingNA = 3;
+
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.setAlpha(%this.color4, 80);
+		borderColorHL = %this.setAlpha(%this.color4, 80);
+		borderColorSL = %this.setAlpha(%this.color4, 150);
+		borderColorNA = %this.setAlpha(%this.color4, 40);
+
+		underfill = true;
+	};
+
+	%this.DropDownItemProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color1;
+	    fillColorHL = AdjustColorValue(%this.color1, 10);
+	    fillColorSL = %this.color5;
+	    fillColorNA = SetColorAlpha(%this.color1, 100);
+
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.setAlpha(%this.color4, 100);
+		align = left;
+		vAlign = middle;
+
+		borderDefault = %borderItem;
+
+		tab = false;
+		canKeyFocus = true;
 	};
 }
 

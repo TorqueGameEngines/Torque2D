@@ -59,7 +59,7 @@ function AssetDictionary::load(%this)
 				AssetID = %assetID;
 				Type = %this.Type;
 			};
-			ThemeManager.setProfile(%button, "buttonProfile");
+			ThemeManager.setProfile(%button, "itemSelectProfile");
 			ThemeManager.setProfile(%button, "tipProfile", "TooltipProfile");
 			%this.grid.add(%button);
 		}

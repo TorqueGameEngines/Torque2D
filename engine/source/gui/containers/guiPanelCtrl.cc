@@ -54,7 +54,7 @@ bool GuiPanelCtrl::onAdd()
 		AssertFatal(mHeader, "GuiPaneCtrl::onAdd() Cannot create a GuiButtonCtrl for the header.");
 		if (mHeader)
 		{
-			mHeader->setField("horizSizing", "right");
+			mHeader->setField("horizSizing", "width");
 			mHeader->setField("vertSizing", "bottom");
 			mHeader->setField("extent", "64 64");
 			mHeader->setField("minExtent", "16 16");
@@ -92,7 +92,8 @@ void GuiPanelCtrl::onRender(Point2I offset, const RectI &updateRect)
 void GuiPanelCtrl::setControlProfile(GuiControlProfile *prof)
 {
 	Parent::setControlProfile(prof);
-	mHeader->setControlProfile(prof);
+	if(mHeader)
+		mHeader->setControlProfile(prof);
 }
 
 bool GuiPanelCtrl::calcExpandedExtent()

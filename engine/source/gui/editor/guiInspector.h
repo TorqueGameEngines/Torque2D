@@ -58,7 +58,13 @@
 #include "gui/containers/guiChainCtrl.h"
 #endif
 
+#ifndef _GUIGRIDCTRL_H_
+#include "gui/containers/guiGridCtrl.h"
+#endif
+
+#ifndef _GUIPANELCTRL_H_
 #include "gui/containers/guiPanelCtrl.h"
+#endif
 
 
 // Forward Declare GuiInspectorGroup
@@ -79,15 +85,41 @@ public:
 
    GuiInspector();
    ~GuiInspector();
+   static void initPersistFields();
    DECLARE_CONOBJECT(GuiInspector);
 
+   virtual void inspectPostApply();
+   virtual void resize(const Point2I &newPosition, const Point2I &newExtent);
    virtual void parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
    void inspectObject( SimObject *object );
    inline SimObject *getInspectObject() { return mTarget.isNull() ? NULL : mTarget; };
    void setName( const char* newName );
    void clearGroups();
-   bool onAdd();
    bool findExistentGroup( StringTableEntry groupName );
+
+   GuiControlProfile *mGroupPanelProfile;
+   GuiControlProfile *mGroupGridProfile;
+   GuiControlProfile *mLabelProfile;
+   GuiControlProfile *mTextEditProfile;
+   GuiControlProfile *mDropDownProfile;
+   GuiControlProfile *mDropDownItemProfile;
+   GuiControlProfile *mScrollProfile;
+   GuiControlProfile *mBackgroundProfile;
+   GuiControlProfile *mThumbProfile;
+   GuiControlProfile *mArrowProfile;
+   GuiControlProfile *mTrackProfile;
+   GuiControlProfile *mCheckboxProfile;
+   GuiControlProfile *mButtonProfile;
+
+   bool onWake();
+   void onSleep();
+
+   S32 mScrollBarThickness;
+   bool mShowArrowButtons;
+   bool mUseConstantHeightThumb;
+
+   Point2I mFieldCellSize;
+   Point2I mControlOffset;
 };
 
 class GuiInspectorField : public GuiControl
@@ -95,12 +127,9 @@ class GuiInspectorField : public GuiControl
 private:
    typedef GuiControl Parent;
 public:
-   // Static Caption Width (in percentage) for all inspector fields
-   static S32                 smCaptionWidth;
 
    // Members
-   StringTableEntry           mCaption;
-   GuiInspectorGroup*         mParent;
+   GuiInspectorGroup*         mGroup;
    SimObjectPtr<SimObject>    mTarget;
    AbstractClassRep::Field*   mField;
    StringTableEntry           mFieldArrayIndex;
@@ -114,21 +143,19 @@ public:
    DECLARE_CONOBJECT(GuiInspectorField);
 
    virtual void setTarget( SimObjectPtr<SimObject> target ) { mTarget = target; };
-   virtual void setParent( GuiInspectorGroup* parent ) { mParent = parent; };
+   virtual void setInspectorGroup( GuiInspectorGroup* grp ) { mGroup = grp; };
    virtual void setInspectorField( AbstractClassRep::Field *field, const char*arrayIndex = NULL );
 
 protected:
    void registerEditControl( GuiControl *ctrl );
 public:
-   virtual GuiControl* constructEditControl();
+   virtual GuiControl* constructEditControl(S32 width);
    virtual void        updateValue( const char* newValue );
    virtual StringTableEntry getFieldName();
    virtual void              setData( const char* data );
    virtual const char*  getData();
 
-   virtual void resize(const Point2I &newPosition, const Point2I &newExtent);
    virtual bool onAdd();
-   virtual void onRender(Point2I offset, const RectI &updateRect);
 };
 
 class GuiInspectorGroup : public GuiPanelCtrl
@@ -138,14 +165,13 @@ private:
 public:
    // Members
    SimObjectPtr<SimObject>             mTarget;
-   SimObjectPtr<GuiInspector>          mParent;
+   SimObjectPtr<GuiInspector>          mInspector;
    Vector<GuiInspectorField*>          mChildren;
-   GuiChainCtrl*						      mStack;
+   GuiGridCtrl*						   mGrid;
 
    // Constructor/Destructor/Conobject Declaration
    GuiInspectorGroup();
-   GuiInspectorGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> parent );
-   ~GuiInspectorGroup();
+   GuiInspectorGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> inspector );
    DECLARE_CONOBJECT(GuiInspectorGroup);
 
    virtual GuiInspectorField* constructField( S32 fieldType );
@@ -154,12 +180,11 @@ public:
    // Publicly Accessible Information about this group
    StringTableEntry getGroupName() { return mText; };
    SimObjectPtr<SimObject> getGroupTarget() { return mTarget; };
-   SimObjectPtr<GuiInspector> getContentCtrl() { return mParent; };
+   SimObjectPtr<GuiInspector> getContentCtrl() { return mInspector; };
 
    bool onAdd();
    virtual bool inspectGroup();
 
-   virtual void animateToContents();
 protected:
    // overridable method that creates our inner controls.
    virtual bool createContent();

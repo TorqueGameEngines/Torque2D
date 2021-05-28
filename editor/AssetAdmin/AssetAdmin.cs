@@ -25,6 +25,8 @@ function AssetAdmin::create(%this)
 	exec("./AssetDictionary.cs");
 	exec("./AssetWindow.cs");
 	exec("./AssetDictionaryButton.cs");
+	exec("./AssetInspector.cs");
+	exec("./AssetInput/AssetInput.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
 	%this.guiPage.add(%this.buildAssetWindow());
@@ -93,25 +95,18 @@ function AssetAdmin::buildDictionary(%this, %title, %type)
 
 function AssetAdmin::buildInspector(%this)
 {
-	%this.insScroller = new GuiScrollCtrl()
+	%this.inspector = new GuiControl()
 	{
+		class = "AssetInspector";
 		HorizSizing="width";
 		VertSizing="top";
 		Position="0 444";
 		Extent="700 324";
 		MinExtent="350 222";
-		hScrollBar="alwaysOn";
-		vScrollBar="alwaysOn";
-		constantThumbHeight="0";
-		showArrowButtons="1";
-		scrollBarThickness="14";
 	};
-	ThemeManager.setProfile(%this.insScroller, "scrollingPanelProfile");
-	ThemeManager.setProfile(%this.insScroller, "scrollingPanelThumbProfile", ThumbProfile);
-	ThemeManager.setProfile(%this.insScroller, "scrollingPanelTrackProfile", TrackProfile);
-	ThemeManager.setProfile(%this.insScroller, "scrollingPanelArrowProfile", ArrowProfile);
+	ThemeManager.setProfile(%this.inspector, "overlayProfile");
 
-	return %this.insScroller;
+	return %this.inspector;
 }
 
 function AssetAdmin::buildAssetWindow(%this)

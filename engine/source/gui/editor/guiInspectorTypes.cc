@@ -26,30 +26,39 @@
 //////////////////////////////////////////////////////////////////////////
 IMPLEMENT_CONOBJECT(GuiInspectorTypeEnum);
 
-GuiControl* GuiInspectorTypeEnum::constructEditControl()
+GuiControl* GuiInspectorTypeEnum::constructEditControl(S32 width)
 {
-   GuiControl* retCtrl = new GuiDropDownCtrl();
+	GuiDropDownCtrl* retCtrl = new GuiDropDownCtrl();
 
    // If we couldn't construct the control, bail!
    if( retCtrl == NULL )
       return retCtrl;
 
-   GuiDropDownCtrl *menu = dynamic_cast<GuiDropDownCtrl*>(retCtrl);
-
    // Let's make it look pretty.
-   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 24));
-   menu->setField("text", getData());
+   retCtrl->setControlProfile(mGroup->mInspector->mDropDownProfile);
+   retCtrl->setControlListBoxProfile(mGroup->mInspector->mDropDownItemProfile);
+   retCtrl->setControlScrollProfile(mGroup->mInspector->mScrollProfile);
+   retCtrl->setControlThumbProfile(mGroup->mInspector->mThumbProfile);
+   retCtrl->setControlArrowProfile(mGroup->mInspector->mArrowProfile);
+   retCtrl->setControlTrackProfile(mGroup->mInspector->mTrackProfile);
+   retCtrl->setControlBackgroundProfile(mGroup->mInspector->mBackgroundProfile);
+   retCtrl->setConstantThumbHeight(mGroup->mInspector->mUseConstantHeightThumb);
+   retCtrl->setShowArrowButtons(mGroup->mInspector->mShowArrowButtons);
+   retCtrl->setScrollBarThickness(mGroup->mInspector->mScrollBarThickness);
 
    registerEditControl( retCtrl );
 
    // Configure it to update our value when the popup is closed
    char szBuffer[512];
-   dSprintf( szBuffer, 512, "%d.%s = %d.getText();%d.inspect(%d);",mTarget->getId(), mField->pFieldname, menu->getId(), mParent->mParent->getId(), mTarget->getId() );
-   menu->setField("Command", szBuffer );
+   dSprintf( szBuffer, 512, "%d.%s = %d.getText();%d.inspect(%d);",mTarget->getId(), mField->pFieldname, retCtrl->getId(), mGroup->mInspector->getId(), mTarget->getId() );
+   retCtrl->setField("Command", szBuffer );
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
 
    //now add the entries
    for(S32 i = 0; i < mField->table->size; i++)
-      menu->getList()->addItemWithID(mField->table->table[i].label, mField->table->table[i].index);
+	   retCtrl->getList()->addItemWithID(mField->table->table[i].label, mField->table->table[i].index);
+   
+   retCtrl->setField("text", getData());
 
    return retCtrl;
 }
@@ -94,33 +103,31 @@ StringTableEntry  GuiInspectorTypeEnum::getData()
 //////////////////////////////////////////////////////////////////////////
 IMPLEMENT_CONOBJECT(GuiInspectorTypeCheckBox);
 
-GuiControl* GuiInspectorTypeCheckBox::constructEditControl()
+GuiControl* GuiInspectorTypeCheckBox::constructEditControl(S32 width)
 {
-   GuiControl* retCtrl = new GuiCheckBoxCtrl();
+	GuiCheckBoxCtrl* retCtrl = new GuiCheckBoxCtrl();
 
-   // If we couldn't construct the control, bail!
-   if( retCtrl == NULL )
-      return retCtrl;
+	// If we couldn't construct the control, bail!
+	if( retCtrl == NULL )
+		return retCtrl;
 
-   GuiCheckBoxCtrl *check = dynamic_cast<GuiCheckBoxCtrl*>(retCtrl);
+	// Let's make it look pretty.
+	retCtrl->setControlProfile(mGroup->mInspector->mCheckboxProfile);
 
-   // Let's make it look pretty.
-   retCtrl->setField( "profile", "GuiCheckBoxProfile" );
-   retCtrl->setField( "text", "" );
-   retCtrl->setExtent(Point2I(20, 30));
+	retCtrl->setText(mText);
+	mText = StringTable->EmptyString;
+	retCtrl->setScriptValue( getData() );
 
-   //check->mIndent = 4;
+	registerEditControl( retCtrl );
 
-   retCtrl->setScriptValue( getData() );
+	// Configure it to update our value when the popup is closed
+	char szBuffer[512];
+	dSprintf( szBuffer, 512, "%d.apply(%d.getValue());",getId(),retCtrl->getId() );
+	retCtrl->setField("Command", szBuffer );
+	retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
+	retCtrl->setTextExtent(Point2I(retCtrl->getExtent().x - retCtrl->getTextOffset().x, retCtrl->getExtent().y - retCtrl->getTextOffset().y));
 
-   registerEditControl( retCtrl );
-
-   // Configure it to update our value when the popup is closed
-   char szBuffer[512];
-   dSprintf( szBuffer, 512, "%d.apply(%d.getValue());",getId(),check->getId() );
-   check->setField("Command", szBuffer );
-
-   return retCtrl;
+	return retCtrl;
 }
 
 
@@ -150,26 +157,33 @@ static S32 QSORT_CALLBACK stringCompare(const void *a,const void *b)
    return(dStricmp(sa, sb));
 }
 
-GuiControl* GuiInspectorTypeGuiProfile::constructEditControl()
+GuiControl* GuiInspectorTypeGuiProfile::constructEditControl(S32 width)
 {
-   GuiControl* retCtrl = new GuiDropDownCtrl();
+	GuiDropDownCtrl* retCtrl = new GuiDropDownCtrl();
 
    // If we couldn't construct the control, bail!
    if( retCtrl == NULL )
       return retCtrl;
 
-   GuiDropDownCtrl *menu = dynamic_cast<GuiDropDownCtrl*>(retCtrl);
-
    // Let's make it look pretty.
-   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 24));
-   menu->setField("text", getData());
+   retCtrl->setControlProfile(mGroup->mInspector->mDropDownProfile);
+   retCtrl->setControlListBoxProfile(mGroup->mInspector->mDropDownItemProfile);
+   retCtrl->setControlScrollProfile(mGroup->mInspector->mScrollProfile);
+   retCtrl->setControlThumbProfile(mGroup->mInspector->mThumbProfile);
+   retCtrl->setControlArrowProfile(mGroup->mInspector->mArrowProfile);
+   retCtrl->setControlTrackProfile(mGroup->mInspector->mTrackProfile);
+   retCtrl->setControlBackgroundProfile(mGroup->mInspector->mBackgroundProfile);
+   retCtrl->setConstantThumbHeight(mGroup->mInspector->mUseConstantHeightThumb);
+   retCtrl->setShowArrowButtons(mGroup->mInspector->mShowArrowButtons);
+   retCtrl->setScrollBarThickness(mGroup->mInspector->mScrollBarThickness);
 
    registerEditControl( retCtrl );
 
    // Configure it to update our value when the popup is closed
    char szBuffer[512];
-   dSprintf( szBuffer, 512, "%d.apply(%d.getText());",getId(),menu->getId() );
-   menu->setField("Command", szBuffer );
+   dSprintf( szBuffer, 512, "%d.apply(%d.getText());",getId(),retCtrl->getId() );
+   retCtrl->setField("Command", szBuffer );
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
 
    Vector<StringTableEntry> entries;
 
@@ -183,9 +197,11 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl()
       }
    }
 
-   menu->getList()->sortByText();
+   retCtrl->getList()->sortByText();
    for(U32 j = 0; j < (U32)entries.size(); j++)
-      menu->getList()->addItem(entries[j]);
+	   retCtrl->getList()->addItem(entries[j]);
+
+   retCtrl->setField("text", getData());
 
    return retCtrl;
 }
@@ -202,26 +218,33 @@ void GuiInspectorTypeGuiBorderProfile::consoleInit()
    ConsoleBaseType::getType(TypeGuiBorderProfile)->setInspectorFieldType("GuiInspectorTypeGuiBorderProfile");
 }
 
-GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl()
+GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl(S32 width)
 {
-   GuiControl* retCtrl = new GuiDropDownCtrl();
+	GuiDropDownCtrl* retCtrl = new GuiDropDownCtrl();
 
    // If we couldn't construct the control, bail!
    if (retCtrl == NULL)
       return retCtrl;
 
-   GuiDropDownCtrl *menu = dynamic_cast<GuiDropDownCtrl*>(retCtrl);
-
    // Let's make it look pretty.
-   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 24));
-   menu->setField("text", getData());
+   retCtrl->setControlProfile(mGroup->mInspector->mDropDownProfile);
+   retCtrl->setControlListBoxProfile(mGroup->mInspector->mDropDownItemProfile);
+   retCtrl->setControlScrollProfile(mGroup->mInspector->mScrollProfile);
+   retCtrl->setControlThumbProfile(mGroup->mInspector->mThumbProfile);
+   retCtrl->setControlArrowProfile(mGroup->mInspector->mArrowProfile);
+   retCtrl->setControlTrackProfile(mGroup->mInspector->mTrackProfile);
+   retCtrl->setControlBackgroundProfile(mGroup->mInspector->mBackgroundProfile);
+   retCtrl->setConstantThumbHeight(mGroup->mInspector->mUseConstantHeightThumb);
+   retCtrl->setShowArrowButtons(mGroup->mInspector->mShowArrowButtons);
+   retCtrl->setScrollBarThickness(mGroup->mInspector->mScrollBarThickness);
 
    registerEditControl(retCtrl);
 
    // Configure it to update our value when the popup is closed
    char szBuffer[512];
-   dSprintf(szBuffer, 512, "%d.apply(%d.getText());", getId(), menu->getId());
-   menu->setField("Command", szBuffer);
+   dSprintf(szBuffer, 512, "%d.apply(%d.getText());", getId(), retCtrl->getId());
+   retCtrl->setField("Command", szBuffer);
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
 
    Vector<StringTableEntry> entries;
 
@@ -235,9 +258,9 @@ GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl()
       }
    }
 
-   menu->getList()->sortByText();
+   retCtrl->getList()->sortByText();
    for (U32 j = 0; j < (U32)entries.size(); j++)
-      menu->getList()->addItem(entries[j]);
+	   retCtrl->getList()->addItem(entries[j]);
 
    return retCtrl;
 }
@@ -255,7 +278,7 @@ void GuiInspectorTypeFileName::consoleInit()
    ConsoleBaseType::getType(TypeFilename)->setInspectorFieldType("GuiInspectorTypeFileName");
 }
 
-GuiControl* GuiInspectorTypeFileName::constructEditControl()
+GuiControl* GuiInspectorTypeFileName::constructEditControl(S32 width)
 {
    GuiControl* retCtrl = new GuiControl();
 
@@ -264,7 +287,7 @@ GuiControl* GuiInspectorTypeFileName::constructEditControl()
       return retCtrl;
 
    // Let's make it look pretty.
-   retCtrl->setField( "profile", "GuiTextProfile" );
+   retCtrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
 
    // Don't forget to register ourselves
    registerEditControl( retCtrl );
@@ -273,23 +296,21 @@ GuiControl* GuiInspectorTypeFileName::constructEditControl()
    dSprintf( szBuffer, 512, "%d.apply(%d.getText());",getId(),retCtrl->getId() );
    retCtrl->setField("AltCommand", szBuffer );
    retCtrl->setField("Validate", szBuffer );
-   retCtrl->setExtent(Point2I((mParent->getExtent().x / 2) - 20, 25));
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - (mGroup->mInspector->mControlOffset.x + 34), 30));
 
    mBrowseButton = new GuiButtonCtrl();
 
    if( mBrowseButton != NULL )
    {
-      
       char szBuffer[512];
       dSprintf( szBuffer, 512, "getLoadFilename(\"*.*\", \"%d.apply\", \"%s\");",getId(), getData());
       mBrowseButton->setField( "Command", szBuffer );
-      mBrowseButton->setField( "text", "..." );
-      mBrowseButton->setField( "Profile", "GuiButtonDynProfile" );
+      mBrowseButton->setField( "text", "..." ); 
+	  mBrowseButton->setControlProfile(mGroup->mInspector->mButtonProfile);
       mBrowseButton->registerObject();
-      mBrowseButton->setExtent(Point2I(30, 25));
-      mBrowseButton->setPosition(Point2I(((mParent->getExtent().x / 2) - 20) - 30, 0));
-      retCtrl->addObject( mBrowseButton );
-
+      mBrowseButton->setExtent(Point2I(30, 28));
+      mBrowseButton->setPosition(Point2I(mGroup->mInspector->mControlOffset.x + retCtrl->getWidth() + 4, mGroup->mInspector->mControlOffset.y + 1));
+      addObject( mBrowseButton );
    }
 
    return retCtrl;
@@ -305,9 +326,9 @@ void GuiInspectorTypeFileName::resize( const Point2I &newPosition, const Point2I
 //////////////////////////////////////////////////////////////////////////
 IMPLEMENT_CONOBJECT(GuiInspectorTypeColor);
 
-GuiControl* GuiInspectorTypeColor::constructEditControl()
+GuiControl* GuiInspectorTypeColor::constructEditControl(S32 width)
 {
-   GuiControl* retCtrl = new GuiColorPickerCtrl();
+	GuiColorPickerCtrl* retCtrl = new GuiColorPickerCtrl();
 
    // If we couldn't construct the control, bail!
    if( retCtrl == NULL )
@@ -316,12 +337,12 @@ GuiControl* GuiInspectorTypeColor::constructEditControl()
    // Don't forget to register ourselves
    registerEditControl( retCtrl );
 
-   retCtrl->setExtent(Point2I((getExtent().x / 2) - 30, 30));
    const char* mCol = getData();
    retCtrl->setField("BaseColor", mCol);
    char szBuffer[512];
    dSprintf(szBuffer, 512, "%s(\"%s\", \"%d.apply\");", mColorFunction, getData(), getId());
    retCtrl->setField("Command", szBuffer);
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
 
    return retCtrl;
 }
@@ -380,7 +401,7 @@ void GuiInspectorTypeSimObjectPtr::consoleInit()
    ConsoleBaseType::getType(TypeSimObjectPtr)->setInspectorFieldType("GuiInspectorTypeSimObjectPtr");
 }
 
-GuiControl * GuiInspectorTypeSimObjectPtr::constructEditControl()
+GuiControl * GuiInspectorTypeSimObjectPtr::constructEditControl(S32 width)
 {
    GuiControl* retCtrl = new GuiControl();
 
@@ -388,8 +409,13 @@ GuiControl * GuiInspectorTypeSimObjectPtr::constructEditControl()
    if (retCtrl == NULL)
       return retCtrl;
 
-   retCtrl->setField("profile", "GuiTextProfile");
-   retCtrl->setExtent(Point2I((mParent->getWidth() / 2) - 20, 25));
+   // Let's make it look pretty.
+   retCtrl->setControlProfile(mGroup->mInspector->mLabelProfile);
+
+   // Don't forget to register ourselves
+   registerEditControl(retCtrl);
+
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
    retCtrl->setField("text", getData());
 
    return retCtrl;
@@ -416,10 +442,8 @@ void GuiInspectorTypeS32::consoleInit()
    ConsoleBaseType::getType(TypeS32)->setInspectorFieldType("GuiInspectorTypeS32");
 }
 
-GuiControl * GuiInspectorTypeS32::constructEditControl()
+GuiControl * GuiInspectorTypeS32::constructEditControl(S32 width)
 {
-   
-   GuiControl* retCtrl;
    const char* mData = getData();
    const char* mName = mField->pFieldname; 
    U32 mCount = 1;
@@ -431,94 +455,90 @@ GuiControl * GuiInspectorTypeS32::constructEditControl()
    // this is just here for Collision layers and groups, needs to be swapped over to a different type.
    if (mCount == 32)
    {
-      retCtrl = new GuiGridCtrl();
+      GuiGridCtrl *retCtrl = new GuiGridCtrl();
       registerEditControl(retCtrl);
-      retCtrl->setField("CellSizeX","35");
-      retCtrl->setField("CellSizeY","30");
-      retCtrl->setExtent(Point2I(mParent->getExtent().x / 2, 10));
 
+	  retCtrl->mCellModeX = GuiGridCtrl::Absolute;
+	  retCtrl->mCellModeY = GuiGridCtrl::Absolute;
+	  retCtrl->mCellSpacingX = 8;
+	  retCtrl->mCellSpacingY = 4;
+
+	  retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
+
+	  U32 labelWidth = mGroup->mInspector->mLabelProfile->mFont->getStrWidth("00");
+	  U32 x = 0, y = 0;
       for (U32 i = 0; i < mCount; i++)
       {
          char szName[32];
          dSprintf(szName, 32, "%d", i);
-         // create our elemnts.
-         GuiControl* mCont = new GuiControl;
-         registerEditControl(mCont);
-         GuiControl* mLabel = new GuiControl;
-         registerEditControl(mLabel);
-         GuiCheckBoxCtrl* mCheck = new GuiCheckBoxCtrl;
-         registerEditControl(mCheck);
+
+         // create our checkboxes.
+         GuiCheckBoxCtrl* checkBox = new GuiCheckBoxCtrl;
+         registerEditControl(checkBox);
+		 checkBox->setControlProfile(mGroup->mInspector->mCheckboxProfile);
+		 checkBox->setTextOffset(Point2I(2,0));
+		 checkBox->setTextExtent(Point2I(labelWidth + 2, checkBox->mProfile->mFont->getHeight() + 2));
+		 checkBox->setBoxOffset(Point2I(checkBox->getTextExtent().x + 2, 0));
+		 checkBox->setText(szName);
+
          // collision group and layer default to on.
          const char* val = StringUnit::getUnit(mData, i, " ");
          if (StringTable->insert(szName) == StringTable->insert(val))
          {
-            mCheck->setStateOn(true);
+            checkBox->setStateOn(true);
          }
          // say hello to my really big friend.
          char szBuffer[512];
          dSprintf(szBuffer, 512, "CollisionArrayUpdate(%d,\"%s\", \"%s\", %d, \"%d.apply\");",
-            mTarget->getId(), mName,szName,mCheck->getId(),getId());
+            mTarget->getId(), mName,szName,checkBox->getId(),getId());
 
-         mCheck->setField("Command", szBuffer);
-         // minimum size required for 2 numbers to show up and a checkbox.
-         mCont->setExtent(Point2I(35, 30));
-         mLabel->setText(szName);
-         mLabel->setExtent(Point2I(15, 30));
-         mCheck->setExtent(Point2I(20, 30));
-         mCont->addObject(mLabel);
-         mLabel->setPosition(Point2I(0, 0));
-         mCont->addObject(mCheck);
-         mCheck->setPosition(Point2I(15, 0));
+         checkBox->setField("Command", szBuffer);
 
-         retCtrl->addObject(mCont);
+		 if (i == 0)
+		 {
+			 U32 xNeeded = checkBox->getBoxOffset().x + checkBox->getBoxExtent().x;
+			 U32 yNeeded = checkBox->getBoxOffset().y + checkBox->getBoxExtent().y;
+
+			 Point2I outerExt = checkBox->getOuterExtent(Point2I(xNeeded, yNeeded), NormalState, checkBox->mProfile);
+
+			 x = (U32)outerExt.x;
+			 y = (U32)outerExt.y;
+		 }
+
+         retCtrl->addObject(checkBox);
       }
 
-      GuiButtonCtrl* mAll = new GuiButtonCtrl;
-      registerEditControl(mAll);
-      GuiButtonCtrl* mNone = new GuiButtonCtrl;
-      registerEditControl(mNone);
+      GuiButtonCtrl* allButton = new GuiButtonCtrl;
+	  allButton->setControlProfile(mGroup->mInspector->mButtonProfile);
+      registerEditControl(allButton);
 
-      mAll->setText("All");
-      mNone->setText("None");
+      GuiButtonCtrl* noneButton = new GuiButtonCtrl;
+	  noneButton->setControlProfile(mGroup->mInspector->mButtonProfile);
+      registerEditControl(noneButton);
+
+      allButton->setText("All");
+      noneButton->setText("None");
+	  Point2I buttonExt = noneButton->getOuterExtent(Point2I(noneButton->mProfile->mFont->getStrWidth("None"), noneButton->mProfile->mFont->getHeight()), NormalState, noneButton->mProfile);
+
+      retCtrl->mCellSizeX = getMax(x, (U32)buttonExt.x);
+      retCtrl->mCellSizeY = getMax(y, (U32)buttonExt.y);
 
       char szBufferAll[512];
       dSprintf(szBufferAll, 512, "%d.apply(\"all\");", getId());
-      mAll->setField("Command", szBufferAll);
-      mAll->setField("profile", "GuiButtonDynProfile");
+      allButton->setField("Command", szBufferAll);
+
       dSprintf(szBufferAll, 512, "%d.apply(\"none\");", getId());
-      mNone->setField("Command", szBufferAll);
-      mNone->setField("profile", "GuiButtonDynProfile");
+      noneButton->setField("Command", szBufferAll);
 
-      retCtrl->addObject(mAll);
-      retCtrl->addObject(mNone);
+      retCtrl->addObject(allButton);
+      retCtrl->addObject(noneButton);
 
+	  return retCtrl;
    }
    else
    {
-      // everything else should do fine under an ordinary text edit.
-      retCtrl = new GuiTextEditCtrl();
-
-      // If we couldn't construct the control, bail!
-      if (retCtrl == NULL)
-         return retCtrl;
-
-      // Let's make it look pretty.
-      retCtrl->setField("profile", "GuiNumberEditProfile");
-
-      // Don't forget to register ourselves
-      registerEditControl(retCtrl);
-
-      char szBuffer[512];
-      dSprintf(szBuffer, 512, "%d.apply(%d.getText());", getId(), retCtrl->getId());
-      retCtrl->setField("AltCommand", szBuffer);
-      retCtrl->setField("Validate", szBuffer);
-      retCtrl->setExtent(Point2I((getExtent().x / 2) - 40, 30));
-
+      return GuiInspectorField::constructEditControl(width);
    }
-
-   
-
-   return retCtrl;
 }
 
 const char* GuiInspectorTypeS32::getData()
@@ -541,7 +561,7 @@ void GuiInspectorTypePoint2I::consoleInit()
    ConsoleBaseType::getType(TypePoint2I)->setInspectorFieldType("GuiInspectorTypePoint2I");
 }
 
-GuiControl * GuiInspectorTypePoint2I::constructEditControl()
+GuiControl * GuiInspectorTypePoint2I::constructEditControl(S32 width)
 {
    // Do everything in a simple way first.
    // then complicate it.
@@ -551,16 +571,20 @@ GuiControl * GuiInspectorTypePoint2I::constructEditControl()
    if (retCtrl == NULL)
       return retCtrl;
 
+   // Let's make it look pretty.
+   retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 60));
+
    // get our data.
    const char* mData = mTarget->getDataField(mField->pFieldname, NULL);
    // Don't forget to register ourselves
    retCtrl->setCanSaveDynamicFields(true);
    registerEditControl(retCtrl);
-   // we want 2 controls in this one.
-   retCtrl->setExtent(Point2I(mParent->getExtent().x / 2, 60));
+
    // make our x fields.
    GuiTextEditCtrl* mXctrl = new GuiTextEditCtrl();
    GuiControl* mXLabel = new GuiControl();
+
    // make our y fields.
    GuiTextEditCtrl* mYctrl = new GuiTextEditCtrl();
    GuiControl* mYLabel = new GuiControl();
@@ -569,8 +593,11 @@ GuiControl * GuiInspectorTypePoint2I::constructEditControl()
    registerEditControl(mXctrl);
    registerEditControl(mYctrl);
 
-   mXctrl->setField("profile", "GuiNumberEditProfile");
-   mYctrl->setField("profile", "GuiNumberEditProfile");
+   // Let's make it look pretty.
+   mXctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
+   mYctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
+   mXLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
+   mYLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
 
    U32 mCount = StringUnit::getUnitCount(mData, " ");
 
@@ -594,12 +621,9 @@ GuiControl * GuiInspectorTypePoint2I::constructEditControl()
    mXLabel->setField("text","X:");
    mYLabel->setField("text", "Y:");
    mYLabel->setPosition(Point2I(0, 30));
-
-   mXLabel->setField("profile", "GuiTextProfile");
-   mYLabel->setField("profile", "GuiTextProfile");
    
-   mXctrl->setExtent(Point2I((mParent->getExtent().x / 2) - 25 - 20, 30));
-   mYctrl->setExtent(Point2I((mParent->getExtent().x / 2) - 25 - 20, 30));
+   mXctrl->setExtent(Point2I(width - 25 - 20, 30));
+   mYctrl->setExtent(Point2I(width - 25 - 20, 30));
 
    char szCommand[512];
 
@@ -652,7 +676,7 @@ void GuiInspectorTypePoint2F::consoleInit()
    ConsoleBaseType::getType(TypePoint2F)->setInspectorFieldType("GuiInspectorTypePoint2F");
 }
 
-GuiControl * GuiInspectorTypePoint2F::constructEditControl()
+GuiControl * GuiInspectorTypePoint2F::constructEditControl(S32 width)
 {
    GuiControl* retCtrl = new GuiControl();
 
@@ -660,16 +684,20 @@ GuiControl * GuiInspectorTypePoint2F::constructEditControl()
    if (retCtrl == NULL)
       return retCtrl;
 
+   // Let's make it look pretty.
+   retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 60));
+
    // get our data.
    const char* mData = mTarget->getDataField(mField->pFieldname, NULL);
    // Don't forget to register ourselves
    retCtrl->setCanSaveDynamicFields(true);
    registerEditControl(retCtrl);
-   // we want 2 controls in this one.
-   retCtrl->setExtent(Point2I(mParent->getExtent().x / 2, 60));
+
    // make our x fields.
    GuiTextEditCtrl* mXctrl = new GuiTextEditCtrl();
    GuiControl* mXLabel = new GuiControl();
+
    // make our y fields.
    GuiTextEditCtrl* mYctrl = new GuiTextEditCtrl();
    GuiControl* mYLabel = new GuiControl();
@@ -678,10 +706,14 @@ GuiControl * GuiInspectorTypePoint2F::constructEditControl()
    registerEditControl(mXctrl);
    registerEditControl(mYctrl);
 
+   // Let's make it look pretty.
+   mXctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
+   mYctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
+   mXLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
+   mYLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
+
    // the only difference between point2i and 2f
    // keeping them separate just incase changes to textEdit.
-   mXctrl->setField("profile", "GuiTextEditProfile");
-   mYctrl->setField("profile", "GuiTextEditProfile");
 
    U32 mCount = StringUnit::getUnitCount(mData, " ");
 
@@ -706,11 +738,8 @@ GuiControl * GuiInspectorTypePoint2F::constructEditControl()
    mYLabel->setField("text", "Y:");
    mYLabel->setPosition(Point2I(0, 30));
 
-   mXLabel->setField("profile", "GuiTextProfile");
-   mYLabel->setField("profile", "GuiTextProfile");
-
-   mXctrl->setExtent(Point2I((mParent->getExtent().x / 2) - 25 - 20, 30));
-   mYctrl->setExtent(Point2I((mParent->getExtent().x / 2) - 25 - 20, 30));
+   mXctrl->setExtent(Point2I(width - 25 - 20, 30));
+   mYctrl->setExtent(Point2I(width - 25 - 20, 30));
 
    char szCommand[512];
 
@@ -763,7 +792,7 @@ void GuiInspectorTypeVector2::consoleInit()
    ConsoleBaseType::getType(TypeVector2)->setInspectorFieldType("GuiInspectorTypeVector2");
 }
 
-GuiControl * GuiInspectorTypeVector2::constructEditControl()
+GuiControl * GuiInspectorTypeVector2::constructEditControl(S32 width)
 {
    // yes vector2 is the same as point2f as well. 
    // all of these could be done similarly to color. but testing need test.
@@ -773,16 +802,20 @@ GuiControl * GuiInspectorTypeVector2::constructEditControl()
    if (retCtrl == NULL)
       return retCtrl;
 
+   // Let's make it look pretty.
+   retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 60));
+
    // get our data.
    const char* mData = mTarget->getDataField(mField->pFieldname, NULL);
    // Don't forget to register ourselves
    retCtrl->setCanSaveDynamicFields(true);
    registerEditControl(retCtrl);
-   // we want 2 controls in this one.
-   retCtrl->setExtent(Point2I(mParent->getExtent().x / 2, 60));
+
    // make our x fields.
    GuiTextEditCtrl* mXctrl = new GuiTextEditCtrl();
    GuiControl* mXLabel = new GuiControl();
+
    // make our y fields.
    GuiTextEditCtrl* mYctrl = new GuiTextEditCtrl();
    GuiControl* mYLabel = new GuiControl();
@@ -791,10 +824,11 @@ GuiControl * GuiInspectorTypeVector2::constructEditControl()
    registerEditControl(mXctrl);
    registerEditControl(mYctrl);
 
-   // the only difference between point2i and 2f
-   // keeping them separate just incase changes to textEdit.
-   mXctrl->setField("profile", "GuiTextEditProfile");
-   mYctrl->setField("profile", "GuiTextEditProfile");
+   // Let's make it look pretty.
+   mXctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
+   mYctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
+   mXLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
+   mYLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
 
    U32 mCount = StringUnit::getUnitCount(mData, " ");
 
@@ -819,11 +853,8 @@ GuiControl * GuiInspectorTypeVector2::constructEditControl()
    mYLabel->setField("text", "Y:");
    mYLabel->setPosition(Point2I(0, 30));
 
-   mXLabel->setField("profile", "GuiTextProfile");
-   mYLabel->setField("profile", "GuiTextProfile");
-
-   mXctrl->setExtent(Point2I((mParent->getExtent().x / 2) - 25 - 20, 30));
-   mYctrl->setExtent(Point2I((mParent->getExtent().x / 2) - 25 - 20, 30));
+   mXctrl->setExtent(Point2I(width - 25 - 20, 30));
+   mYctrl->setExtent(Point2I(width - 25 - 20, 30));
 
    char szCommand[512];
 
@@ -869,7 +900,7 @@ void GuiInspectorTypeVector2::updateValue(StringTableEntry newValue)
 //////////////////////////////////////////////////////////////////////////
 IMPLEMENT_CONOBJECT(GuiInspectorTypeAsset);
 
-GuiControl* GuiInspectorTypeAsset::constructEditControl()
+GuiControl* GuiInspectorTypeAsset::constructEditControl(S32 width)
 {
    // we don't need a custom update for this.
    // the object is a guicontrol and therefore 
@@ -881,12 +912,12 @@ GuiControl* GuiInspectorTypeAsset::constructEditControl()
       return retCtrl;
 
    // Let's make it look pretty.
-   retCtrl->setField("profile", "GuiTextProfile");
+   retCtrl->setControlProfile(mGroup->mInspector->mLabelProfile);
 
    // Don't forget to register ourselves
    registerEditControl(retCtrl);
 
-   retCtrl->setExtent(Point2I((getExtent().x / 2), 30));
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - (mGroup->mInspector->mControlOffset.x + 34), 30));
    retCtrl->setText(getData());
 
    mBrowseButton = new GuiButtonCtrl();
@@ -898,10 +929,10 @@ GuiControl* GuiInspectorTypeAsset::constructEditControl()
       dSprintf(szBuffer, 512, "getAsset(\"%d.apply\", \"%s\", \"%s\");", getId(), getData(), mAssetType);
       mBrowseButton->setField("Command", szBuffer);
       mBrowseButton->setField("text", "...");
-      mBrowseButton->setField("Profile", "GuiButtonDynProfile");
-      mBrowseButton->registerObject();
-      mBrowseButton->setExtent(Point2I(30, 25));
-      mBrowseButton->setPosition(Point2I(((getExtent().x / 2) - 30) - 30, 0));
+	  mBrowseButton->setControlProfile(mGroup->mInspector->mButtonProfile);
+	  mBrowseButton->registerObject();
+	  mBrowseButton->setExtent(Point2I(30, 28));
+	  mBrowseButton->setPosition(Point2I(mGroup->mInspector->mControlOffset.x + retCtrl->getWidth() + 4, mGroup->mInspector->mControlOffset.y + 1));
       retCtrl->addObject(mBrowseButton);
 
    }

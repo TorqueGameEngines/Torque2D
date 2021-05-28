@@ -60,19 +60,7 @@ function AssetDictionaryButton::loadAnimationAsset(%this, %assetID)
 
 function AssetDictionaryButton::getIconExtent(%this, %size)
 {
-	%x = getWord(%size, 0);
-	%y = getWord(%size, 1);
-	%ratio = %x / %y;
-	%extent = "50 50";
-	if(%x > %y)
-	{
-		%extent = "50" SPC (50/%ratio);
-	}
-	else if(%x < %y)
-	{
-		%extent = (50*%ratio) SPC "50";
-	}
-	return %extent;
+	return "50 50";
 }
 
 function AssetDictionaryButton::buildIcon(%this, %extent)
@@ -85,6 +73,8 @@ function AssetDictionaryButton::buildIcon(%this, %extent)
 		Extent = %extent;
 		minExtent=%extent;
 		Position = "0 0";
+		constrainProportions = "1";
+		fullSize = "1";
 	};
 	ThemeManager.setProfile(%texture, "spriteProfile");
 	return %texture;
@@ -95,10 +85,12 @@ function AssetDictionaryButton::onClick(%this)
 	if(isObject(%this.AnimationAsset) && %this.AnimationAssetID !$= "")
 	{
 		AssetAdmin.AssetWindow.displayAnimationAsset(%this.imageAsset, %this.AnimationAsset, %this.AnimationAssetID);
+		AssetAdmin.inspector.loadAnimationAsset(%this.AnimationAsset, %this.AnimationAssetID);
 	}
 	else if(isObject(%this.ImageAsset) && %this.ImageAssetID !$= "")
 	{
 		AssetAdmin.AssetWindow.displayImageAsset(%this.ImageAsset, %this.ImageAssetID);
+		AssetAdmin.inspector.loadImageAsset(%this.ImageAsset, %this.ImageAssetID);
 	}
 }
 

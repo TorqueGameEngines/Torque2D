@@ -59,7 +59,7 @@ protected:
 public:
 	GuiExpandCtrl();
 
-   void parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
+   virtual void parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
 
    inline bool getExpanded() { return mExpanded; };
    void setExpanded(bool isExpanded);

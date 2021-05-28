@@ -86,7 +86,6 @@ void GuiExpandCtrl::parentResized(const Point2I &oldParentExtent, const Point2I 
 		newPosition.y += deltaY;
 	else if (mVertSizing == vertResizeRelative && oldParentExtent.y != 0)
 	{
-
 		S32 newTop = (newPosition.y * newParentExtent.y) / oldParentExtent.y;
 		S32 newBottom = ((newPosition.y + newExtent.y) * newParentExtent.y) / oldParentExtent.y;
 
@@ -103,6 +102,18 @@ void GuiExpandCtrl::parentResized(const Point2I &oldParentExtent, const Point2I 
 	}
 
 	resize(newPosition, newExtent);
+
+	calcExpandedExtent();
+
+	if (mExpanded)
+	{
+		mBounds.extent = mExpandedExtent;
+	}
+	else
+	{
+		mBounds.extent = mCollapsedExtent;
+	}
+	setUpdate();
 }
 
 void GuiExpandCtrl::setCollapsedExtent(const Point2I &extent)
