@@ -26,7 +26,6 @@ function AssetAdmin::create(%this)
 	exec("./AssetWindow.cs");
 	exec("./AssetDictionaryButton.cs");
 	exec("./AssetInspector.cs");
-	exec("./AssetInput/AssetInput.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
 	%this.guiPage.add(%this.buildAssetWindow());

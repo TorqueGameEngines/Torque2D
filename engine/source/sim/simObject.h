@@ -272,6 +272,14 @@ private:
     {
        static_cast<SimObject*>(object)->setLocked(dAtob(data)); return false;
     }
+	static bool _writeHidden(void* object, const char* data)
+	{
+		return static_cast<SimObject*>(object)->isHidden();
+	}
+	static bool _writeLocked(void* object, const char* data)
+	{
+		return static_cast<SimObject*>(object)->isLocked();
+	}
 
 public:
     /// @name Notification
