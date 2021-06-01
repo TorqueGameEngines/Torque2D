@@ -86,10 +86,18 @@ function AssetInspector::onAdd(%this)
 
 function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 {
+	%this.inspector.clearHiddenFields();
+	%this.inspector.addHiddenField("hidden");
+	%this.inspector.addHiddenField("locked");
+	%this.inspector.addHiddenField("AssetInternal");
 	%this.inspector.inspect(%imageAsset);
 }
 
 function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)
 {
+	%this.inspector.clearHiddenFields();
+	%this.inspector.addHiddenField("hidden");
+	%this.inspector.addHiddenField("locked");
+	%this.inspector.addHiddenField("AssetInternal");
 	%this.inspector.inspect(%animationAsset);
 }

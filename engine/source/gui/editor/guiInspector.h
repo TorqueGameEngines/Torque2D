@@ -66,6 +66,9 @@
 #include "gui/containers/guiPanelCtrl.h"
 #endif
 
+#include <string>
+#include <vector>
+#include <algorithm>
 
 // Forward Declare GuiInspectorGroup
 class GuiInspectorGroup;
@@ -78,6 +81,8 @@ class GuiInspector : public GuiChainCtrl
 {
 private:
    typedef GuiChainCtrl Parent;
+   vector<string> mHiddenFieldList;
+
 public:
    // Members
    Vector<GuiInspectorGroup*>    mGroups;
@@ -96,6 +101,9 @@ public:
    void setName( const char* newName );
    void clearGroups();
    bool findExistentGroup( StringTableEntry groupName );
+   inline bool hideField(const char* fieldName) { return std::find(mHiddenFieldList.begin(), mHiddenFieldList.end(), fieldName) != mHiddenFieldList.end(); };
+   inline void clearHiddenField() { mHiddenFieldList.clear(); };
+   inline void addHiddenField(const char* fieldName) { mHiddenFieldList.push_back(fieldName); };
 
    GuiControlProfile *mGroupPanelProfile;
    GuiControlProfile *mGroupGridProfile;
@@ -126,6 +134,7 @@ class GuiInspectorField : public GuiControl
 {
 private:
    typedef GuiControl Parent;
+
 public:
 
    // Members

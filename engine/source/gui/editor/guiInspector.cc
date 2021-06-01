@@ -335,21 +335,21 @@ void GuiInspector::inspectObject( SimObject *object )
       addObject( dynGroup );
    }
 
-   // If the general group is still empty at this point, kill it.
+   // If any group is still empty at this point, kill it.
    for(S32 i=0; i<mGroups.size(); i++)
    {
-      if(mGroups[i] == general && general->mGrid->size() == 0)
+      if(mGroups[i]->mGrid->size() == 0)
       {
+		 mGroups[i]->deleteObject();
          mGroups.erase(i);
-         general->deleteObject();
-         resize(getPosition(), getExtent());
+		 i--;
       }
    }
+   resize(getPosition(), getExtent());
 
    // Don't steal first responder
    if( !currResponder.isNull() )
       guiCanvas->setFirstResponder( currResponder );
-
 }
 
 ConsoleMethod( GuiInspector, inspect, void, 3, 3, "(obj) Goes through the object's fields and autogenerates editor boxes\n"
@@ -393,6 +393,18 @@ ConsoleMethod( GuiInspector, setName, void, 3, 3, "(NewObjectName) Set object na
               "@return No return value.")
 {
    object->setName(argv[2]);
+}
+
+ConsoleMethod(GuiInspector, clearHiddenFields, void, 2, 2, "() Clears the list of hidden fields\n"
+	"@return No return value.")
+{
+	object->clearHiddenField();
+}
+
+ConsoleMethod(GuiInspector, addHiddenField, void, 3, 3, "() Adds a new field to the list of hidden fields\n"
+	"@return No return value.")
+{
+	object->addHiddenField(argv[2]);
 }
 #pragma endregion
 
@@ -748,29 +760,26 @@ bool GuiInspectorGroup::inspectGroup()
       if( itr->type == AbstractClassRep::StartGroupFieldType )
       {
          // If we're dealing with general fields, always set grabItems to true (to skip them)
-         if( bNoGroup == true )
-            bGrabItems = true;
-         else if( itr->pGroupname != NULL && dStricmp( itr->pGroupname, mText ) == 0 )
+         if( bNoGroup == true || ( itr->pGroupname != NULL && dStricmp( itr->pGroupname, mText ) == 0 ))
             bGrabItems = true;
          continue;
       }
       else if ( itr->type == AbstractClassRep::EndGroupFieldType )
       {
          // If we're dealing with general fields, always set grabItems to false (to grab them)
-         if( bNoGroup == true )
-            bGrabItems = false;
-         else if( itr->pGroupname != NULL && dStricmp( itr->pGroupname, mText ) == 0 )
+         if( bNoGroup == true || ( itr->pGroupname != NULL && dStricmp( itr->pGroupname, mText ) == 0 ))
             bGrabItems = false;
          continue;
       }
 
-      if( ( bGrabItems == true || ( bNoGroup == true && bGrabItems == false ) ) && itr->type != AbstractClassRep::DepricatedFieldType )
-      {
-         if( bNoGroup == true && bGrabItems == true )
-            continue; 
-           // This is weird, but it should work for now. - JDD
-           // We are going to check to see if this item is an array
-           // if so, we're going to construct a field for each array element
+      if((bGrabItems == true || (bNoGroup == true && bGrabItems == false)) && itr->type != AbstractClassRep::DepricatedFieldType )
+      { 
+		  //We are inside a group and looking for items that don't have a group. Move on.
+		  if( bNoGroup == true && bGrabItems == true )
+				continue; 
+
+        // We are going to check to see if this item is an array
+        // if so, we're going to construct a field for each array element
          if( itr->elementCount > 1 )
          {
             for(S32 nI = 0; nI < itr->elementCount; nI++)
@@ -830,6 +839,12 @@ bool GuiInspectorGroup::inspectGroup()
 
             bNewItems = true;
 
+			//check the hidden field list
+			if (mInspector->hideField(itr->pFieldname))
+			{
+				continue;
+			}
+			//Time to create a new field
             field = constructField( itr->type );
             if( field == NULL )
                field = new GuiInspectorField( this, mTarget, itr );
