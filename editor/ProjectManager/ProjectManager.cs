@@ -26,7 +26,6 @@ function ProjectManager::create(%this)
 
 	%this.comingSoon = new GuiControl()
 	{
-		Profile = ThemeManager.activeTheme.panelProfile;
 		HorizSizing="center";
 		VertSizing="center";
 		Position="412 324";

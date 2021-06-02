@@ -34,11 +34,6 @@ function EditorConsole::create(%this)
 		AltCommand="EditorConsole.eval();";
 		MaxLength="255";
 		active = "1";
-		HistorySize="40";
-		password="0";
-		TabComplete="0";
-		SinkAllKeyEvents="1";
-		UseSiblingScroller="1";
 	};
 	ThemeManager.setProfile(%this.consoleEntry, "textEditProfile");
 	%this.guiPage.add(%this.consoleEntry);
@@ -108,15 +103,9 @@ function EditorConsole::eval(%this)
 {
 	%text = trim(%this.consoleEntry.getValue());
 
-    if(strpos(%text, "(") == -1)
+    if(strpos(%text, "(") == -1 && strpos(%text, "=") == -1 && strpos(%text, " ") == -1 && strpos(%text, "{") == -1 && strpos(%text, "}") == -1)
     {
-        if(strpos(%text, "=") == -1 && strpos(%text, " ") == -1)
-        {
-            if(strpos(%text, "{") == -1 && strpos(%text, "}") == -1)
-            {
-                %text = %text @ "()";
-            }
-        }
+        %text = %text @ "()";
     }
 
     %pos = strlen(%text) - 1;

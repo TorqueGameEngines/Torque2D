@@ -117,7 +117,7 @@ ConsoleMethodWithDocs( GuiControl, setActive, ConsoleVoid, 3, 3, ( isActive ))
 }
 
 /*! Use the isActive method to determine if this control is active.
-    An inactive control may visible, but will not accept inputs. It will also normally re-shade or re-skin itself to reflect its inactive state
+    An inactive control may be visible, but will not accept inputs. It will also normally re-shade or re-skin itself to reflect its inactive state
     @return Returns true if this control is active.
 */
 ConsoleMethodWithDocs( GuiControl, isActive, ConsoleBool, 2, 2, ())

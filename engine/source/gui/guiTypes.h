@@ -228,9 +228,7 @@ public:
 	   MiddleVAlign
    };
    VertAlignmentType mVAlignment;				   ///< Vertical text alignment
-
-   bool mReturnTab;                                ///< Used in GuiTextEditCtrl to specify if a tab-event should be simulated when return is pressed.
-   bool mNumbersOnly;                              ///< For text controls, true if this should only accept numerical data
+                             
    bool mMouseOverSelected;                        ///< True if this object should be "selected" while the mouse is over it
    ColorI mCursorColor;                            ///< Color for the blinking cursor in text fields (for example)
 

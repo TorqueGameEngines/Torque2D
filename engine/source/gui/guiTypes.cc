@@ -335,8 +335,6 @@ GuiControlProfile::GuiControlProfile(void) :
 	
 	mAlignment     = LeftAlign;
 	mVAlignment    = MiddleVAlign;
-	mReturnTab     = false;
-	mNumbersOnly   = false;
    mProfileForChildrenName = NULL;
 	mProfileForChildren = NULL;
 
@@ -378,8 +376,6 @@ GuiControlProfile::GuiControlProfile(void) :
 
       //used by GuiTextCtrl
       mAlignment = def->mAlignment;
-      mReturnTab = def->mReturnTab;
-      mNumbersOnly = def->mNumbersOnly;
       mCursorColor = def->mCursorColor;
 
       // Child profile
@@ -431,8 +427,6 @@ void GuiControlProfile::initPersistFields()
    addField("align", TypeEnum, Offset(mAlignment, GuiControlProfile), 1, &gAlignTable);
    addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControlProfile), 1, &gVAlignTable);
    addField("textOffset",    TypePoint2I,    Offset(mTextOffset, GuiControlProfile));
-   addField("returnTab",     TypeBool,       Offset(mReturnTab, GuiControlProfile));
-   addField("numbersOnly",   TypeBool,       Offset(mNumbersOnly, GuiControlProfile));
    addField("cursorColor",   TypeColorI,     Offset(mCursorColor, GuiControlProfile));
 
    addField("bitmap",        TypeFilename,   Offset(mBitmapName, GuiControlProfile));

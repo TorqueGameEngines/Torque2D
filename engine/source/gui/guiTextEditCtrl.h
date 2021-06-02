@@ -39,18 +39,30 @@ private:
 
 protected:
 
-	S32 mMaxStrLen;   // max string len, must be less then or equal to 255
-	bool     mTruncateWhenUnfocused;
+	S32 mMaxStrLen; 
    StringBuffer mTextBuffer;
 
    StringTableEntry mValidateCommand;
    StringTableEntry mEscapeCommand;
-   AssetPtr<AudioAsset>  mDeniedSound;
+
+public:
+   //input mode
+   enum InputMode
+   {
+		AllText = 0,
+		Decimal,
+		Number,
+		Alpha,
+		AlphaNumeric
+   };
+
+protected:
+   InputMode mInputMode;
+   bool mReturnCausesTab;
 
    // for animating the cursor
    S32      mNumFramesElapsed;
    U32      mTimeLastCursorFlipped;
-   ColorI   mCursorColor;
    bool     mCursorOn;
 
    //Edit Cursor
@@ -61,7 +73,6 @@ protected:
    Point2I  mTextOffset;
    bool     mTextOffsetReset;
    bool     mDragHit;
-   bool     mTabComplete;
    S32      mScrollDir;
 
    //undo members
@@ -80,6 +91,7 @@ protected:
    S32                  mHistoryLast;
    S32                  mHistoryIndex;
    S32                  mHistorySize;
+
    bool                 mPasswordText;
    StringTableEntry     mPasswordMask;
 
@@ -104,8 +116,8 @@ public:
 
    /// Get the contents of the control.
    ///
-   /// dest should be of size GuiTextCtrl::MAX_STRING_LENGTH+1.
-   void getText(char *dest);
+   /// dest should be of size GuiTextEditCtrl::MAX_STRING_LENGTH+1.
+   virtual void getText(char *dest);
 
    virtual void setText(const UTF8* txt);
    virtual void setText(const UTF16* txt);
@@ -115,7 +127,7 @@ public:
    void  reallySetCursorPos( const S32 newPos );
    
    void selectAllText();
-   void forceValidateText();
+   bool validate();
    const char *getScriptValue();
    void setScriptValue(const char *value);
 
@@ -140,10 +152,54 @@ public:
    void onRender(Point2I offset, const RectI &updateRect);
    virtual void drawText( const RectI &drawRect, GuiControlState currentState );
 	
-	void playDeniedSound();
+	bool inputModeValidate(const U16 key, S32 cursorPos);
+	void keyDenied();
 	void execConsoleCallback();
 
+	inline void setValidateCommand(const char *newCmd) { mValidateCommand = newCmd ? StringTable->insert(newCmd) : StringTable->EmptyString; }
+	inline const char * getValidateCommand() { return mValidateCommand; }
+
+	inline void setEscapeCommand(const char *newCmd) { mEscapeCommand = newCmd ? StringTable->insert(newCmd) : StringTable->EmptyString; }
+	inline const char * getEscapeCommand() { return mEscapeCommand; }
+
+	inline void setReturnCausesTab(bool setting) { mReturnCausesTab = setting; }
+	inline bool getReturnCausesTab() { return mReturnCausesTab; }
+
+	inline void setSinkAllKeyEvents(bool setting) { mSinkAllKeyEvents = setting; }
+	inline bool getSinkAllKeyEvents() { return mSinkAllKeyEvents; }
+
+	inline void setIsPassword(bool setting) { mPasswordText = setting; }
+	inline bool getIsPassword() { return mPasswordText; }
+
+	void setMaxLength(S32 max);
+	inline S32 getMaxLength() { return mMaxStrLen; }
+	static bool setMaxLengthProperty(void* obj, const char* data) { static_cast<GuiTextEditCtrl*>(obj)->setMaxLength(dAtoi(data)); return true; }
+
+	void setInputMode(const InputMode mode);
+	inline InputMode getInputMode() { return mInputMode; }
+	static bool setInputMode(void* obj, const char* data)
+	{
+		// Fetch body type.
+		const InputMode mode = getInputModeEnum(data);
+
+		// Check for error.
+		if (mode < AllText || mode > AlphaNumeric)
+			return false;
+
+		static_cast<GuiTextEditCtrl*>(obj)->setInputMode(mode);
+		return true;
+	}
+	static const char* getInputMode(void* obj, const char* data) { return getInputModeDescription(static_cast<GuiTextEditCtrl*>(obj)->getInputMode()); }
+	static bool writeInputMode(void* obj, StringTableEntry pFieldName) { return static_cast<GuiTextEditCtrl*>(obj)->getInputMode() != AllText; }
+	static InputMode getInputModeEnum(const char* label);
+	static const char* getInputModeDescription(const InputMode mode);
+
 	enum Constants { MAX_STRING_LENGTH = 1024 };
+
+private:
+	bool tabNext();
+	bool tabPrev();
+	void handleBackSpace();
 };
 
 #endif //_GUI_TEXTEDIT_CTRL_H

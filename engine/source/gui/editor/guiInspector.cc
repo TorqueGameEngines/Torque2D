@@ -537,7 +537,6 @@ GuiControl* GuiInspectorField::constructEditControl(S32 width)
    char szBuffer[512];
    dSprintf( szBuffer, 512, "%d.apply(%d.getText());",getId(), retCtrl->getId() );
    retCtrl->setField("AltCommand", szBuffer );
-   retCtrl->setField("Validate", szBuffer );
    retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
 
    return retCtrl;
@@ -1126,12 +1125,11 @@ void GuiInspectorDynamicField::renameField( StringTableEntry newFieldName )
    // Assign our dynamic field pointer (where we retrieve field information from) to our new field pointer
    mDynField = newEntry;
 
-   // Lastly we need to reassign our Command and AltCommand fields for our value edit control
+   // Lastly we need to reassign our AltCommand fields for our value edit control
    char szBuffer[512];
    dSprintf( szBuffer, 512, "%d.%s = %d.getText();",mTarget->getId(), getFieldName(), mEdit->getId() );
    mEdit->setExtent(Point2I((getExtent().x / 2) - 20, 30));
    mEdit->setField("AltCommand", szBuffer );
-   mEdit->setField("Validate", szBuffer );
 }
 
 ConsoleMethod( GuiInspectorDynamicField, renameField, void, 3,3, "field.renameField(newDynamicFieldName);" )
@@ -1178,7 +1176,6 @@ GuiControl* GuiInspectorDynamicField::constructRenameControl()
    dynamic_cast<GuiTextEditCtrl*>(retCtrl)->setText( getFieldName() );
    retCtrl->setExtent(Point2I((getExtent().x / 2) - 20, 30));
    retCtrl->setField("AltCommand", szBuffer );
-   retCtrl->setField("Validate", szBuffer);
    addObject( retCtrl );
 
 

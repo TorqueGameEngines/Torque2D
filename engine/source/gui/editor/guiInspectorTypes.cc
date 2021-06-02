@@ -295,7 +295,6 @@ GuiControl* GuiInspectorTypeFileName::constructEditControl(S32 width)
    char szBuffer[512];
    dSprintf( szBuffer, 512, "%d.apply(%d.getText());",getId(),retCtrl->getId() );
    retCtrl->setField("AltCommand", szBuffer );
-   retCtrl->setField("Validate", szBuffer );
    retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - (mGroup->mInspector->mControlOffset.x + 34), 30));
 
    mBrowseButton = new GuiButtonCtrl();
