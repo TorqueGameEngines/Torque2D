@@ -80,6 +80,7 @@ function AssetInspector::onAdd(%this)
 	ThemeManager.setProfile(%this.inspector, "scrollingPanelArrowProfile", "ArrowProfile");
 	ThemeManager.setProfile(%this.inspector, "checkboxProfile", "checkboxProfile");
 	ThemeManager.setProfile(%this.inspector, "buttonProfile", "buttonProfile");
+	ThemeManager.setProfile(%this.inspector, "tipProfile", "tooltipProfile");
 	%this.insScroller.add(%this.inspector);
 	$ins = %this.inspector;
 }

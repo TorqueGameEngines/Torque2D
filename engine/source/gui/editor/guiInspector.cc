@@ -575,6 +575,18 @@ bool GuiInspectorField::onAdd()
 	Point2I outerExt = getOuterExtent(innerRect.extent, NormalState, mProfile);
 	mBounds.extent.y = outerExt.y;
 
+	//Set the tool tip if possible
+	if (mField->pFieldDocs != NULL)
+	{
+		mEdit->setField("tooltip", mField->pFieldDocs);
+		if (mGroup->mInspector->mTooltipProfile != NULL)
+		{
+			char buffer[256];
+			dSprintf(buffer, sizeof(buffer), "%d", mGroup->mInspector->mTooltipProfile->getId());
+			mEdit->setField("tooltipProfile", buffer);
+		}
+	}
+
 	addObject( mEdit );
 
 	// Force our editField to set it's value

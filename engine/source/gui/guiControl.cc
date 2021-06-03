@@ -578,7 +578,7 @@ bool GuiControl::renderTooltip(Point2I cursorPos, const char* tipText )
         return false;
 
     if (!mTooltipProfile)
-        mTooltipProfile = mProfile;
+		setField("TooltipProfile", "GuiTooltipProfile");
 
     GFont *font = mTooltipProfile->mFont;
    
@@ -917,6 +917,9 @@ bool GuiControl::onWake()
    if( isMethod("onWake") )
       Con::executef(this, 1, "onWake");
 
+   if (mTooltipProfile != NULL)
+	   mTooltipProfile->incRefCount();
+
    return true;
 }
 
@@ -936,6 +939,9 @@ void GuiControl::onSleep()
    // This will suppress warnings
    if( isMethod("onSleep") )
       Con::executef(this, 1, "onSleep");
+
+   if (mTooltipProfile != NULL)
+	   mTooltipProfile->decRefCount();
 
    // Set Flag
    mAwake = false;
