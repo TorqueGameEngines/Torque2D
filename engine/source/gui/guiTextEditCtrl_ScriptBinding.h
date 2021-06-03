@@ -65,18 +65,18 @@ ConsoleMethodWithDocs(GuiTextEditCtrl, selectAllText, ConsoleVoid, 2, 2, "()")
 /*! Calls the validation function for the control. This is depreciated. Please use validate() instead.
 	@return No return value.
 */
-ConsoleMethodWithDocs(GuiTextEditCtrl, forceValidateText, ConsoleVoid, 2, 2, "()")
+ConsoleMethodWithDocs(GuiTextEditCtrl, forceValidateText, ConsoleBool, 2, 2, "()")
 {
 	Con::warnf("GuiTextEditCtrl::forceValidateText() is depreciated. Please use GuiTextEditCtrl::validate() instead.");
-	object->validate();
+	return object->validate();
 }
 
 /*! Calls the validation function for the control.
 	@return No return value.
 */
-ConsoleMethodWithDocs(GuiTextEditCtrl, validate, ConsoleVoid, 2, 2, "()")
+ConsoleMethodWithDocs(GuiTextEditCtrl, validate, ConsoleBool, 2, 2, "()")
 {
-	object->validate();
+	return object->validate();
 }
 
 /*! Sets the returnCausesTab flag. If true, the pressing enter will attempt to tab to the next control. False will keep the focus in this control.

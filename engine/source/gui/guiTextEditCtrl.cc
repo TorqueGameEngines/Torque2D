@@ -67,7 +67,6 @@ GuiTextEditCtrl::GuiTextEditCtrl()
    mHistoryIndex = 0;
    mHistoryBuf = NULL;
 
-   mValidateCommand = StringTable->EmptyString;
    mEscapeCommand = StringTable->EmptyString;
    mPasswordMask = StringTable->insert( "*" );
 
@@ -110,7 +109,6 @@ void GuiTextEditCtrl::initPersistFields()
    addDepricatedField("tabComplete");
 
    addGroup("Text Edit");
-   addField("validateCommand",   TypeString,    Offset(mValidateCommand,   GuiTextEditCtrl));
    addField("escapeCommand",     TypeString,    Offset(mEscapeCommand,     GuiTextEditCtrl));
    addField("sinkAllKeyEvents",  TypeBool,      Offset(mSinkAllKeyEvents,  GuiTextEditCtrl));
    addField("password", TypeBool, Offset(mPasswordText, GuiTextEditCtrl));
@@ -335,13 +333,9 @@ void GuiTextEditCtrl::selectAllText()
 bool GuiTextEditCtrl::validate()
 {
 	bool valid = true;
-	if ( mValidateCommand[0] )
+	if (isMethod("onValidate"))
 	{
-		valid = Con::evaluate( mValidateCommand, false );
-	}
-	else if (isMethod("onValidate"))
-	{
-		valid = Con::executef(this, 2, "onValidate");
+		valid = dAtob(Con::executef(this, 2, "onValidate"));
 	}
 	return valid;
 }
@@ -635,8 +629,6 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
         switch (event.keyCode)
         {
             case KEY_TAB:
-				if (isMethod("onTab"))
-					Con::executef(this, 2, "onTab", "1");
                return tabPrev();
 
             case KEY_HOME:

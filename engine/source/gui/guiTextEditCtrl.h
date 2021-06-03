@@ -42,7 +42,6 @@ protected:
 	S32 mMaxStrLen; 
    StringBuffer mTextBuffer;
 
-   StringTableEntry mValidateCommand;
    StringTableEntry mEscapeCommand;
 
 public:
@@ -155,9 +154,6 @@ public:
 	bool inputModeValidate(const U16 key, S32 cursorPos);
 	void keyDenied();
 	void execConsoleCallback();
-
-	inline void setValidateCommand(const char *newCmd) { mValidateCommand = newCmd ? StringTable->insert(newCmd) : StringTable->EmptyString; }
-	inline const char * getValidateCommand() { return mValidateCommand; }
 
 	inline void setEscapeCommand(const char *newCmd) { mEscapeCommand = newCmd ? StringTable->insert(newCmd) : StringTable->EmptyString; }
 	inline const char * getEscapeCommand() { return mEscapeCommand; }
