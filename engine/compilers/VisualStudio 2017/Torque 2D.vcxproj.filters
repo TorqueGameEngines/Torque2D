@@ -465,9 +465,6 @@
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc">
       <Filter>gui\buttons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
@@ -482,9 +479,6 @@
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc">
       <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiControlListPopup.cc">
-      <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiDebugger.cc">
       <Filter>gui\editor</Filter>
@@ -738,9 +732,6 @@
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiCanvas.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -777,12 +768,6 @@
     <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrlEx.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -793,9 +778,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc">
@@ -1764,9 +1746,6 @@
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h">
       <Filter>gui\buttons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
@@ -2079,9 +2058,6 @@
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiCanvas.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -2118,12 +2094,6 @@
     <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrlEx.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -2134,9 +2104,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTextListCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h">
