@@ -50,14 +50,17 @@ GuiControl* GuiInspectorTypeEnum::constructEditControl(S32 width)
 
    // Configure it to update our value when the popup is closed
    char szBuffer[512];
-   dSprintf( szBuffer, 512, "%d.%s = %d.getText();%d.inspect(%d);",mTarget->getId(), mField->pFieldname, retCtrl->getId(), mGroup->mInspector->getId(), mTarget->getId() );
+   dSprintf( szBuffer, 512, "%d.%s = %d.getText();",mTarget->getId(), mField->pFieldname, retCtrl->getId() );
    retCtrl->setField("Command", szBuffer );
    retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
 
    //now add the entries
+   GuiListBoxCtrl* list = retCtrl->getList();
+   EnumTable::Enums* table = mField->table->table;
    for(S32 i = 0; i < mField->table->size; i++)
-	   retCtrl->getList()->addItemWithID(mField->table->table[i].label, mField->table->table[i].index);
-   
+   {
+	   list->addItemWithID(table[i].label, table[i].index);
+   }
    retCtrl->setField("text", getData());
 
    return retCtrl;
