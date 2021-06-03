@@ -29,7 +29,6 @@
 #include "io/fileStream.h"
 #include "gui/containers/guiScrollCtrl.h"
 #include "gui/editor/guiEditCtrl.h"
-#include "gui/guiPopUpCtrl.h"
 #include "gui/guiDefaultControlRender.h"
 
 #include "guiTabBookCtrl_ScriptBinding.h"

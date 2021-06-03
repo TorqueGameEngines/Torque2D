@@ -26,8 +26,8 @@
 #ifndef _GUITYPES_H_
 #include "gui/guiTypes.h"
 #endif
-#ifndef _GUITEXTCTRL_H_
-#include "gui/guiTextCtrl.h"
+#ifndef _GUISCROLLCTRL_H_
+#include "gui/containers/guiScrollCtrl.h"
 #endif
 
 /// Renders a grid of cells. Gives common functionality to a few controls that inherit from it, but has no conObject.
