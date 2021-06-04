@@ -92,6 +92,8 @@ function AssetDictionaryButton::onClick(%this)
 		AssetAdmin.AssetWindow.displayImageAsset(%this.ImageAsset, %this.ImageAssetID);
 		AssetAdmin.inspector.loadImageAsset(%this.ImageAsset, %this.ImageAssetID);
 	}
+
+	AssetAdmin.chosenButton = %this;
 }
 
 function AssetDictionaryButton::onRemove(%this)

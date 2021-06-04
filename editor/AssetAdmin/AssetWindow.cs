@@ -152,4 +152,9 @@ function AssetWindow::onExtentChange(%this, %d)
 	}
 	%area = %topLeft SPC %bottomRight;
 	%this.setCameraArea(%area);
+
+	if(isObject(AssetAdmin.chosenButton))
+	{
+		AssetAdmin.chosenButton.onClick();
+	}
 }

@@ -33,6 +33,8 @@ function AssetAdmin::create(%this)
 	%this.guiPage.add(%this.buildInspector());
 
 	EditorCore.FinishRegistration(%this.guiPage);
+
+	%this.isOpen = false;
 }
 
 function AssetAdmin::buildLibrary(%this)
@@ -57,8 +59,8 @@ function AssetAdmin::buildLibrary(%this)
 
 	%this.dictionaryList = new GuiChainCtrl()
 	{
-		HorizSizing="bottom";
-		VertSizing="right";
+		HorizSizing="right";
+		VertSizing="bottom";
 		Position="0 0";
 		Extent="310 768";
 		MinExtent="220 200";
@@ -79,8 +81,8 @@ function AssetAdmin::buildDictionary(%this, %title, %type)
 		Class = AssetDictionary;
 		Text=%title;
 		command="";
-		HorizSizing="bottom";
-		VertSizing="right";
+		HorizSizing="right";
+		VertSizing="bottom";
 		Position="0 0";
 		Extent="310 22";
 		MinExtent="80 22";
@@ -121,7 +123,7 @@ function AssetAdmin::buildAssetWindow(%this)
 		extent = "700 444";
 		HorizSizing="width";
 		VertSizing="height";
-		minExtent = "175 111";
+		minExtent = "0 0";
 		cameraPosition = "0 0";
 		cameraSize = "175 111";
 		useWindowInputEvents = false;
@@ -143,6 +145,7 @@ function AssetAdmin::open(%this)
 	%this.Dictionary["AnimationAsset"].load();
 
 	%this.assetScene.setScenePause(false);
+	%this.isOpen = true;
 }
 
 function AssetAdmin::close(%this)
@@ -151,4 +154,13 @@ function AssetAdmin::close(%this)
 	%this.Dictionary["AnimationAsset"].unload();
 
 	%this.assetScene.setScenePause(true);
+	%this.isOpen = false;
+}
+
+function AssetBase::onRefresh(%this)
+{
+	if(AssetAdmin.isOpen  && isObject(AssetAdmin.chosenButton))
+	{
+		AssetAdmin.chosenButton.onClick();
+	}
 }

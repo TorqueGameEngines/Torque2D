@@ -576,7 +576,7 @@ bool GuiInspectorField::onAdd()
 	mBounds.extent.y = outerExt.y;
 
 	//Set the tool tip if possible
-	if (mField->pFieldDocs != NULL)
+	if (mField != NULL && mField->pFieldDocs != NULL)
 	{
 		mEdit->setField("tooltip", mField->pFieldDocs);
 		if (mGroup->mInspector->mTooltipProfile != NULL)
