@@ -195,6 +195,8 @@ protected:
     S32 mHorizSizing;      ///< Set from horizSizingOptions.
     S32 mVertSizing;       ///< Set from vertSizingOptions.
 
+	Point2I mStoredExtent; //Used in conjunction with the min extent.
+
     StringTableEntry	mConsoleVariable;
     StringTableEntry	mConsoleCommand;
     StringTableEntry	mAltConsoleCommand;
@@ -309,8 +311,12 @@ public:
 	virtual const char*      getText();
 
 	// Text Property Accessors
-	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return true; }
+	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return false; }
 	static const char* getTextProperty(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getText(); }
+
+	static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); return false; }
+	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); return false; }
+	static bool writeMinExtentFn(void* obj,  const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mMinExtent.x != 0 || ctrl->mMinExtent.y != 0; }
 
     /// @}
 
@@ -731,6 +737,12 @@ public:
 
     virtual void inspectPostApply();
     virtual void inspectPreApply();
+
+	//Stores or spends stored extent
+	Point2I extentBattery(Point2I &newExtent);
+
+	//Expells all stored extent
+	inline void resetStoredExtent() { mStoredExtent.set(0,0); }
 
 protected:
 	virtual void interpolateTick(F32 delta) {};

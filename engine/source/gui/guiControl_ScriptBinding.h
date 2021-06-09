@@ -278,6 +278,7 @@ ConsoleMethodWithDocs( GuiControl, setExtent, ConsoleVoid, 4, 4, (int width, int
 {
    Point2I kExt(dAtoi(argv[2]), dAtoi(argv[3]));
    object->setExtent(kExt);
+   object->resetStoredExtent();
 }
 
 /*! Get the minimum allowed size of the control.
