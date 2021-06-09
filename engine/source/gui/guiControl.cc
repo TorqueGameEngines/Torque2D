@@ -1777,7 +1777,7 @@ const char* GuiControl::execAltConsoleCallback()
 
 void GuiControl::setText(const char *text)
 {
-	mText = StringTable->insert(text);
+	mText = StringTable->insert(text, true);
 }
 
 void GuiControl::setTextID(const char *id)

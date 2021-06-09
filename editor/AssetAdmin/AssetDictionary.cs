@@ -54,6 +54,7 @@ function AssetDictionary::load(%this)
 				Class = AssetDictionaryButton;
 				HorizSizing="center";
 				VertSizing="center";
+				Extent = "100 100";
 				Tooltip = AssetDatabase.getAssetName(%assetID);
 				Text = "";
 				AssetID = %assetID;

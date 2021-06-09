@@ -5,4 +5,9 @@
 	Description="Provides controls to view and edit assets."
 	ScriptFile="AssetAdmin.cs"
 	CreateFunction="create"
-	DestroyFunction="destroy" />
+	DestroyFunction="destroy">
+		<DeclaredAssets
+			Path="images"
+			Extension="asset.taml"
+			Recurse="true"/>
+</ModuleDefinition>

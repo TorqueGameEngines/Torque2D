@@ -272,27 +272,7 @@ function BaseTheme::makePanelProfile(%this)
 
 function BaseTheme::makeItemSelectProfile(%this)
 {
-	%buttonBorderV = new GuiBorderProfile()
-	{
-		padding = %this.borderSize;
-		paddingHL = 0;
-		paddingSL = 0;
-		paddingNA = %this.borderSize;
-
-		border = 0;
-		borderHL = %this.borderSize;
-		borderSL = %this.borderSize;
-		borderNA = 0;
-
-		borderColor = "0 0 0 0";
-		borderColorHL = %this.setAlpha(%this.adjustValue(%this.color2, 10), 170);
-		borderColorSL = %this.setAlpha(%this.adjustValue(%this.color5, 10), 170);
-		borderColorNA = "0 0 0 0";
-
-		underfill = false;
-	};
-
-	%buttonBorderH = new GuiBorderProfile()
+	%buttonBorder = new GuiBorderProfile()
 	{
 		padding = %this.borderSize;
 		paddingHL = 0;
@@ -324,13 +304,50 @@ function BaseTheme::makeItemSelectProfile(%this)
 		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
-		fontColorSL = "0 0 0 255";
+		fontColorSL = %this.color1;
 		fontColorNA = %this.setAlpha(%this.color4, 100);
 		align = Center;
 
-		borderDefault = %buttonBorderV;
-		borderRight = %buttonBorderH;
-		borderLeft = %buttonBorderH;
+		borderDefault = %buttonBorder;
+	};
+
+	%buttonBorder = new GuiBorderProfile()
+	{
+		padding = 0;
+		paddingHL = 0;
+		paddingSL = 0;
+		paddingNA = 0;
+
+		border = %this.borderSize;
+		borderHL = %this.borderSize;
+		borderSL = %this.borderSize;
+		borderNA = %this.borderSize;
+
+		borderColor = %this.setAlpha(%this.adjustValue(%this.color5, 10), 170);
+		borderColorHL = %this.setAlpha(%this.adjustValue(%this.color5, 15), 170);
+		borderColorSL = %this.setAlpha(%this.adjustValue(%this.color5, 10), 130);
+		borderColorNA = "0 0 0 0";
+
+		underfill = false;
+	};
+
+	%this.itemSelectedProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color3;
+		fillColorHL = %this.adjustValue(%this.color3, 10);
+		fillColorSL = %this.color3;
+		fillColorNA = %this.setAlpha(%this.color2, 80);
+
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.setAlpha(%this.color4, 100);
+		align = Center;
+
+		borderDefault = %buttonBorder;
 	};
 }
 

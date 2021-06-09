@@ -1,0 +1,8 @@
+<ImageAsset
+    AssetName="assetIcons"
+    ImageFile="assetIcons.png"
+    CellCountX="2"
+    CellCountY="2"
+    CellWidth="64"
+    CellHeight="64"
+	AssetInternal="1" />

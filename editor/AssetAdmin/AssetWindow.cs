@@ -29,6 +29,7 @@ function AssetWindow::displayImageAsset(%this, %imageAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
+	%this.setCameraZoom(1);
 	if(!%imageAsset.getExplicitMode() && %imageAsset.getFrameCount() == 1)
 	{
 		%size = %this.getWorldSize(%imageAsset.getFrameSize(0));
@@ -88,6 +89,7 @@ function AssetWindow::displayAnimationAsset(%this, %imageAsset, %animationAsset,
 {
 	AssetAdmin.AssetScene.clear(true);
 
+	%this.setCameraZoom(1);
 	%size = %this.getWorldSize(%imageAsset.getFrameSize(0));
 	new Sprite()
 	{
@@ -99,6 +101,66 @@ function AssetWindow::displayAnimationAsset(%this, %imageAsset, %animationAsset,
 		Position = "0 0";
 		BodyType = static;
 	};
+}
+
+function AssetWindow::displayParticleAsset(%this, %particleAsset, %assetID)
+{
+	AssetAdmin.AssetScene.clear(true);
+
+	%this.setCameraZoom(5);
+	new ParticlePlayer()
+	{
+		Scene = AssetAdmin.AssetScene;
+		Particle = %assetID;
+		size = "10 10";
+		BlandColor = "1 1 1 1";
+		SceneLayer = 1;
+		Position = "0 0";
+		BodyType = static;
+	};
+}
+
+function AssetWindow::displayFontAsset(%this, %fontAsset, %assetID)
+{
+	AssetAdmin.AssetScene.clear(true);
+
+	%this.setCameraZoom(1);
+	%size = %this.getWorldSize("10 10");
+	new TextSprite()
+	{
+		Scene = AssetAdmin.AssetScene;
+		Font = %assetID;
+		fontSize = 4;
+		size = %size;
+		BlandColor = "1 1 1 1";
+		SceneLayer = 1;
+		Position = "0 0";
+		BodyType = static;
+		Text = "A B C D E F G H I J K L M N O P Q R S T U V W X Y Z a b c d e f g h i j k l m n o p q r s t u v w x y z 0 1 2 3 4 5 6 7 8 9";
+		OverflowModeY = "Visible";
+		OverflowModeX = "Wrap";
+		TextAlignment = "center";
+		TextVAlignment = "middle";
+	};
+}
+
+function AssetWindow::displayAudioAsset(%this, %audioAsset, %assetID)
+{
+	AssetAdmin.AssetScene.clear(true);
+
+	AssetAdmin.audioPlayButton.setVisible(true);
+	AssetAdmin.AssetWindow.setVisible(false);
+
+	AssetAdmin.audioPlayButton.resetSound();
+	AssetAdmin.audioPlayButton.assetID = %assetID;
+	AssetAdmin.audioPlayButton.asset = %audioAsset;
+	AssetAdmin.audioPlayButton.onClick();
+}
+
+function AssetWindow::displaySpineAsset(%this, %spineAsset, %assetID)
+{
+	AssetAdmin.AssetScene.clear(true);
+	//good luck!
 }
 
 function AssetWindow::getWorldSize(%this, %size)

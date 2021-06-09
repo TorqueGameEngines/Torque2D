@@ -26,9 +26,11 @@ function AssetAdmin::create(%this)
 	exec("./AssetWindow.cs");
 	exec("./AssetDictionaryButton.cs");
 	exec("./AssetInspector.cs");
+	exec("./AssetAudioPlayButton.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
 	%this.guiPage.add(%this.buildAssetWindow());
+	%this.guiPage.add(%this.buildAudioPlayButton());
 	%this.guiPage.add(%this.buildLibrary());
 	%this.guiPage.add(%this.buildInspector());
 
@@ -70,6 +72,10 @@ function AssetAdmin::buildLibrary(%this)
 
 	%this.dictionaryList.add(%this.buildDictionary("Images", "ImageAsset"));
 	%this.dictionaryList.add(%this.buildDictionary("Animations", "AnimationAsset"));
+	%this.dictionaryList.add(%this.buildDictionary("Particle Effects", "ParticleAsset"));
+	%this.dictionaryList.add(%this.buildDictionary("Fonts", "FontAsset"));
+	%this.dictionaryList.add(%this.buildDictionary("Audio", "AudioAsset"));
+	//%this.dictionaryList.add(%this.buildDictionary("Spines", "SpineAsset"));
 
 	return %this.libScroller;
 }
@@ -134,6 +140,32 @@ function AssetAdmin::buildAssetWindow(%this)
 	return %this.assetWindow;
 }
 
+function AssetAdmin::buildAudioPlayButton(%this)
+{
+	%container = new GuiControl()
+	{
+		position = "0 0";
+		extent = "700 444";
+		HorizSizing="width";
+		VertSizing="height";
+	};
+	ThemeManager.setProfile(%container, "emptyProfile");
+
+	%this.audioPlayButton = new GuiButtonCtrl()
+	{
+		class="AssetAudioPlayButton";
+		HorizSizing="center";
+		VertSizing="center";
+		Extent="100 48";
+		Visible="0";
+		Text = "Play";
+	};
+	ThemeManager.setProfile(%this.audioPlayButton, "buttonProfile");
+	%container.add(%this.audioPlayButton);
+
+	return %container;
+}
+
 function AssetAdmin::destroy(%this)
 {
 
@@ -143,6 +175,10 @@ function AssetAdmin::open(%this)
 {
 	%this.Dictionary["ImageAsset"].load();
 	%this.Dictionary["AnimationAsset"].load();
+	%this.Dictionary["ParticleAsset"].load();
+	%this.Dictionary["FontAsset"].load();
+	%this.Dictionary["AudioAsset"].load();
+	//%this.Dictionary["SpineAsset"].load();
 
 	%this.assetScene.setScenePause(false);
 	%this.isOpen = true;
@@ -152,6 +188,10 @@ function AssetAdmin::close(%this)
 {
 	%this.Dictionary["ImageAsset"].unload();
 	%this.Dictionary["AnimationAsset"].unload();
+	%this.Dictionary["ParticleAsset"].unload();
+	%this.Dictionary["FontAsset"].unload();
+	%this.Dictionary["AudioAsset"].unload();
+	//%this.Dictionary["SpineAsset"].unload();
 
 	%this.assetScene.setScenePause(true);
 	%this.isOpen = false;

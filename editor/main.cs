@@ -21,6 +21,7 @@
 //-----------------------------------------------------------------------------
 
 new ModuleManager(EditorManager);
+EditorManager.addListener(AssetDatabase);
 
 // Scans for the modules that make up the editors.
 EditorManager.scanModules( "." );

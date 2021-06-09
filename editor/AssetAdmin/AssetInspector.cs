@@ -29,7 +29,7 @@ function AssetInspector::onAdd(%this)
 		Position="0 0";
 		Extent="700 34";
 		MinExtent="350 34";
-		Text = "Image Asset";
+		Text = "";
 	};
 	ThemeManager.setProfile(%this.titlebar, "panelProfile");
 	%this.add(%this.titlebar);
@@ -87,6 +87,7 @@ function AssetInspector::onAdd(%this)
 
 function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 {
+	%this.titlebar.setText("Image Asset");
 	%this.inspector.clearHiddenFields();
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
@@ -96,9 +97,50 @@ function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 
 function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)
 {
+	%this.titlebar.setText("Animation Asset");
 	%this.inspector.clearHiddenFields();
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
 	%this.inspector.addHiddenField("AssetInternal");
 	%this.inspector.inspect(%animationAsset);
+}
+
+function AssetInspector::loadParticleAsset(%this, %particleAsset, %assetID)
+{
+	%this.titlebar.setText("Particle Asset");
+	%this.inspector.clearHiddenFields();
+	%this.inspector.addHiddenField("hidden");
+	%this.inspector.addHiddenField("locked");
+	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.inspect(%particleAsset);
+}
+
+function AssetInspector::loadFontAsset(%this, %fontAsset, %assetID)
+{
+	%this.titlebar.setText("Font Asset");
+	%this.inspector.clearHiddenFields();
+	%this.inspector.addHiddenField("hidden");
+	%this.inspector.addHiddenField("locked");
+	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.inspect(%fontAsset);
+}
+
+function AssetInspector::loadAudioAsset(%this, %audioAsset, %assetID)
+{
+	%this.titlebar.setText("Audio Asset");
+	%this.inspector.clearHiddenFields();
+	%this.inspector.addHiddenField("hidden");
+	%this.inspector.addHiddenField("locked");
+	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.inspect(%audioAsset);
+}
+
+function AssetInspector::loadSpineAsset(%this, %spineAsset, %assetID)
+{
+	%this.titlebar.setText("Spine Asset");
+	%this.inspector.clearHiddenFields();
+	%this.inspector.addHiddenField("hidden");
+	%this.inspector.addHiddenField("locked");
+	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.inspect(%spineAsset);
 }
