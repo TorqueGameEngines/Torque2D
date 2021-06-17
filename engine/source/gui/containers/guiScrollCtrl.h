@@ -114,8 +114,9 @@ protected:
 
 	virtual void calcContentExtents();
    virtual bool calcChildExtents();
-   virtual void calcScrollRects(void);
-   void calcThumbs();
+   virtual void calcScrollRects(RectI &fillRect);
+   virtual void calcThumbs();
+   virtual void calcScrollOffset();
 
    //--------------------------------------
 
@@ -124,50 +125,51 @@ protected:
 public:
    GuiScrollCtrl();
    DECLARE_CONOBJECT(GuiScrollCtrl);
-   void scrollByRegion(Region reg);
+   
    static void initPersistFields();
 
-   void scrollTo(S32 x, S32 y);
-   void scrollDelta(S32 x, S32 y);
-   void scrollRectVisible(RectI rect);
+   virtual void scrollTo(S32 x, S32 y);
+   virtual void scrollDelta(S32 x, S32 y);
+   virtual void scrollRectVisible(RectI rect);
+   virtual void scrollByRegion(Region reg);
 
-   void computeSizes();
+   virtual void computeSizes();
 
-   void addObject(SimObject *obj);
-   void resize(const Point2I &newPosition, const Point2I &newExtent);
-   void childResized(GuiControl *child);
-   S32 scrollBarThickness() const                        { return(mScrollBarThickness); }
-   bool hasHScrollBar() const                            { return(mHasHScrollBar); }
-   bool hasVScrollBar() const                            { return(mHasVScrollBar); }
-   bool enabledHScrollBar() const                        { return(mHBarEnabled); }
-   bool enabledVScrollBar() const                        { return(mVBarEnabled); }
+   virtual void addObject(SimObject *obj);
+   virtual void resize(const Point2I &newPosition, const Point2I &newExtent);
+   virtual void childResized(GuiControl *child);
+   virtual S32 scrollBarThickness() const                        { return(mScrollBarThickness); }
+   virtual bool hasHScrollBar() const                            { return(mHasHScrollBar); }
+   virtual bool hasVScrollBar() const                            { return(mHasVScrollBar); }
+   virtual bool enabledHScrollBar() const                        { return(mHBarEnabled); }
+   virtual bool enabledVScrollBar() const                        { return(mVBarEnabled); }
 
-   bool isScrolledToBottom() { return mChildExt.y <= mScrollOffset.y + mContentExt.y; }
+   virtual bool isScrolledToBottom() { return mChildExt.y <= mScrollOffset.y + mContentExt.y; }
 
-   Region getCurHitRegion(void) { return curHitRegion; }
+   virtual Region getCurHitRegion(void) { return curHitRegion; }
 
-   void onTouchMove(const GuiEvent &event);
-   bool onKeyDown(const GuiEvent &event);
-   void onTouchDown(const GuiEvent &event);
-   void onTouchUp(const GuiEvent &event);
-   void onTouchDragged(const GuiEvent &event);
-   void onTouchLeave(const GuiEvent &event);
-   bool onMouseWheelUp(const GuiEvent &event);
-   bool onMouseWheelDown(const GuiEvent &event);
+   virtual void onTouchMove(const GuiEvent &event);
+   virtual bool onKeyDown(const GuiEvent &event);
+   virtual void onTouchDown(const GuiEvent &event);
+   virtual void onTouchUp(const GuiEvent &event);
+   virtual void onTouchDragged(const GuiEvent &event);
+   virtual void onTouchLeave(const GuiEvent &event);
+   virtual bool onMouseWheelUp(const GuiEvent &event);
+   virtual bool onMouseWheelDown(const GuiEvent &event);
 
-   bool onWake();
-   void onSleep();
-   void setControlThumbProfile(GuiControlProfile* prof);
-   void setControlTrackProfile(GuiControlProfile* prof);
-   void setControlArrowProfile(GuiControlProfile* prof);
+   virtual bool onWake();
+   virtual void onSleep();
+   virtual void setControlThumbProfile(GuiControlProfile* prof);
+   virtual void setControlTrackProfile(GuiControlProfile* prof);
+   virtual void setControlArrowProfile(GuiControlProfile* prof);
 
-   void onPreRender();
-   void onRender(Point2I offset, const RectI &updateRect);
-   RectI applyScrollBarSpacing(Point2I offset, Point2I extent);
-   GuiControlState getRegionCurrentState(GuiScrollCtrl::Region region);
-   void renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile* profile, GuiControlState state, GuiDirection direction);
-   void renderVScrollBar(const Point2I& offset);
-   void renderHScrollBar(const Point2I& offset);
+   virtual void onPreRender();
+   virtual void onRender(Point2I offset, const RectI &updateRect);
+   virtual RectI applyScrollBarSpacing(Point2I offset, Point2I extent);
+   virtual GuiControlState getRegionCurrentState(GuiScrollCtrl::Region region);
+   virtual void renderBorderedRectWithArrow(RectI& bounds, GuiControlProfile* profile, GuiControlState state, GuiDirection direction);
+   virtual void renderVScrollBar(const Point2I& offset);
+   virtual void renderHScrollBar(const Point2I& offset);
    virtual GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1);
    virtual void renderChildControls(Point2I offset, RectI content, const RectI& updateRect);
 };

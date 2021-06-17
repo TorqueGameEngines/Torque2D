@@ -132,24 +132,34 @@ function AssetAdmin::buildAssetWindow(%this)
 		minExtent = "0 0";
 		cameraPosition = "0 0";
 		cameraSize = "175 111";
-		useWindowInputEvents = false;
+		useWindowInputEvents = true;
 		useObjectInputEvents = true;
+		constantThumbHeight = false;
+		scrollBarThickness = 14;
+		 showArrowButtons = false;
 	};
+	ThemeManager.setProfile(%this.assetWindow, "thumbProfile", ThumbProfile);
+	ThemeManager.setProfile(%this.assetWindow, "trackProfile", TrackProfile);
+	ThemeManager.setProfile(%this.assetWindow, "scrollArrowProfile", ArrowProfile);
+
 	%this.assetWindow.setScene(%this.assetScene);
+	%this.assetWindow.setViewLimitOn("-87.5 -55.5 87.5 55.5");
+	%this.assetWindow.setShowScrollBar(true);
+	%this.assetWindow.setMouseWheelScrolls(false);
 
 	return %this.assetWindow;
 }
 
 function AssetAdmin::buildAudioPlayButton(%this)
 {
-	%container = new GuiControl()
+	%this.audioPlayButtonContainer = new GuiControl()
 	{
 		position = "0 0";
 		extent = "700 444";
 		HorizSizing="width";
 		VertSizing="height";
 	};
-	ThemeManager.setProfile(%container, "emptyProfile");
+	ThemeManager.setProfile(%this.audioPlayButtonContainer, "emptyProfile");
 
 	%this.audioPlayButton = new GuiButtonCtrl()
 	{
@@ -161,9 +171,9 @@ function AssetAdmin::buildAudioPlayButton(%this)
 		Text = "Play";
 	};
 	ThemeManager.setProfile(%this.audioPlayButton, "buttonProfile");
-	%container.add(%this.audioPlayButton);
+	%this.audioPlayButtonContainer.add(%this.audioPlayButton);
 
-	return %container;
+	return %this.audioPlayButtonContainer;
 }
 
 function AssetAdmin::destroy(%this)

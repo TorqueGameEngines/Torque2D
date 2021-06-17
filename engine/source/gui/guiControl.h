@@ -370,12 +370,12 @@ public:
     /// Translates local coordinates (wrt this object) into global coordinates
     ///
     /// @param   src   Local coordinates to translate
-    Point2I localToGlobalCoord(const Point2I &src);
+    virtual Point2I localToGlobalCoord(const Point2I &src);
 
     /// Returns global coordinates translated into local space
     ///
     /// @param   src   Global coordinates to translate
-    Point2I globalToLocalCoord(const Point2I &src);
+    virtual Point2I globalToLocalCoord(const Point2I &src);
     /// @}
 
     /// @name Resizing
@@ -514,16 +514,16 @@ public:
 
     /// Lock the mouse within the provided control
     /// @param   lockingControl   Control to lock the mouse within
-    void mouseLock(GuiControl *lockingControl);
+    virtual void mouseLock(GuiControl *lockingControl);
 
     /// Turn on mouse locking with last used lock control
-    void mouseLock();
+    virtual void mouseLock();
 
     /// Unlock the mouse
-    void mouseUnlock();
+    virtual void mouseUnlock();
 
     /// Returns true if the mouse is locked
-    bool isMouseLocked();
+    virtual bool isMouseLocked();
     /// @}
 
 

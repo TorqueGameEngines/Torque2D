@@ -22,10 +22,10 @@
 
 ConsoleMethodGroupBeginWithDocs(SceneWindow, GuiControl)
 
-/*! Fetch Window Extents (Position/Size).
+/*! Returns the windows position and extent.
     @return Returns the window dimensions as a string formatted as follows: <position.x> <position.y> <width> <height>
 */
-ConsoleMethodWithDocs(SceneWindow, getWindowExtents, ConsoleString, 2, 2, ())
+ConsoleMethodWithDocs(SceneWindow, getWindowArea, ConsoleString, 2, 2, ())
 {
     // Get Size Argument Buffer.
     char* pExtentsBuffer = Con::getReturnBuffer(64);
@@ -374,8 +374,8 @@ ConsoleMethodWithDocs(SceneWindow, getTargetCameraSize, ConsoleString, 2, 2, ())
 //-----------------------------------------------------------------------------
 
 /*! Set the target camera area.
-    @param x1 / y1 Coordinates of the upper left corner of the target area.
-    @param x2 / y2 Coordinates of the lower right corner of the target area.
+    @param x1 / y1 Coordinates of the lower left corner of the target area.
+    @param x2 / y2 Coordinates of the upper right corner of the target area.
     @return No return value.
 */
 ConsoleMethodWithDocs(SceneWindow, setTargetCameraArea, ConsoleVoid, 3, 6, (x1 / y1 / x2 / y2))
@@ -491,6 +491,7 @@ ConsoleMethodWithDocs(SceneWindow, getTargetCameraAngle, ConsoleFloat, 2, 2, ())
 //-----------------------------------------------------------------------------
 
 /*! Set camera interpolation time.
+    @param interpolationTime Time to animate given in seconds.
     @return No return value
 */
 ConsoleMethodWithDocs(SceneWindow, setCameraInterpolationTime, ConsoleVoid, 3, 3, (interpolationTime))
@@ -502,6 +503,7 @@ ConsoleMethodWithDocs(SceneWindow, setCameraInterpolationTime, ConsoleVoid, 3, 3
 //-----------------------------------------------------------------------------
 
 /*! Set camera interpolation mode.
+    @param interpolationMode Posible values are Linear and Sigmoid.
     @return No return value.
 */
 ConsoleMethodWithDocs(SceneWindow, setCameraInterpolationMode, ConsoleVoid, 3, 3, (interpolationMode))
@@ -699,23 +701,8 @@ ConsoleMethodWithDocs(SceneWindow, dismount, ConsoleVoid, 2, 2, ())
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::dismountMe( SceneObject* pSceneObject )
-{
-    // Are we mounted to the specified object?
-    if ( isCameraMounted() && pSceneObject != mpMountedTo )
-    {
-        // No, so warn.
-        Con::warnf("SceneWindow::dismountMe() - Object is not mounted by the camera!");
-        return;
-    }
-
-    // Dismount Object.
-    dismount();
-}
-
-//-----------------------------------------------------------------------------
-
 /*! Set View Limit On.
+	@param [minX / minY / maxX / maxY] Optionally supplies the limits for the view.
     @return No return value
 */
 ConsoleMethodWithDocs(SceneWindow, setViewLimitOn, ConsoleVoid, 3, 6, ([minX / minY / maxX / maxY]))
@@ -787,6 +774,28 @@ ConsoleMethodWithDocs(SceneWindow, setViewLimitOff, ConsoleVoid, 2, 2, ())
 ConsoleMethodWithDocs(SceneWindow, clampCameraViewLimit, ConsoleVoid, 2, 2, ())
 {
     object->clampCameraViewLimit();
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Sets the scroll bars on. View Limits should be set prior to turning on scroll bars. 
+	@param setting If true, scroll bars will be on. 
+	@return No return value
+*/
+ConsoleMethodWithDocs(SceneWindow, setShowScrollBar, ConsoleVoid, 3, 3, (setting))
+{
+	object->setShowScrollBar(dAtob(argv[2]));
+}
+
+//-----------------------------------------------------------------------------
+
+/*! When true, allows the mouse wheel to move the scroll bar when it's turned on.
+	@param setting If true, the scroll bars will consume the mouse wheel events instead of being passed to the scene. Holding shift will reverse this behavior.
+	@return No return value
+*/
+ConsoleMethodWithDocs(SceneWindow, setMouseWheelScrolls, ConsoleVoid, 3, 3, (setting))
+{
+	object->setMouseWheelScrolls(dAtob(argv[2]));
 }
 
 //-----------------------------------------------------------------------------
@@ -952,10 +961,10 @@ ConsoleMethodWithDocs(SceneWindow, getRenderGroupMask, ConsoleInt, 2, 2, ())
 //-----------------------------------------------------------------------------
 
 /*! or ( stockColorName )  - Sets the background color for the scene.
-    @param red The red value.
-    @param green The green value.
-    @param blue The blue value.
-    @param alpha The alpha value.
+    @param red The red value as floating point value between 0 and 1.
+    @param green The green value as floating point value between 0 and 1.
+    @param blue The blue value as floating point value between 0 and 1.
+    @param alpha The alpha value as floating point value between 0 and 1.
     @return No return Value.
 */
 ConsoleMethodWithDocs(SceneWindow, setBackgroundColor, ConsoleVoid, 3, 6, (float red, float green, float blue, [float alpha = 1.0]))
@@ -1555,6 +1564,42 @@ ConsoleMethodWithDocs(SceneWindow, setAudioListener, ConsoleVoid, 2, 3, ())
     bool onoff = true;
     if ((argc > 2) && !dAtob(argv[2])) onoff = false;
     object->setProcessAudioListener(onoff);
+}
+
+/*! Sets the currently used ThumbProfile for the GuiControl
+	@param p The Thumbprofile you wish to set the control to use
+	@return No return value
+*/
+ConsoleMethodWithDocs(SceneWindow, setThumbProfile, ConsoleVoid, 3, 3, (GuiControlProfile p))
+{
+	GuiControlProfile* profile;
+
+	if (Sim::findObject(argv[2], profile))
+		object->setControlThumbProfile(profile);
+}
+
+/*! Sets the currently used TrackProfile for the GuiControl
+	@param p The Trackprofile you wish to set the control to use
+	@return No return value
+*/
+ConsoleMethodWithDocs(SceneWindow, setTrackProfile, ConsoleVoid, 3, 3, (GuiControlProfile p))
+{
+	GuiControlProfile* profile;
+
+	if (Sim::findObject(argv[2], profile))
+		object->setControlTrackProfile(profile);
+}
+
+/*! Sets the currently used ArrowProfile for the GuiControl
+	@param p The Arrowprofile you wish to set the control to use
+	@return No return value
+*/
+ConsoleMethodWithDocs(SceneWindow, setArrowProfile, ConsoleVoid, 3, 3, (GuiControlProfile p))
+{
+	GuiControlProfile* profile;
+
+	if (Sim::findObject(argv[2], profile))
+		object->setControlArrowProfile(profile);
 }
 
 ConsoleMethodGroupEndWithDocs(SceneWindow)

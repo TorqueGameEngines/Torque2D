@@ -617,6 +617,7 @@
     <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
@@ -1151,6 +1152,7 @@
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiSceneScrollCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h" />

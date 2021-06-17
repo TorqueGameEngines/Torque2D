@@ -1465,6 +1465,9 @@
     <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -3321,6 +3324,9 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl_ScriptBinding.h">
       <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiSceneScrollCtrl.h">
+      <Filter>gui\containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

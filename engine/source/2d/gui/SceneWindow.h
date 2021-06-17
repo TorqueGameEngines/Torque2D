@@ -43,13 +43,19 @@
 #include "2d/core/Utility.h"
 #endif
 
-//-----------------------------------------------------------------------------
+class GuiSceneScrollCtrl;
 
 class SceneWindow : public GuiControl, public virtual Tickable
 {
     typedef GuiControl Parent;
 
 public:
+	virtual bool onWake();
+	virtual void onSleep();
+	virtual void setControlThumbProfile(GuiControlProfile* prof);
+	virtual void setControlTrackProfile(GuiControlProfile* prof);
+	virtual void setControlArrowProfile(GuiControlProfile* prof);
+
     /// Camera View.
     struct CameraView
     {
@@ -106,6 +112,11 @@ private:
     F32                 mMountForce;
     bool                mMountAngle;
 
+	/// Camera Scroll bar
+	bool				mShowScrollBar;
+	GuiSceneScrollCtrl* mScrollBar;
+	bool				mMouseWheelScrolls;
+
     /// View Limit.
     bool                mViewLimitActive;
     Vector2             mViewLimitMin;
@@ -153,6 +164,13 @@ private:
 
     void calculateCameraView( CameraView* pCameraView );
 
+	//Standard Scrolling settings
+	bool mUseConstantHeightThumb;
+	S32 mScrollBarThickness;
+	bool mShowArrowButtons;
+	GuiControlProfile *mThumbProfile;
+	GuiControlProfile *mTrackProfile;
+	GuiControlProfile *mArrowProfile;
 public:
 
     /// Camera Interpolation Mode.
@@ -227,7 +245,12 @@ public:
     inline bool isViewLimitOn( void ) const { return mViewLimitActive; }
     inline Vector2 getViewLimitMin( void ) const { return mViewLimitMin; }
     inline Vector2 getViewLimitMax( void ) const { return mViewLimitMax; }
-    inline void clampCameraViewLimit( void );
+    void clampCameraViewLimit( void );
+	void setShowScrollBar(bool setting);
+	inline bool getShowScrollBar() { return mShowScrollBar; }
+	void updateScrollBar();
+	inline void setMouseWheelScrolls(bool setting) { mMouseWheelScrolls = setting; }
+	inline bool getMouseWheelScrolls() { return mMouseWheelScrolls; }
 
     /// Tick Processing.
     void zeroCameraTime( void );
@@ -319,6 +342,10 @@ public:
     virtual bool onMouseWheelDown( const GuiEvent &event );
     virtual bool onMouseWheelUp( const GuiEvent &event );
 
+	void setUseConstantThumbHeight(const bool setting);
+	void setScrollBarThickness(const S32 thickness);
+	void setShowArrowButtons(const bool setting);
+
     void renderMetricsOverlay( Point2I offset, const RectI& updateRect );
 
     static CameraInterpolationMode getInterpolationModeEnum(const char* label);
@@ -331,7 +358,61 @@ protected:
     static bool writeUseWindowInputEvents( void* obj, StringTableEntry pFieldName ) { return static_cast<SceneWindow*>(obj)->mUseWindowInputEvents == false; }
     static bool writeUseObjectInputEvents( void* obj, StringTableEntry pFieldName ) { return static_cast<SceneWindow*>(obj)->mUseObjectInputEvents == true; }
     static bool writeBackgroundColor( void* obj, StringTableEntry pFieldName )      { return static_cast<SceneWindow*>(obj)->mUseBackgroundColor == true; }
-    static bool writeUseBackgroundColor( void* obj, StringTableEntry pFieldName )   { return static_cast<SceneWindow*>(obj)->mUseBackgroundColor == true; }
+	static bool writeUseBackgroundColor(void* obj, StringTableEntry pFieldName) { return static_cast<SceneWindow*>(obj)->mUseBackgroundColor == true; }
+	static bool writeScrollSettingFn(void* obj, StringTableEntry pFieldName) { return static_cast<SceneWindow*>(obj)->mShowScrollBar == true; }
+
+	static bool setConstantThumbFn(void* obj, const char* data) { SceneWindow* ctrl = static_cast<SceneWindow*>(obj); ctrl->setUseConstantThumbHeight(dAtob(data)); return false; }
+	static bool setScrollBarThicknessFn(void* obj, const char* data) { SceneWindow* ctrl = static_cast<SceneWindow*>(obj); ctrl->setScrollBarThickness(dAtoi(data)); return false; }
+	static bool setShowArrowButtonsFn(void* obj, const char* data) { SceneWindow* ctrl = static_cast<SceneWindow*>(obj); ctrl->setShowArrowButtons(dAtob(data)); return false; }
+
+	static bool setThumbProfileFn(void* obj, const char* data) 
+	{ 
+		SceneWindow* ctrl = static_cast<SceneWindow*>(obj); 
+		SimObject* simObj = Sim::findObject(data);
+		if (simObj)
+		{
+			GuiControlProfile* profile = dynamic_cast<GuiControlProfile*>(simObj);
+			if(profile)
+			{
+				ctrl->setControlThumbProfile(profile);
+				return false;
+			}
+		}
+		Con::warnf("SceneWindow::setThumbProfileFn - Unable to find requested profile.");
+		return true; 
+	}
+	static bool setTrackProfileFn(void* obj, const char* data)
+	{
+		SceneWindow* ctrl = static_cast<SceneWindow*>(obj);
+		SimObject* simObj = Sim::findObject(data);
+		if (simObj)
+		{
+			GuiControlProfile* profile = dynamic_cast<GuiControlProfile*>(simObj);
+			if (profile)
+			{
+				ctrl->setControlTrackProfile(profile);
+				return false;
+			}
+		}
+		Con::warnf("SceneWindow::setTrackProfileFn - Unable to find requested profile.");
+		return true;
+	}
+	static bool setArrowProfileFn(void* obj, const char* data)
+	{
+		SceneWindow* ctrl = static_cast<SceneWindow*>(obj);
+		SimObject* simObj = Sim::findObject(data);
+		if (simObj)
+		{
+			GuiControlProfile* profile = dynamic_cast<GuiControlProfile*>(simObj);
+			if (profile)
+			{
+				ctrl->setControlArrowProfile(profile);
+				return false;
+			}
+		}
+		Con::warnf("SceneWindow::setArrowProfileFn - Unable to find requested profile.");
+		return true;
+	}
 };
 
 #endif // _SCENE_WINDOW_H_

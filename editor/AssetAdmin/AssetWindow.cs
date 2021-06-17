@@ -29,6 +29,7 @@ function AssetWindow::displayImageAsset(%this, %imageAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
+	%this.setCameraPosition("0 0");
 	%this.setCameraZoom(1);
 	if(!%imageAsset.getExplicitMode() && %imageAsset.getFrameCount() == 1)
 	{
@@ -89,6 +90,7 @@ function AssetWindow::displayAnimationAsset(%this, %imageAsset, %animationAsset,
 {
 	AssetAdmin.AssetScene.clear(true);
 
+	%this.setCameraPosition("0 0");
 	%this.setCameraZoom(1);
 	%size = %this.getWorldSize(%imageAsset.getFrameSize(0));
 	new Sprite()
@@ -107,6 +109,7 @@ function AssetWindow::displayParticleAsset(%this, %particleAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
+	%this.setCameraPosition("0 0");
 	%this.setCameraZoom(5);
 	new ParticlePlayer()
 	{
@@ -124,6 +127,7 @@ function AssetWindow::displayFontAsset(%this, %fontAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
+	%this.setCameraPosition("0 0");
 	%this.setCameraZoom(1);
 	%size = %this.getWorldSize("10 10");
 	new TextSprite()
@@ -148,7 +152,7 @@ function AssetWindow::displayAudioAsset(%this, %audioAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
-	AssetAdmin.audioPlayButton.setVisible(true);
+	AssetAdmin.audioPlayButtonContainer.setVisible(true);
 	AssetAdmin.AssetWindow.setVisible(false);
 
 	AssetAdmin.audioPlayButton.resetSound();
@@ -214,9 +218,42 @@ function AssetWindow::onExtentChange(%this, %d)
 	}
 	%area = %topLeft SPC %bottomRight;
 	%this.setCameraArea(%area);
+	%this.setViewLimitOn(%area);
 
 	if(isObject(AssetAdmin.chosenButton))
 	{
 		AssetAdmin.chosenButton.onClick();
 	}
+}
+
+function AssetWindow::onMouseWheelUp(%this)
+{
+	%zoom = %this.getTargetCameraZoom();
+	if(%zoom > 1)
+	{
+		//prevent gradual rounding errors
+		%zoom = mRound(%zoom);
+	}
+	if(%zoom == 1)
+	{
+		%this.setTargetCameraPosition("0 0");
+	}
+	%this.setTargetCameraZoom(mGetMin(16, %zoom * 2));
+	%this.startCameraMove(0.2);
+}
+
+function AssetWindow::onMouseWheelDown(%this)
+{
+	%zoom = %this.getTargetCameraZoom();
+	if(%zoom > 1)
+	{
+		//prevent gradual rounding errors
+		%zoom = mRound(%zoom);
+	}
+	if(%zoom == 1)
+	{
+		%this.setTargetCameraPosition("0 0");
+	}
+	%this.setTargetCameraZoom(mGetMax(0.0625, %zoom / 2));
+	%this.startCameraMove(0.2);
 }

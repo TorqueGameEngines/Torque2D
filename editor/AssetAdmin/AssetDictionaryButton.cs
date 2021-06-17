@@ -140,7 +140,7 @@ function AssetDictionaryButton::onClick(%this)
 		ThemeManager.setProfile(%this, "itemSelectedProfile");
 	}
 
-	AssetAdmin.audioPlayButton.setVisible(false);
+	AssetAdmin.audioPlayButtonContainer.setVisible(false);
 	AssetAdmin.AssetWindow.setVisible(true);
 
 	if(isObject(%this.AnimationAsset) && %this.AnimationAssetID !$= "")
