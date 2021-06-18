@@ -35,6 +35,11 @@
 #include "string/unicode.h"
 #include "collection/vector.h"
 
+#include <sstream>
+#include <iostream>
+#include <vector>
+#include <string>
+
 #include "guiControl_ScriptBinding.h"
 
 #ifndef _FRAMEALLOCATOR_H_
@@ -87,6 +92,7 @@ GuiControl::GuiControl()
    mTipHoverTime        = 1000;
    mTooltipWidth		= 250;
    mIsContainer         = false;
+   mTextWrap			= false;
 }
 
 GuiControl::~GuiControl()
@@ -194,6 +200,7 @@ void GuiControl::initPersistFields()
    addGroup("Text");
    addProtectedField("text", TypeCaseString, Offset(mText, GuiControl), setTextProperty, getTextProperty, "");
    addField("textID", TypeString, Offset(mTextID, GuiControl));
+   addField("textWrap", TypeBool, Offset(mTextWrap, GuiControl), &writeTextWrapFn, "If true, text will wrap to additional lines.");
    endGroup("Text");
 }
 
@@ -524,7 +531,7 @@ void GuiControl::onRender(Point2I offset, const RectI &updateRect)
 	}
 }
 
-RectI GuiControl::applyMargins(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
+RectI GuiControl::applyMargins(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile)
 {
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
@@ -540,7 +547,7 @@ RectI GuiControl::applyMargins(Point2I offset, Point2I extent, GuiControlState c
 	return RectI(offset.x + leftSize, offset.y + topSize, (extent.x - leftSize) - rightSize, (extent.y - topSize) - bottomSize);
 }
 
-RectI GuiControl::applyBorders(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
+RectI GuiControl::applyBorders(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile)
 {
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
@@ -556,7 +563,7 @@ RectI GuiControl::applyBorders(Point2I offset, Point2I extent, GuiControlState c
 	return RectI(offset.x + leftSize, offset.y + topSize, (extent.x - leftSize) - rightSize, (extent.y - topSize) - bottomSize);
 }
 
-RectI GuiControl::applyPadding(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
+RectI GuiControl::applyPadding(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile)
 {
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
@@ -572,7 +579,7 @@ RectI GuiControl::applyPadding(Point2I offset, Point2I extent, GuiControlState c
 	return RectI(offset.x + leftSize, offset.y + topSize, (extent.x - leftSize) - rightSize, (extent.y - topSize) - bottomSize);
 }
 
-RectI GuiControl::getInnerRect(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile)
+RectI GuiControl::getInnerRect(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile)
 {
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
@@ -588,7 +595,7 @@ RectI GuiControl::getInnerRect(Point2I offset, Point2I extent, GuiControlState c
 	return RectI(offset.x + leftSize, offset.y + topSize, (extent.x - leftSize) - rightSize, (extent.y - topSize) - bottomSize);
 }
 
-Point2I GuiControl::getOuterExtent(Point2I innerExtent, GuiControlState currentState, GuiControlProfile *profile)
+Point2I GuiControl::getOuterExtent(Point2I &innerExtent, GuiControlState currentState, GuiControlProfile *profile)
 {
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
@@ -604,7 +611,7 @@ Point2I GuiControl::getOuterExtent(Point2I innerExtent, GuiControlState currentS
 	return Point2I(innerExtent.x + leftSize + rightSize, innerExtent.y + topSize + bottomSize);
 }
 
-bool GuiControl::renderTooltip(Point2I cursorPos, const char* tipText )
+bool GuiControl::renderTooltip(Point2I &cursorPos, const char* tipText )
 {
 #if !defined(TORQUE_OS_IOS) && !defined(TORQUE_OS_ANDROID) && !defined(TORQUE_OS_EMSCRIPTEN)
     // Short Circuit.
@@ -1665,79 +1672,153 @@ void GuiControl::getScrollLineSizes(U32 *rowHeight, U32 *columnWidth)
     *rowHeight = 30;
 }
 
-void GuiControl::renderText(Point2I offset, Point2I extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot)
+void GuiControl::renderText(Point2I &offset, Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot)
 {
-   GFont *font = profile->mFont;
-   S32 textWidth = font->getStrWidth((const UTF8*)text);
-   S32 textHeight = font->getHeight();
-   S32 totalWidth = extent.x;
-   S32 totalHeight = extent.y;
-
-   if (rot != tRotateNone)
-   {
-	   totalWidth = extent.y;
-	   totalHeight = extent.x;
-   }
-
-   Point2I startOffset = Point2I(0,0);
-   // align the horizontal
-   if(textWidth < totalWidth)
-   {
-	   if (profile->mAlignment == GuiControlProfile::RightAlign)
-	   {
-		   startOffset.x = totalWidth - textWidth;
-	   }
-	   else if (profile->mAlignment == GuiControlProfile::CenterAlign)
-	   {
-		   startOffset.x = (totalWidth - textWidth) / 2;
-	   }
-   }
-
-	// align the vertical
-	if (textHeight < totalHeight)
-	{
-		if (profile->mVAlignment == GuiControlProfile::MiddleVAlign)
-		{
-			startOffset.y = (totalHeight - textHeight) / 2;
-		}
-		else if (profile->mVAlignment == GuiControlProfile::BottomVAlign)
-		{
-			startOffset.y = (totalHeight - textHeight);
-		}
-	}
-	else
-	{
-		startOffset.y = -((textHeight - totalHeight) / 2);
-	}
-
-	Point2I start = Point2I(0, 0);
-	F32 rotation;
-	if (rot == tRotateNone)
-	{
-		start += startOffset;
-		rotation = 0.0f;
-	}
-	else if (rot == tRotateLeft)
-	{
-		start.x = startOffset.y;
-		start.y = extent.y + startOffset.x;
-		rotation = 90.0f;
-	}
-	else if (rot == tRotateRight)
-	{
-		start.x = extent.x - startOffset.y;
-		start.y = startOffset.x;
-		rotation = -90.0f;
-	}
-
 	RectI old = dglGetClipRect();
 	RectI clipRect = RectI(offset, extent);
-	if(clipRect.intersect(old))
+	if (clipRect.intersect(old))
 	{
 		dglSetClipRect(clipRect);
-		dglDrawText( font, start + offset + profile->mTextOffset, text, profile->mFontColors, 9, rotation );
+
+	   GFont *font = profile->mFont;
+	   S32 textWidth = 0;
+	   const S32 textHeight = font->getHeight();
+	   S32 totalWidth = extent.x;
+	   S32 totalHeight = extent.y;
+
+	   if (rot != tRotateNone)
+	   {
+		   totalWidth = extent.y;
+		   totalHeight = extent.x;
+	   }
+
+	   Point2I startOffset = Point2I(0,0);
+
+	   vector<string> lineList = vector<string>();
+
+	   if (!mTextWrap)
+	   {
+		   lineList.push_back(text);
+	   }
+	   else
+	   {
+			vector<string> paragraphList = vector<string>();
+			istringstream f(text);
+			string s;
+			while(getline(f, s)) {
+				paragraphList.push_back(s);
+			}
+
+			for (string &paragraph : paragraphList)
+			{
+				vector<string> wordList = vector<string>();
+				istringstream f2(paragraph);
+				string s2;
+				while (getline(f2, s2, ' ')) {
+					wordList.push_back(s2);
+				}
+
+				//now process the word list
+				string line;
+				line.clear();
+				for (string &word : wordList)
+				{
+					if (font->getStrWidth(word.c_str()) >= totalWidth)
+					{
+						if (line.size() > 0)
+						{
+							lineList.push_back(string(line));
+							line.clear();
+						}
+						lineList.push_back(word);
+						continue;
+					}
+
+					string prevLine = string(line);
+					line += (line.size() > 0) ? " " + word : word;
+					if (font->getStrWidth(line.c_str()) >= totalWidth)
+					{
+						lineList.push_back(prevLine);
+						line = word;
+					}
+				}
+				lineList.push_back(string(line));
+			}
+	   }
+
+	   //first align vertical
+	   S32 blockHeight = textHeight * lineList.size();
+		if (blockHeight < totalHeight)
+		{
+			startOffset.y = getTextVerticalOffset(blockHeight, totalHeight, profile->mVAlignment);
+		}
+		else
+		{
+			startOffset.y = getTextVerticalOffset(blockHeight, totalHeight, GuiControlProfile::VertAlignmentType::MiddleVAlign);
+		}
+
+	   //Now print each line
+	   for(string &line : lineList)
+	   {
+		   // align the horizontal
+		   textWidth = font->getStrWidth(line.c_str());
+		   if(textWidth < totalWidth)
+		   {
+				startOffset.x = getTextHorizontalOffset(textWidth, totalWidth, profile->mAlignment);
+		   }
+
+			Point2I start = Point2I(0, 0);
+			F32 rotation;
+			if (rot == tRotateNone)
+			{
+				start += startOffset;
+				rotation = 0.0f;
+			}
+			else if (rot == tRotateLeft)
+			{
+				start.x = startOffset.y;
+				start.y = extent.y + startOffset.x;
+				rotation = 90.0f;
+			}
+			else if (rot == tRotateRight)
+			{
+				start.x = extent.x - startOffset.y;
+				start.y = startOffset.x;
+				rotation = -90.0f;
+			}
+
+			dglDrawText( font, start + offset + profile->mTextOffset, line.c_str(), profile->mFontColors, 9, rotation );
+			
+			startOffset.y += textHeight;
+		}
 		dglSetClipRect(old);
 	}
+}
+
+S32 GuiControl::getTextHorizontalOffset(S32 textWidth, S32 totalWidth, GuiControlProfile::AlignmentType align)
+{
+	if (align == GuiControlProfile::RightAlign)
+	{
+		return totalWidth - textWidth;
+	}
+	else if (align == GuiControlProfile::CenterAlign)
+	{
+		return (totalWidth - textWidth) / 2;
+	}
+	return 0;//left aligned
+}
+
+S32 GuiControl::getTextVerticalOffset(S32 textHeight, S32 totalHeight, GuiControlProfile::VertAlignmentType align)
+{
+	if (align == GuiControlProfile::MiddleVAlign)
+	{
+		return (totalHeight - textHeight) / 2;
+	}
+	else if (align == GuiControlProfile::BottomVAlign)
+	{
+		return totalHeight - textHeight;
+	}
+	return 0;
 }
 
 void GuiControl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEvent &lastGuiEvent)

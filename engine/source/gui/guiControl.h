@@ -206,6 +206,7 @@ protected:
 
 	StringTableEntry    mText;
 	StringTableEntry    mTextID;
+	bool				mTextWrap;
 
     /// @}
 
@@ -309,10 +310,13 @@ public:
 	virtual void             setTextID(S32 id);
 	virtual void             setTextID(const char *id);
 	virtual const char*      getText();
+	inline void				 setTextWrap(const bool wrap) { mTextWrap = wrap; }
+	inline bool				 getTextWrap() { return mTextWrap; }
 
 	// Text Property Accessors
 	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return false; }
 	static const char* getTextProperty(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getText(); }
+	static bool writeTextWrapFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextWrap(); }
 
 	static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); return false; }
 	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); return false; }
@@ -435,7 +439,7 @@ public:
     /// Render a tooltip at the specified cursor position for this control
     /// @param   cursorPos   position of cursor to display the tip near
     /// @param   tipText     optional alternate tip to be rendered
-    virtual bool renderTooltip(Point2I cursorPos, const char* tipText = NULL );
+    virtual bool renderTooltip(Point2I &cursorPos, const char* tipText = NULL );
 
     /// Called when this control should render its children
     /// @param   offset   The top left of the parent control
@@ -718,22 +722,22 @@ public:
     /// Renders justified text using the profile.
     ///
     /// @note This should move into the graphics library at some point
-    void renderText(Point2I offset, Point2I extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
+    void renderText(Point2I &offset, Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
 
 	/// Returns a new rect based on the margins.
-	RectI applyMargins(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile);
+	RectI applyMargins(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
 
 	/// Returns the bounds of the rect after considering the borders.
-	RectI applyBorders(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile);
+	RectI applyBorders(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
 
 	/// Returns the bounds of the rect this time with padding.
-	RectI applyPadding(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile);
+	RectI applyPadding(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
 
 	/// Returns the bounds of the rect with margin, borders, and padding applied.
-	RectI getInnerRect(Point2I offset, Point2I extent, GuiControlState currentState, GuiControlProfile *profile);
+	RectI getInnerRect(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
 
 	/// Returns the extent of the outer rect given the extent of the inner rect.
-	Point2I getOuterExtent(Point2I innerExtent, GuiControlState currentState, GuiControlProfile *profile);
+	Point2I getOuterExtent(Point2I &innerExtent, GuiControlState currentState, GuiControlProfile *profile);
 
     virtual void inspectPostApply();
     virtual void inspectPreApply();
@@ -748,6 +752,9 @@ protected:
 	virtual void interpolateTick(F32 delta) {};
 	virtual void processTick() {};
 	virtual void advanceTime(F32 timeDelta) {};
+
+	S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, GuiControlProfile::AlignmentType align);
+	S32 getTextVerticalOffset(S32 textHeight, S32 totalHeight, GuiControlProfile::VertAlignmentType align);
 };
 /// @}
 

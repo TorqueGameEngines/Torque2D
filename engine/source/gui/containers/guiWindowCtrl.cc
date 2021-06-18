@@ -756,7 +756,7 @@ RectI GuiWindowCtrl::renderButtons(const Point2I &offset, const RectI &contentRe
 
 RectI GuiWindowCtrl::renderButton(const RectI &contentRect, S32 distanceFromEdge, GuiControlState buttonState, GuiControlProfile *profile, Icon defaultIcon)
 {
-	RectI buttonContent = applyMargins(contentRect.point, contentRect.extent, buttonState, profile);
+	RectI buttonContent = applyMargins(Point2I(contentRect.point), Point2I(contentRect.extent), buttonState, profile);
 	S32 horizMarginSize = contentRect.extent.x - buttonContent.extent.x;
 	RectI finalButtonRect = RectI(contentRect.point, Point2I(buttonContent.extent.y + horizMarginSize, contentRect.extent.y));
 	if (mProfile->mAlignment != GuiControlProfile::AlignmentType::RightAlign)

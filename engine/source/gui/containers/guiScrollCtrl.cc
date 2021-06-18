@@ -286,7 +286,7 @@ void GuiScrollCtrl::computeSizes()
 		calcScrollOffset();
 	}
 	// build all the rectangles and such...
-	RectI ctrlRect = applyMargins(mBounds.point.Zero, mBounds.extent, NormalState, mProfile);
+	RectI ctrlRect = applyMargins(Point2I(mBounds.point.Zero), mBounds.extent, NormalState, mProfile);
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
 	calcScrollRects(fillRect);
 	calcThumbs();
