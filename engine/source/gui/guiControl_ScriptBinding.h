@@ -337,4 +337,21 @@ ConsoleMethodWithDocs(GuiControl, getText, ConsoleString, 2, 2, ())
 	return object->getText();
 }
 
+/*! Turns on or off text wrap.
+	@param setting True turns on text wrap.
+	@return No return value
+*/
+ConsoleMethodWithDocs(GuiControl, setTextWrap, ConsoleVoid, 3, 3, (setting))
+{
+	object->setTextWrap(dAtob(argv[2]));
+}
+
+/*! Returns if text wrap is on.
+	@return Returns the state of text wrap.
+*/
+ConsoleMethodWithDocs(GuiControl, getTextWrap, ConsoleBool, 2, 2, ())
+{
+	return object->getTextWrap();
+}
+
 ConsoleMethodGroupEndWithDocs(GuiControl)

@@ -96,7 +96,7 @@ ConsoleMethodWithDocs(GuiTextEditCtrl, getReturnCausesTab, ConsoleBool, 2, 2, ()
 	return object->getReturnCausesTab();
 }
 
-/*! Sets the sinkAllKeyEvents flag. If true, the tab key will act like the enter key.
+/*! Sets the sinkAllKeyEvents flag.
 	@param setting True to turn on the flag. False otherwise.
 	@return No return value
 */
@@ -113,7 +113,7 @@ ConsoleMethodWithDocs(GuiTextEditCtrl, getSinkAllKeyEvents, ConsoleBool, 2, 2, (
 	return object->getSinkAllKeyEvents();
 }
 
-/*! Sets the password flag. If true, the tab key will act like the enter key.
+/*! Sets the password flag.
 	@param setting True to turn on the flag. False otherwise.
 	@return No return value
 */
