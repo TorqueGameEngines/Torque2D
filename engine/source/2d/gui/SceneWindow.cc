@@ -242,6 +242,8 @@ bool SceneWindow::onWake()
 	{
 		mScrollBar->onWake();
 	}
+
+	return true;
 }
 
 void SceneWindow::onSleep()
