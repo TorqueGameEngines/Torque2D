@@ -601,11 +601,18 @@ ConsoleFunctionWithDocs(getExecutableName, ConsoleString, 1, 1, ())
    return Platform::getExecutableName();
 }
 
-/*! 
+/*!
 */
 ConsoleFunctionWithDocs(getMainDotCsDir, ConsoleString, 1, 1, ())
 {
-   return Platform::getMainDotCsDir();
+	return Platform::getMainDotCsDir();
+}
+
+/*!
+*/
+ConsoleFunctionWithDocs(setMainDotCsDir, ConsoleVoid, 2, 2, (path))
+{
+	Platform::setMainDotCsDir(argv[1]);
 }
 
 /*! 

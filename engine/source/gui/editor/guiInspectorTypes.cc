@@ -52,7 +52,7 @@ GuiControl* GuiInspectorTypeEnum::constructEditControl(S32 width)
    char szBuffer[512];
    dSprintf( szBuffer, 512, "%d.%s = %d.getText();",mTarget->getId(), mField->pFieldname, retCtrl->getId() );
    retCtrl->setField("Command", szBuffer );
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 28));
 
    //now add the entries
    GuiListBoxCtrl* list = retCtrl->getList();
@@ -186,7 +186,7 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl(S32 width)
    char szBuffer[512];
    dSprintf( szBuffer, 512, "%d.apply(%d.getText());",getId(),retCtrl->getId() );
    retCtrl->setField("Command", szBuffer );
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 28));
 
    Vector<StringTableEntry> entries;
 
@@ -247,7 +247,7 @@ GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl(S32 width)
    char szBuffer[512];
    dSprintf(szBuffer, 512, "%d.apply(%d.getText());", getId(), retCtrl->getId());
    retCtrl->setField("Command", szBuffer);
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 28));
 
    Vector<StringTableEntry> entries;
 

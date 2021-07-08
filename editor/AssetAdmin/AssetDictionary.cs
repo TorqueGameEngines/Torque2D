@@ -22,9 +22,19 @@
 
 function AssetDictionary::onAdd(%this)
 {
+	%this.newButton = new GuiButtonCtrl()
+	{
+		class = "NewAssetButton";
+		Position = "5 27";
+		Extent = "300 30";
+		Text = "New";
+	};
+	ThemeManager.setProfile(%this.newButton, "buttonProfile");
+	%this.add(%this.newButton);
+
 	%this.grid = new GuiGridCtrl()
 	{
-		Position="0 22";
+		Position="0 62";
 		Extent = "310 50";
 		CellSizeX = 60;
 		CellSizeY = 60;
@@ -49,23 +59,52 @@ function AssetDictionary::load(%this)
 
 		if(!AssetDatabase.isAssetInternal(%assetID))
 		{
-			%button = new GuiButtonCtrl()
-			{
-				Class = AssetDictionaryButton;
-				HorizSizing="center";
-				VertSizing="center";
-				Extent = "100 100";
-				Tooltip = AssetDatabase.getAssetName(%assetID);
-				Text = "";
-				AssetID = %assetID;
-				Type = %this.Type;
-			};
-			ThemeManager.setProfile(%button, "itemSelectProfile");
-			ThemeManager.setProfile(%button, "tipProfile", "TooltipProfile");
-			%this.grid.add(%button);
+			%this.addButton(%assetID);
 		}
 	}
 	%query.delete();
+
+	%this.newButton.text = "New" SPC %this.type;
+	%this.newButton.type = %this.type;
+}
+
+function AssetDictionary::addButton(%this, %assetID)
+{
+	%button = new GuiButtonCtrl()
+	{
+		Class = AssetDictionaryButton;
+		HorizSizing="center";
+		VertSizing="center";
+		Extent = "100 100";
+		Tooltip = AssetDatabase.getAssetName(%assetID);
+		Text = "";
+		AssetID = %assetID;
+		Type = %this.Type;
+	};
+	ThemeManager.setProfile(%button, "itemSelectProfile");
+	ThemeManager.setProfile(%button, "tipProfile", "TooltipProfile");
+	%this.grid.add(%button);
+
+	if(%this.getExpanded())
+	{
+		%this.setExpanded(false);
+		%this.setExpanded(true);
+	}
+
+	return %button;
+}
+
+function AssetDictionary::getButton(%this, %assetID)
+{
+	for(%i = 0; %i < %this.grid.getCount(); %i++)
+	{
+		%button = %this.grid.getObject(%i);
+		if(%button.AssetID $= %assetID)
+		{
+			return %button;
+		}
+	}
+	return 0;
 }
 
 function AssetDictionary::unload(%this)

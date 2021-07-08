@@ -179,7 +179,7 @@ public:
 
     static void process();
     static void setCursorPos(S32 x, S32 y);
-    static void setCursorState(bool on); ///< If True, turn on the platform's cursor
+    static void setCursorState(bool on); ///< If True, turns off the platform cursor
 
     static void setCursorShape(U32 cursorID);
 

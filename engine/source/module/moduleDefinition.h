@@ -90,7 +90,7 @@ private:
     bool                            mDeprecated;
     bool                            mCriticalMerge;
     StringTableEntry                mModuleDescription;
-    StringTableEntry                mAuthor;;
+    StringTableEntry                mAuthor;
     StringTableEntry                mModuleGroup;
     StringTableEntry                mModuleType;
     typeModuleDependencyVector      mDependencies;

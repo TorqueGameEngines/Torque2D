@@ -24,20 +24,29 @@ function ProjectManager::create(%this)
 {
 	%this.guiPage = EditorCore.RegisterEditor("Project Manager", %this);
 
-	%this.comingSoon = new GuiControl()
+	%this.comingSoon = new GuiWindowCtrl()
 	{
+		class = "comingSoonTest";
 		HorizSizing="center";
 		VertSizing="center";
 		Position="412 324";
 		Extent="200 120";
-		minExtent="8 8";
 		Visible="1";
 		Text = "Coming Soon!";
+		canClose = true;
+		canMove = true;
+		Profile = "GuiWindowProfile";
+		CloseButtonProfile = "GuiWindowCloseButtonProfile";
 	};
-	ThemeManager.setProfile(%this.comingSoon, "simpleProfile");
+	//ThemeManager.setProfile(%this.comingSoon, "simpleProfile");
 	%this.guiPage.add(%this.comingSoon);
 
 	EditorCore.FinishRegistration(%this.guiPage);
+}
+
+function comingSoonTest::onClose(%this)
+{
+	echo("comingSoonTest::onClose fired successfully!");
 }
 
 function ProjectManager::destroy(%this)

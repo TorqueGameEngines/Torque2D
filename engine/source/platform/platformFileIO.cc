@@ -244,7 +244,7 @@ char * Platform::makeFullPathName(const char *path, char *buffer, U32 size, cons
    }
 
    if(cwd == NULL)
-      cwd = Platform::getCurrentDirectory();
+      cwd = Platform::getMainDotCsDir();
 
    dStrncpy(buffer, cwd, size);
    buffer[size-1] = 0;
@@ -266,6 +266,9 @@ char * Platform::makeFullPathName(const char *path, char *buffer, U32 size, cons
          {
             // Parent
             endptr = dStrrchr(buffer, '/');
+
+			if (endptr)
+				*endptr-- = 0;
          }
          else if(dStrcmp(ptr, ".") == 0)
          {

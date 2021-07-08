@@ -171,6 +171,9 @@ void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 
 Point2I GuiGridCtrl::getCellPosition(const U16 cellNumber, const Point2I &innerExtent, GuiControl *ctrl)
 {
+	if(mCalcChainLength == 0)
+		return Point2I(0, 0);
+
 	Point2I result(0,0);
 	U16 y = (U16)mFloor(cellNumber / mCalcChainLength);
 	U16 x = (U16)(cellNumber % mCalcChainLength);

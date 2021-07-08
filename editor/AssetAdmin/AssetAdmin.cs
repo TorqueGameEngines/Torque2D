@@ -27,6 +27,12 @@ function AssetAdmin::create(%this)
 	exec("./AssetDictionaryButton.cs");
 	exec("./AssetInspector.cs");
 	exec("./AssetAudioPlayButton.cs");
+	exec("./NewAssetButton.cs");
+	exec("./NewImageAssetDialog.cs");
+	exec("./NewAnimationAssetDialog.cs");
+	exec("./NewParticleAssetDialog.cs");
+	exec("./NewFontAssetDialog.cs");
+	exec("./NewAudioAssetDialog.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
 	%this.guiPage.add(%this.buildAssetWindow());
@@ -158,6 +164,7 @@ function AssetAdmin::buildAudioPlayButton(%this)
 		extent = "700 444";
 		HorizSizing="width";
 		VertSizing="height";
+		Visible="0";
 	};
 	ThemeManager.setProfile(%this.audioPlayButtonContainer, "emptyProfile");
 
@@ -167,7 +174,6 @@ function AssetAdmin::buildAudioPlayButton(%this)
 		HorizSizing="center";
 		VertSizing="center";
 		Extent="100 48";
-		Visible="0";
 		Text = "Play";
 	};
 	ThemeManager.setProfile(%this.audioPlayButton, "buttonProfile");

@@ -23,6 +23,8 @@
 function EditorCore::create( %this )
 {
 	exec("./Themes/ThemeManager.cs");
+	exec("./EditorDialog.cs");
+	exec("./EditorForm.cs");
 
 	new ScriptObject(ThemeManager);
 
@@ -179,4 +181,53 @@ function EditorCoreTabBook::onTabSelected(%this, %tabText)
 	}
 	%this.Core.page[%tabText].Editor.open();
 	%this.openEditor = %this.Core.page[%tabText].Editor;
+}
+
+function EditorCore::findModuleOfPath(%this, %pathWithFile)
+{
+	%pathWithFile = makeFullPath(%pathWithFile);
+	%loadedModules = ModuleDatabase.findModules(false);
+
+	%chosenModSig = "";
+	for(%i = 0; %i < getWordCount(%loadedModules); %i++)
+	{
+		%mod = getWord(%loadedModules, %i);
+		%modPath = %this.flattenPath(%mod.ModulePath);
+
+		//Now compare the two paths to see if they go together
+		if(strPos(%pathWithFile, %modPath) != -1)
+		{
+			%chosenModSig = %mod.Signature;
+			break;
+		}
+	}
+
+	return %chosenModSig;
+}
+
+function EditorCore::flattenPath(%this, %path)
+{
+	%pen = 0;
+	for(%i = 0; %i < getUnitCount(%path, "/"); %i++)
+	{
+		%token = getUnit(%path, %i, "/");
+
+		if(%token $= "..")
+		{
+			%pen = mGetMax(%pen - 1, 0);
+		}
+		else
+		{
+			%token[%pen] = %token;
+			%pen++;
+		}
+	}
+
+	%result = %token[0];
+	for(%i = 1; %i <= %pen; %i++)
+	{
+		%result = %result @ "/" @ %token[%i];
+	}
+
+	return %result;
 }

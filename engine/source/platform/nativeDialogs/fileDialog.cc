@@ -22,6 +22,7 @@
 #include "platform/nativeDialogs/fileDialog.h"
 #include "console/consoleTypes.h"
 #include "fileDialog_ScriptBinding.h"
+#include "gui/guiCanvas.h"
 
 IMPLEMENT_CONOBJECT(FileDialog);
 IMPLEMENT_CONOBJECT(OpenFileDialog);
@@ -120,6 +121,42 @@ const char* FileDialog::getChangePath(void* obj, const char* data)
 bool FileDialog::setFile(void* obj, const char* data)
 {
    return false;
+}
+
+void FileDialog::preExecute()
+{
+	mPrevNativeCursorState = true;
+
+	SimObject *obj = Sim::findObject("Canvas");
+	GuiCanvas* canvas = NULL;
+	if (obj)
+	{
+		canvas = dynamic_cast<GuiCanvas*>(obj);
+
+		if (canvas && !canvas->getUseNativeCursor())
+		{
+			mPrevNativeCursorState = false;
+			canvas->useNativeCursor(true);
+		}
+	}
+}
+
+void FileDialog::postExecute()
+{
+	if (!mPrevNativeCursorState)
+	{
+		SimObject *obj = Sim::findObject("Canvas");
+		GuiCanvas* canvas = NULL;
+		if (obj)
+		{
+			canvas = dynamic_cast<GuiCanvas*>(obj);
+
+			if (canvas)
+			{
+				canvas->useNativeCursor(mPrevNativeCursorState);
+			}
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------

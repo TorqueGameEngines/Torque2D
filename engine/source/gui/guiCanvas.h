@@ -294,7 +294,7 @@ public:
 
    /// Enable/disable rendering of the cursor.
    /// @param   state    True if we should render cursor
-   virtual void showCursor(bool state)            { mShowCursor = state; Input::setCursorState(state); }
+   virtual void showCursor(bool state)            { mShowCursor = state; }
 
    /// Returns true if the cursor is being rendered.
    virtual bool isCursorShown()                   { return(mShowCursor); }

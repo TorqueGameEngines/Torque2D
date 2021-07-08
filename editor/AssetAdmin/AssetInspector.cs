@@ -92,7 +92,10 @@ function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
 	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.addHiddenField("AssetPrivate");
+	%this.inspector.addHiddenField("ExplicitMode");
 	%this.inspector.inspect(%imageAsset);
+	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)
@@ -102,7 +105,9 @@ function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
 	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%animationAsset);
+	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadParticleAsset(%this, %particleAsset, %assetID)
@@ -112,7 +117,9 @@ function AssetInspector::loadParticleAsset(%this, %particleAsset, %assetID)
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
 	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%particleAsset);
+	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadFontAsset(%this, %fontAsset, %assetID)
@@ -122,7 +129,9 @@ function AssetInspector::loadFontAsset(%this, %fontAsset, %assetID)
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
 	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%fontAsset);
+	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadAudioAsset(%this, %audioAsset, %assetID)
@@ -132,7 +141,9 @@ function AssetInspector::loadAudioAsset(%this, %audioAsset, %assetID)
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
 	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%audioAsset);
+	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadSpineAsset(%this, %spineAsset, %assetID)
@@ -142,5 +153,7 @@ function AssetInspector::loadSpineAsset(%this, %spineAsset, %assetID)
 	%this.inspector.addHiddenField("hidden");
 	%this.inspector.addHiddenField("locked");
 	%this.inspector.addHiddenField("AssetInternal");
+	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%spineAsset);
+	%this.inspector.openGroupByIndex(0);
 }

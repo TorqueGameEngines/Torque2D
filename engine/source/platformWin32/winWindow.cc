@@ -954,7 +954,10 @@ case WM_NCMOUSEMOVE:
 
 case WM_MOUSEMOVE:
    // keep trying until we actually show it
-   while (ShowCursor(FALSE) >= 0);
+   if(!Canvas->getUseNativeCursor())
+   {
+		while (ShowCursor(FALSE) >= 0);
+   }
    Input::refreshCursor();
 
    if ( !windowLocked )

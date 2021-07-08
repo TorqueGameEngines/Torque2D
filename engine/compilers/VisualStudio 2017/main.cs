@@ -22,4 +22,6 @@
 
 // This file simply points to the real main.cs file in the root of the working directory.
 // This is needed if the project is run in debug mode from within VisualStudio.
+setMainDotCsDir(makeFullPath("../../../"));
+setCurrentDirectory(makeFullPath("./"));
 exec("../../../main.cs");

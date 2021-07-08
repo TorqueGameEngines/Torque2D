@@ -29,7 +29,11 @@ ConsoleMethodGroupBeginWithDocs(FileDialog, SimObject)
 */
 ConsoleMethodWithDocs( FileDialog, Execute, ConsoleBool, 2, 2, ())
 {
-   return object->Execute();
+	object->preExecute();
+	bool result = object->Execute();
+	object->postExecute();
+
+	return result;
 }
 
 ConsoleMethodGroupEndWithDocs(FileDialog)

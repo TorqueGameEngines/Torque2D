@@ -130,6 +130,7 @@ void GuiCanvas::setCursor(GuiCursor *curs)
 
    if(mShowCursor)
    {
+		mUseNativeCursor = false;
        Input::setCursorState(false);
    }
 }
@@ -148,7 +149,18 @@ bool GuiCanvas::getUseNativeCursor(void)
 
 void GuiCanvas::useNativeCursor(bool useNative)
 {
-   mUseNativeCursor = useNative;
+	if(!mUseNativeCursor && useNative)
+	{
+		//We are turning on the native cursor
+		Input::setCursorState(true);
+	}
+	else if(mUseNativeCursor && !useNative)
+	{
+		//We are turning off the native cursor
+		Input::setCursorState(false);
+	}
+
+	mUseNativeCursor = useNative;
 }
 
 void GuiCanvas::setCursorPos(const Point2I &pt)   

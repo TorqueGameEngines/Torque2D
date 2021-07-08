@@ -23,7 +23,6 @@
 function AssetDictionaryButton::onAdd(%this)
 {
 	%this.call("load" @ %this.type, %this.assetID);
-	%this.assetID = "";
 }
 
 function AssetDictionaryButton::loadImageAsset(%this, %assetID)
