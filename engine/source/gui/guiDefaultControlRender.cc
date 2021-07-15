@@ -250,7 +250,6 @@ void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &
 	destRect.extent.y = Top.extent.y;
 	destRect.point.y = bounds.point.y;
 	stretchRect = Top;
-	stretchRect.inset(1, 0);
 	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
 
 	//bottom line stretch
@@ -259,7 +258,6 @@ void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &
 	destRect.extent.y = Bottom.extent.y;
 	destRect.point.y = bounds.point.y + bounds.extent.y - Bottom.extent.y;
 	stretchRect = Bottom;
-	stretchRect.inset(1, 0);
 	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
 
 	//left line stretch
@@ -268,7 +266,6 @@ void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &
 	destRect.extent.y = bounds.extent.y - TopLeft.extent.y - BottomLeft.extent.y;
 	destRect.point.y = bounds.point.y + TopLeft.extent.y;
 	stretchRect = Left;
-	stretchRect.inset(0, 1);
 	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
 
 	//right line stretch
@@ -277,7 +274,6 @@ void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &
 	destRect.extent.y = bounds.extent.y - TopRight.extent.y - BottomRight.extent.y;
 	destRect.point.y = bounds.point.y + TopRight.extent.y;
 	stretchRect = Right;
-	stretchRect.inset(0, 1);
 	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
 
 	//fill stretch
@@ -286,7 +282,6 @@ void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &
 	destRect.extent.y = bounds.extent.y - Top.extent.y - Bottom.extent.y;
 	destRect.point.y = bounds.point.y + Top.extent.y;
 	stretchRect = Fill;
-	stretchRect.inset(1, 1);
 	dglDrawBitmapStretchSR(texture, destRect, stretchRect);
 }
 
@@ -320,7 +315,6 @@ void renderFixedBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiContro
       destRect.point.y = bounds.point.y;
       //stretch it
       stretchRect = mBitmapBounds[Fill];
-      stretchRect.inset(1,0);
       //draw it
       dglDrawBitmapStretchSR(profile->mTextureHandle,destRect,stretchRect);
    }

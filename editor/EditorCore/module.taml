@@ -4,4 +4,9 @@
 	Description="Core module for the editor"
 	ScriptFile="EditorCore.cs"
 	CreateFunction="create"
-	DestroyFunction="destroy" />
+	DestroyFunction="destroy">
+		<DeclaredAssets
+			Path="Themes"
+			Extension="asset.taml"
+			Recurse="true"/>
+</ModuleDefinition>
