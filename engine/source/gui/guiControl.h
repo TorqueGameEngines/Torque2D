@@ -488,6 +488,9 @@ public:
     /// Called when this object has a new child. Congratulations!
     virtual void onChildAdded( GuiControl *child );
 
+	/// Called when a child is removed.
+	virtual inline void onChildRemoved(GuiControl* child) {};
+
     /// @}
 
     /// @name Console

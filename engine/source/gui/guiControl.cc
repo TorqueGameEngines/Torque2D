@@ -258,16 +258,26 @@ void GuiControl::addObject(SimObject *object)
   GuiControl *parent = ctrl->getParent();
   if( parent )
      parent->onChildAdded( ctrl );
-
-
 }
 
 void GuiControl::removeObject(SimObject *object)
 {
+	GuiControl *ctrl = dynamic_cast<GuiControl *>(object);
+	if (!ctrl)
+	{
+		AssertWarn(0, "GuiControl::removeObject: attempted to remove NON GuiControl from set");
+		return;
+	}
+	GuiControl *parent = ctrl->getParent();
+
    AssertFatal(mAwake == static_cast<GuiControl*>(object)->isAwake(), "GuiControl::removeObject: child control wake state is bad");
    if (mAwake)
       static_cast<GuiControl*>(object)->sleep();
     Parent::removeObject(object);
+
+	// If we are a child, notify our parent that we've been removed
+	if (parent)
+		parent->onChildRemoved(ctrl);
 }
 
 GuiControl *GuiControl::getParent()

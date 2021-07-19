@@ -587,7 +587,7 @@ void GuiListBoxCtrl::setItemText( S32 index, StringTableEntry text )
 #pragma region Sizing
 void GuiListBoxCtrl::updateSize()
 {
-   if( !mProfile )
+   if( !mProfile || !mProfile->mFont )
       return;
 
    GFont *font = mProfile->mFont;
