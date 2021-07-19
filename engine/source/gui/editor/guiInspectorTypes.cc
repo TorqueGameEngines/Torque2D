@@ -539,7 +539,11 @@ GuiControl * GuiInspectorTypeS32::constructEditControl(S32 width)
    }
    else
    {
-      return GuiInspectorField::constructEditControl(width);
+      GuiControl* retCtrl = GuiInspectorField::constructEditControl(width);
+	  GuiTextEditCtrl *editCtrl = dynamic_cast<GuiTextEditCtrl*>(retCtrl);
+	  editCtrl->setInputMode(GuiTextEditCtrl::InputMode::Number);
+
+	  return editCtrl;
    }
 }
 
@@ -549,6 +553,75 @@ const char* GuiInspectorTypeS32::getData()
       return "";
 
    return mTarget->getDataField(mField->pFieldname, NULL);
+}
+
+//////////////////////////////////////////////////////////////////////////
+// DualValue GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+void GuiInspectorTypeDualValue::constructEditControlChildren(GuiControl* retCtrl, S32 width)
+{
+	// make our x fields.
+	mCtrlX = new GuiTextEditCtrl();
+	GuiControl* mLabelX = new GuiControl();
+
+	// make our y fields.
+	mCtrlY = new GuiTextEditCtrl();
+	GuiControl* mLabelY = new GuiControl();
+
+	// Don't forget to register ourselves
+	registerEditControl(mCtrlX);
+	registerEditControl(mCtrlY);
+
+	// Let's make it look pretty.
+	mCtrlX->setControlProfile(mGroup->mInspector->mTextEditProfile);
+	mCtrlY->setControlProfile(mGroup->mInspector->mTextEditProfile);
+	mLabelX->setControlProfile(mGroup->mInspector->mLabelProfile);
+	mLabelY->setControlProfile(mGroup->mInspector->mLabelProfile);
+
+	// make and position our controls.
+	S32 labelWidth = 20;
+	mLabelX->setExtent(Point2I(labelWidth, 30));
+	mLabelY->setExtent(Point2I(labelWidth, 30));
+	mLabelX->setField("text", "X");
+	mLabelY->setField("text", "Y");
+
+	S32 halfX = mCeil(width / 2);
+	mLabelY->setPosition(Point2I(halfX, 0));
+
+	mCtrlX->setExtent(Point2I(halfX - labelWidth, 30));
+	mCtrlY->setExtent(Point2I(halfX - labelWidth, 30));
+
+	char szCommand[512];
+
+	dSprintf(szCommand, 512, "%d.apply(%d.getText() SPC %d.getText());", getId(), mCtrlX->getId(), mCtrlY->getId());
+
+	mCtrlX->setPosition(Point2I(labelWidth, 0));
+	mCtrlY->setPosition(Point2I(halfX + labelWidth, 0));
+
+	mCtrlX->setInputMode(GuiTextEditCtrl::InputMode::Number);
+	mCtrlY->setInputMode(GuiTextEditCtrl::InputMode::Number);
+
+	mCtrlX->setField("AltCommand", szCommand);
+	mCtrlY->setField("AltCommand", szCommand);
+
+	retCtrl->addObject(mLabelX);
+	retCtrl->addObject(mLabelY);
+	retCtrl->addObject(mCtrlX);
+	retCtrl->addObject(mCtrlY);
+}
+
+void GuiInspectorTypeDualValue::updateValue(StringTableEntry newValue)
+{
+	U32 elementCount = Utility::mGetStringElementCount(newValue);
+
+	if (elementCount > 0)
+	{
+		mCtrlX->setText(StringUnit::getUnit(newValue, 0, " \t\n"));
+	}
+	if (elementCount > 1)
+	{
+		mCtrlY->setText(StringUnit::getUnit(newValue, 1, " \t\n"));
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -565,105 +638,22 @@ void GuiInspectorTypePoint2I::consoleInit()
 
 GuiControl * GuiInspectorTypePoint2I::constructEditControl(S32 width)
 {
-   // Do everything in a simple way first.
-   // then complicate it.
-   GuiControl* retCtrl = new GuiControl();
+	GuiControl* retCtrl = new GuiControl();
 
-   // If we couldn't construct the control, bail!
-   if (retCtrl == NULL)
-      return retCtrl;
+	// If we couldn't construct the control, bail!
+	if (retCtrl == NULL)
+		return retCtrl;
 
-   // Let's make it look pretty.
-   retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 60));
+	// Let's make it look pretty.
+	retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
+	retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
 
-   // get our data.
-   const char* mData = mTarget->getDataField(mField->pFieldname, NULL);
-   // Don't forget to register ourselves
-   retCtrl->setCanSaveDynamicFields(true);
-   registerEditControl(retCtrl);
+	// Don't forget to register ourselves
+	registerEditControl(retCtrl);
 
-   // make our x fields.
-   GuiTextEditCtrl* mXctrl = new GuiTextEditCtrl();
-   GuiControl* mXLabel = new GuiControl();
+	constructEditControlChildren(retCtrl, width - mGroup->mInspector->mControlOffset.x);
 
-   // make our y fields.
-   GuiTextEditCtrl* mYctrl = new GuiTextEditCtrl();
-   GuiControl* mYLabel = new GuiControl();
-
-   // Don't forget to register ourselves
-   registerEditControl(mXctrl);
-   registerEditControl(mYctrl);
-
-   // Let's make it look pretty.
-   mXctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
-   mYctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
-   mXLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
-   mYLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
-
-   U32 mCount = StringUnit::getUnitCount(mData, " ");
-
-   for (U32 i = 0; i < mCount; i++)
-   {
-      const char* mVal = StringUnit::getUnit(mData, i, " ");
-
-      if (i == 0)
-      {
-         mXctrl->setText(mVal);
-      }
-      else
-      {
-         mYctrl->setText(mVal);
-      }
-   }
-
-   // make and position our controls.
-   mXLabel->setExtent(Point2I(15, 30));
-   mYLabel->setExtent(Point2I(15, 30));
-   mXLabel->setField("text","X:");
-   mYLabel->setField("text", "Y:");
-   mYLabel->setPosition(Point2I(0, 30));
-   
-   mXctrl->setExtent(Point2I(width - 25 - 20, 30));
-   mYctrl->setExtent(Point2I(width - 25 - 20, 30));
-
-   char szCommand[512];
-
-   dSprintf(szCommand, 512, "ApplyPoint2Value(\"%d.apply\",%d,%d);", getId(), mXctrl->getId(), mYctrl->getId());
-
-   mXctrl->setPosition(Point2I(10, 0));
-   mYctrl->setPosition(Point2I(10, 30));
-
-   // they can share the same command.
-   // set altCommand instead.
-   mXctrl->setField("AltCommand", szCommand);
-   mYctrl->setField("AltCommand", szCommand);
-
-   retCtrl->addObject(mXLabel);
-   retCtrl->addObject(mYLabel);
-   retCtrl->addObject(mXctrl);
-   retCtrl->addObject(mYctrl);
-   char szBuffX[512];
-   char szBuffY[512];
-   dSprintf(szBuffX, 512, "%d", mXctrl->getId());
-   dSprintf(szBuffY, 512, "%d", mYctrl->getId());
-   retCtrl->setDataField(StringTable->insert("fieldX"),NULL, StringTable->insert(szBuffX));
-   retCtrl->setDataField(StringTable->insert("fieldY"),NULL, StringTable->insert(szBuffY));
-
-   return retCtrl;
-}
-
-void GuiInspectorTypePoint2I::updateValue(StringTableEntry newValue)
-{
-   GuiControl *ctrl = dynamic_cast<GuiControl*>(mEdit);
-   if (ctrl != NULL)
-   {
-      const char* xField = ctrl->getDataField(StringTable->insert("fieldX"), NULL);
-      const char* yField = ctrl->getDataField(StringTable->insert("fieldY"), NULL);
-      Con::evaluatef("UpdatePoint2Value(\"%s\",\"%s\",\"%s\");", newValue, xField, yField);
-
-   }
-
+	return retCtrl;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -680,106 +670,25 @@ void GuiInspectorTypePoint2F::consoleInit()
 
 GuiControl * GuiInspectorTypePoint2F::constructEditControl(S32 width)
 {
-   GuiControl* retCtrl = new GuiControl();
+	GuiControl* retCtrl = new GuiControl();
 
-   // If we couldn't construct the control, bail!
-   if (retCtrl == NULL)
-      return retCtrl;
+	// If we couldn't construct the control, bail!
+	if (retCtrl == NULL)
+		return retCtrl;
 
-   // Let's make it look pretty.
-   retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 60));
+	// Let's make it look pretty.
+	retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
+	retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
 
-   // get our data.
-   const char* mData = mTarget->getDataField(mField->pFieldname, NULL);
-   // Don't forget to register ourselves
-   retCtrl->setCanSaveDynamicFields(true);
-   registerEditControl(retCtrl);
+	// Don't forget to register ourselves
+	registerEditControl(retCtrl);
 
-   // make our x fields.
-   GuiTextEditCtrl* mXctrl = new GuiTextEditCtrl();
-   GuiControl* mXLabel = new GuiControl();
+	constructEditControlChildren(retCtrl, width - mGroup->mInspector->mControlOffset.x);
 
-   // make our y fields.
-   GuiTextEditCtrl* mYctrl = new GuiTextEditCtrl();
-   GuiControl* mYLabel = new GuiControl();
+	mCtrlX->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
+	mCtrlY->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
 
-   // Don't forget to register ourselves
-   registerEditControl(mXctrl);
-   registerEditControl(mYctrl);
-
-   // Let's make it look pretty.
-   mXctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
-   mYctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
-   mXLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
-   mYLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
-
-   // the only difference between point2i and 2f
-   // keeping them separate just incase changes to textEdit.
-
-   U32 mCount = StringUnit::getUnitCount(mData, " ");
-
-   for (U32 i = 0; i < mCount; i++)
-   {
-      const char* mVal = StringUnit::getUnit(mData, i, " ");
-
-      if (i == 0)
-      {
-         mXctrl->setText(mVal);
-      }
-      else
-      {
-         mYctrl->setText(mVal);
-      }
-   }
-
-   // make and position our controls.
-   mXLabel->setExtent(Point2I(15, 30));
-   mYLabel->setExtent(Point2I(15, 30));
-   mXLabel->setField("text", "X:");
-   mYLabel->setField("text", "Y:");
-   mYLabel->setPosition(Point2I(0, 30));
-
-   mXctrl->setExtent(Point2I(width - 25 - 20, 30));
-   mYctrl->setExtent(Point2I(width - 25 - 20, 30));
-
-   char szCommand[512];
-
-   dSprintf(szCommand, 512, "ApplyPoint2Value(\"%d.apply\",%d,%d);", getId(), mXctrl->getId(), mYctrl->getId());
-
-   mXctrl->setPosition(Point2I(10, 0));
-   mYctrl->setPosition(Point2I(10, 30));
-
-   // they can share the same command.
-   // set altCommand instead.
-   mXctrl->setField("AltCommand", szCommand);
-   mYctrl->setField("AltCommand", szCommand);
-
-   retCtrl->addObject(mXLabel);
-   retCtrl->addObject(mYLabel);
-   retCtrl->addObject(mXctrl);
-   retCtrl->addObject(mYctrl);
-   char szBuffX[512];
-   char szBuffY[512];
-   dSprintf(szBuffX, 512, "%d", mXctrl->getId());
-   dSprintf(szBuffY, 512, "%d", mYctrl->getId());
-   retCtrl->setDataField(StringTable->insert("fieldX"), NULL, StringTable->insert(szBuffX));
-   retCtrl->setDataField(StringTable->insert("fieldY"), NULL, StringTable->insert(szBuffY));
-
-   return retCtrl;
-}
-
-void GuiInspectorTypePoint2F::updateValue(StringTableEntry newValue)
-{
-   GuiControl *ctrl = dynamic_cast<GuiControl*>(mEdit);
-   if (ctrl != NULL)
-   {
-      const char* xField = ctrl->getDataField(StringTable->insert("fieldX"), NULL);
-      const char* yField = ctrl->getDataField(StringTable->insert("fieldY"), NULL);
-      Con::evaluatef("UpdatePoint2Value(\"%s\",\"%s\",\"%s\");", newValue, xField, yField);
-
-   }
-
+	return retCtrl;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -796,105 +705,25 @@ void GuiInspectorTypeVector2::consoleInit()
 
 GuiControl * GuiInspectorTypeVector2::constructEditControl(S32 width)
 {
-   // yes vector2 is the same as point2f as well. 
-   // all of these could be done similarly to color. but testing need test.
-   GuiControl* retCtrl = new GuiControl();
+	GuiControl* retCtrl = new GuiControl();
 
-   // If we couldn't construct the control, bail!
-   if (retCtrl == NULL)
-      return retCtrl;
+	// If we couldn't construct the control, bail!
+	if (retCtrl == NULL)
+		return retCtrl;
 
-   // Let's make it look pretty.
-   retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 60));
+	// Let's make it look pretty.
+	retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
+	retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
 
-   // get our data.
-   const char* mData = mTarget->getDataField(mField->pFieldname, NULL);
-   // Don't forget to register ourselves
-   retCtrl->setCanSaveDynamicFields(true);
-   registerEditControl(retCtrl);
+	// Don't forget to register ourselves
+	registerEditControl(retCtrl);
 
-   // make our x fields.
-   GuiTextEditCtrl* mXctrl = new GuiTextEditCtrl();
-   GuiControl* mXLabel = new GuiControl();
+	constructEditControlChildren(retCtrl, width - mGroup->mInspector->mControlOffset.x);
 
-   // make our y fields.
-   GuiTextEditCtrl* mYctrl = new GuiTextEditCtrl();
-   GuiControl* mYLabel = new GuiControl();
+	mCtrlX->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
+	mCtrlY->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
 
-   // Don't forget to register ourselves
-   registerEditControl(mXctrl);
-   registerEditControl(mYctrl);
-
-   // Let's make it look pretty.
-   mXctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
-   mYctrl->setControlProfile(mGroup->mInspector->mTextEditProfile);
-   mXLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
-   mYLabel->setControlProfile(mGroup->mInspector->mLabelProfile);
-
-   U32 mCount = StringUnit::getUnitCount(mData, " ");
-
-   for (U32 i = 0; i < mCount; i++)
-   {
-      const char* mVal = StringUnit::getUnit(mData, i, " ");
-
-      if (i == 0)
-      {
-         mXctrl->setText(mVal);
-      }
-      else
-      {
-         mYctrl->setText(mVal);
-      }
-   }
-
-   // make and position our controls.
-   mXLabel->setExtent(Point2I(15, 30));
-   mYLabel->setExtent(Point2I(15, 30));
-   mXLabel->setField("text", "X:");
-   mYLabel->setField("text", "Y:");
-   mYLabel->setPosition(Point2I(0, 30));
-
-   mXctrl->setExtent(Point2I(width - 25 - 20, 30));
-   mYctrl->setExtent(Point2I(width - 25 - 20, 30));
-
-   char szCommand[512];
-
-   dSprintf(szCommand, 512, "ApplyPoint2Value(\"%d.apply\",%d,%d);", getId(), mXctrl->getId(), mYctrl->getId());
-
-   mXctrl->setPosition(Point2I(10, 0));
-   mYctrl->setPosition(Point2I(10, 30));
-
-   // they can share the same command.
-   // set altCommand instead.
-   mXctrl->setField("AltCommand", szCommand);
-   mYctrl->setField("AltCommand", szCommand);
-
-   retCtrl->addObject(mXLabel);
-   retCtrl->addObject(mYLabel);
-   retCtrl->addObject(mXctrl);
-   retCtrl->addObject(mYctrl);
-   char szBuffX[512];
-   char szBuffY[512];
-   dSprintf(szBuffX, 512, "%d", mXctrl->getId());
-   dSprintf(szBuffY, 512, "%d", mYctrl->getId());
-   retCtrl->setDataField(StringTable->insert("fieldX"), NULL, StringTable->insert(szBuffX));
-   retCtrl->setDataField(StringTable->insert("fieldY"), NULL, StringTable->insert(szBuffY));
-
-   return retCtrl;
-}
-
-void GuiInspectorTypeVector2::updateValue(StringTableEntry newValue)
-{
-   GuiControl *ctrl = dynamic_cast<GuiControl*>(mEdit);
-   if (ctrl != NULL)
-   {
-      const char* xField = ctrl->getDataField(StringTable->insert("fieldX"), NULL);
-      const char* yField = ctrl->getDataField(StringTable->insert("fieldY"), NULL);
-      Con::evaluatef("UpdatePoint2Value(\"%s\",\"%s\",\"%s\");", newValue, xField, yField);
-
-   }
-
+	return retCtrl;
 }
 
 //////////////////////////////////////////////////////////////////////////

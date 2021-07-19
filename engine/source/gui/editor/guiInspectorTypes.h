@@ -251,9 +251,23 @@ public:
 };
 
 //////////////////////////////////////////////////////////////////////////
+// DualValue GuiInspectorField Class
+//////////////////////////////////////////////////////////////////////////
+class GuiInspectorTypeDualValue : public GuiInspectorField
+{
+protected: 
+	GuiTextEditCtrl* mCtrlX;
+	GuiTextEditCtrl* mCtrlY;
+
+public:
+	virtual void		constructEditControlChildren(GuiControl* retCtrl, S32 width);
+	virtual void		updateValue(StringTableEntry newValue);
+};
+
+//////////////////////////////////////////////////////////////////////////
 // TypePoint2I GuiInspectorField Class
 //////////////////////////////////////////////////////////////////////////
-class GuiInspectorTypePoint2I : public GuiInspectorField
+class GuiInspectorTypePoint2I : public GuiInspectorTypeDualValue
 {
 private:
    typedef GuiInspectorField Parent;
@@ -265,13 +279,12 @@ public:
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
    virtual GuiControl*        constructEditControl(S32 width);
-   virtual void               updateValue(StringTableEntry newValue);
 };
 
 //////////////////////////////////////////////////////////////////////////
 // TypePoint2F GuiInspectorField Class
 //////////////////////////////////////////////////////////////////////////
-class GuiInspectorTypePoint2F : public GuiInspectorField
+class GuiInspectorTypePoint2F : public GuiInspectorTypeDualValue
 {
 private:
    typedef GuiInspectorField Parent;
@@ -283,13 +296,12 @@ public:
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
    virtual GuiControl*        constructEditControl(S32 width);
-   virtual void               updateValue(StringTableEntry newValue);
 };
 
 //////////////////////////////////////////////////////////////////////////
 // TypeVector2 GuiInspectorField Class
 //////////////////////////////////////////////////////////////////////////
-class GuiInspectorTypeVector2 : public GuiInspectorField
+class GuiInspectorTypeVector2 : public GuiInspectorTypeDualValue
 {
 private:
    typedef GuiInspectorField Parent;
@@ -301,7 +313,6 @@ public:
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
    virtual GuiControl*        constructEditControl(S32 width);
-   virtual void               updateValue(StringTableEntry newValue);
 };
 
 //////////////////////////////////////////////////////////////////////////
