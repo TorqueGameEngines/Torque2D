@@ -787,6 +787,22 @@ GuiTabPageCtrl *GuiTabBookCtrl::findHitTab( Point2I hitPoint )
    return NULL;
 }
 
+U32 GuiTabBookCtrl::getSelectedPage()
+{
+	U32 index = 0;
+
+	for (U32 i = 0; i < mPages.size(); i++)
+	{
+		if (mActivePage == mPages[i].Page)
+		{
+			index = i;
+			break;
+		}
+	}
+
+	return index;
+}
+
 void GuiTabBookCtrl::selectPage( S32 index )
 {
    if( index < 0 || index >= mPages.size())

@@ -154,6 +154,8 @@ private:
    /// This may change in the future.
    void addNewPage();
 
+   U32 getSelectedPage();
+
    /// Select a tab page based on an index
    /// @param   index   The index in the list that specifies which page to select
    void selectPage( S32 index );

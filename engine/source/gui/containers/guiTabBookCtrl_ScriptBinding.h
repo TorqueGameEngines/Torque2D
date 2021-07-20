@@ -25,7 +25,7 @@ ConsoleMethodGroupBeginWithDocs(GuiTabBookCtrl, GuiControl)
 /*! Selects the active tab by index.
 	@param pageIndex The zero-based index of the tab to make active.
 */
-ConsoleMethodWithDocs(GuiTabBookCtrl, selectPage, void, 3, 3, "(pageIndex)")
+ConsoleMethodWithDocs(GuiTabBookCtrl, selectPage, ConsoleVoid, 3, 3, "(pageIndex)")
 {
 	S32 pageIndex = dAtoi(argv[2]);
 
@@ -34,10 +34,19 @@ ConsoleMethodWithDocs(GuiTabBookCtrl, selectPage, void, 3, 3, "(pageIndex)")
 
 /*! Selects the active tab by name.
 	@param pageName The name that appears on the tab to make active.
+	@return No return value
 */
-ConsoleMethodWithDocs(GuiTabBookCtrl, selectPageName, void, 3, 3, "(pageName)")
+ConsoleMethodWithDocs(GuiTabBookCtrl, selectPageName, ConsoleVoid, 3, 3, "(pageName)")
 {
 	object->selectPage(argv[2]);
+}
+
+/*! Returns the currently selected page index.
+	@return The index of the currently selected page.
+*/
+ConsoleMethodWithDocs(GuiTabBookCtrl, getSelectedPage, ConsoleInt, 2, 2, "()")
+{
+	return object->getSelectedPage();
 }
 
 /*! Sets the currently used TabProfile for the GuiControl
