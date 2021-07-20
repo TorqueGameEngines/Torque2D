@@ -603,3 +603,59 @@ function TorqueSuitTheme::makeMenuProfile(%this)
 		borderBottom = %menuItemBorderBottom;
 	};
 }
+
+function TorqueSuitTheme::makeListBoxProfile(%this)
+{
+	%borderProfile = new GuiBorderProfile()
+	{
+		margin = 1;
+		marginHL = 1;
+		marginSL = 1;
+		marginNA = 1;
+
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+	};
+
+	%leftBorderProfile = new GuiBorderProfile()
+	{
+		margin = 1;
+		marginHL = 1;
+		marginSL = 1;
+		marginNA = 1;
+
+		padding = 8;
+		paddingHL = 8;
+		paddingSL = 8 - %this.borderSize;
+		paddingNA = 8;
+
+		borderSL = %this.borderSize;
+		borderColorSL = %this.color5;
+	};
+
+	%this.listBoxProfile = new GuiControlProfile ()
+	{
+	    // fill color
+	    fillColor = %this.adjustValue(%this.color1, 4);
+	    fillColorHL = %this.adjustValue(%this.color1, 8);
+	    fillColorSL = %this.color3;
+	    fillColorNA = %this.setAlpha(%this.color1, 150);
+		align = left;
+
+		tab = false;
+		canKeyFocus = true;
+
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 10);
+		fontColorSL = %this.adjustValue(%this.color1, 2);
+		fontColorNA = %this.adjustValue(%this.color4, -30);
+
+		borderDefault = %borderProfile;
+		borderLeft = %leftBorderProfile;
+	};
+}

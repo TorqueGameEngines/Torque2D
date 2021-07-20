@@ -53,12 +53,14 @@ function BaseTheme::onAdd(%this)
 	%this.makePrimaryButtonProfile();
 	%this.makeCheckboxProfile();
 	%this.makeTabProfile();
+	%this.makeSmallTabProfile();
 	%this.makeTextEditProfile();
 	%this.makeScrollProfile();
 	%this.makeConsoleProfile();
 	%this.makeMenuProfile();
 	%this.makeDropDownProfile();
 	%this.makeWindowProfile();
+	%this.makeListBoxProfile();
 }
 
 function BaseTheme::init(%this)
@@ -869,6 +871,62 @@ function BaseTheme::makeTabProfile(%this)
 	};
 }
 
+function BaseTheme::makeSmallTabProfile(%this)
+{
+	%tabBorder = new GuiBorderProfile()
+	{
+		margin = 1;
+		marginHL = 1;
+		marginSL = 0;
+		marginNA = 1;
+
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		padding = 2;
+		paddingHL = 2;
+		paddingSL = 3;
+		paddingNA = 2;
+
+		borderColor = "0 0 0 90";
+		borderColorHL = "0 0 0 90";
+		borderColorSL = "255 255 255 90";
+		borderColorNA = "0 0 0 90";
+	};
+
+	%this.smallTabProfile = new GuiControlProfile ()
+	{
+		fillColor = %this.color3;
+		fillColorHL = %this.adjustValue(%this.color3, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.setAlpha(%this.color3, 150);
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.setAlpha(%this.color4, 100);
+		align = Center;
+
+		borderDefault = %tabBorder;
+	};
+	%bookBorderDefault = new GuiBorderProfile()
+	{
+		padding = 0;
+		border = 1;
+		borderColor = "0 0 0 50";
+	};
+	%this.smallTabBookProfile = new GuiControlProfile ()
+	{
+		borderDefault = %bookBorderDefault;
+		fillcolor = %this.adjustValue(%this.color2, -10);
+	};
+}
+
 function BaseTheme::makeTextEditProfile(%this)
 {
 	%labelBorder = new GuiBorderProfile()
@@ -1507,6 +1565,45 @@ function BaseTheme::makeWindowProfile(%this)
 		fontColorNA = %this.color1;
 
 		borderDefault = %windowButtonBorder;
+	};
+}
+
+function BaseTheme::makeListBoxProfile(%this)
+{
+	%borderProfile = new GuiBorderProfile()
+	{
+		margin = 1;
+		marginHL = 1;
+		marginSL = 1;
+		marginNA = 1;
+
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+	};
+
+	%this.listBoxProfile = new GuiControlProfile ()
+	{
+	    // fill color
+	    fillColor = %this.adjustValue(%this.color1, 2);
+	    fillColorHL = %this.adjustValue(%this.color1, 4);
+	    fillColorSL = %this.color5;
+	    fillColorNA = %this.setAlpha(%this.color1, 150);
+		align = left;
+
+		tab = false;
+		canKeyFocus = true;
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 20);
+		fontColorSL = %this.adjustValue(%this.color1, 2);
+		fontColorNA = %this.adjustValue(%this.color4, -30);
+
+		borderDefault = %borderProfile;
 	};
 }
 
