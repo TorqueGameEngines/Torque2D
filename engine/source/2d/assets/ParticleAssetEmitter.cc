@@ -281,9 +281,10 @@ void ParticleAssetEmitter::initPersistFields()
     addProtectedField("IsTargeting", TypeBool, Offset(mTargetParticle, ParticleAssetEmitter), &setIsTargeting, &defaultProtectedGetFn, &writeTargetParticle, "");
     addProtectedField("TargetPosition", TypeVector2, Offset(mTargetPosition, ParticleAssetEmitter), &setTargetPosition, &defaultProtectedGetFn, &writeTargetPosition, "");
 
+	//NOTE: long-term we plan to move physics particles to their own emmitter type.
     //Physics Particles
-    addProtectedField("PhysicsParticle", TypeBool, Offset(mPhysicsParticles, ParticleAssetEmitter), &setPhysicsParticles, &defaultProtectedGetFn, &writePhysicsParticles, "");
-    addProtectedField("PhysicsParticleType", TypeEnum, Offset(mPhysicsParticleType, ParticleAssetEmitter), &setPhysicsParticleType, &defaultProtectedGetFn, &writePhysicsParticleType, 1, &PhysicsParticleTypeTable);
+    //addProtectedField("PhysicsParticle", TypeBool, Offset(mPhysicsParticles, ParticleAssetEmitter), &setPhysicsParticles, &defaultProtectedGetFn, &writePhysicsParticles, "");
+    //addProtectedField("PhysicsParticleType", TypeEnum, Offset(mPhysicsParticleType, ParticleAssetEmitter), &setPhysicsParticleType, &defaultProtectedGetFn, &writePhysicsParticleType, 1, &PhysicsParticleTypeTable);
     //Physics Particles end---
 
     addProtectedField("EmitterAngle", TypeF32, Offset(mEmitterAngle, ParticleAssetEmitter), &setEmitterAngle, &defaultProtectedGetFn, &writeEmitterAngle, "");

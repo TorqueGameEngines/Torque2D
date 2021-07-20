@@ -315,7 +315,7 @@ protected:
     static bool     writeEmitterOffset( void* obj, StringTableEntry pFieldName )        { return static_cast<ParticleAssetEmitter*>(obj)->getEmitterOffset().notZero(); }
 
     static bool     setIsTargeting(void* obj, const char* data)                      { static_cast<ParticleAssetEmitter*>(obj)->setIsTargeting(dAtob(data)); return false; }
-    static bool     writeTargetParticle(void* obj, StringTableEntry pFieldName)         { return static_cast<ParticleAssetEmitter*>(obj)->getIsTargeting() == false; }
+    static bool     writeTargetParticle(void* obj, StringTableEntry pFieldName)         { return static_cast<ParticleAssetEmitter*>(obj)->getIsTargeting(); }
     static bool     setTargetPosition(void* obj, const char* data)                      { static_cast<ParticleAssetEmitter*>(obj)->setTargetPosition(Vector2(data)); return false; }
     static bool     writeTargetPosition(void* obj, StringTableEntry pFieldName)         { return static_cast<ParticleAssetEmitter*>(obj)->getTargetPosition().notZero(); }
 
