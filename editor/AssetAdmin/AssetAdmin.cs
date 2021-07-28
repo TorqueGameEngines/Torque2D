@@ -33,6 +33,7 @@ function AssetAdmin::create(%this)
 	exec("./NewParticleAssetDialog.cs");
 	exec("./NewFontAssetDialog.cs");
 	exec("./NewAudioAssetDialog.cs");
+	exec("./ParticleEditor/exec.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
 	%this.guiPage.add(%this.buildAssetWindow());

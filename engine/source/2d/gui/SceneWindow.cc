@@ -1743,7 +1743,8 @@ void SceneWindow::resize(const Point2I &newPosition, const Point2I &newExtent)
     dSprintf( argBuffer, 64, "%d %d %d %d", newPosition.x, newPosition.y, newExtent.x, newExtent.y );
 
     // Resize Callback.
-    Con::executef( this, 2, "onExtentChange", argBuffer );
+	if(this->getNamespace())
+		Con::executef( this, 2, "onExtentChange", argBuffer );
 }
 
 //-----------------------------------------------------------------------------

@@ -1020,7 +1020,6 @@ void GuiControl::setControlProfile(GuiControlProfile *prof)
    mProfile = prof;
    if(mAwake)
       mProfile->incRefCount();
-
 }
 
 void GuiControl::onPreRender()

@@ -251,6 +251,26 @@ S32 ParticleAssetField::setSingleDataKey( const F32 value )
 
 //-----------------------------------------------------------------------------
 
+bool ParticleAssetField::doesKeyExist(const F32 time)
+{
+	U32 index = 0;
+	for (index = 0; index < getDataKeyCount(); index++)
+	{
+		// Found Time?
+		if (mDataKeys[index].mTime == time)
+		{
+			return true;
+		}
+		// Past Time?
+		else if (mDataKeys[index].mTime > time)
+			// Finish search.
+			break;
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+
 S32 ParticleAssetField::addDataKey( const F32 time, const F32 value )
 {
     // Check Max Time.

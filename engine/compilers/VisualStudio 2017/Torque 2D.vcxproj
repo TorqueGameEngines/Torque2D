@@ -620,6 +620,7 @@
     <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\editor\guiParticleGraphInspector.cc" />
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiCanvas.cc" />
     <ClCompile Include="..\..\source\gui\guiColorPicker.cc" />
@@ -1159,6 +1160,8 @@
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas_ScriptBinding.h" />

@@ -25,12 +25,16 @@ function AssetWindow::onAdd(%this)
 
 }
 
+function AssetWindow::resetCamera(%this)
+{
+	%this.setCameraPosition("0 0");
+	%this.setCameraZoom(1);
+}
+
 function AssetWindow::displayImageAsset(%this, %imageAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
-	%this.setCameraPosition("0 0");
-	%this.setCameraZoom(1);
 	%size = %this.getWorldSize(%imageAsset.getImageSize());
 	%sizeX = getWord(%size, 0);
 	%sizeY = getWord(%size, 1);
@@ -113,8 +117,6 @@ function AssetWindow::displayAnimationAsset(%this, %imageAsset, %animationAsset,
 {
 	AssetAdmin.AssetScene.clear(true);
 
-	%this.setCameraPosition("0 0");
-	%this.setCameraZoom(1);
 	%size = %this.getWorldSize(%imageAsset.getFrameSize(0));
 	new Sprite()
 	{
@@ -132,8 +134,6 @@ function AssetWindow::displayParticleAsset(%this, %particleAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
-	%this.setCameraPosition("0 0");
-	%this.setCameraZoom(5);
 	new ParticlePlayer()
 	{
 		Scene = AssetAdmin.AssetScene;
@@ -150,8 +150,6 @@ function AssetWindow::displayFontAsset(%this, %fontAsset, %assetID)
 {
 	AssetAdmin.AssetScene.clear(true);
 
-	%this.setCameraPosition("0 0");
-	%this.setCameraZoom(1);
 	%size = %this.getWorldSize("10 10");
 	new TextSprite()
 	{

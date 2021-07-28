@@ -61,6 +61,7 @@ function BaseTheme::onAdd(%this)
 	%this.makeDropDownProfile();
 	%this.makeWindowProfile();
 	%this.makeListBoxProfile();
+	%this.makeGraphProfile();
 }
 
 function BaseTheme::init(%this)
@@ -1604,6 +1605,33 @@ function BaseTheme::makeListBoxProfile(%this)
 		fontColorNA = %this.adjustValue(%this.color4, -30);
 
 		borderDefault = %borderProfile;
+	};
+}
+
+function BaseTheme::makeGraphProfile(%this)
+{
+	%border = new GuiBorderProfile()
+	{
+		padding = 4;
+		border = %this.borderSize;
+		borderColor = %this.color3; //Used for the border as normal
+	};
+
+	%this.graphProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color2; //Used for the background of the control as normal
+		fillColorHL = %this.setAlpha(%this.color3, 220); //Used for the grid and labels
+		fillColorSL = %this.color5; //Used for the lines of the control
+		fillColorNA = %this.setAlpha(%this.color5, 100); //Used for the variance when it is displayed
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
+		fontColor = %this.color4; //Used for the points
+		fontColorHL = %this.adjustValue(%this.color4, 10); //Used for the points when they are hovered over
+		fontColorSL = %this.adjustValue(%this.color5, 10); //Used for the selected points
+
+		borderDefault = %border;
 	};
 }
 
