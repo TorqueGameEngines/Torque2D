@@ -1667,6 +1667,11 @@ void GuiControl::setActive( bool value )
 {
    mActive = value;
 
+   if (value && isMethod("onActive"))
+	   Con::executef(this, 1, "onActive");
+	else if (!value && isMethod("onInactive"))
+		Con::executef(this, 1, "onInactive");
+
    if ( !mActive )
       clearFirstResponder();
 
