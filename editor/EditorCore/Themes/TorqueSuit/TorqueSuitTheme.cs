@@ -32,7 +32,7 @@ function TorqueSuitTheme::makeButtonProfile(%this)
 	{
 		fillColor = %this.color2;
 		fillColorHL = %this.adjustValue(%this.color2, 10);
-		fillColorSL = %this.adjustValue(%this.color2, -20);
+		fillColorSL = %this.adjustValue(%this.color2, -2);
 		fillColorNA = %this.setAlpha(%this.color2, 80);
 
 		fontType = %this.font[2];
@@ -40,9 +40,39 @@ function TorqueSuitTheme::makeButtonProfile(%this)
 		fontSize = %this.fontSize;
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
-		fontColorSL = "255 255 255 150";
-		fontColorNA = %this.setAlpha(%this.color4, 100);
+		fontColorSL = %this.color5;
+		fontColorNA = %this.setAlpha(%this.color3, 100);
 		align = Center;
+		valign = Middle;
+
+		borderDefault = %buttonBorder;
+	};
+}
+
+function TorqueSuitTheme::makeIconButtonProfile(%this)
+{
+	%buttonBorder = new GuiBorderProfile()
+	{
+		padding = 2;
+		paddingHL = 2;
+		paddingSL = 2;
+		paddingNA = 2;
+	};
+
+	%this.iconButtonProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color2;
+		fillColorHL = %this.adjustValue(%this.color2, 10);
+		fillColorSL = %this.adjustValue(%this.color2, -2);
+		fillColorNA = %this.setAlpha(%this.color2, 80);
+
+		fontSize = %this.fontSize;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 10);
+		fontColorSL = %this.color5;
+		fontColorNA = %this.setAlpha(%this.color3, 100);
+		align = Center;
+		valign = Middle;
 
 		borderDefault = %buttonBorder;
 	};

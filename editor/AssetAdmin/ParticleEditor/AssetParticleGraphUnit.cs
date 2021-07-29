@@ -15,43 +15,43 @@ function AssetParticleGraphUnit::onAdd(%this)
 	%center = 6 + mRound(getWord(%this.graph.extent, 1) / 2);
 	%this.valueZoomInButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 0;
 		Position = "2" SPC (%center + 13);
-		Extent = "24 24";
-		Text = "+";
 		Command = %this.getId() @ ".valueZoomIn();";
 	};
-	ThemeManager.setProfile(%this.valueZoomInButton, "buttonProfile");
+	ThemeManager.setProfile(%this.valueZoomInButton, "iconButtonProfile");
 	%this.add(%this.valueZoomInButton);
 
 	%this.valueZoomOutButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 1;
 		Position = "2" SPC (%center - 13);
-		Extent = "24 24";
-		Text = "-";
 		Command = %this.getId() @ ".valueZoomOut();";
 	};
-	ThemeManager.setProfile(%this.valueZoomOutButton, "buttonProfile");
+	ThemeManager.setProfile(%this.valueZoomOutButton, "iconButtonProfile");
 	%this.add(%this.valueZoomOutButton);
 
 	//Value move buttons
 	%this.valueMoveUpButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 2;
 		Position = "2 18";
-		Extent = "24 24";
-		Text = "^";
 		Command = %this.getId() @ ".valueMoveUp();";
 	};
-	ThemeManager.setProfile(%this.valueMoveUpButton, "buttonProfile");
+	ThemeManager.setProfile(%this.valueMoveUpButton, "iconButtonProfile");
 	%this.add(%this.valueMoveUpButton);
 
 	%this.valueMoveDownButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 6;
 		Position = "2" SPC (getWord(%this.extent, 1) - 66);
-		Extent = "24 24";
-		Text = "v";
 		Command = %this.getId() @ ".valueMoveDown();";
 	};
-	ThemeManager.setProfile(%this.valueMoveDownButton, "buttonProfile");
+	ThemeManager.setProfile(%this.valueMoveDownButton, "iconButtonProfile");
 	%this.add(%this.valueMoveDownButton);
 
 	//time zoom buttons
@@ -68,45 +68,45 @@ function AssetParticleGraphUnit::onAdd(%this)
 
 	%this.timeZoomInButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 0;
 		Position = "0 0";
-		Extent = "24 24";
-		Text = "+";
 		Command = %this.getId() @ ".timeZoomIn();";
 	};
-	ThemeManager.setProfile(%this.timeZoomInButton, "buttonProfile");
+	ThemeManager.setProfile(%this.timeZoomInButton, "iconButtonProfile");
 	%this.timeZoomContainer.add(%this.timeZoomInButton);
 
 	%this.timeZoomOutButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 1;
 		Position = "26 0";
-		Extent = "24 24";
-		Text = "-";
 		Command = %this.getId() @ ".timeZoomOut();";
 	};
-	ThemeManager.setProfile(%this.timeZoomOutButton, "buttonProfile");
+	ThemeManager.setProfile(%this.timeZoomOutButton, "iconButtonProfile");
 	%this.timeZoomContainer.add(%this.timeZoomOutButton);
 
 	//Time move buttons
 	%this.timeMoveBackButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 8;
 		HorizSizing = "right";
 		Position = "30" SPC %bottom;
-		Extent = "24 24";
-		Text = "<";
 		Command = %this.getId() @ ".timeMoveBack();";
 	};
-	ThemeManager.setProfile(%this.timeMoveBackButton, "buttonProfile");
+	ThemeManager.setProfile(%this.timeMoveBackButton, "iconButtonProfile");
 	%this.add(%this.timeMoveBackButton);
 
 	%this.timeMoveForwardButton = new GuiButtonCtrl()
 	{
+		Class = "EditorIconButton";
+		Frame = 4;
 		HorizSizing = "left";
 		Position = (getWord(%this.graph.extent, 0) + 6) SPC %bottom;
-		Extent = "24 24";
-		Text = ">";
 		Command = %this.getId() @ ".timeMoveForward();";
 	};
-	ThemeManager.setProfile(%this.timeMoveForwardButton, "buttonProfile");
+	ThemeManager.setProfile(%this.timeMoveForwardButton, "iconButtonProfile");
 	%this.add(%this.timeMoveForwardButton);
 }
 
@@ -192,6 +192,11 @@ function AssetParticleGraphUnit::setTimeController(%this, %controller)
 
 function AssetParticleGraphUnit::refreshCamera(%this)
 {
+	if(!isObject(%this.timeController) || !isObject(%this.valueController))
+	{
+		return;
+	}
+	
 	%xMin = %this.timeController.getCameraMin();
 	%xMax = %this.timeController.getCameraMax();
 	%yMin = %this.valueController.getCameraMin();

@@ -25,6 +25,7 @@ function EditorCore::create( %this )
 	exec("./Themes/ThemeManager.cs");
 	exec("./EditorDialog.cs");
 	exec("./EditorForm.cs");
+	exec("./EditorIconButton.cs");
 
 	new ScriptObject(ThemeManager);
 

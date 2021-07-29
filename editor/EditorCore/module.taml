@@ -9,4 +9,8 @@
 			Path="Themes"
 			Extension="asset.taml"
 			Recurse="true"/>
+		<DeclaredAssets
+			Path="images"
+			Extension="asset.taml"
+			Recurse="true"/>
 </ModuleDefinition>

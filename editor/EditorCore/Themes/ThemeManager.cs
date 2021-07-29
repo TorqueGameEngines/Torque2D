@@ -67,6 +67,7 @@ function ThemeManager::setTheme(%this, %i)
 	%theme = %this.themeList.getObject(%i);
 	%this.activeTheme = %theme;
 	%this.refreshProfiles();
+	%this.postEvent("ThemeChange", %theme);
 }
 
 function ThemeManager::nextTheme(%this)
