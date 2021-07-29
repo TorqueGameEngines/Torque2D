@@ -609,8 +609,23 @@ ConsoleMethodWithDocs(GuiSpriteCtrl, setImageColor, ConsoleVoid, 3, 3, "(color r
 		return;
 	}
 
-
 	const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
+	if (colorCount == 1)
+	{
+		// Is this a stock color name?
+		if (!StockColor::isColor(argv[2]))
+		{
+			// No, so warn.
+			Con::warnf("GuiSpriteCtrl::setImageColor() - Invalid single argument of '%s' could not be interpreted as a stock color name.", argv[2]);
+			return;
+		}
+
+		// Set stock color (if it's invalid we'll get the default.
+		object->setImageColor(ColorI(argv[2]));
+
+		return;
+	}
+
 	if (colorCount != 3 && colorCount != 4)
 	{
 		Con::warnf("GuiSpriteCtrl::setImageColor() - Colors require 4 values between 0 and 255 (red, green, blue, alpha)!");
@@ -832,13 +847,6 @@ ConsoleMethodWithDocs(GuiSpriteCtrl, fadeTo, ConsoleVoid, 4, 5, "(Vector2 x y, i
 		return;
 	}
 
-	const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
-	if (colorCount != 4)
-	{
-		Con::warnf("GuiSpriteCtrl::fadeTo() - Color requires 4 values between 0 and 255 (red, green, blue, alpha)");
-		return;
-	}
-
 	EasingFunction ease = Linear;
 	if (argc == 5)
 	{
@@ -847,6 +855,29 @@ ConsoleMethodWithDocs(GuiSpriteCtrl, fadeTo, ConsoleVoid, 4, 5, "(Vector2 x y, i
 			if (dStricmp(easingEnums[i].label, argv[4]) == 0)
 				ease = (EasingFunction)easingEnums[i].index;
 		}
+	}
+
+	const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
+	if (colorCount == 1)
+	{
+		// Is this a stock color name?
+		if (!StockColor::isColor(argv[2]))
+		{
+			// No, so warn.
+			Con::warnf("GuiSpriteCtrl::fadeTo() - Invalid single argument of '%s' could not be interpreted as a stock color name.", argv[2]);
+			return;
+		}
+
+		// Set stock color (if it's invalid we'll get the default).
+		object->fadeTo(ColorI(argv[2]), dAtoi(argv[3]), ease);
+
+		return;
+	}
+
+	if (colorCount != 4)
+	{
+		Con::warnf("GuiSpriteCtrl::fadeTo() - Color requires 4 values between 0 and 255 (red, green, blue, alpha)");
+		return;
 	}
 
 	object->fadeTo(ColorI(dAtof(Utility::mGetStringElement(argv[2], 0)),
