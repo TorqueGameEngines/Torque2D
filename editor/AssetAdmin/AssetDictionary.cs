@@ -85,13 +85,30 @@ function AssetDictionary::addButton(%this, %assetID)
 	ThemeManager.setProfile(%button, "tipProfile", "TooltipProfile");
 	%this.grid.add(%button);
 
+	%this.fixSize();
+
+	return %button;
+}
+
+function AssetDictionary::removeButton(%this, %assetID)
+{
+	%button = %this.getButton(%assetID);
+	if(isObject(%button))
+	{
+		%button.delete();
+		%this.fixSize();
+		return true;
+	}
+	return false;
+}
+
+function AssetDictionary::fixSize(%this)
+{
 	if(%this.getExpanded())
 	{
 		%this.setExpanded(false);
 		%this.setExpanded(true);
 	}
-
-	return %button;
 }
 
 function AssetDictionary::getButton(%this, %assetID)
@@ -115,21 +132,12 @@ function AssetDictionary::unload(%this)
 		%obj = %this.grid.getObject(%i);
 		%obj.delete();
 	}
+}
 
-	//release all the assets we loaded for this - might take them out of memory
-	// %query = new AssetQuery();
-	// AssetDatabase.findAllAssets(%query);
-	// AssetDatabase.findAssetType(%query, %this.Type, true);
-	//
-	// for(%i = 0; %i < %query.getCount(); %i++)
-	// {
-	// 	%assetID = %query.getAsset(%i);
-	// 	if(!AssetDatabase.isAssetInternal(%assetID))
-	// 	{
-	// 		AssetDatabase.releaseAsset(%assetID);
-	// 	}
-	// }
-	// %query.delete();
+function AssetDictionary::reload(%this)
+{
+	%this.unload();
+	%this.load();
 }
 
 function AssetDictionarySprite::onAnimationEnd(%this, %animationAssetID)

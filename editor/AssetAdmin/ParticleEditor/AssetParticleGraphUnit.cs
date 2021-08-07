@@ -19,6 +19,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		Frame = 0;
 		Position = "2" SPC (%center + 13);
 		Command = %this.getId() @ ".valueZoomIn();";
+		Tooltip = "Zoom In";
 	};
 	ThemeManager.setProfile(%this.valueZoomInButton, "iconButtonProfile");
 	%this.add(%this.valueZoomInButton);
@@ -29,6 +30,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		Frame = 1;
 		Position = "2" SPC (%center - 13);
 		Command = %this.getId() @ ".valueZoomOut();";
+		Tooltip = "Zoom Out";
 	};
 	ThemeManager.setProfile(%this.valueZoomOutButton, "iconButtonProfile");
 	%this.add(%this.valueZoomOutButton);
@@ -40,6 +42,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		Frame = 2;
 		Position = "2 18";
 		Command = %this.getId() @ ".valueMoveUp();";
+		Tooltip = "Move Graph Up";
 	};
 	ThemeManager.setProfile(%this.valueMoveUpButton, "iconButtonProfile");
 	%this.add(%this.valueMoveUpButton);
@@ -50,6 +53,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		Frame = 6;
 		Position = "2" SPC (getWord(%this.extent, 1) - 66);
 		Command = %this.getId() @ ".valueMoveDown();";
+		Tooltip = "Move Graph Down";
 	};
 	ThemeManager.setProfile(%this.valueMoveDownButton, "iconButtonProfile");
 	%this.add(%this.valueMoveDownButton);
@@ -72,6 +76,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		Frame = 0;
 		Position = "0 0";
 		Command = %this.getId() @ ".timeZoomIn();";
+		Tooltip = "Zoom In";
 	};
 	ThemeManager.setProfile(%this.timeZoomInButton, "iconButtonProfile");
 	%this.timeZoomContainer.add(%this.timeZoomInButton);
@@ -82,6 +87,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		Frame = 1;
 		Position = "26 0";
 		Command = %this.getId() @ ".timeZoomOut();";
+		Tooltip = "Zoom Out";
 	};
 	ThemeManager.setProfile(%this.timeZoomOutButton, "iconButtonProfile");
 	%this.timeZoomContainer.add(%this.timeZoomOutButton);
@@ -94,6 +100,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		HorizSizing = "right";
 		Position = "30" SPC %bottom;
 		Command = %this.getId() @ ".timeMoveBack();";
+		Tooltip = "Move Graph Back";
 	};
 	ThemeManager.setProfile(%this.timeMoveBackButton, "iconButtonProfile");
 	%this.add(%this.timeMoveBackButton);
@@ -105,6 +112,7 @@ function AssetParticleGraphUnit::onAdd(%this)
 		HorizSizing = "left";
 		Position = (getWord(%this.graph.extent, 0) + 6) SPC %bottom;
 		Command = %this.getId() @ ".timeMoveForward();";
+		Tooltip = "Move Graph Forward";
 	};
 	ThemeManager.setProfile(%this.timeMoveForwardButton, "iconButtonProfile");
 	%this.add(%this.timeMoveForwardButton);
@@ -196,7 +204,7 @@ function AssetParticleGraphUnit::refreshCamera(%this)
 	{
 		return;
 	}
-	
+
 	%xMin = %this.timeController.getCameraMin();
 	%xMax = %this.timeController.getCameraMax();
 	%yMin = %this.valueController.getCameraMin();

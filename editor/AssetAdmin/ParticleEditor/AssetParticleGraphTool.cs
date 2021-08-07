@@ -192,8 +192,8 @@ function AssetParticleGraphTool::inspect(%this, %asset, %emitterID)
 		%this.lifeGraph.graph.inspect(%asset);
 	}
 	%this.baseList.clearSelection();
-	%this.baseList.setCurSel(0);
 	%this.emitterID = %emitterID;
+	%this.baseList.setCurSel(0);
 }
 
 function AssetParticleGraphToolList::onSelect(%this, %index, %text, %id)

@@ -119,6 +119,11 @@ ParticleAssetField* GuiParticleGraphInspector::getTargetField()
 
 	if (field == NULL)
 	{
+		if (mEmitterIndex >= mTargetAsset->getEmitterCount())
+		{
+			mEmitterIndex = mTargetAsset->getEmitterCount() - 1;
+		}
+
 		ParticleAssetEmitter* emitter = mTargetAsset->getEmitter(mEmitterIndex);
 		ParticleAssetFieldCollection &emitterCollection = emitter->getParticleFields();
 		field = emitterCollection.findField(mTargetField);

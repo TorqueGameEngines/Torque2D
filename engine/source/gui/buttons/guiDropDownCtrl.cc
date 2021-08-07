@@ -56,6 +56,11 @@ void GuiDropDownListBoxCtrl::addSelection(LBItem *item, S32 index)
 void GuiDropDownListBoxCtrl::setCurSel(S32 index)
 {
 	Parent::setCurSel(index);
+}
+
+void GuiDropDownListBoxCtrl::onTouchUp(const GuiEvent &event)
+{
+	Parent::onTouchUp(event);
 	mDropDownCtrl->closeDropDown();
 }
 #pragma endregion

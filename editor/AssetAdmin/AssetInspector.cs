@@ -52,6 +52,36 @@ function AssetInspector::onAdd(%this)
 	ThemeManager.setProfile(%this.titleDropDown, "scrollingPanelArrowProfile", "ArrowProfile");
 	%this.titlebar.add(%this.titleDropDown);
 
+	%this.deleteAssetButton = new GuiButtonCtrl()
+	{
+		HorizSizing = "left";
+		Class = "EditorIconButton";
+		Frame = 48;
+		Position = "660 5";
+		Command = %this.getId() @ ".deleteAsset();";
+		Tooltip = "Delete Asset";
+		Visible = false;
+	};
+	ThemeManager.setProfile(%this.deleteAssetButton, "iconButtonProfile");
+	%this.add(%this.deleteAssetButton);
+
+	%this.emitterButtonBar = new GuiChainCtrl()
+	{
+		Class = "EditorButtonBar";
+		Position = "340 5";
+		Extent = "0 24";
+		ChildSpacing = 4;
+		IsVertical = false;
+		Tool = %this;
+		Visible = false;
+	};
+	ThemeManager.setProfile(%this.emitterButtonBar, "emptyProfile");
+	%this.add(%this.emitterButtonBar);
+	%this.emitterButtonBar.addButton("AddEmitter", 25, "Add Emitter", "");
+	%this.emitterButtonBar.addButton("MoveEmitterBackward", 27, "Move Emitter Backward", "getMoveEmitterBackwardEnabled");
+	%this.emitterButtonBar.addButton("MoveEmitterForward", 28, "Move Emitter Forward", "getMoveEmitterForwardEnabled");
+	%this.emitterButtonBar.addButton("RemoveEmitter", 23, "Remove Emitter", "getRemoveEmitterEnabled");
+
 	%this.tabBook = new GuiTabBookCtrl()
 	{
 		Class = AssetInspectorTabBook;
@@ -156,6 +186,15 @@ function AssetInspector::createInspector(%this)
 	return %inspector;
 }
 
+function AssetInspector::hideInspector(%this)
+{
+	%this.titlebar.setText("");
+	%this.titleDropDown.visible = false;
+	%this.tabBook.Visible = false;
+	%this.emitterButtonBar.visible = false;
+	%this.deleteAssetButton.visible = false;
+}
+
 function AssetInspector::resetInspector(%this)
 {
 	%this.titlebar.setText("");
@@ -170,6 +209,9 @@ function AssetInspector::resetInspector(%this)
 	{
 		%this.tabBook.remove(%this.emitterGraphPage);
 	}
+
+	%this.emitterButtonBar.visible = false;
+	%this.deleteAssetButton.visible = true;
 }
 
 function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
@@ -206,6 +248,14 @@ function AssetInspector::loadParticleAsset(%this, %particleAsset, %assetID)
 	%this.resetInspector();
 	%this.titleDropDown.visible = true;
 
+	%this.refreshParticleTitleDropDown(%particleAsset, 0);
+	%this.titleDropDown.Command = %this.getId() @ ".onChooseParticleAsset(" @ %particleAsset.getId() @ ");";
+
+	%this.onChooseParticleAsset(%particleAsset);
+}
+
+function AssetInspector::refreshParticleTitleDropDown(%this, %particleAsset, %index)
+{
 	%this.titleDropDown.clearItems();
 	%this.titleDropDown.addItem("Particle Asset:" SPC %particleAsset.AssetName);
 	for(%i = 0; %i < %particleAsset.getEmitterCount(); %i++)
@@ -213,11 +263,8 @@ function AssetInspector::loadParticleAsset(%this, %particleAsset, %assetID)
 		%emitter = %particleAsset.getEmitter(%i);
 		%this.titleDropDown.addItem("Emitter:" SPC %emitter.EmitterName);
 		%this.titleDropDown.setItemColor(%i + 1, ThemeManager.activeTheme.color5);
-		%this.titleDropDown.Command = %this.getId() @ ".onChooseParticleAsset(" @ %particleAsset.getId() @ ");";
 	}
-	%this.titleDropDown.setCurSel(0);
-
-	%this.onChooseParticleAsset(%particleAsset);
+	%this.titleDropDown.setCurSel(%index);
 }
 
 function AssetInspector::onChooseParticleAsset(%this, %particleAsset)
@@ -255,6 +302,9 @@ function AssetInspector::onChooseParticleAsset(%this, %particleAsset)
 	}
 	%this.tabBook.selectPage(%curSel);
 	%this.inspector.openGroupByIndex(0);
+
+	%this.emitterButtonBar.visible = true;
+	%this.emitterButtonBar.refreshEnabled();
 }
 
 function AssetInspector::loadFontAsset(%this, %fontAsset, %assetID)
@@ -297,4 +347,140 @@ function AssetInspector::loadSpineAsset(%this, %spineAsset, %assetID)
 	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%spineAsset);
 	%this.inspector.openGroupByIndex(0);
+}
+
+function AssetInspector::deleteAsset(%this)
+{
+	%asset = %this.inspector.getInspectObject();
+	if(%this.titleDropDown.visible && %this.titleDropDown.getSelectedItem() != 0)
+	{
+		%asset = %asset.getOwner();
+	}
+
+	%width = 700;
+	%height = 230;
+	%dialog = new GuiControl()
+	{
+		class = "DeleteAssetDialog";
+		superclass = "EditorDialog";
+		dialogSize = (%width + 8) SPC (%height + 8);
+		dialogCanClose = true;
+		dialogText = "Delete Asset";
+		doomedAsset = %asset;
+	};
+	%dialog.init(%width, %height);
+
+	Canvas.pushDialog(%dialog);
+}
+
+function AssetInspector::addEmitter(%this)
+{
+	%asset = %this.inspector.getInspectObject();
+	if(%this.titleDropDown.getSelectedItem() != 0)
+	{
+		%asset = %asset.getOwner();
+	}
+
+	%width = 700;
+	%height = 230;
+	%dialog = new GuiControl()
+	{
+		class = "NewParticleEmitterDialog";
+		superclass = "EditorDialog";
+		dialogSize = (%width + 8) SPC (%height + 8);
+		dialogCanClose = true;
+		dialogText = "New Particle Emitter";
+		parentAsset = %asset;
+	};
+	%dialog.init(%width, %height);
+
+	Canvas.pushDialog(%dialog);
+}
+
+function AssetInspector::MoveEmitterForward(%this)
+{
+	%emitter = %this.inspector.getInspectObject();
+	%asset = %emitter.getOwner();
+	%index = %this.titleDropDown.getSelectedItem();
+	%asset.moveEmitter(%index-1, %index);
+
+	%this.refreshParticleTitleDropDown(%asset, %index+1);
+
+	%asset.refreshAsset();
+}
+
+function AssetInspector::MoveEmitterBackward(%this)
+{
+	%emitter = %this.inspector.getInspectObject();
+	%asset = %emitter.getOwner();
+	%index = %this.titleDropDown.getSelectedItem();
+	%asset.moveEmitter(%index-1, %index-2);
+
+	%this.refreshParticleTitleDropDown(%asset, %index-1);
+
+	%asset.refreshAsset();
+}
+
+function AssetInspector::RemoveEmitter(%this)
+{
+	%emitter = %this.inspector.getInspectObject();
+	%asset = %emitter.getOwner();
+	%asset.RemoveEmitter(%emitter, true);
+
+	%index = %this.titleDropDown.getSelectedItem();
+	%this.titleDropDown.deleteItem(%index);
+
+	if(%this.titleDropDown.getItemCount() <= %index)
+	{
+		%index = %this.titleDropDown.getItemCount() - 1;
+	}
+	%this.titleDropDown.setCurSel(%index);
+	%this.inspector.inspect(%asset.getEmitter(%index - 1));
+	%this.emitterGraphPage.inspect(%asset, %index - 1);
+	%this.emitterButtonBar.refreshEnabled();
+
+	%asset.refreshAsset();
+}
+
+function AssetInspector::getMoveEmitterForwardEnabled(%this)
+{
+	if(isObject(%this.titleDropDown) && %this.titleDropDown.getSelectedItem() <= 0)
+	{
+		return false;
+	}
+	if(isObject(%this.inspector))
+	{
+		%asset = %this.inspector.getInspectObject();
+		%emitterID = %this.emitterGraphPage.emitterID;
+
+		return %emitterID != (%asset.getOwner().getEmitterCount() - 1);
+	}
+	return false;
+}
+
+function AssetInspector::getMoveEmitterBackwardEnabled(%this)
+{
+	if(isObject(%this.titleDropDown) && %this.titleDropDown.getSelectedItem() <= 0)
+	{
+		return false;
+	}
+	if(isObject(%this.inspector))
+	{
+		return %this.emitterGraphPage.emitterID != 0;
+	}
+	return false;
+}
+
+function AssetInspector::getRemoveEmitterEnabled(%this)
+{
+	if(isObject(%this.titleDropDown) && %this.titleDropDown.getSelectedItem() <= 0)
+	{
+		return false;
+	}
+	if(isObject(%this.inspector))
+	{
+		%asset = %this.inspector.getInspectObject();
+		return %asset.getOwner().getEmitterCount() > 1;
+	}
+	return false;
 }

@@ -16,11 +16,16 @@ function EditorIconButton::onAdd(%this)
 		ImageSize = "18 18";
 		ImageColor = ThemeManager.activeTheme.iconButtonProfile.FontColor;
 		Frame = %this.frame;
+		Tooltip = %this.Tooltip;
 	};
 	ThemeManager.setProfile(%this.icon, "spriteProfile");
 	%this.add(%this.icon);
 
 	%this.startListening(ThemeManager);
+	if(%this.Tooltip !$= "")
+	{
+		ThemeManager.setProfile(%this, "tipProfile", "TooltipProfile");
+	}
 }
 
 function EditorIconButton::onTouchEnter(%this)

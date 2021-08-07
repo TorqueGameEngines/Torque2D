@@ -164,6 +164,20 @@ function EditorForm::createDropDownItem(%this, %label)
 	return %dropDown;
 }
 
+function EditorForm::createCheckboxItem(%this, %label)
+{
+	%box = new GuiCheckBoxCtrl()
+	{
+		Position = "10 16";
+		Extent = (getWord(%label.extent, 0) - 24) SPC 30;
+		Text = %label.text;
+	};
+	ThemeManager.setProfile(%box, "checkboxProfile");
+	%label.add(%box);
+	%label.text = "";
+	return %box;
+}
+
 function EditorFormDropDown::onClose(%this)
 {
 	%this.form.postEvent("DropDownClosed", %this);

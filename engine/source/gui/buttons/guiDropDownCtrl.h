@@ -57,6 +57,7 @@ public:
 	GuiDropDownListBoxCtrl(GuiDropDownCtrl *ctrl);
 	void addSelection(LBItem *item, S32 index);
 	void setCurSel(S32 index);
+	void onTouchUp(const GuiEvent &event);
 };
 
 class GuiDropDownCtrl : public GuiButtonCtrl
