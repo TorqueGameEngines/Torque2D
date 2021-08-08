@@ -29,5 +29,5 @@ EditorManager.scanModules( "./" );
 
 // Load various editors
 EditorManager.LoadExplicit("EditorConsole");
-Editormanager.LoadExplicit("ProjectManager");
+//Editormanager.LoadExplicit("ProjectManager");//Someday...
 EditorManager.LoadExplicit("AssetAdmin");

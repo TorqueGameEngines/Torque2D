@@ -6,8 +6,8 @@
     Position="0 0"
     Extent="1024 30"
     MinExtent="220 30"
-    Visible="1">	
-	
+    Visible="1">
+
 	<!-- Manipulation Mode-->
     <GuiButtonCtrl
         Name="ManipulationModeButton"
@@ -27,7 +27,7 @@
         Active="1"
         hovertime="1000"
         groupNum="-1"
-        useMouseEvents="1" />		
+        useMouseEvents="1" />
 
 	<!-- Pause Scene Mode-->
     <GuiButtonCtrl
@@ -47,14 +47,14 @@
         Active="1"
         hovertime="1000"
         groupNum="-1"
-        useMouseEvents="1" />		
-		
+        useMouseEvents="1" />
+
 	<!-- Reload Toy-->
     <GuiButtonCtrl
 		Name="ReloadToyOverlayButton"
         Profile="BlueButtonProfile"
 		Text="Reload Toy"
-		ButtonType="PushButton"		
+		ButtonType="PushButton"
         canSaveDynamicFields="0"
         isContainer="0"
         HorizSizing="left"
@@ -74,7 +74,7 @@
 		Name="RestartToyOverlayButton"
         Profile="BlueButtonProfile"
 		Text="Restart Toy"
-		ButtonType="PushButton"		
+		ButtonType="PushButton"
         canSaveDynamicFields="0"
         isContainer="0"
         HorizSizing="left"
@@ -92,9 +92,9 @@
 	<!-- Show Log -->
     <GuiButtonCtrl
         Profile="BlueButtonProfile"
-		Text="Show Log"
-		ButtonType="PushButton"	
-		command="ToggleConsole(true);"		
+		Text="Open Console"
+		ButtonType="PushButton"
+		command="EditorCore.toggleEditor();"		
         canSaveDynamicFields="0"
         isContainer="0"
         HorizSizing="left"
@@ -107,8 +107,8 @@
         Active="1"
         hovertime="1000"
         groupNum="-1"
-        useMouseEvents="1" />		
-			
+        useMouseEvents="1" />
+
 	<!-- Show Toolbox -->
     <GuiButtonCtrl
         Profile="BlueButtonProfile"
@@ -128,5 +128,5 @@
         hovertime="1000"
         groupNum="-1"
         useMouseEvents="1" />
-		
+
 </GuiControl>

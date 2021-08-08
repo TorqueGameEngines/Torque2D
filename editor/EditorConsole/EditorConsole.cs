@@ -29,7 +29,7 @@ function EditorConsole::create(%this)
 		HorizSizing="width";
 		VertSizing="top";
 		Position="0 738";
-		Extent="924 30";
+		Extent="1024 30";
 		minExtent="120 20";
 		AltCommand="EditorConsole.eval();";
 		MaxLength="255";
@@ -37,19 +37,6 @@ function EditorConsole::create(%this)
 	};
 	ThemeManager.setProfile(%this.consoleEntry, "textEditProfile");
 	%this.guiPage.add(%this.consoleEntry);
-
-	%this.hideLogButton = new GuiButtonCtrl()
-	{
-		Text="Close";
-		command="EditorCore.close();";
-		HorizSizing="left";
-		VertSizing="top";
-		Position="924 738";
-		Extent="100 30";
-		MinExtent="80 20";
-	};
-	ThemeManager.setProfile(%this.hideLogButton, "buttonProfile");
-	%this.guiPage.add(%this.hideLogButton);
 
 	%this.scroller = new GuiScrollCtrl()
 	{
