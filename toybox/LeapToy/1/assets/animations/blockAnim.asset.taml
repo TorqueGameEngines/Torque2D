@@ -1,6 +1,0 @@
-<AnimationAsset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../Torque2D.xsd"
-                AssetName="blockAnim"
-                Image="@asset=LeapToy:objectsBlocks"
-                AnimationCycle="1"
-                AnimationTime="2"
-                AnimationFrames="0 1 2 3 4 5 6 7"/>

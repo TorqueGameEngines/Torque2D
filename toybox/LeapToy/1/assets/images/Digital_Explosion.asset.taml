@@ -1,8 +1,0 @@
-<ImageAsset
-    AssetName="Digital_ExplosionSprite"
-    imageFile="Digital_Explosion.png"
-    cellCountX="4"
-    cellCountY="4"
-    cellWidth="128"
-    cellHeight="128"
-	 />

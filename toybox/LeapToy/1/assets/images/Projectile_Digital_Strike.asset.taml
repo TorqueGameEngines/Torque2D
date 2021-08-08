@@ -1,8 +1,0 @@
-<ImageAsset
-    AssetName="Projectile_Digital_StrikeSprite"
-    imageFile="Projectile_Digital_Strike.png"
-    cellCountX="4"
-    cellCountY="4"
-    cellWidth="64"
-    cellHeight="96"
-	 />
