@@ -1,5 +1,5 @@
 ![Torque Logo](modules/Sandbox/1/assets/t2d.png)
-## Torque 2D 3.4
+## Torque 2D 3.5
 
 MIT Licensed Open Source version of Torque 2D from GarageGames. Maintained by the T2D Steering Committee and contributions from the community.
 
