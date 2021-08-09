@@ -202,6 +202,9 @@
     <Filter Include="Box2D\Particle">
       <UniqueIdentifier>{b2903a96-6c49-4961-82a8-f1832989d4a4}</UniqueIdentifier>
     </Filter>
+    <Filter Include="2d\editorToy">
+      <UniqueIdentifier>{598766e4-7dc1-45b8-8acf-f133f4fced82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\audio\audio.cc">
@@ -462,13 +465,7 @@
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc">
       <Filter>gui\buttons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
@@ -482,9 +479,6 @@
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc">
       <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiControlListPopup.cc">
-      <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiDebugger.cc">
       <Filter>gui\editor</Filter>
@@ -502,9 +496,6 @@
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiMenuBar.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Collision\b2BroadPhase.cpp">
@@ -741,12 +732,6 @@
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBitmapCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiCanvas.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -763,9 +748,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiDefaultControlRender.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiFadeinBitmapCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc">
@@ -786,12 +768,6 @@
     <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrlEx.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -802,9 +778,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc">
@@ -1477,6 +1450,27 @@
     <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToySceneWindow.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToyTool.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc">
+      <Filter>gui\buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc">
+      <Filter>gui\editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\editor\guiParticleGraphInspector.cc">
+      <Filter>gui\editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -1758,13 +1752,7 @@
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h">
       <Filter>gui\buttons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
@@ -1795,9 +1783,6 @@
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiMenuBar.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Box2D.h">
@@ -2079,12 +2064,6 @@
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiCanvas.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -2121,12 +2100,6 @@
     <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrlEx.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -2137,9 +2110,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTextListCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h">
@@ -3319,20 +3289,54 @@
     <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
-      <Filter>math</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\math\mMathAMD_ASM.asm">
-      <Filter>math</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\math\mMathSSE_ASM.asm">
-      <Filter>math</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\platform\platformCPUInfo.asm">
-      <Filter>platform</Filter>
-    </CustomBuild>
+    <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow_ScriptBinding.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToyTool.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl_ScriptBinding.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl_ScriptBinding.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiTextEditCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiSceneScrollCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector_ScriptBinding.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />

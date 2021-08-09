@@ -78,10 +78,10 @@ BEGIN
         BLOCK "040904b0"
         BEGIN
             VALUE "CompanyName", "Torque Game Engines"
-            VALUE "FileDescription", "Torque 2D MIT"
+            VALUE "FileDescription", "Torque 2D: Rocket Edition"
             VALUE "FileVersion", "4, 0, 0, 0"
             VALUE "InternalName", "Torque 2D"
-            VALUE "LegalCopyright", "Copyright (c) 2020 Torque Game Engines"
+            VALUE "LegalCopyright", "Copyright (c) 2021 Torque Game Engines"
             VALUE "OriginalFilename", "Torque2D.exe"
             VALUE "ProductName", "Torque 2D"
             VALUE "ProductVersion", "4, 0, 0, 0"
