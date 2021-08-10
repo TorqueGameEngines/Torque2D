@@ -184,7 +184,6 @@ protected:
          SimGroup2,
          SimGroup3,
          SimGroup4,
-         Audio,
          Camera,
          Hidden,
          Lock1,
@@ -376,14 +375,14 @@ protected:
       void onSleep();
       void onPreRender();
       bool onKeyDown( const GuiEvent &event );
-		void onMouseDown(const GuiEvent &event);
+		void onTouchDown(const GuiEvent &event);
       void onMiddleMouseDown(const GuiEvent &event);
-      void onMouseMove(const GuiEvent &event);
-      void onMouseEnter(const GuiEvent &event);
-      void onMouseLeave(const GuiEvent &event);
+      void onTouchMove(const GuiEvent &event);
+      void onTouchEnter(const GuiEvent &event);
+      void onTouchLeave(const GuiEvent &event);
       void onRightMouseDown(const GuiEvent &event);
-      void onMouseDragged(const GuiEvent &event);
-      void onMouseUp(const GuiEvent &event);
+      void onTouchDragged(const GuiEvent &event);
+      void onTouchUp(const GuiEvent &event);
 
       /// Returns false if the object is a child of one of the inner items.
       bool childSearch(Item * item, SimObject *obj, bool yourBaby);

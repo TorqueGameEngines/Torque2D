@@ -53,13 +53,37 @@ public:
    ~GuiListBoxCtrl();
    DECLARE_CONOBJECT(GuiListBoxCtrl);
 
-   struct LBItem
+   class LBItem
    {
+   public:
       StringTableEntry  itemText;
       bool              isSelected;
+	  bool				isActive;
+	  int				ID;
       void*             itemData;
       ColorF            color;
       bool              hasColor;
+
+	  static bool sIncreasing;
+
+	  // Compare Functions
+	  static bool compByID(const LBItem *a, const LBItem *b)
+	  {
+		  bool res = a->ID < b->ID;
+		  return (sIncreasing ? res : !res);
+	  }
+	  static bool compByText(const LBItem *a, const LBItem *b)
+	  {
+		  char buf[512];
+		  char bufB[512];
+
+		  dSprintf(buf, 512, "%s", a->itemText);
+		  dSprintf(bufB, 512, "%s", b->itemText);
+
+		  S32 res = dStricmp(buf, bufB);
+		  bool result = res <= 0;
+		  return (sIncreasing ? result : !result);
+	  }
    };
 
    VectorPtr<LBItem*>   mItems;
@@ -68,6 +92,8 @@ public:
    Point2I              mItemSize;
    bool                 mFitParentWidth;
    LBItem*              mLastClickItem;
+
+   
 
    // Persistence
    static void       initPersistFields();   
@@ -80,47 +106,64 @@ public:
    S32               getItemIndex( LBItem *item );
    StringTableEntry  getItemText( S32 index );
    
-   void              setCurSel( S32 index );
+   void				 setSelectionInternal(StringTableEntry text);
+   virtual void      setCurSel( S32 index );
    void              setCurSelRange( S32 start, S32 stop );
    void              setItemText( S32 index, StringTableEntry text );
 
    S32               addItem( StringTableEntry text, void *itemData = NULL );
    S32               addItemWithColor( StringTableEntry text, ColorF color = ColorF(-1, -1, -1), void *itemData = NULL);
+   S32				 addItemWithID(StringTableEntry text, S32 ID = 0, void *itemData = NULL);
    S32               insertItem( S32 index, StringTableEntry text, void *itemData = NULL );
    S32               insertItemWithColor( S32 index, StringTableEntry text, ColorF color = ColorF(-1, -1, -1), void *itemData = NULL);
    S32               findItemText( StringTableEntry text, bool caseSensitive = false );
 
    void              setItemColor(S32 index, ColorF color);
    void              clearItemColor(S32 index);
+   void				 clearAllColors();
+   ColorF			 getItemColor(S32 index);
+   bool				 getItemHasColor(S32 index);
+
+   void				 setItemID(S32 index, S32 ID);
+   S32				 getItemID(S32 index);
+   S32				 findItemID(S32 ID);
+
+   void				 setItemActive(S32 index);
+   void				 setItemInactive(S32 index);
+   bool				 getItemActive(S32 index);
 
    void              deleteItem( S32 index );
    void              clearItems();
    void              clearSelection();
    void              removeSelection( LBItem *item, S32 index );
    void              removeSelection( S32 index );
-   void              addSelection( LBItem *item, S32 index );
+   virtual void      addSelection( LBItem *item, S32 index );
    void              addSelection( S32 index );
-   inline void       setMultipleSelection( bool allowMultipleSelect = true ) { mMultipleSelections = allowMultipleSelect; };
+   inline void       setMultipleSelection(bool allowMultipleSelect = true) { mMultipleSelections = allowMultipleSelect; };
+   inline bool       getMultipleSelection() { return mMultipleSelections; };
 
    // Sizing
    void              updateSize();
    virtual void      parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
    virtual bool      onWake();
+   virtual void		 addObject(SimObject *obj);
 
    // Rendering
    virtual void      onRender( Point2I offset, const RectI &updateRect );
-   virtual void      onRenderItem( RectI itemRect, LBItem *item );
-   void              drawBox( const Point2I &box, S32 size, ColorI &outlineColor, ColorI &boxColor );
+   virtual void      onRenderItem( RectI &itemRect, LBItem *item );
+   virtual void		 ScrollToIndex(const S32 targetIndex);
 
    // Mouse Events
-   virtual void      onMouseDown( const GuiEvent &event );
-   virtual void      onMouseDragged(const GuiEvent &event);
+   virtual void      onTouchDown( const GuiEvent &event );
+   virtual void      onTouchDragged(const GuiEvent &event);
+   virtual bool		 GuiListBoxCtrl::onKeyDown(const GuiEvent &event);
 
-   // String Utility
-   static U32        getStringElementCount( const char *string );
-   static const char* getStringElement( const char* inString, const U32 index );
-   
+   // Sorting
+   virtual void		 sortByText(bool increasing = true);
+   virtual void		 sortByID(bool increasing = true);
 
+protected:
+	GuiControl		*caller;
 };
 
 #endif

@@ -26,7 +26,7 @@
 #include "platform/platformNetAsync.h"
 #include "console/console.h"
 
-#if defined(TORQUE_OS_WIN32)
+#if defined(TORQUE_OS_WIN)
 #  include <winsock.h>
 #else
 #include <netdb.h>

@@ -32,7 +32,11 @@
 #endif
 
 #ifndef _COLOR_H_
-#include "graphics/color.h"
+#include "graphics/gColor.h"
+#endif
+
+#ifndef _FLUID_H_
+#include "math/mFluid.h"
 #endif
 
 #ifndef _SIMBASE_H_
@@ -51,6 +55,10 @@
 #include "audio/AudioAsset.h"
 #endif
 
+#ifndef _IMAGE_ASSET_H_
+#include "2d/assets/ImageAsset.h"
+#endif
+
 #include "graphics/gFont.h"
 
 class GBitmap;
@@ -66,6 +74,27 @@ struct GuiEvent
    Point2I  mousePoint;        ///< for mouse events
    U8       mouseClickCount;   ///< to determine double clicks, etc...
    S32		eventID;		   ///< assigns mouse or touch ID to the event
+};
+
+enum GuiControlState
+{
+	NormalState = 0,				//Control renders with default look
+	HighlightState,				//Control is highlighted
+	SelectedState,				//Control has been selected
+	DisabledState,				//Control cannot be used
+	NormalStateOn,				//Used by controls like checkboxes to denote the normal state while checked
+	HighlightStateOn,			//The highlight state while on
+	SelectedStateOn,			//The selected state while on
+	DisabledStateOn,			//The disabled state while on
+	StateCount					//Not an actual state! Should always be at the end of the list.
+};
+
+enum class GuiDirection
+{
+	Up,				
+	Down,				
+	Left,				
+	Right			
 };
 
 class GuiCursor : public SimObject
@@ -92,7 +121,36 @@ public:
    void onRemove();
    void render(const Point2I &pos);
 };
+DefineConsoleType(TypeGuiCursor)
 
+/// A GuiBorderProfile holds on the information needed for a single border of a GuiControl.
+/// GuiBorderProfiles can be assigned to a GuiControlProfile to cover one or all of the borders.
+class GuiBorderProfile : public SimObject
+{
+private:
+	typedef SimObject Parent;
+	inline U8 getStateIndex(const GuiControlState state) { return state >= 4 ? state - 4 : state; }
+
+public:
+	S32 mMargin[static_cast<S32>(4)];					//The distance between the edge and the start of the border. Margin is outside of the control.
+	S32 mBorder[static_cast<S32>(4)];					//Width of the border.
+	ColorI mBorderColor[static_cast<S32>(4)];			//The color of the border.
+	S32 mPadding[static_cast<S32>(4)];					//The distance between the border and content of the control.
+	bool mUnderfill;									//True if the control's fill color should appear under the border.
+public:
+	DECLARE_CONOBJECT(GuiBorderProfile);
+	GuiBorderProfile();
+	~GuiBorderProfile();
+	static void initPersistFields();
+	bool onAdd();
+	void onRemove();
+
+	S32 getMargin(const GuiControlState state); //Returns the margin based on the control's state.
+	S32 getBorder(const GuiControlState state); //Returns the size of the border based on the control's state.
+	const ColorI& getBorderColor(const GuiControlState state); //Returns the correct border color based on the control's state.
+	S32 getPadding(const GuiControlState state); //Returns the padding based on the control's state.
+};
+DefineConsoleType(TypeGuiBorderProfile)
 /// A GuiControlProfile is used by every GuiObject and is akin to a
 /// datablock. It is used to control information that does not change
 /// or is unlikely to change during execution of a program. It is also
@@ -108,32 +166,37 @@ public:
    S32  mRefCount;                                 ///< Used to determine if any controls are using this profile
    bool mTabable;                                  ///< True if this object is accessable from using the tab key
 
-   static StringTableEntry  sFontCacheDirectory;
    bool mCanKeyFocus;                              ///< True if the object can be given keyboard focus (in other words, made a first responder @see GuiControl)
-   bool mModal;                                    ///< True if this is a Modeless dialog meaning it will pass input through instead of taking it all
+   bool mUseInput;                                 ///< True if input events like a click can be passed to this object. False will pass events to the parent and this object and its children will not be evaluated.
 
-   bool mOpaque;                                   ///< True if this object is not translucent
-   ColorI mFillColor;                              ///< Fill color, this is used to fill the bounds of the control if it is opaque
-   ColorI mFillColorHL;                            ///< This is used insetead of mFillColor if the object is highlited
-   ColorI mFillColorNA;                            ///< This is used to instead of mFillColor if the object is not active or disabled
+   ColorI mFillColor; //Normal fill color used to fill the control area inside (and possibly under) the border.
+   ColorI mFillColorHL; //The highlight fill color used when the cursor enters the control.
+   ColorI mFillColorSL;	//Color used when the control is selected.
+   ColorI mFillColorNA; //Used if the object is not active or disabled.
 
-   S32 mBorder;                                    ///< For most controls, if mBorder is > 0 a border will be drawn, some controls use this to draw different types of borders however @see guiDefaultControlRender.cc
-   S32 mBorderThickness;                           ///< Border thickness
-   ColorI mBorderColor;                            ///< Border color, used to draw a border around the bounds if border is enabled
-   ColorI mBorderColorHL;                          ///< Used instead of mBorderColor when the object is highlited
-   ColorI mBorderColorNA;                          ///< Used instead of mBorderColor when the object is not active or disabled
-
-   ColorI mBevelColorHL;                          ///< Used for the high-light part of the bevel
-   ColorI mBevelColorLL;                          ///< Used for the low-light part of the bevel
+   GuiBorderProfile* mBorderDefault;					//The default border settings.
+   // top profile
+   StringTableEntry mTopProfileName;
+   GuiBorderProfile* mBorderTop;
+   // Bottom profile
+   StringTableEntry mBottomProfileName;
+   GuiBorderProfile* mBorderBottom;
+   // Left profile
+   StringTableEntry mLeftProfileName;
+   GuiBorderProfile* mBorderLeft;
+   // Left profile
+   StringTableEntry mRightProfileName;
+   GuiBorderProfile* mBorderRight;
 
    // font members
-   StringTableEntry  mFontType;                    ///< Font face name for the control
+   StringTableEntry  mFontType;
+   StringTableEntry  mFontDirectory;                    ///< Font face name for the control
    S32               mFontSize;                    ///< Font size for the control
    enum {
       BaseColor = 0,
       ColorHL,
       ColorNA,
-      ColorSEL,
+      ColorSL,
       ColorUser0,
       ColorUser1,
       ColorUser2,
@@ -145,28 +208,43 @@ public:
    ColorI& mFontColor;                             ///< Main font color
    ColorI& mFontColorHL;                           ///< Highlited font color
    ColorI& mFontColorNA;                           ///< Font color when object is not active/disabled
-   ColorI& mFontColorSEL;                          ///< Font color when object/text is selected
+   ColorI& mFontColorSL;                          ///< Font color when object/text is selected
    FontCharset mFontCharset;                       ///< Font character set
 
    Resource<GFont>   mFont;                        ///< Font resource
 
    enum AlignmentType
    {
-      LeftJustify,
-      RightJustify,
-      CenterJustify
+      LeftAlign,
+      RightAlign,
+      CenterAlign
    };
-
    AlignmentType mAlignment;                       ///< Horizontal text alignment
-   bool mAutoSizeWidth;                            ///< Auto-size the width-bounds of the control to fit it's contents
-   bool mAutoSizeHeight;                           ///< Auto-size the height-bounds of the control to fit it's contents
-   bool mReturnTab;                                ///< Used in GuiTextEditCtrl to specify if a tab-event should be simulated when return is pressed.
-   bool mNumbersOnly;                              ///< For text controls, true if this should only accept numerical data
+
+   enum VertAlignmentType
+   {
+	   TopVAlign,
+	   BottomVAlign,
+	   MiddleVAlign
+   };
+   VertAlignmentType mVAlignment;				   ///< Vertical text alignment
+                             
    bool mMouseOverSelected;                        ///< True if this object should be "selected" while the mouse is over it
    ColorI mCursorColor;                            ///< Color for the blinking cursor in text fields (for example)
 
    Point2I mTextOffset;                            ///< Text offset for the control
+   StringTableEntry  mCategory;                    ///< Category for control in editors.
 
+   // imageAsset members
+   StringTableEntry mImageAssetID;
+   AssetPtr<ImageAsset> mImageAsset;
+   void setImageAsset( const char* pImageAssetID );
+   inline StringTableEntry getImageAsset( void ) const { return mImageAssetID; }
+protected:
+	static bool setImageAsset(void* obj, const char* data) { static_cast<GuiControlProfile*>(obj)->setImageAsset(data); return false; }
+	static const char* getImageAsset(void* obj, const char* data) { return static_cast<GuiControlProfile*>(obj)->getImageAsset(); }
+
+public:
    // bitmap members
    StringTableEntry mBitmapName;                   ///< Bitmap file name for the bitmap of the control
    TextureHandle mTextureHandle;                   ///< Texture handle for the control
@@ -175,7 +253,7 @@ public:
    // sound members
    AssetPtr<AudioAsset> mSoundButtonDown;                 ///< Sound played when the object is "down" ie a button is pushed
    AssetPtr<AudioAsset> mSoundButtonOver;                 ///< Sound played when the mouse is over the object
-
+   StringTableEntry mProfileForChildrenName;
    GuiControlProfile* mProfileForChildren;         ///< Profile used with children controls (such as the scroll bar on a popup menu) when defined.
 public:
    DECLARE_CONOBJECT(GuiControlProfile);
@@ -183,6 +261,23 @@ public:
    ~GuiControlProfile();
    static void initPersistFields();
    bool onAdd();
+
+
+   GuiBorderProfile* getLeftProfile();
+   void setLeftProfile(GuiBorderProfile* prof);
+
+   GuiBorderProfile* getRightProfile();
+   void setRightProfile(GuiBorderProfile* prof);
+
+   GuiBorderProfile* getTopProfile();
+   void setTopProfile(GuiBorderProfile* prof);
+
+   GuiBorderProfile* getBottomProfile();
+   void setBottomProfile(GuiBorderProfile* prof);
+
+   // Get and Set child profile
+   GuiControlProfile * getChildrenProfile();
+   void setChildrenProfile(GuiControlProfile * prof);
 
    /// This method creates an array of bitmaps from one single bitmap with
    /// seperator color. The seperator color is whatever color is in pixel 0,0
@@ -193,6 +288,17 @@ public:
 
    void incRefCount();
    void decRefCount();
+
+   const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.
+   const ColorI& getFontColor(const GuiControlState state); //Returns the font color based on the state.
+   bool usesAssetRendering(const GuiControlState state);
+   bool usesBitmapRendering(const GuiControlState state);
+   bool usesDefaultRendering(const GuiControlState state);
+
+   GuiBorderProfile* getLeftBorder() { return mBorderLeft; }
+   GuiBorderProfile* getRightBorder() { return mBorderRight; }
+   GuiBorderProfile* getTopBorder() { return mBorderTop; }
+   GuiBorderProfile* getBottomBorder() { return mBorderBottom; }
 };
 DefineConsoleType( TypeGuiProfile)
 

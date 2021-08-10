@@ -23,21 +23,25 @@
 #ifndef _GUIRADIOCTRL_H_
 #define _GUIRADIOCTRL_H_
 
-#ifndef _GUICHECKBOXCTRLL_H_
+#ifndef _GUICHECKBOXCTRL_H_
 #include "gui/buttons/guiCheckBoxCtrl.h"
 #endif
-
-// the radio button renders exactly the same as the check box
-// the only difference is it sends messages to its siblings to
-// turn themselves off.
 
 class GuiRadioCtrl : public GuiCheckBoxCtrl
 {
    typedef GuiCheckBoxCtrl Parent;
 
+protected:
+	S32 mRadioGroup;
+
 public:
    DECLARE_CONOBJECT(GuiRadioCtrl);
    GuiRadioCtrl();
+   static void initPersistFields();
+   void renderInnerControl(RectI &boxRect, const GuiControlState currentState);
+   void setStateOn(bool bStateOn);
+   void onAction();
+   void onMessage(GuiControl *, S32 msg);
 };
 
 #endif //_GUI_RADIO_CTRL_H

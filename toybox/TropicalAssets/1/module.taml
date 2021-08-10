@@ -1,0 +1,10 @@
+<ModuleDefinition
+	ModuleId="TropicalAssets"
+	VersionId="1"
+	Description="Tropical Fish Assets.  Particularly useful for the AquariumToy"
+>
+		<DeclaredAssets
+			Path="assets"
+			Extension="asset.taml"
+			Recurse="true"/>
+</ModuleDefinition>

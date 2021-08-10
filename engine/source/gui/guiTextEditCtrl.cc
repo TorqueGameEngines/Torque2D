@@ -22,6 +22,7 @@
 
 #include "console/consoleTypes.h"
 #include "console/console.h"
+#include "graphics/gColor.h"
 #include "graphics/dgl.h"
 #include "gui/guiCanvas.h"
 #include "gui/guiMLTextCtrl.h"
@@ -29,6 +30,8 @@
 #include "gui/guiDefaultControlRender.h"
 #include "memory/frameAllocator.h"
 #include "string/unicode.h"
+
+#include "guiTextEditCtrl_ScriptBinding.h"
 
 IMPLEMENT_CONOBJECT(GuiTextEditCtrl);
 
@@ -44,7 +47,6 @@ GuiTextEditCtrl::GuiTextEditCtrl()
    mNumFramesElapsed = 0;
 
    mDragHit = false;
-   mTabComplete = false;
    mScrollDir = 0;
 
    mUndoBlockStart = 0;
@@ -52,6 +54,7 @@ GuiTextEditCtrl::GuiTextEditCtrl()
    mUndoCursorPos = 0;
    mPasswordText = false;
 
+   mReturnCausesTab = false;
    mSinkAllKeyEvents = false;
 
    mActive = true;
@@ -64,11 +67,13 @@ GuiTextEditCtrl::GuiTextEditCtrl()
    mHistoryIndex = 0;
    mHistoryBuf = NULL;
 
-   mValidateCommand = StringTable->EmptyString;
    mEscapeCommand = StringTable->EmptyString;
    mPasswordMask = StringTable->insert( "*" );
 
    mEditCursor = NULL;
+   mMaxStrLen = MAX_STRING_LENGTH;
+
+   mInputMode = AllText;
 }
 
 GuiTextEditCtrl::~GuiTextEditCtrl()
@@ -83,18 +88,34 @@ GuiTextEditCtrl::~GuiTextEditCtrl()
    }
 }
 
+static EnumTable::Enums inputModeEnums[] =
+{
+	{ GuiTextEditCtrl::AllText, "AllText" },
+	{ GuiTextEditCtrl::Decimal, "Decimal" },
+	{ GuiTextEditCtrl::Number, "Number" },
+	{ GuiTextEditCtrl::Alpha, "Alpha" },
+	{ GuiTextEditCtrl::AlphaNumeric, "AlphaNumeric" }
+};
+static EnumTable gInputModeTable(5, &inputModeEnums[0]);
+
 void GuiTextEditCtrl::initPersistFields()
 {
    Parent::initPersistFields();
 
-   addField("validate",          TypeString,    Offset(mValidateCommand,   GuiTextEditCtrl));
+   addDepricatedField("validate");
+   addDepricatedField("truncate");
+   addDepricatedField("passwordMask");
+   addDepricatedField("historySize");
+   addDepricatedField("tabComplete");
+
+   addGroup("Text Edit");
    addField("escapeCommand",     TypeString,    Offset(mEscapeCommand,     GuiTextEditCtrl));
-   addField("historySize",       TypeS32,       Offset(mHistorySize,       GuiTextEditCtrl));
-   addField("tabComplete",       TypeBool,      Offset(mTabComplete,       GuiTextEditCtrl));     
-   addField("deniedSound",       TypeAudioAssetPtr, Offset(mDeniedSound, GuiTextEditCtrl));
    addField("sinkAllKeyEvents",  TypeBool,      Offset(mSinkAllKeyEvents,  GuiTextEditCtrl));
-   addField("password",          TypeBool,      Offset(mPasswordText,      GuiTextEditCtrl));
-   addField("passwordMask",      TypeString,    Offset(mPasswordMask,      GuiTextEditCtrl));
+   addField("password", TypeBool, Offset(mPasswordText, GuiTextEditCtrl));
+   addField("returnCausesTab", TypeBool, Offset(mReturnCausesTab, GuiTextEditCtrl));
+   addProtectedField("maxLength", TypeS32,		Offset(mMaxStrLen,			GuiTextEditCtrl), &setMaxLengthProperty, &defaultProtectedGetFn, "The max number of characters that can be entered into the text edit box.");
+   addProtectedField("inputMode", TypeEnum,		Offset(mInputMode,			GuiTextEditCtrl), &setInputMode, &getInputMode, &writeInputMode, 1, &gInputModeTable, "InputMode allows different characters to be entered.");	
+   endGroup("Text Edit");
 }
 
 bool GuiTextEditCtrl::onAdd()
@@ -108,7 +129,7 @@ bool GuiTextEditCtrl::onAdd()
       mHistoryBuf = new UTF16*[mHistorySize];
       for ( S32 i = 0; i < mHistorySize; i++ )
       {
-         mHistoryBuf[i] = new UTF16[GuiTextCtrl::MAX_STRING_LENGTH + 1];
+         mHistoryBuf[i] = new UTF16[MAX_STRING_LENGTH + 1];
          mHistoryBuf[i][0] = '\0';
       }
    }
@@ -127,10 +148,37 @@ void GuiTextEditCtrl::onStaticModified(const char* slotName)
       setText(mText);
 }
 
+void GuiTextEditCtrl::inspectPostApply()
+{
+	Parent::inspectPostApply();
+	if (mTextID && *mTextID != 0)
+		setTextID(mTextID);
+	else
+		setText(mText);
+}
+
 bool GuiTextEditCtrl::onWake()
 {
    if (! Parent::onWake())
       return false;
+
+   if (mConsoleVariable[0])
+   {
+	   const char *txt = Con::getVariable(mConsoleVariable);
+	   if (txt)
+	   {
+		   if (dStrlen(txt) > (U32)mMaxStrLen)
+		   {
+			   char* buf = new char[mMaxStrLen + 1];
+			   dStrncpy(buf, txt, mMaxStrLen);
+			   buf[mMaxStrLen] = 0;
+			   setScriptValue(buf);
+			   delete[] buf;
+		   }
+		   else
+			   setScriptValue(txt);
+	   }
+   }
 
    // If this is the first awake text edit control, enable keyboard translation
    if (smNumAwake == 0)
@@ -191,8 +239,8 @@ void GuiTextEditCtrl::updateHistory( StringBuffer *inTxt, bool moveIndex )
       else
          mHistoryLast++;
 
-      inTxt->getCopy(mHistoryBuf[mHistoryLast], GuiTextCtrl::MAX_STRING_LENGTH);
-      mHistoryBuf[mHistoryLast][GuiTextCtrl::MAX_STRING_LENGTH] = '\0';
+      inTxt->getCopy(mHistoryBuf[mHistoryLast], MAX_STRING_LENGTH);
+      mHistoryBuf[mHistoryLast][MAX_STRING_LENGTH] = '\0';
    }
 
    if(moveIndex)
@@ -202,11 +250,32 @@ void GuiTextEditCtrl::updateHistory( StringBuffer *inTxt, bool moveIndex )
 void GuiTextEditCtrl::getText( char *dest )
 {
    if ( dest )
-      mTextBuffer.getCopy8((UTF8*)dest, GuiTextCtrl::MAX_STRING_LENGTH+1);
+      mTextBuffer.getCopy8((UTF8*)dest, MAX_STRING_LENGTH+1);
 }  
  
 void GuiTextEditCtrl::setText( const UTF8 *txt )
 {
+	//make sure we don't call this before onAdd();
+	if (!mProfile)
+		return;
+
+	//Make sure we have a font
+	mProfile->incRefCount();
+
+	//If the font isn't found, we want to decrement the profile usage and return now or we may crash!
+	if (mProfile->mFont.isNull())
+	{
+		//decrement the profile referrence
+		mProfile->decRefCount();
+		return;
+	}
+
+	setVariable((char*)mText);
+	setUpdate();
+
+	//decrement the profile referrence
+	mProfile->decRefCount();
+
    if(txt && txt[0] != 0)
    {
       Parent::setText(txt);
@@ -229,21 +298,29 @@ void GuiTextEditCtrl::setText( const UTF16* txt)
    {
       UTF8* txt8 = convertUTF16toUTF8( txt );
       Parent::setText( txt8 );
+	  setText(txt8);
       delete[] txt8;
-      mTextBuffer.set( txt );
    }
    else
    {
       Parent::setText("");
-      mTextBuffer.set("");
-   }
-   
-    //respect the max size
-    int diff = mTextBuffer.length() - mMaxStrLen; 
-    if( diff > 0 ) {
-        mTextBuffer.cut( mMaxStrLen, diff );
-    }
-   mCursorPos = mTextBuffer.length();   
+      setText("");
+   }  
+}
+
+void GuiTextEditCtrl::setTextID(const char *id)
+{
+	S32 n = Con::getIntVariable(id, -1);
+	if (n != -1)
+	{
+		setTextID(n);
+	}
+}
+void GuiTextEditCtrl::setTextID(S32 id)
+{
+	const UTF8 *str = getGUIString(id);
+	if (str)
+		setText((const char*)str);
 }
 
 void GuiTextEditCtrl::selectAllText()
@@ -253,15 +330,14 @@ void GuiTextEditCtrl::selectAllText()
    setUpdate();
 }
 
-void GuiTextEditCtrl::forceValidateText()
+bool GuiTextEditCtrl::validate()
 {
-   if ( mValidateCommand[0] )
-   {
-      char buf[16];
-      dSprintf(buf, sizeof(buf), "%d", getId());
-      Con::setVariable("$ThisControl", buf);
-      Con::evaluate( mValidateCommand, false );
-   }
+	bool valid = true;
+	if (isMethod("onValidate"))
+	{
+		valid = dAtob(Con::executef(this, 2, "onValidate"));
+	}
+	return valid;
 }
 
 void GuiTextEditCtrl::reallySetCursorPos( const S32 newPos )
@@ -300,13 +376,13 @@ S32 GuiTextEditCtrl::setCursorPos( const Point2I &offset )
    for(count=0; count< (S32)mTextBuffer.length(); count++)
    {
       UTF16 c = mTextBuffer.getChar(count);
-      if(!mPasswordText && !mFont->isValidChar(c))
+      if(!mPasswordText && !mProfile->mFont->isValidChar(c))
          continue;
          
       if(mPasswordText)
-         charLength += mFont->getCharXIncrement( mPasswordMask[0] );
+         charLength += mProfile->mFont->getCharXIncrement( mPasswordMask[0] );
       else
-         charLength += mFont->getCharXIncrement( c );
+         charLength += mProfile->mFont->getCharXIncrement( c );
 
       if ( charLength > curX )
          break;      
@@ -315,7 +391,7 @@ S32 GuiTextEditCtrl::setCursorPos( const Point2I &offset )
    return count;
 }
 
-void GuiTextEditCtrl::onMouseDown( const GuiEvent &event )
+void GuiTextEditCtrl::onTouchDown( const GuiEvent &event )
 {
    mDragHit = false;
 
@@ -357,17 +433,17 @@ void GuiTextEditCtrl::onMouseDown( const GuiEvent &event )
    setFirstResponder();
 
    // Notify Script.
-    if( isMethod("onMouseDown") )
+    if( isMethod("onTouchDown") )
     {
         char buf[3][32];
         dSprintf(buf[0], 32, "%d", event.modifier);
         dSprintf(buf[1], 32, "%d %d", event.mousePoint.x, event.mousePoint.y);
         dSprintf(buf[2], 32, "%d", event.mouseClickCount);
-        Con::executef(this, 4, "onMouseDown", buf[0], buf[1], buf[2]);
+        Con::executef(this, 4, "onTouchDown", buf[0], buf[1], buf[2]);
     }
 }
 
-void GuiTextEditCtrl::onMouseDragged( const GuiEvent &event )
+void GuiTextEditCtrl::onTouchDragged( const GuiEvent &event )
 {
    S32 pos = setCursorPos( event.mousePoint );
 
@@ -392,33 +468,33 @@ void GuiTextEditCtrl::onMouseDragged( const GuiEvent &event )
       mBlockStart = mBlockEnd = 0;
 
    //let the parent get the event
-   Parent::onMouseDragged(event);
+   Parent::onTouchDragged(event);
 
    // Notify Script.
-    if( isMethod("onMouseDragged") )
+    if( isMethod("onTouchDragged") )
     {
         char buf[3][32];
         dSprintf(buf[0], 32, "%d", event.modifier);
         dSprintf(buf[1], 32, "%d %d", event.mousePoint.x, event.mousePoint.y);
         dSprintf(buf[2], 32, "%d", event.mouseClickCount);
-        Con::executef(this, 4, "onMouseDragged", buf[0], buf[1], buf[2]);
+        Con::executef(this, 4, "onTouchDragged", buf[0], buf[1], buf[2]);
     }
 }
 
-void GuiTextEditCtrl::onMouseUp(const GuiEvent &event)
+void GuiTextEditCtrl::onTouchUp(const GuiEvent &event)
 {
    mDragHit = false;
    mScrollDir = 0;
    mouseUnlock();
 
     // Notify Script.
-    if( isMethod("onMouseUp") )
+    if( isMethod("onTouchUp") )
     {
         char buf[3][32];
         dSprintf(buf[0], 32, "%d", event.modifier);
         dSprintf(buf[1], 32, "%d %d", event.mousePoint.x, event.mousePoint.y);
         dSprintf(buf[2], 32, "%d", event.mouseClickCount);
-        Con::executef(this, 4, "onMouseUp", buf[0], buf[1], buf[2]);
+        Con::executef(this, 4, "onTouchUp", buf[0], buf[1], buf[2]);
     }
 }
 
@@ -542,21 +618,18 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
    S32 stringLen = mTextBuffer.length();
    setUpdate();
 
-   // Ugly, but now I'm cool like MarkF.
-   if(event.keyCode == KEY_BACKSPACE)
-      goto dealWithBackspace;
+   if (event.keyCode == KEY_BACKSPACE)
+   {
+	   handleBackSpace();
+	   return true;
+   }
 
    if (event.modifier & SI_SHIFT)
     {
         switch (event.keyCode)
         {
             case KEY_TAB:
-               if ( mTabComplete )
-               {
-                  Con::executef( this, 2, "onTabComplete", "1" );
-                  return( true );
-               }
-               break; //*** DAW: We don't want to fall through if we don't handle the TAB here.
+               return tabPrev();
 
             case KEY_HOME:
                mBlockStart = 0;
@@ -800,19 +873,10 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
          case KEY_RETURN:
          case KEY_NUMPADENTER:
             //first validate
-            if (mProfile->mReturnTab)
+            if (!validate())
             {
-               //execute the validate command
-               if ( mValidateCommand[0] )
-               {
-                  char buf[16];
-                  dSprintf(buf, sizeof(buf), "%d", getId());
-                  Con::setVariable("$ThisControl", buf);
-                  Con::evaluate( mValidateCommand, false );
-               }
-               
-               if( isMethod( "onValidate" ) )
-                  Con::executef( this, 2, "onValidate" );
+				//The contents must be invalid. Stop here.
+				return true;
             }
 
             updateHistory(&mTextBuffer, true);
@@ -823,16 +887,11 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
 
             // Notify of Return
             if ( isMethod("onReturn") )
-               Con::executef( this, 2, "onReturn" );
+               Con::executef( this, 1, "onReturn" );
 
-            if (mProfile->mReturnTab)
+            if (mReturnCausesTab)
             {
-               GuiCanvas *root = getRoot();
-               if (root)
-               {
-                  root->tabNext();
-                  return true;
-               }
+               tabNext();
             }
             return true;
 
@@ -889,31 +948,8 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
             return true;
 
          case KEY_BACKSPACE:
-dealWithBackspace:
-            //save the current state
-            saveUndoState();
-
-            if (mBlockEnd > 0)
-            {
-               mTextBuffer.cut(mBlockStart, mBlockEnd-mBlockStart);
-               mCursorPos  = mBlockStart;
-               mBlockStart = 0;
-               mBlockEnd   = 0;
-               mHistoryDirty = true;
-
-               // Execute the console command!
-               execConsoleCallback();
-
-            }
-            else if (mCursorPos > 0)
-            {
-               mTextBuffer.cut(mCursorPos-1, 1);
-               mCursorPos--;
-               mHistoryDirty = true;
-
-               // Execute the console command!
-               execConsoleCallback();
-            }
+			//This should have been handled above, but it is here again for safety.
+            handleBackSpace();
             return true;
 
          case KEY_DELETE:
@@ -964,50 +1000,27 @@ dealWithBackspace:
    switch ( event.keyCode )
    {
       case KEY_TAB:
-         if ( mTabComplete )
-         {
-            Con::executef( this, 2, "onTabComplete", "0" );
-            return( true );
-         }
+		  return tabNext();
       case KEY_UP:
       case KEY_DOWN:
       case KEY_ESCAPE:
          return Parent::onKeyDown( event );
    }
 
-   if(mFont.isNull())
+   if(mProfile->mFont.isNull())
        return false;
 
-   if ( mFont->isValidChar( event.ascii ) )
+   if ( mProfile->mFont->isValidChar( event.ascii ) )
    {
       // Get the character ready to add to a UTF8 string.
       UTF16 convertedChar[2] = { event.ascii, 0 };
 
-      //see if it's a number field
-      if ( mProfile->mNumbersOnly )
-      {
-         if (event.ascii == '-')
-         {
-            //a minus sign only exists at the beginning, and only a single minus sign
-            if ( mCursorPos != 0 )
-            {
-               playDeniedSound();
-               return true;
-            }
-
-            if ( mInsertOn && ( mTextBuffer.getChar(0) == '-' ) ) 
-            {
-               playDeniedSound();
-               return true;
-            }
-         }
-         // BJTODO: This is probably not unicode safe.
-         else if ( event.ascii < '0' || event.ascii > '9' )
-         {
-            playDeniedSound();
-            return true;
-         }
-      }
+		//Stop characters that aren't allowed based on InputMode
+		if (!inputModeValidate(event.ascii, mCursorPos))
+		{
+			keyDenied();
+			return true;
+		}
 
       //save the current state
       saveUndoState();
@@ -1045,7 +1058,7 @@ dealWithBackspace:
          }
       }
       else
-         playDeniedSound();
+		  keyDenied();
 
       //reset the history index
       mHistoryDirty = true;
@@ -1065,6 +1078,58 @@ dealWithBackspace:
    return Parent::onKeyDown( event );
 }
 
+bool GuiTextEditCtrl::tabNext()
+{
+	if (isMethod("onTab"))
+		Con::executef(this, 2, "onTab", "0");
+
+	GuiCanvas *root = getRoot();
+	if (root)
+	{
+		root->tabNext();
+		return true;
+	}
+	return false;
+}
+
+bool GuiTextEditCtrl::tabPrev()
+{
+	if (isMethod("onTab"))
+		Con::executef(this, 2, "onTab", "1");
+
+	GuiCanvas *root = getRoot();
+	if (root)
+	{
+		root->tabPrev();
+		return true;
+	}
+	return false;
+}
+
+void GuiTextEditCtrl::handleBackSpace()
+{
+	//save the current state
+	saveUndoState();
+
+	if (mBlockEnd > 0)
+	{
+		mTextBuffer.cut(mBlockStart, mBlockEnd - mBlockStart);
+		mCursorPos = mBlockStart;
+		mBlockStart = 0;
+		mBlockEnd = 0;
+		mHistoryDirty = true;
+	}
+	else if (mCursorPos > 0)
+	{
+		mTextBuffer.cut(mCursorPos - 1, 1);
+		mCursorPos--;
+		mHistoryDirty = true;
+	}
+
+	// Execute the console command!
+	execConsoleCallback();
+}
+
 void GuiTextEditCtrl::setFirstResponder()
 {
    Parent::setFirstResponder();
@@ -1082,19 +1147,15 @@ void GuiTextEditCtrl::onLoseFirstResponder()
    updateHistory( &mTextBuffer, true );
 
    //execute the validate command
-   if ( mValidateCommand[0] )
+   bool valid = validate();
+
+   if (valid)
    {
-      char buf[16];
-      dSprintf(buf, sizeof(buf), "%d", getId());
-      Con::setVariable("$ThisControl", buf);
-      Con::evaluate( mValidateCommand, false );
+	   execAltConsoleCallback();
    }
 
-   if( isMethod( "onValidate" ) )
-      Con::executef( this, 2, "onValidate" );
-
    if( isMethod( "onLoseFirstResponder" ) )
-      Con::executef( this, 2, "onLoseFirstResponder" );
+      Con::executef( this, 2, "onLoseFirstResponder", valid);
 
    // Redraw the control:
    setUpdate();
@@ -1109,27 +1170,39 @@ void GuiTextEditCtrl::parentResized(const Point2I &oldParentExtent, const Point2
 
 void GuiTextEditCtrl::onRender(Point2I offset, const RectI & updateRect)
 {
-   RectI ctrlRect( offset, mBounds.extent );
+	//Notice that there's no Highlight state. The HL colors are used for selected text - not hover.
+	//The selected state is used when the box has the focus and can be typed in.
+	GuiControlState currentState = NormalState;
+	if (!mActive)
+	{
+		currentState = DisabledState;
+	}
+	else if (isFirstResponder())
+	{
+		currentState = SelectedState;
+	}
 
-   //if opaque, fill the update rect with the fill color
-   if ( mProfile->mOpaque )
-   {
-      if(isFirstResponder())
-         dglDrawRectFill( ctrlRect, mActive ? mProfile->mFillColor : mProfile->mFillColorNA );
-      else
-         dglDrawRectFill( ctrlRect, mActive ? mProfile->mFillColor : mProfile->mFillColorNA );
-   }
+	RectI ctrlRect = applyMargins(offset, mBounds.extent, currentState, mProfile);
 
-   //if there's a border, draw the border
-   if ( mProfile->mBorder )
-   {
-      dglSetBitmapModulation( mActive ? mProfile->mFillColor : mProfile->mFillColorNA );
-      renderBorder( ctrlRect, mProfile );
-   }
+	if (!ctrlRect.isValidRect())
+	{
+		return;
+	}
 
-   drawText( ctrlRect, isFirstResponder() );
-   
-   renderChildControls(offset, updateRect);
+	renderUniversalRect(ctrlRect, mProfile, currentState);
+
+	//Render Text
+	dglSetBitmapModulation(mProfile->mFontColor);
+	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
+	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, NormalState, mProfile);
+
+	if (contentRect.isValidRect())
+	{
+		drawText(contentRect, currentState);
+
+		//Render the childen
+		renderChildControls(offset, contentRect, updateRect);
+	}
 }
 
 void GuiTextEditCtrl::onPreRender()
@@ -1157,206 +1230,191 @@ void GuiTextEditCtrl::onPreRender()
    }
 }
 
-void GuiTextEditCtrl::drawText( const RectI &drawRect, bool isFocused )
+void GuiTextEditCtrl::drawText( const RectI &drawRect, GuiControlState currentState )
 {
-   StringBuffer textBuffer;
-   Point2I drawPoint = drawRect.point;
-   Point2I paddingLeftTop, paddingRightBottom;
-
-   // Just a little sanity.
-   if(mCursorPos > (S32)mTextBuffer.length()) 
-      mCursorPos = (S32)mTextBuffer.length();
-   if(mCursorPos < 0)
-       mCursorPos = 0;
-
-   // Apply password masking (make the masking char optional perhaps?)
-   if(mPasswordText)
+   RectI old = dglGetClipRect();
+   RectI clipRect = RectI(drawRect.point, drawRect.extent);
+   if (clipRect.intersect(old))
    {
-      for(U32 i = 0; i<mTextBuffer.length(); i++)
-         textBuffer.append(mPasswordMask);
-   }
-   else
-   {
-      // Or else just copy it over.
-      textBuffer.set(&mTextBuffer);
-   }
+	   dglSetClipRect(clipRect);
 
-   paddingLeftTop.set(( mProfile->mTextOffset.x != 0 ? mProfile->mTextOffset.x : 3 ), mProfile->mTextOffset.y);
-   paddingRightBottom = paddingLeftTop;
+	   // Just a little sanity.
+	   if(mCursorPos > (S32)mTextBuffer.length()) 
+		  mCursorPos = (S32)mTextBuffer.length();
+	   if(mCursorPos < 0)
+		   mCursorPos = 0;
 
-   // Center vertically:
-   drawPoint.y += ( ( drawRect.extent.y - paddingLeftTop.y - paddingRightBottom.y - mFont->getHeight() ) / 2 ) + paddingLeftTop.y;
+	   StringBuffer textBuffer;
+	   Point2I drawPoint = drawRect.point;
 
-   // Align horizontally:
+	   // Apply password masking (make the masking char optional perhaps?)
+	   if(mPasswordText)
+	   {
+		  for(U32 i = 0; i<mTextBuffer.length(); i++)
+			 textBuffer.append(mPasswordMask);
+	   }
+	   else
+	   {
+		  // Or else just copy it over.
+		  textBuffer.set(&mTextBuffer);
+	   }
+
+	   // Center vertically:
+	   S32 h = mProfile->mFont->getHeight();
+	   drawPoint.y += ( ( drawRect.extent.y - h ) / 2 );
+
+	   // Align horizontally:
    
-   S32 textWidth = mFont->getStrNWidth(textBuffer.getPtr(), textBuffer.length());
+	   S32 textWidth = mProfile->mFont->getStrNWidth(textBuffer.getPtr(), textBuffer.length());
 
-   if ( drawRect.extent.x - paddingLeftTop.x > textWidth )
-   {
-      switch( mProfile->mAlignment )
-      {
-      case GuiControlProfile::RightJustify:
-         drawPoint.x += ( drawRect.extent.x - textWidth - paddingRightBottom.x );
-         break;
-      case GuiControlProfile::CenterJustify:
-         drawPoint.x += ( ( drawRect.extent.x - textWidth ) / 2 );
-         break;
-      default:
-      case GuiControlProfile::LeftJustify :
-         drawPoint.x += paddingLeftTop.x;
-         break;
-      }
-   }
-   else
-      drawPoint.x += paddingLeftTop.x;
+	   if ( drawRect.extent.x > textWidth )
+	   {
+		  switch( mProfile->mAlignment )
+		  {
+		  case GuiControlProfile::RightAlign:
+			 drawPoint.x += ( drawRect.extent.x - textWidth );
+			 break;
+		  case GuiControlProfile::CenterAlign:
+			 drawPoint.x += ( ( drawRect.extent.x - textWidth ) / 2 );
+			 break;
+		  }
+	   }
 
-   ColorI fontColor = mActive ? mProfile->mFontColor : mProfile->mFontColorNA;
+	   ColorI fontColor = mActive ? mProfile->mFontColor : mProfile->mFontColorNA;
 
-   // now draw the text
-   Point2I cursorStart, cursorEnd;
-   mTextOffset = drawPoint;
-   if ( mTextOffsetReset )
-   {
-      mTextOffset.x = drawPoint.x;
-      mTextOffsetReset = false;
-   }
+	   // now draw the text
+	   Point2I cursorStart, cursorEnd;
+	   mTextOffset = drawPoint;
+	   if ( mTextOffsetReset )
+	   {
+		  mTextOffset.x = drawPoint.x;
+		  mTextOffsetReset = false;
+	   }
 
-   if ( drawRect.extent.x - paddingLeftTop.x > textWidth )
-      mTextOffset.x = drawPoint.x;
-   else
-   {
-      // Alignment affects large text
-      if ( mProfile->mAlignment == GuiControlProfile::RightJustify
-         || mProfile->mAlignment == GuiControlProfile::CenterJustify )
-      {
-         if ( mTextOffset.x + textWidth < (drawRect.point.x + drawRect.extent.x) - paddingRightBottom.x)
-            mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - paddingRightBottom.x - textWidth;
-      }
-   }
+	   if ( drawRect.extent.x > textWidth )
+		  mTextOffset.x = drawPoint.x;
+	   else
+	   {
+		  // Alignment affects large text
+		  if ( mProfile->mAlignment == GuiControlProfile::RightAlign
+			 || mProfile->mAlignment == GuiControlProfile::CenterAlign )
+		  {
+			 if ( mTextOffset.x + textWidth < (drawRect.point.x + drawRect.extent.x))
+				mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - textWidth;
+		  }
+	   }
 
-   // calculate the cursor
-   if ( isFocused )
-   {
-      // Where in the string are we?
-      S32 cursorOffset=0, charWidth=0;
-      UTF16 tempChar = mTextBuffer.getChar(mCursorPos);
+	   // calculate the cursor
+	   if ( currentState == SelectedState )
+	   {
+		  // Where in the string are we?
+		  S32 cursorOffset=0, charWidth=0;
+		  UTF16 tempChar = mTextBuffer.getChar(mCursorPos);
 
-      // Alright, we want to terminate things momentarily.
-      if(mCursorPos > 0)
-      {
-         cursorOffset = mFont->getStrNWidth(textBuffer.getPtr(), mCursorPos);
-      }
-      else
-         cursorOffset = 0;
+		  // Alright, we want to terminate things momentarily.
+		  if(mCursorPos > 0)
+		  {
+			 cursorOffset = mProfile->mFont->getStrNWidth(textBuffer.getPtr(), mCursorPos);
+		  }
+		  else
+			 cursorOffset = 0;
 
-      if ( tempChar )
-         charWidth = mFont->getCharWidth( tempChar );
-      else
-         charWidth = paddingRightBottom.x;
+		  if ( tempChar )
+			 charWidth = mProfile->mFont->getCharWidth( tempChar );
+		  else
+			 charWidth = 0;
 
-      if( mTextOffset.x + cursorOffset + charWidth >= (drawRect.point.x + drawRect.extent.x) - paddingLeftTop.x )
-      {
-         // Cursor somewhere beyond the textcontrol,
-         // skip forward roughly 25% of the total width (if possible)
-         S32 skipForward = drawRect.extent.x / 4;
+		  if( mTextOffset.x + cursorOffset + charWidth >= (drawRect.point.x + drawRect.extent.x))
+		  {
+			 // Cursor somewhere beyond the textcontrol,
+			 // skip forward roughly 25% of the total width (if possible)
+			 S32 skipForward = drawRect.extent.x / 4;
 
-         if ( cursorOffset + skipForward > textWidth )
-            mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - paddingRightBottom.x - textWidth;
-         else
-            mTextOffset.x -= skipForward;
-      }
-      else if( mTextOffset.x + cursorOffset < drawRect.point.x + paddingLeftTop.x )
-      {
-         // Cursor somewhere before the textcontrol
-         // skip backward roughly 25% of the total width (if possible)
-         S32 skipBackward = drawRect.extent.x / 4;
+			 if ( cursorOffset + skipForward > textWidth )
+				mTextOffset.x = (drawRect.point.x + drawRect.extent.x) - textWidth;
+			 else
+				mTextOffset.x -= skipForward;
+		  }
+		  else if( mTextOffset.x + cursorOffset < drawRect.point.x)
+		  {
+			 // Cursor somewhere before the textcontrol
+			 // skip backward roughly 25% of the total width (if possible)
+			 S32 skipBackward = drawRect.extent.x / 4;
 
-         if ( cursorOffset - skipBackward < 0 )
-            mTextOffset.x = drawRect.point.x + paddingLeftTop.x;
-         else
-            mTextOffset.x += skipBackward;
-      }
-      cursorStart.x = mTextOffset.x + cursorOffset;
-      cursorEnd.x = cursorStart.x;
+			 if ( cursorOffset - skipBackward < 0 )
+				mTextOffset.x = drawRect.point.x;
+			 else
+				mTextOffset.x += skipBackward;
+		  }
+		  cursorStart.x = mTextOffset.x + cursorOffset;
+		  cursorEnd.x = cursorStart.x;
 
-      S32 cursorHeight = mFont->getHeight();
-      if ( cursorHeight < drawRect.extent.y )
-      {
-         cursorStart.y = drawPoint.y;
-         cursorEnd.y = cursorStart.y + cursorHeight;
-      }
-      else
-      {
-         cursorStart.y = drawRect.point.y;
-         cursorEnd.y = cursorStart.y + drawRect.extent.y;
-      }
-   }
+		  S32 cursorHeight = mProfile->mFont->getHeight();
+		  if ( cursorHeight < drawRect.extent.y )
+		  {
+			 cursorStart.y = drawPoint.y;
+			 cursorEnd.y = cursorStart.y + cursorHeight;
+		  }
+		  else
+		  {
+			 cursorStart.y = drawRect.point.y;
+			 cursorEnd.y = cursorStart.y + drawRect.extent.y;
+		  }
+	   }
 
-   //draw the text
-   if ( !isFocused )
-      mBlockStart = mBlockEnd = 0;
+	   //draw the text
+	   if ( currentState != SelectedState )
+		  mBlockStart = mBlockEnd = 0;
 
-   //also verify the block start/end
-   if ((mBlockStart > (S32)textBuffer.length() || (mBlockEnd > (S32)textBuffer.length()) || (mBlockStart > mBlockEnd)))
-      mBlockStart = mBlockEnd = 0;
+	   //also verify the block start/end
+	   if ((mBlockStart > (S32)textBuffer.length() || (mBlockEnd > (S32)textBuffer.length()) || (mBlockStart > mBlockEnd)))
+		  mBlockStart = mBlockEnd = 0;
 
-   Point2I tempOffset = mTextOffset;
+	   Point2I tempOffset = mTextOffset;
 
-   //draw the portion before the highlight
-   if ( mBlockStart > 0 )
-   {
-      dglSetBitmapModulation( fontColor );
+	   //draw the portion before the highlight
+	   if ( mBlockStart > 0 )
+	   {
+		  dglSetBitmapModulation( fontColor );
 
-      const UTF16* preString2 = textBuffer.getPtr();
-      dglDrawTextN( mFont, tempOffset, preString2, mBlockStart, mProfile->mFontColors);
-      tempOffset.x += mFont->getStrNWidth(preString2, mBlockStart);
-   }
+		  const UTF16* preString2 = textBuffer.getPtr();
+		  dglDrawTextN( mProfile->mFont, tempOffset, preString2, mBlockStart, mProfile->mFontColors);
+		  tempOffset.x += mProfile->mFont->getStrNWidth(preString2, mBlockStart);
+	   }
 
-   //draw the hilighted portion
-   if ( mBlockEnd > 0 )
-   {
-      const UTF16* highlightBuff = textBuffer.getPtr() + mBlockStart;
-      U32 highlightBuffLen = mBlockEnd-mBlockStart;
+	   //draw the hilighted portion
+	   if ( mBlockEnd > 0 )
+	   {
+		  const UTF16* highlightBuff = textBuffer.getPtr() + mBlockStart;
+		  U32 highlightBuffLen = mBlockEnd-mBlockStart;
 
-      S32 highlightWidth = mFont->getStrNWidth(highlightBuff, highlightBuffLen);
+		  S32 highlightWidth = mProfile->mFont->getStrNWidth(highlightBuff, highlightBuffLen);
 
-      dglDrawRectFill( Point2I( tempOffset.x, drawRect.point.y + 1 ),
-         Point2I( tempOffset.x + highlightWidth, drawRect.point.y + drawRect.extent.y - 1),
-         mProfile->mFillColorHL );
+		  dglDrawRectFill( Point2I( tempOffset.x, drawRect.point.y + 1 ),
+			 Point2I( tempOffset.x + highlightWidth, drawRect.point.y + drawRect.extent.y - 1),
+			 mProfile->mFillColorHL );
 
-      dglSetBitmapModulation( mProfile->mFontColorHL );
-      dglDrawTextN( mFont, tempOffset, highlightBuff, highlightBuffLen, mProfile->mFontColors );
-      tempOffset.x += highlightWidth;
-   }
+		  dglSetBitmapModulation( mProfile->mFontColorHL );
+		  dglDrawTextN( mProfile->mFont, tempOffset, highlightBuff, highlightBuffLen, mProfile->mFontColors );
+		  tempOffset.x += highlightWidth;
+	   }
 
-   //draw the portion after the highlite
-   if(mBlockEnd < (S32)mTextBuffer.length())
-   {
-       // Special handling if we are truncating when the ctrl is unfocused
-       if ( !isFocused && mTruncateWhenUnfocused)
-       {
-          StringBuffer terminationString = "...";
-          S32 width = mBounds.extent.x;
-          StringBuffer truncatedBuffer = truncate(textBuffer, terminationString, width);
-          const UTF16* truncatedBufferPtr = truncatedBuffer.getPtr();
-          U32 finalBuffLen = truncatedBuffer.length();
+	   //draw the portion after the highlite
+	   if(mBlockEnd < (S32)mTextBuffer.length())
+	   {
+			const UTF16* finalBuff = textBuffer.getPtr() + mBlockEnd;
+			U32 finalBuffLen = mTextBuffer.length() - mBlockEnd;
 
-          dglSetBitmapModulation( fontColor );
-          dglDrawTextN( mFont, tempOffset, truncatedBufferPtr, finalBuffLen, mProfile->mFontColors );
-       }
-       else
-       {
-          const UTF16* finalBuff = textBuffer.getPtr() + mBlockEnd;
-          U32 finalBuffLen = mTextBuffer.length() - mBlockEnd;
+			dglSetBitmapModulation( fontColor );
+			dglDrawTextN( mProfile->mFont, tempOffset, finalBuff, finalBuffLen, mProfile->mFontColors );
+	   }
 
-          dglSetBitmapModulation( fontColor );
-          dglDrawTextN( mFont, tempOffset, finalBuff, finalBuffLen, mProfile->mFontColors );
-       }
-   }
+	   //draw the cursor
+	   if (currentState == SelectedState && mCursorOn )
+		  dglDrawLine( cursorStart, cursorEnd, mProfile->mCursorColor );
 
-   //draw the cursor
-   if ( isFocused && mCursorOn )
-      dglDrawLine( cursorStart, cursorEnd, mProfile->mCursorColor );
+	   dglSetClipRect(old);
+	}
 }
 
 bool GuiTextEditCtrl::hasText()
@@ -1364,13 +1422,10 @@ bool GuiTextEditCtrl::hasText()
    return (mTextBuffer.length());
 }
 
-void GuiTextEditCtrl::playDeniedSound()
+void GuiTextEditCtrl::keyDenied()
 {
-    if ( mDeniedSound.notNull() )
-   {
-      AUDIOHANDLE handle = alxCreateSource( mDeniedSound );
-      alxPlay( handle );
-   }
+	if (isMethod("onDenied"))
+		Con::executef(this, 1, "onDenied");
 }
 
 const char *GuiTextEditCtrl::getScriptValue()
@@ -1384,41 +1439,203 @@ void GuiTextEditCtrl::setScriptValue(const char *value)
    mCursorPos = getMin((S32)(mTextBuffer.length() - 1), 0);
 }
 
-ConsoleMethod( GuiTextEditCtrl, getText, const char*, 2, 2, "() Get the contents of the textedit control\n"
-              "@return Returns the current textedit buffer.")
+
+StringBuffer GuiTextEditCtrl::truncate(StringBuffer buffer, StringBuffer terminationString, S32 width)
 {
-   if( !object->hasText() )
-      return StringTable->EmptyString;
+	// Check if the buffer width exceeds the specified width
+	S32 bufferWidth = textBufferWidth(buffer);
 
-   char *retBuffer = Con::getReturnBuffer( GuiTextEditCtrl::MAX_STRING_LENGTH );
-   object->getText( retBuffer );
+	// If not, just return the unmodified buffer
+	if (bufferWidth <= width)
+		return buffer;
 
-   return retBuffer;
+	// Get the width of the termination string
+	S32 terminationWidth = textBufferWidth(terminationString) + 6; // add an extra bit of space at the end
+
+	// Calculate the new target width with space allowed for the termination string
+	S32 targetWidth = width - terminationWidth;
+
+	// If the target width is zero or less, just replace the entire buffer with the termination string
+	if (targetWidth <= 0)
+		return terminationString;
+
+	// Step backwards in the buffer until we find the character that fits within the target width
+	S32 currentWidth = 0;
+	S32 count = 0;
+	for (S32 i = 0; i < (S32)buffer.length(); i++)
+	{
+		if (currentWidth >= targetWidth)
+			break;
+
+		UTF16 c = buffer.getChar(i);
+		currentWidth += mProfile->mFont->getCharXIncrement(c);
+		count++;
+	}
+
+	// Get the substring
+	StringBuffer retBuffer = buffer.substring(0, count - 2);
+
+	// Append terminating string
+	retBuffer.append(terminationString);
+
+	return retBuffer;
 }
 
-
-ConsoleMethod( GuiTextEditCtrl, getCursorPos, S32, 2, 2, "() Use the getCursorPos method to get the current position of the text cursor in the control.\n"
-                                                                "@return Returns the current position of the text cursor in the control, where 0 is at the beginning of the line, 1 is after the first letter, and so on.\n"
-                                                                "@sa setCursorPos")
+S32 GuiTextEditCtrl::textBufferWidth(StringBuffer buffer)
 {
-   return( object->getCursorPos() );
+	S32 charLength = 0;
+
+	for (S32 count = 0; count < (S32)buffer.length(); count++)
+	{
+		UTF16 c = buffer.getChar(count);
+		if (!mProfile->mFont->isValidChar(c))
+			continue;
+
+		charLength += mProfile->mFont->getCharXIncrement(c);
+	}
+
+	return charLength;
 }
 
-ConsoleMethod( GuiTextEditCtrl, setCursorPos, void, 3, 3, "( newPos ) Use the setCursorPos method to set the current position of text cursor to newPos.\n"
-                                                                "If the requested position is beyond the end of text, the cursor will be placed after the last letter. If the value is less than zero, the cursor will be placed at the front of the entry.\n"
-                                                                "@param newPos The new position to place the cursor at, where 0 is at the beginning of the line, 1 is after the first letter, and so on.\n"
-                                                                "@return No return value.\n"
-                                                                "@sa getCursorPos")
+GuiTextEditCtrl::InputMode GuiTextEditCtrl::getInputModeEnum(const char* label)
 {
-   object->reallySetCursorPos( dAtoi( argv[2] ) );
+	// Search for Mnemonic.
+	for (U32 i = 0; i < (sizeof(inputModeEnums) / sizeof(EnumTable::Enums)); i++)
+	{
+		if (dStricmp(inputModeEnums[i].label, label) == 0)
+			return (InputMode)inputModeEnums[i].index;
+	}
+
+	// Warn.
+	Con::warnf("GuiTextEditCtrl::getInputModeEnum() - Invalid mode of '%s'", label);
+
+	return (InputMode)-1;
 }
 
-ConsoleMethod( GuiTextEditCtrl, selectAllText, void, 2, 2, "textEditCtrl.selectAllText()" )
+const char* GuiTextEditCtrl::getInputModeDescription(const InputMode mode)
 {
-   object->selectAllText();
+	// Search for Mnemonic.
+	for (U32 i = 0; i < (sizeof(inputModeEnums) / sizeof(EnumTable::Enums)); i++)
+	{
+		if (inputModeEnums[i].index == mode)
+			return inputModeEnums[i].label;
+	}
+
+	// Warn.
+	Con::warnf("GuiTextEditCtrl::getInputModeDescription() - Invalid input mode.");
+
+	return StringTable->EmptyString;
 }
 
-ConsoleMethod( GuiTextEditCtrl, forceValidateText, void, 2, 2, "textEditCtrl.forceValidateText()" )
+//Returns true if valid, false if invalid
+bool GuiTextEditCtrl::inputModeValidate(const U16 key, S32 cursorPos)
 {
-   object->forceValidateText();
+	if (key == '-')
+	{
+		if (mInputMode == Alpha || mInputMode == AlphaNumeric)
+		{
+			return false;
+		}
+		else if (mInputMode == Decimal || mInputMode == Number)
+		{
+			//a minus sign only exists at the beginning, and only a single minus sign
+			if (cursorPos != 0 || (mInsertOn && mTextBuffer.getChar(0) == '-'))
+			{
+				return false;
+			}
+		}
+	}
+	else if (key >= '0' && key <= '9')
+	{
+		if (mInputMode == Alpha)
+		{
+			return false;
+		}
+	}
+	else if (key == '.')
+	{
+		if (mInputMode == Number || mInputMode == Alpha || mInputMode == AlphaNumeric)
+		{
+			return false;
+		}
+		else if (mInputMode == Decimal)
+		{
+			if (!mInsertOn && mTextBuffer.getChar(cursorPos) == '.')
+			{
+				return true;
+			}
+
+			const char* dot = dStrchr(mTextBuffer.getPtr8(), '.');
+			if (dot != NULL)
+			{
+				return false;
+			}
+		}
+	}
+	else if ((key >= 'A' && key <= 'Z') || (key >= 'a' && key <= 'z'))
+	{
+		if (mInputMode == Decimal || mInputMode == Number)
+		{
+			return false;
+		}
+	}
+	else if (key == 32)
+	{
+		if (mInputMode == Decimal || mInputMode == Number)
+		{
+			return false;
+		}
+	}
+	else if (mInputMode == Decimal || mInputMode == Number || mInputMode == Alpha || mInputMode == AlphaNumeric)
+	{
+		//The remaining characters only go with AllText
+		return false;
+	}
+
+	//Looks like we have a valid character!
+	return true;
+}
+
+void GuiTextEditCtrl::setMaxLength(S32 max)
+{
+	mMaxStrLen = getMax(1, getMin(max, MAX_STRING_LENGTH));
+}
+
+void GuiTextEditCtrl::setInputMode(const InputMode mode)
+{
+	if(mInputMode == mode)
+		return;
+
+	//Let's start by clearing the history.
+	mHistoryIndex = 0;
+	mHistoryLast = -1;
+
+	//Time to set the mode
+	mInputMode = mode;
+
+	//now let's parse that buffer and get rid of invalid characters
+	if (mode != AllText)
+	{
+		bool oldInsert = mInsertOn;
+		mInsertOn = false;
+		for (S32 i = 0; i < MAX_STRING_LENGTH; i++)
+		{
+			const UTF16 character = mTextBuffer.getChar(i);
+			if (character == '\0')
+			{
+				//Done and done.
+				break;
+			}
+			
+			if (!inputModeValidate(character, i))
+			{
+				//Bad Character! Let's remove it.
+				mTextBuffer.cut(i, 1);
+
+				//Step it back
+				i--;
+			}
+		}
+		mInsertOn = oldInsert;
+	}
 }

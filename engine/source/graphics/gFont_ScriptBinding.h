@@ -166,6 +166,48 @@ ConsoleFunctionWithDocs(writeFontCache, ConsoleVoid, 1, 1, ())
    }
 }
 
+/*! Force all cached fonts with a given font name in their paths to serialize themselves to the cache.
+	@param fontName The name of the font to search for in the path. Will save if found.
+	@return No return value
+*/
+ConsoleFunctionWithDocs(writeSingleFontCache, ConsoleVoid, 2, 2, (fontName))
+{
+	FindMatch match("*.uft", 4096);
+	ResourceManager->findMatches(&match);
+
+	Con::printf("--------------------------------------------------------------------------");
+	Con::printf("   Writing font cache for font face %s to disk", argv[1]);
+
+	for (U32 i = 0; i < (U32)match.numMatches(); i++)
+	{
+		char *curMatch = match.matchList[i];
+		if(dStrstr(curMatch, argv[1]) != NULL )
+		{
+			Resource<GFont> font = ResourceManager->load(curMatch);
+
+			// Deal with inexplicably missing or failed to load fonts.
+			if (font.isNull())
+			{
+				Con::errorf(" o Couldn't find font : %s", curMatch);
+				continue;
+			}
+
+			// Ok, dump info!
+			FileStream stream;
+			if (ResourceManager->openFileForWrite(stream, curMatch))
+			{
+				Con::printf("      o Writing '%s' to disk...", curMatch);
+				font->write(stream);
+				stream.close();
+			}
+			else
+			{
+				Con::errorf("      o Could not open '%s' for write!", curMatch);
+			}
+		}
+	}
+}
+
 /*! 
     Populate the font cache for all fonts with characters from the specified string.
     @param inString The string to use to set the font caches

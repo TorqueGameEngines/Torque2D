@@ -210,7 +210,7 @@ void GuiImageButtonCtrl::onRender(Point2I offset, const RectI& updateRect)
         if ( mMouseOver )
             state = HOVER;
 
-        if ( mDepressed || mStateOn )
+        if ( mDepressed )
             state = DOWN;
     }
     else
@@ -272,7 +272,7 @@ void GuiImageButtonCtrl::renderButton( ImageAsset* pImageAsset, const U32 frame,
         dglSetBitmapModulation( mProfile->mFillColor );
         dglDrawBitmapStretchSR( pImageAsset->getImageTexture(), destinationRegion, sourceRegion );
         dglClearBitmapModulation();
-        renderChildControls( offset, updateRect);
+        renderChildControls( offset, mBounds, updateRect);
     }
     else
     {

@@ -95,6 +95,7 @@ public:
 
     void resetDataKeys( void );
     S32 setSingleDataKey( const F32 value );
+	bool doesKeyExist(const F32 time);
     S32 addDataKey( const F32 time, const F32 value );
     bool removeDataKey( const U32 index );
     void clearDataKeys( void );

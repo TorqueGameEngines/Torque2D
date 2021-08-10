@@ -23,20 +23,62 @@
 #ifndef _GUIBUTTONCTRL_H_
 #define _GUIBUTTONCTRL_H_
 
-#ifndef _GUIBUTTONBASECTRL_H_
-#include "gui/buttons/guiButtonBaseCtrl.h"
+#ifndef _GUICONTROL_H_
+#include "gui/guiControl.h"
 #endif
 
-class GuiButtonCtrl : public GuiButtonBaseCtrl
+class GuiButtonCtrl : public GuiControl
 {
-   typedef GuiButtonBaseCtrl Parent;
+private:
+   typedef GuiControl Parent;
+
 protected:
-   bool mHasTheme;
+	bool mDepressed;
+	bool mMouseOver;
+	FluidColorI mFluidFillColor; //The actual fill color as it moves fluidly from one color to another.
+	GuiControlState mPreviousState;
+	GuiControlState mCurrentState;
+	GuiControlState getCurrentState();
+	S32 getBitmapIndex(const GuiControlState state);
+
 public:
-   DECLARE_CONOBJECT(GuiButtonCtrl);
-   GuiButtonCtrl();
-   bool onWake();
-   void onRender(Point2I offset, const RectI &updateRect);
+	GuiButtonCtrl();
+	static void initPersistFields();
+
+	DECLARE_CONOBJECT(GuiButtonCtrl);
+
+	EasingFunction mEaseFillColorHL; //Transitioning to or from HL (if SL is not involved)
+	EasingFunction mEaseFillColorSL; //Transitioning to or from SL (over HL)
+
+	S32 mEaseTimeFillColorHL;
+	S32 mEaseTimeFillColorSL;
+
+	void acceleratorKeyPress(U32 index);
+	void acceleratorKeyRelease(U32 index);
+
+	virtual void onTouchDown(const GuiEvent &);
+	virtual void onTouchUp(const GuiEvent &);
+	virtual void onRightMouseUp(const GuiEvent &);
+
+	virtual void onTouchEnter(const GuiEvent &);
+	virtual void onTouchLeave(const GuiEvent &);
+
+	virtual bool onKeyDown(const GuiEvent &event);
+	virtual bool onKeyUp(const GuiEvent &event);
+
+	virtual void setScriptValue(const char *value);
+	virtual const char *getScriptValue();
+
+	virtual void onMessage(GuiControl *, S32 msg);
+	virtual void onAction();
+   
+	virtual void onRender(Point2I offset, const RectI &updateRect);
+	virtual void setControlProfile(GuiControlProfile *prof);
+
+	const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.
+	virtual void processTick();
+
+	inline const char* getEasingFunctionDescription(const EasingFunction ease) { return mFluidFillColor.getEasingFunctionDescription(ease); };
 };
 
 #endif //_GUI_BUTTON_CTRL_H

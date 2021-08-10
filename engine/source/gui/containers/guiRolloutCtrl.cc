@@ -59,11 +59,11 @@ void GuiRolloutCtrl::initPersistFields()
 {
    Parent::initPersistFields();
 
-   addField("Caption", TypeCaseString, Offset(mCaption, GuiRolloutCtrl));
-   addField("Margin", TypePoint2I, Offset(mMargin, GuiRolloutCtrl));
-   addField("DefaultHeight", TypeS32, Offset(mDefaultHeight, GuiRolloutCtrl));
-   addProtectedField( "Collapsed", TypeBool, Offset( mIsExpanded, GuiRolloutCtrl), &setCollapsed, &defaultProtectedGetFn, "" );
-   addField("ClickCollapse", TypeBool, Offset(mCanCollapse, GuiRolloutCtrl));
+   //addField("Caption", TypeCaseString, Offset(mCaption, GuiRolloutCtrl));
+   //addField("Margin", TypePoint2I, Offset(mMargin, GuiRolloutCtrl));
+   //addField("DefaultHeight", TypeS32, Offset(mDefaultHeight, GuiRolloutCtrl));
+   //addProtectedField( "Collapsed", TypeBool, Offset( mIsExpanded, GuiRolloutCtrl), &setCollapsed, &defaultProtectedGetFn, "" );
+   //addField("ClickCollapse", TypeBool, Offset(mCanCollapse, GuiRolloutCtrl));
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -115,12 +115,12 @@ void GuiRolloutCtrl::removeObject( SimObject *obj )
 //////////////////////////////////////////////////////////////////////////
 // Mouse Events
 //////////////////////////////////////////////////////////////////////////
-void GuiRolloutCtrl::onMouseDown( const GuiEvent &event )
+void GuiRolloutCtrl::onTouchDown( const GuiEvent &event )
 {
    mouseLock();
 }
 
-void GuiRolloutCtrl::onMouseUp( const GuiEvent &event )
+void GuiRolloutCtrl::onTouchUp( const GuiEvent &event )
 {
    Point2I localPoint = globalToLocalCoord( event.mousePoint );
    if( mCanCollapse && mHeader.pointInRect( localPoint ) && !mIsAnimating && isMouseLocked() )
@@ -339,21 +339,21 @@ void GuiRolloutCtrl::onRender(Point2I offset, const RectI &updateRect)
 
    if( mProfile->mBitmapArrayRects.size() >= NumBitmaps )
    {
-      dglClearBitmapModulation();
+      //dglClearBitmapModulation();
 
       // Draw Rollout From Skin
       if( !mIsExpanded )
          renderFixedBitmapBordersFilled( worldBounds, 1, mProfile );
-      else// Draw Border
-         renderSizableBitmapBordersFilledIndex( worldBounds, TopLeftHeader, mProfile );
+      //else// Draw Border
+         //renderSizableBitmapBordersFilledIndex( worldBounds, TopLeftHeader, mProfile );
 
       // Draw Caption ( Vertically Centered )
       ColorI currColor;
-      dglGetBitmapModulation( &currColor );
+      //dglGetBitmapModulation( &currColor );
       Point2I textPosition = mHeader.point + offset + mProfile->mTextOffset;
-      dglSetBitmapModulation( mProfile->mFontColor );
-      renderJustifiedText( textPosition, mHeader.extent, mCaption );
-      dglSetBitmapModulation( currColor );
+      //dglSetBitmapModulation( mProfile->mFontColor );
+      renderText( textPosition, mHeader.extent, mCaption, mProfile);
+      //dglSetBitmapModulation( currColor );
 
       // If we're collapsed we contain the first child as our content
       // thus we don't render it when collapsed.  but to support modified
@@ -367,7 +367,7 @@ void GuiRolloutCtrl::onRender(Point2I offset, const RectI &updateRect)
          else if( mIsExpanded && !pChild->isVisible())
             pChild->setVisible( true );
       }
-      renderChildControls(offset, updateRect);
+      renderChildControls(offset, mBounds, updateRect);
    }
 }
 

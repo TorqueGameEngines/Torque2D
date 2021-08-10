@@ -218,43 +218,96 @@ const ImageAsset::FrameArea& ImageFrameProviderCore::getProviderImageFrameArea( 
 //------------------------------------------------------------------------------
 
 void ImageFrameProviderCore::render(
-    const bool flipX,
-    const bool flipY,
-    const Vector2& vertexPos0,
-    const Vector2& vertexPos1,
-    const Vector2& vertexPos2,
-    const Vector2& vertexPos3,
-    BatchRender* pBatchRenderer ) const
+	const bool flipX,
+	const bool flipY,
+	const Vector2& vertexPos0,
+	const Vector2& vertexPos1,
+	const Vector2& vertexPos2,
+	const Vector2& vertexPos3,
+	BatchRender* pBatchRenderer) const
 {
-    // Finish if we can't render.
-    if ( !validRender() )
-        return;
+	// Finish if we can't render.
+	if (!validRender())
+		return;
 
-    // Fetch texel area.
-    ImageAsset::FrameArea::TexelArea texelArea = getProviderImageFrameArea().mTexelArea;
+	// Fetch texel area.
+	ImageAsset::FrameArea::TexelArea texelArea = getProviderImageFrameArea().mTexelArea;
 
-    // Flip texture coordinates appropriately.
-    texelArea.setFlip( flipX, flipY );
+	// Flip texture coordinates appropriately.
+	texelArea.setFlip(flipX, flipY);
 
-    // Fetch lower/upper texture coordinates.
-    const Vector2& texLower = texelArea.mTexelLower;
-    const Vector2& texUpper = texelArea.mTexelUpper;
-    
-    // Submit batched quad.
-    pBatchRenderer->SubmitQuad(
-        vertexPos0,
-        vertexPos1,
-        vertexPos2,
-        vertexPos3,
-        Vector2( texLower.x, texUpper.y ),
-        Vector2( texUpper.x, texUpper.y ),
-        Vector2( texUpper.x, texLower.y ),
-        Vector2( texLower.x, texLower.y ),
-        getProviderTexture() );
+	// Fetch lower/upper texture coordinates.
+	const Vector2& texLower = texelArea.mTexelLower;
+	const Vector2& texUpper = texelArea.mTexelUpper;
+
+	// Submit batched quad.
+	pBatchRenderer->SubmitQuad(
+		vertexPos0,
+		vertexPos1,
+		vertexPos2,
+		vertexPos3,
+		Vector2(texLower.x, texUpper.y),
+		Vector2(texUpper.x, texUpper.y),
+		Vector2(texUpper.x, texLower.y),
+		Vector2(texLower.x, texLower.y),
+		getProviderTexture());
+}
+
+//------------------------------------------------------------------------------
+
+void ImageFrameProviderCore::render(
+	const bool flipX,
+	const bool flipY,
+	const Vector2& vertexPos0,
+	const Vector2& vertexPos1,
+	const Vector2& vertexPos2,
+	const Vector2& vertexPos3,
+	const Vector2& uvPos0,
+	const Vector2& uvPos1,
+	const Vector2& uvPos2,
+	const Vector2& uvPos3,
+	BatchRender* pBatchRenderer) const
+{
+	// Finish if we can't render.
+	if (!validRender())
+		return;
+
+	// Submit batched quad.
+	pBatchRenderer->SubmitQuad(
+		vertexPos0,
+		vertexPos1,
+		vertexPos2,
+		vertexPos3,
+		uvPos0,
+		uvPos1,
+		uvPos2,
+		uvPos3,
+		getProviderTexture());
 }
 
 //-----------------------------------------------------------------------------
 
+void ImageFrameProviderCore::render(
+		const U32 vertexCount,
+		const Vector2 *vertexArray,
+		const Vector2 *textureArray,
+		const ColorF *colorArray,
+		BatchRender* pBatchRenderer) const
+{
+	// Finish if we can't render.
+	if (!validRender() || !vertexCount)
+		return;
+
+	// Submit mesh list
+	pBatchRenderer->SubmitTriangles(
+		vertexCount,
+		vertexArray,
+		textureArray,
+		colorArray,
+		getProviderTexture());
+}
+
+//------------------------------------------------------------------------------
 void ImageFrameProviderCore::renderGui( GuiControl& owner, Point2I offset, const RectI &updateRect ) const
 {
     // Validate frame provider.
@@ -290,7 +343,7 @@ void ImageFrameProviderCore::renderGui( GuiControl& owner, Point2I offset, const
     }
 
     // Render child controls.
-    owner.renderChildControls(offset, updateRect);
+    owner.renderChildControls(offset, updateRect, updateRect);
 }
 
 //------------------------------------------------------------------------------

@@ -106,6 +106,7 @@ protected:
    FileDialogData mData; ///< Stores platform agnostic information about the dialogs properties
    bool mChangePath; ///< Exposed ChangePath Property
    bool mBoolTranslator; ///< Internally used to translate boolean values into their respective bits of dialog style
+   bool mPrevNativeCursorState; ///< Was the native cursor active before the dialog was opened?
 public:
 
    FileDialog();
@@ -114,7 +115,9 @@ public:
 
    static void initPersistFields();
 
+   virtual void preExecute();
    virtual bool Execute();
+   virtual void postExecute();
 
    FileDialogData &getData() { return mData; };
 protected:

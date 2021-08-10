@@ -1,0 +1,16 @@
+<ModuleDefinition
+	ModuleId="EditorCore"
+	VersionId="1"
+	Description="Core module for the editor"
+	ScriptFile="EditorCore.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy">
+		<DeclaredAssets
+			Path="Themes"
+			Extension="asset.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="images"
+			Extension="asset.taml"
+			Recurse="true"/>
+</ModuleDefinition>

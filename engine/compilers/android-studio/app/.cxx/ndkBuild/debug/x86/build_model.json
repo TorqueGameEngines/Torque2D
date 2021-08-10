@@ -1,0 +1,60 @@
+{
+  "variant": {
+    "module": {
+      "rootBuildGradleFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio",
+      "sdkFolder": "C:\\Users\\Peter\\AppData\\Local\\Android\\Sdk",
+      "isNativeCompilerSettingsCacheEnabled": false,
+      "isBuildOnlyTargetAbiEnabled": true,
+      "splitsAbiFilterSet": [],
+      "intermediatesFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates",
+      "gradleModulePathName": ":app",
+      "moduleRootFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app",
+      "makeFile": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Android.mk",
+      "buildSystem": "NDK_BUILD",
+      "compilerSettingsCacheFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\.cxx",
+      "cxxFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx",
+      "ndkFolder": "C:\\Users\\Peter\\AppData\\Local\\Android\\Sdk\\ndk-bundle",
+      "ndkVersion": "20.0.5594570",
+      "ndkSupportedAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "ndkDefaultAbiList": [
+        "ARMEABI_V7A",
+        "ARM64_V8A",
+        "X86",
+        "X86_64"
+      ],
+      "cmakeToolchainFile": "."
+    },
+    "buildSystemArgumentList": [],
+    "cFlagList": [],
+    "cppFlagsList": [],
+    "variantName": "debug",
+    "soFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates\\ndkBuild\\debug\\lib",
+    "objFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates\\ndkBuild\\debug\\obj\\local",
+    "jsonFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug",
+    "gradleBuildOutputFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\cxx\\debug",
+    "isDebuggableEnabled": true,
+    "validAbiList": [
+      "ARMEABI_V7A",
+      "ARM64_V8A",
+      "X86",
+      "X86_64"
+    ],
+    "buildTargetSet": []
+  },
+  "abi": "X86",
+  "abiPlatformVersion": 19,
+  "cxxBuildFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug\\x86",
+  "jsonFile": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug\\x86\\android_gradle_build.json",
+  "gradleBuildOutputFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\cxx\\debug\\x86",
+  "objFolder": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates\\ndkBuild\\debug\\obj\\local\\x86",
+  "buildCommandFile": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug\\x86\\build_command.txt",
+  "buildOutputFile": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug\\x86\\build_output.txt",
+  "modelOutputFile": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug\\x86\\build_model.json",
+  "jsonGenerationLoggingRecordFile": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug\\x86\\json_generation_record.json",
+  "compileCommandsJsonFile": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\.cxx\\ndkBuild\\debug\\x86\\compile_commands.json"
+}

@@ -34,16 +34,8 @@
 #include "gui/guiCanvas.h"
 #endif
 
-#ifndef _GUISTACKCTRL_H_
-#include "gui/containers/guiStackCtrl.h"
-#endif
-
 #ifndef _H_GUIDEFAULTCONTROLRENDER_
 #include "gui/guiDefaultControlRender.h"
-#endif
-
-#ifndef _GUITICKCTRL_H_
-#include "gui/guiTickCtrl.h"
 #endif
 
 #ifndef _GUISCROLLCTRL_H_
@@ -54,16 +46,29 @@
 #include "gui/guiTextEditCtrl.h"
 #endif
 
-#ifndef _GUIBITMAPBUTTON_H_
-#include "gui/buttons/guiBitmapButtonCtrl.h"
+#ifndef _GUIBUTTONCTRL_H_
+#include "gui/buttons/guiButtonCtrl.h"
 #endif
 
-#ifndef _GUIPOPUPCTRL_H_
-#include "gui/guiPopUpCtrl.h"
+#ifndef _GUIDROPDOWNCTRL_H_
+#include "gui/buttons/guiDropDownCtrl.h"
 #endif
 
-#include "gui/containers/guiRolloutCtrl.h"
+#ifndef _GUICHAINCTRL_H_
+#include "gui/containers/guiChainCtrl.h"
+#endif
 
+#ifndef _GUIGRIDCTRL_H_
+#include "gui/containers/guiGridCtrl.h"
+#endif
+
+#ifndef _GUIPANELCTRL_H_
+#include "gui/containers/guiPanelCtrl.h"
+#endif
+
+#include <string>
+#include <vector>
+#include <algorithm>
 
 // Forward Declare GuiInspectorGroup
 class GuiInspectorGroup;
@@ -72,10 +77,12 @@ class GuiInspectorField;
 // Forward Declare GuiInspectorDatablockField
 class GuiInspectorDatablockField;
 
-class GuiInspector : public GuiStackControl
+class GuiInspector : public GuiChainCtrl
 {
 private:
-   typedef GuiStackControl Parent;
+   typedef GuiChainCtrl Parent;
+   vector<string> mHiddenFieldList;
+
 public:
    // Members
    Vector<GuiInspectorGroup*>    mGroups;
@@ -83,28 +90,55 @@ public:
 
    GuiInspector();
    ~GuiInspector();
+   static void initPersistFields();
    DECLARE_CONOBJECT(GuiInspector);
 
+   virtual void inspectPostApply();
+   virtual void resize(const Point2I &newPosition, const Point2I &newExtent);
    virtual void parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
    void inspectObject( SimObject *object );
    inline SimObject *getInspectObject() { return mTarget.isNull() ? NULL : mTarget; };
    void setName( const char* newName );
    void clearGroups();
-   bool onAdd();
    bool findExistentGroup( StringTableEntry groupName );
+   inline bool hideField(const char* fieldName) { return std::find(mHiddenFieldList.begin(), mHiddenFieldList.end(), fieldName) != mHiddenFieldList.end(); };
+   inline void clearHiddenField() { mHiddenFieldList.clear(); };
+   inline void addHiddenField(const char* fieldName) { mHiddenFieldList.push_back(fieldName); };
+
+   GuiControlProfile *mGroupPanelProfile;
+   GuiControlProfile *mGroupGridProfile;
+   GuiControlProfile *mLabelProfile;
+   GuiControlProfile *mTextEditProfile;
+   GuiControlProfile *mDropDownProfile;
+   GuiControlProfile *mDropDownItemProfile;
+   GuiControlProfile *mScrollProfile;
+   GuiControlProfile *mBackgroundProfile;
+   GuiControlProfile *mThumbProfile;
+   GuiControlProfile *mArrowProfile;
+   GuiControlProfile *mTrackProfile;
+   GuiControlProfile *mCheckboxProfile;
+   GuiControlProfile *mButtonProfile;
+
+   bool onWake();
+   void onSleep();
+
+   S32 mScrollBarThickness;
+   bool mShowArrowButtons;
+   bool mUseConstantHeightThumb;
+
+   Point2I mFieldCellSize;
+   Point2I mControlOffset;
 };
 
 class GuiInspectorField : public GuiControl
 {
 private:
    typedef GuiControl Parent;
+
 public:
-   // Static Caption Width (in percentage) for all inspector fields
-   static S32                 smCaptionWidth;
 
    // Members
-   StringTableEntry           mCaption;
-   GuiInspectorGroup*         mParent;
+   GuiInspectorGroup*         mGroup;
    SimObjectPtr<SimObject>    mTarget;
    AbstractClassRep::Field*   mField;
    StringTableEntry           mFieldArrayIndex;
@@ -118,57 +152,51 @@ public:
    DECLARE_CONOBJECT(GuiInspectorField);
 
    virtual void setTarget( SimObjectPtr<SimObject> target ) { mTarget = target; };
-   virtual void setParent( GuiInspectorGroup* parent ) { mParent = parent; };
+   virtual void setInspectorGroup( GuiInspectorGroup* grp ) { mGroup = grp; };
    virtual void setInspectorField( AbstractClassRep::Field *field, const char*arrayIndex = NULL );
 
 protected:
    void registerEditControl( GuiControl *ctrl );
 public:
-   virtual GuiControl* constructEditControl();
+   virtual GuiControl* constructEditControl(S32 width);
    virtual void        updateValue( const char* newValue );
    virtual StringTableEntry getFieldName();
    virtual void              setData( const char* data );
    virtual const char*  getData();
 
-   virtual void resize(const Point2I &newPosition, const Point2I &newExtent);
    virtual bool onAdd();
-   virtual void onRender(Point2I offset, const RectI &updateRect);
 };
 
-class GuiInspectorGroup : public GuiRolloutCtrl
+class GuiInspectorGroup : public GuiPanelCtrl
 {
 private:
-   typedef GuiRolloutCtrl Parent;
+   typedef GuiPanelCtrl Parent;
 public:
    // Members
    SimObjectPtr<SimObject>             mTarget;
-   SimObjectPtr<GuiInspector>          mParent;
+   SimObjectPtr<GuiInspector>          mInspector;
    Vector<GuiInspectorField*>          mChildren;
-   GuiStackControl*                    mStack;
+   GuiGridCtrl*						   mGrid;
 
    // Constructor/Destructor/Conobject Declaration
    GuiInspectorGroup();
-   GuiInspectorGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> parent );
-   ~GuiInspectorGroup();
+   GuiInspectorGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> inspector );
    DECLARE_CONOBJECT(GuiInspectorGroup);
 
    virtual GuiInspectorField* constructField( S32 fieldType );
    virtual GuiInspectorField* findField( StringTableEntry fieldName );
 
    // Publicly Accessible Information about this group
-   StringTableEntry getGroupName() { return mCaption; };
+   StringTableEntry getGroupName() { return mText; };
    SimObjectPtr<SimObject> getGroupTarget() { return mTarget; };
-   SimObjectPtr<GuiInspector> getContentCtrl() { return mParent; };
+   SimObjectPtr<GuiInspector> getContentCtrl() { return mInspector; };
 
    bool onAdd();
    virtual bool inspectGroup();
 
-   virtual void animateToContents();
 protected:
    // overridable method that creates our inner controls.
    virtual bool createContent();
-
-
 };
 
 class GuiInspectorDynamicField : public GuiInspectorField
@@ -209,7 +237,7 @@ private:
 public:
    DECLARE_CONOBJECT(GuiInspectorDynamicGroup);
    GuiInspectorDynamicGroup() { /*mNeedScroll=false;*/ };
-   GuiInspectorDynamicGroup( SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> parent ) : GuiInspectorGroup( target, groupName, parent) { /*mNeedScroll=false;*/};
+   GuiInspectorDynamicGroup(SimObjectPtr<SimObject> target, StringTableEntry groupName, SimObjectPtr<GuiInspector> parent) : GuiInspectorGroup(target, groupName, parent) {};
    
    //////////////////////////////////////////////////////////////////////////
    // inspectGroup is overridden in GuiInspectorDynamicGroup to inspect an 

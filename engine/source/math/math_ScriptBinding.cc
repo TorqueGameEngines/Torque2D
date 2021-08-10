@@ -382,4 +382,27 @@ ConsoleFunctionWithDocs( removeBitFromMask, ConsoleInt, 3, 3, ( mask, bit ))
 
 ConsoleFunctionGroupEnd(GeneralMath)
 
+/*! Given a linear progress from 0 to 1, the ease function returns an "eased" version of that progress. The 
+	returned value might be outside of 0 and 1.
+	@param easeFunction The name of the easing function to use. Possible values include EaseIn, EaseOut, EaseInOut and postfix versions of Back, Elastic, and Bounce (i.e. EaseInBounce).
+	@param progress Linear progress from 0 to 1.
+	@return An eased progress from 0 to 1 (although the value might go outside of 0 and 1).
+*/
+ConsoleFunctionWithDocs(mEase, ConsoleFloat, 3, 3, (easeFunction, progress))
+{
+	F32 progress = 0.0;
+	if (argc >= 3)
+	{
+		progress = dAtof(argv[2]);
+	}
+	EasingFunction f = Linear;
+	for (U32 i = 0; i < (sizeof(easingEnums) / sizeof(EnumTable::Enums)); i++)
+	{
+		if (dStricmp(easingEnums[i].label, argv[1]) == 0)
+			f = (EasingFunction)easingEnums[i].index;
+	}
+
+	return mEase(f, progress);
+}
+
 /*! @} */ // group MathFunctions

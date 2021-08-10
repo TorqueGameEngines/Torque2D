@@ -27,29 +27,36 @@
 #include "gui/guiControl.h"
 #endif
 
-#ifndef _GUITEXTCTRL_H_
-#include "gui/guiTextCtrl.h"
-#endif
-
-
-class GuiProgressCtrl : public GuiTextCtrl
+class GuiProgressCtrl : public GuiControl, public Fluid
 {
 private:
-   typedef GuiTextCtrl Parent;
+   typedef GuiControl Parent;
 
-   F32 mProgress;
+   F32 mCurrent;
+   F32 mStart;
+   F32 mEnd;
 
 public:
    //creation methods
    DECLARE_CONOBJECT(GuiProgressCtrl);
    GuiProgressCtrl();
+   static void initPersistFields();
 
-   //console related methods
+   //these methods are here for backwards compatability
    virtual const char *getScriptValue();
    virtual void setScriptValue(const char *value);
 
-   void onPreRender();
+   void setCurrentProgress(F32 target);
+   void setCurrentProgress(F32 target, S32 time);
+   void resetProgress();
+   inline F32 getCurrentProgress() { return mEnd; }
+   inline F32 getDisplayedProgress() { return mCurrent; }
+
    void onRender(Point2I offset, const RectI &updateRect);
+
+protected:
+	virtual void processTick();
+	bool animateProgressBar();
 };
 
 #endif

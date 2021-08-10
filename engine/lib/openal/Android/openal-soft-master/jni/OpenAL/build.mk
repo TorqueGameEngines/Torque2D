@@ -40,7 +40,9 @@ endif
 
 ifeq ($(TARGET_OS), android)
 OBJECTS += Alc/audiotrack.o
+ifdef POST_FROYO
 OBJECTS += Alc/opensles.o
+endif
 CCFLAGS += -I/Developer/AndroidNDK/platforms/android-9/arch-arm/usr/include
 CCFLAGS += -DOPENAL_FIXED_POINT -DOPENAL_FIXED_POINT_SHIFT=16
 endif

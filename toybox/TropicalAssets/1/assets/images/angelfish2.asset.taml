@@ -1,0 +1,7 @@
+<ImageAsset
+    AssetName="angelfish2"
+    ImageFile="angelfish2.png"
+    CellCountX="2"
+    CellCountY="2"
+    CellWidth="256"
+    CellHeight="256" />

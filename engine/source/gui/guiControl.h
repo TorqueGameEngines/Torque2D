@@ -33,7 +33,7 @@
 #include "math/mRect.h"
 #endif
 #ifndef _COLOR_H_
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #endif
 #ifndef _SIMBASE_H_
 #include "sim/simBase.h"
@@ -51,6 +51,15 @@
 #ifndef _LANG_H_
 #include "gui/language/lang.h"
 #endif
+
+#ifndef _TICKABLE_H_
+#include "platform/Tickable.h"
+#endif
+
+#ifndef _MFLUID_H_
+#include "math/mFluid.h"
+#endif
+
 class GuiCanvas;
 class GuiEditCtrl;
 
@@ -87,10 +96,28 @@ class GuiEditCtrl;
 ///
 /// @ref GUI has an overview of the GUI system.
 ///
+/// Tickable Information - taken from guiTickCtrl now retired.
+/// This Gui Control is designed to recieve update ticks at a constant interval.
+/// It was created to be the Parent class of a control which used a DynamicTexture
+/// along with a VectorField to create warping effects much like the ones found
+/// in visualization displays for iTunes or Winamp. Those displays are updated
+/// at the framerate frequency. This works fine for those effects, however for
+/// an application of the same type of effects for things like Gui transitions
+/// the framerate-driven update frequency is not desireable because it does not
+/// allow the developer to be able to have any idea of a consistant user-experience.
+///
+/// Enter the Tickable interface. This lets the Gui control, in this case, update
+/// the dynamic texture at a constant rate of once per tick, even though it gets
+/// rendered every frame, thus creating a framerate-independant update frequency
+/// so that the effects are at a consistant speed regardless of the specifics
+/// of the system the user is on. This means that the screen-transitions will
+/// occur in the same time on a machine getting 300fps in the Gui shell as a
+/// machine which gets 150fps in the Gui shell.
+/// @see Tickable
 ///
 /// @ingroup gui_group Gui System
 /// @{
-class GuiControl : public SimGroup
+class GuiControl : public SimGroup, public virtual Tickable
 {
 private:
    typedef SimGroup Parent;
@@ -118,6 +145,8 @@ public:
     static S32     smCursorChanged; ///< Has this control modified the cursor? -1 or type
     RectI   mBounds;
     Point2I mMinExtent;
+	Point2I mRenderInsetLT;			///Add this to the mBounds and parent offset to get the true render location of the control
+	Point2I mRenderInsetRB;			///The actual rendered inset for the right and bottom sides.
     StringTableEntry mLangTableName;
     LangTable *mLangTable;
 
@@ -152,6 +181,12 @@ public:
         vertResizeCenter,
         vertResizeRelative      ///< resize relative
     };
+	enum TextRotationOptions
+	{
+		tRotateNone = 0,
+		tRotateLeft, 
+		tRotateRight
+	};
 
 protected:
     /// @name Control State
@@ -160,12 +195,18 @@ protected:
     S32 mHorizSizing;      ///< Set from horizSizingOptions.
     S32 mVertSizing;       ///< Set from vertSizingOptions.
 
+	Point2I mStoredExtent; //Used in conjunction with the min extent.
+
     StringTableEntry	mConsoleVariable;
     StringTableEntry	mConsoleCommand;
     StringTableEntry	mAltConsoleCommand;
     StringTableEntry	mAcceleratorKey;
 
     StringTableEntry	mTooltip;
+
+	StringTableEntry    mText;
+	StringTableEntry    mTextID;
+	bool				mTextWrap;
 
     /// @}
 
@@ -264,6 +305,22 @@ public:
     const S32        getTop() { return mBounds.point.y; } ///< Returns the Y position of the control
     const S32        getWidth() { return mBounds.extent.x; } ///< Returns the width of the control
     const S32        getHeight() { return mBounds.extent.y; } ///< Returns the height of the control
+	
+	virtual void             setText(const char *text);
+	virtual void             setTextID(S32 id);
+	virtual void             setTextID(const char *id);
+	virtual const char*      getText();
+	inline void				 setTextWrap(const bool wrap) { mTextWrap = wrap; }
+	inline bool				 getTextWrap() { return mTextWrap; }
+
+	// Text Property Accessors
+	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return false; }
+	static const char* getTextProperty(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getText(); }
+	static bool writeTextWrapFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextWrap(); }
+
+	static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); return false; }
+	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); return false; }
+	static bool writeMinExtentFn(void* obj,  const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mMinExtent.x != 0 || ctrl->mMinExtent.y != 0; }
 
     /// @}
 
@@ -301,7 +358,7 @@ public:
 
     /// Adds an object as a child of this object.
     /// @param   obj   New child object of this control
-    void addObject(SimObject *obj);
+    virtual void addObject(SimObject *obj);
 
     /// Removes a child object from this control.
     /// @param   obj Object to remove from this control
@@ -317,12 +374,12 @@ public:
     /// Translates local coordinates (wrt this object) into global coordinates
     ///
     /// @param   src   Local coordinates to translate
-    Point2I localToGlobalCoord(const Point2I &src);
+    virtual Point2I localToGlobalCoord(const Point2I &src);
 
     /// Returns global coordinates translated into local space
     ///
     /// @param   src   Global coordinates to translate
-    Point2I globalToLocalCoord(const Point2I &src);
+    virtual Point2I globalToLocalCoord(const Point2I &src);
     /// @}
 
     /// @name Resizing
@@ -382,12 +439,13 @@ public:
     /// Render a tooltip at the specified cursor position for this control
     /// @param   cursorPos   position of cursor to display the tip near
     /// @param   tipText     optional alternate tip to be rendered
-    virtual bool renderTooltip(Point2I cursorPos, const char* tipText = NULL );
+    virtual bool renderTooltip(Point2I &cursorPos, const char* tipText = NULL );
 
     /// Called when this control should render its children
-    /// @param   offset   The location this control is to begin rendering
+    /// @param   offset   The top left of the parent control
+    /// @param   contentOffset   The top left of the parent's content
     /// @param   updateRect   The screen area this control has drawing access to
-    void renderChildControls(Point2I offset, const RectI &updateRect);
+    virtual void renderChildControls(Point2I offset, RectI content, const RectI &updateRect);
 
     /// Sets the area (local coordinates) this control wants refreshed each frame
     /// @param   pos   UpperLeft point on rectangle of refresh area
@@ -418,17 +476,20 @@ public:
     /// Do special pre-render proecessing
     virtual void onPreRender();
 
-    /// Called when this object is removed
+    /// Called when this object is removed using delete.
     virtual void onRemove();
 
-    /// Called when one of this objects children is removed
-    virtual void onChildRemoved( GuiControl *child );
+	/// Called when this object is removed using delete or parent.remove().
+	virtual void onGroupRemove();
 
     /// Called when this object is added to the scene
     bool onAdd();
 
-    /// Called when this object has a new child
+    /// Called when this object has a new child. Congratulations!
     virtual void onChildAdded( GuiControl *child );
+
+	/// Called when a child is removed.
+	virtual inline void onChildRemoved(GuiControl* child) {};
 
     /// @}
 
@@ -460,32 +521,32 @@ public:
 
     /// Lock the mouse within the provided control
     /// @param   lockingControl   Control to lock the mouse within
-    void mouseLock(GuiControl *lockingControl);
+    virtual void mouseLock(GuiControl *lockingControl);
 
     /// Turn on mouse locking with last used lock control
-    void mouseLock();
+    virtual void mouseLock();
 
     /// Unlock the mouse
-    void mouseUnlock();
+    virtual void mouseUnlock();
 
     /// Returns true if the mouse is locked
-    bool isMouseLocked();
+    virtual bool isMouseLocked();
     /// @}
 
 
     /// General input handler.
     virtual bool onInputEvent(const InputEvent &event);
 
-    /// @name Mouse Events
+    /// @name Touch/Mouse Events
     /// These functions are called when the input event which is
     /// in the name of the function occurs.
     /// @{
-    virtual void onMouseUp(const GuiEvent &event);
-    virtual void onMouseDown(const GuiEvent &event);
-    virtual void onMouseMove(const GuiEvent &event);
-    virtual void onMouseDragged(const GuiEvent &event);
-    virtual void onMouseEnter(const GuiEvent &event);
-    virtual void onMouseLeave(const GuiEvent &event);
+    virtual void onTouchUp(const GuiEvent &event);
+    virtual void onTouchDown(const GuiEvent &event);
+    virtual void onTouchMove(const GuiEvent &event);
+    virtual void onTouchDragged(const GuiEvent &event);
+    virtual void onTouchEnter(const GuiEvent &event);
+    virtual void onTouchLeave(const GuiEvent &event);
 
     virtual bool onMouseWheelUp(const GuiEvent &event);
     virtual bool onMouseWheelDown(const GuiEvent &event);
@@ -499,6 +560,10 @@ public:
     virtual void onMiddleMouseDragged(const GuiEvent &event);
 
     /// @}
+
+	//Called just before onTouch down for the hit control. The focus should then bubble up through the 
+	//controls allowing windows to move to the front.
+	virtual void onFocus();
     
     /// @name Editor Mouse Events
     ///
@@ -632,7 +697,7 @@ public:
     ///
     /// @see GuiControlProfile
     /// @param   prof   Control profile to apply
-    void setControlProfile(GuiControlProfile *prof);
+    virtual void setControlProfile(GuiControlProfile *prof);
 
     /// Occurs when this control performs its "action"
     virtual void onAction();
@@ -660,10 +725,39 @@ public:
     /// Renders justified text using the profile.
     ///
     /// @note This should move into the graphics library at some point
-    void renderJustifiedText(Point2I offset, Point2I extent, const char *text);
+    void renderText(Point2I &offset, Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
 
-    void inspectPostApply();
-    void inspectPreApply();
+	/// Returns a new rect based on the margins.
+	RectI applyMargins(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
+
+	/// Returns the bounds of the rect after considering the borders.
+	RectI applyBorders(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
+
+	/// Returns the bounds of the rect this time with padding.
+	RectI applyPadding(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
+
+	/// Returns the bounds of the rect with margin, borders, and padding applied.
+	RectI getInnerRect(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
+
+	/// Returns the extent of the outer rect given the extent of the inner rect.
+	Point2I getOuterExtent(Point2I &innerExtent, GuiControlState currentState, GuiControlProfile *profile);
+
+    virtual void inspectPostApply();
+    virtual void inspectPreApply();
+
+	//Stores or spends stored extent
+	Point2I extentBattery(Point2I &newExtent);
+
+	//Expells all stored extent
+	inline void resetStoredExtent() { mStoredExtent.set(0,0); }
+
+protected:
+	virtual void interpolateTick(F32 delta) {};
+	virtual void processTick() {};
+	virtual void advanceTime(F32 timeDelta) {};
+
+	S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, GuiControlProfile::AlignmentType align);
+	S32 getTextVerticalOffset(S32 textHeight, S32 totalHeight, GuiControlProfile::VertAlignmentType align);
 };
 /// @}
 

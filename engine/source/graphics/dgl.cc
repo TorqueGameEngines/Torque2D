@@ -23,7 +23,7 @@
 #include "math/mPoint.h"
 #include "graphics/TextureManager.h"
 #include "graphics/dgl.h"
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #include "math/mPoint.h"
 #include "math/mRect.h"
 #include "graphics/gFont.h"
@@ -35,6 +35,8 @@
 
 #include "dglMac_ScriptBinding.h"
 #include "dgl_ScriptBinding.h"
+
+#include <vector>
 
 namespace {
 
@@ -805,6 +807,33 @@ void dglDrawLine(const Point2I &startPt, const Point2I &endPt, const ColorI &col
     dglDrawLine(startPt.x, startPt.y, endPt.x, endPt.y, color);
 }
 
+void dglDrawTriangleFill(const Point2I &pt1, const Point2I &pt2, const Point2I &pt3, const ColorI &color)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	glColor4ub(color.red, color.green, color.blue, color.alpha);
+#if defined(TORQUE_OS_IOS) || defined(TORQUE_OS_ANDROID) || defined(TORQUE_OS_EMSCRIPTEN)
+	GLfloat vertices[] = {
+		(GLfloat)pt1.x, (GLfloat)pt1.y,
+		(GLfloat)pt2.x, (GLfloat)pt2.y,
+		(GLfloat)pt3.x, (GLfloat)pt3.y,
+	};
+
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 3);
+#else
+	glBegin(GL_TRIANGLES);
+	glVertex2f((GLfloat)pt1.x, (GLfloat)pt1.y);
+	glVertex2f((GLfloat)pt2.x, (GLfloat)pt2.y);
+	glVertex2f((GLfloat)pt3.x, (GLfloat)pt3.y);
+	glEnd();
+#endif
+}
+
 void dglDrawRect(const Point2I &upperL, const Point2I &lowerR, const ColorI &color, const float &lineWidth)
 {
    glEnable(GL_BLEND);
@@ -873,6 +902,40 @@ void dglDrawRectFill(const RectI &rect, const ColorI &color)
 {
    Point2I lowerR(rect.point.x + rect.extent.x, rect.point.y + rect.extent.y);
    dglDrawRectFill(rect.point, lowerR, color);
+}
+
+//Start in the top left and move counter-clockwise around the quad.
+void dglDrawQuadFill(const Point2I &point1, const Point2I &point2, const Point2I &point3, const Point2I &point4, const ColorI &color)
+{
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	glColor4ub(color.red, color.green, color.blue, color.alpha);
+
+	//Points 3 and 4 are switched by design.
+	GLfloat vertices[] = {
+		(GLfloat)point1.x, (GLfloat)point1.y,
+		(GLfloat)point2.x, (GLfloat)point2.y,
+		(GLfloat)point4.x, (GLfloat)point4.y,
+		(GLfloat)point3.x, (GLfloat)point3.y,
+	};
+
+	glVertexPointer(2, GL_FLOAT, 0, vertices);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+void dglDrawDot(const Point2F &screenPoint,const ColorI &color)
+{
+   glEnable(GL_BLEND);
+   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+   glBegin(GL_POINTS);
+   glColor4ub(color.red, color.green, color.blue, color.alpha);
+   glVertex2f(screenPoint.x, screenPoint.y);
+   glDisable(GL_BLEND);
+   glEnd();
 }
 
 void dglDraw2DSquare( const Point2F &screenPoint, F32 width, F32 spinAngle )
@@ -1109,6 +1172,88 @@ void dglSolidCube(const Point3F & extent, const Point3F & center)
       glEnd();
    }
 #endif
+}
+
+//Draws an unfilled circle with line segments.
+//Circle drawing code was modified from this source with gratitude. It is in the public domain.
+//http://slabode.exofire.net/circle_draw.shtml
+void dglDrawCircle(const Point2I &center, const F32 radius, const ColorI &color, const F32 &lineWidth)
+{
+	F32 adjustedRadius = radius - (lineWidth/2);
+	const S32 num_segments = (const S32)round(10 * sqrtf(adjustedRadius));
+	F32 theta = 2 * 3.1415926f / F32(num_segments);
+	F32 c = cosf(theta);//precalculate the sine and cosine
+	F32 s = sinf(theta);
+	F32 t;
+
+	F32 x = adjustedRadius;//we start at angle = 0 
+	F32 y = 0;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	glLineWidth(lineWidth);
+
+	glColor4ub(color.red, color.green, color.blue, color.alpha);
+
+	vector<GLfloat> verts;
+	for (int ii = 0; ii < num_segments; ii++)
+	{
+		verts.push_back(GLfloat(x + center.x));
+		verts.push_back(GLfloat(y + center.y));
+
+		//apply the rotation matrix
+		t = x;
+		x = c * x - s * y;
+		y = s * t + c * y;
+	}
+	verts.push_back(GLfloat(verts[0]));
+	verts.push_back(GLfloat(verts[1]));
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, verts.data());
+	glDrawArrays(GL_LINE_LOOP, 0, num_segments + 1);//draw last two
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void dglDrawCircleFill(const Point2I &center, const F32 radius, const ColorI &color)
+{
+	const S32 num_segments = (const S32)round(10 * sqrtf(radius));
+	F32 theta = 2 * 3.1415926f / F32(num_segments);
+	F32 c = cosf(theta);//precalculate the sine and cosine
+	F32 s = sinf(theta);
+	F32 t;
+
+	F32 x = radius;//we start at angle = 0 
+	F32 y = 0;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	glColor4ub(color.red, color.green, color.blue, color.alpha);
+
+	vector<GLfloat> verts;
+	verts.push_back(GLfloat(center.x));
+	verts.push_back(GLfloat(center.y));
+	for (int ii = 0; ii < num_segments; ii++)
+	{
+		verts.push_back(GLfloat(x + center.x));
+		verts.push_back(GLfloat(y + center.y));
+
+		//apply the rotation matrix
+		t = x;
+		x = c * x - s * y;
+		y = s * t + c * y;
+	}
+	verts.push_back(GLfloat(verts[2]));
+	verts.push_back(GLfloat(verts[3]));
+
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(2, GL_FLOAT, 0, verts.data());
+	glDrawArrays(GL_TRIANGLE_FAN, 0, num_segments+2);
+	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
 void dglSetClipRect(const RectI &clipRect)

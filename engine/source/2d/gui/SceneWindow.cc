@@ -29,6 +29,7 @@
 #include "2d/sceneobject/SceneObject.h"
 #include "2d/core/Utility.h"
 #include "2d/gui/SceneWindow.h"
+#include "gui/containers/guiSceneScrollCtrl.h"
 
 #ifndef _ASSET_MANAGER_H_
 #include "assets/assetManager.h"
@@ -59,8 +60,8 @@ static StringTableEntry mouseEventRightMouseDraggedName= StringTable->insert("on
 static StringTableEntry mouseEventWheelUpName          = StringTable->insert("onMouseWheelUp");
 static StringTableEntry mouseEventWheelDownName        = StringTable->insert("onMouseWheelDown");
 
-static StringTableEntry mouseEventEnterName            = StringTable->insert("onMouseEnter");
-static StringTableEntry mouseEventLeaveName            = StringTable->insert("onMouseLeave");
+static StringTableEntry mouseEventEnterName            = StringTable->insert("onTouchEnter");
+static StringTableEntry mouseEventLeaveName            = StringTable->insert("onTouchLeave");
 
 //-----------------------------------------------------------------------------
 
@@ -114,7 +115,9 @@ SceneWindow::SceneWindow() :    mpScene(NULL),
                                 mInputEventGroupMaskFilter(MASK_ALL),
                                 mInputEventLayerMaskFilter(MASK_ALL),
                                 mInputEventInvisibleFilter( true ),
-                                mProcessAudioListener(false)
+                                mProcessAudioListener(false),
+								mShowScrollBar(false),
+								mMouseWheelScrolls(false)
 {
     // Set Vector Associations.
     VECTOR_SET_ASSOCIATION( mCameraQueue );
@@ -124,12 +127,31 @@ SceneWindow::SceneWindow() :    mpScene(NULL),
 
     // Turn-on Tick Processing.
     setProcessTicks( true );
+
+	mThumbProfile = NULL;
+	mTrackProfile = NULL;
+	mArrowProfile = NULL;
+
+	mScrollBar = new GuiSceneScrollCtrl(this);
+	mScrollBar->mForceVScrollBar = GuiScrollCtrl::ScrollBarDynamic;
+	mScrollBar->mForceHScrollBar = GuiScrollCtrl::ScrollBarDynamic;
+	mUseConstantHeightThumb = false;
+	mScrollBarThickness = 16;
+	mShowArrowButtons = true;
+
+	mThumbProfile = mScrollBar->mThumbProfile;
+	mThumbProfile->incRefCount();
+	mTrackProfile = mScrollBar->mTrackProfile;
+	mThumbProfile->incRefCount();
+	mArrowProfile = mScrollBar->mArrowProfile;
+	mThumbProfile->incRefCount();
 }
 
 //-----------------------------------------------------------------------------
 
 SceneWindow::~SceneWindow()
 {
+	delete mScrollBar;
 }
 
 //-----------------------------------------------------------------------------
@@ -190,6 +212,126 @@ void SceneWindow::initPersistFields()
     // Background color.
     addField("UseBackgroundColor", TypeBool, Offset(mUseBackgroundColor, SceneWindow), &writeUseBackgroundColor, "" );
     addField("BackgroundColor", TypeColorF, Offset(mBackgroundColor, SceneWindow), &writeBackgroundColor, "" );
+
+	//Standard scroll bar settings
+	addProtectedField("constantThumbHeight", TypeBool, Offset(mUseConstantHeightThumb, GuiScrollCtrl), &setConstantThumbFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("scrollBarThickness", TypeS32, Offset(mScrollBarThickness, GuiScrollCtrl), &setScrollBarThicknessFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("showArrowButtons", TypeBool, Offset(mShowArrowButtons, GuiScrollCtrl), &setShowArrowButtonsFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("thumbProfile", TypeGuiProfile, Offset(mThumbProfile, GuiScrollCtrl), &setThumbProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("trackProfile", TypeGuiProfile, Offset(mTrackProfile, GuiScrollCtrl), &setTrackProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("arrowProfile", TypeGuiProfile, Offset(mArrowProfile, GuiScrollCtrl), &setArrowProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+}
+
+bool SceneWindow::onWake()
+{
+	if (!Parent::onWake())
+	{
+		return false;
+	}
+
+	if (mThumbProfile != NULL)
+		mThumbProfile->incRefCount();
+
+	if (mTrackProfile != NULL)
+		mTrackProfile->incRefCount();
+
+	if (mArrowProfile != NULL)
+		mArrowProfile->incRefCount();
+
+	if(mShowScrollBar)
+	{
+		mScrollBar->onWake();
+	}
+
+	return true;
+}
+
+void SceneWindow::onSleep()
+{
+	Parent::onSleep();
+
+	if (mThumbProfile != NULL)
+		mThumbProfile->decRefCount();
+
+	if (mTrackProfile != NULL)
+		mTrackProfile->decRefCount();
+
+	if (mArrowProfile != NULL)
+		mArrowProfile->decRefCount();
+
+	if(mScrollBar->mAwake)
+	{
+		mScrollBar->onSleep();
+	}
+}
+
+void SceneWindow::setUseConstantThumbHeight(const bool setting)
+{
+	if (setting == mUseConstantHeightThumb)
+		return;
+
+	mUseConstantHeightThumb = setting;
+	mScrollBar->mUseConstantHeightThumb = setting;
+} 
+
+void SceneWindow::setScrollBarThickness(const S32 thickness)
+{
+	if (thickness == mScrollBarThickness)
+		return;
+
+	mScrollBarThickness = thickness;
+	mScrollBar->mScrollBarThickness = thickness;
+}
+
+void SceneWindow::setShowArrowButtons(const bool setting)
+{
+	if (setting == mShowArrowButtons)
+		return;
+
+	mShowArrowButtons = setting;
+	mScrollBar->mShowArrowButtons = setting;
+}
+
+void SceneWindow::setControlThumbProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "SceneWindow::setControlThumbProfile: invalid thumb profile");
+	if (prof == mThumbProfile)
+		return;
+	if (mAwake && mThumbProfile->mRefCount > 0)
+		mThumbProfile->decRefCount();
+	mThumbProfile = prof;
+	if (mAwake)
+		mThumbProfile->incRefCount();
+
+	mScrollBar->setControlThumbProfile(prof);
+}
+
+void SceneWindow::setControlTrackProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "SceneWindow::setControlTrackProfile: invalid track profile");
+	if (prof == mTrackProfile)
+		return;
+	if (mAwake && mTrackProfile->mRefCount > 0)
+		mTrackProfile->decRefCount();
+	mTrackProfile = prof;
+	if (mAwake)
+		mTrackProfile->incRefCount();
+
+	mScrollBar->setControlTrackProfile(prof);
+}
+
+void SceneWindow::setControlArrowProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "SceneWindow::setControlArrowProfile: invalid Arrow profile");
+	if (prof == mArrowProfile)
+		return;
+	if (mAwake && mArrowProfile->mRefCount > 0)
+		mArrowProfile->decRefCount();
+	mArrowProfile = prof;
+	if (mAwake)
+		mArrowProfile->incRefCount();
+
+	mScrollBar->setControlArrowProfile(prof);
 }
 
 //-----------------------------------------------------------------------------
@@ -254,6 +396,9 @@ void SceneWindow::setCameraPosition( const Vector2& position )
 
     // Set Camera Target to Current.
     mCameraTarget = mCameraCurrent;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -271,6 +416,9 @@ void SceneWindow::setCameraSize( const Vector2& size )
 
     // Set Camera Target to Current.
     mCameraTarget = mCameraCurrent;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -295,6 +443,9 @@ void SceneWindow::setCameraArea( const RectF& cameraWindow )
 
     // Set Camera Target to Current.
     mCameraTarget = mCameraCurrent;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -309,6 +460,9 @@ void SceneWindow::setCameraZoom( const F32 zoomFactor )
 
     // Set Camera Target to Current.
     mCameraTarget = mCameraCurrent;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -323,6 +477,9 @@ void SceneWindow::setCameraAngle( const F32 cameraAngle )
 
     // Set Camera Target to Current.
     mCameraTarget = mCameraCurrent;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -345,6 +502,9 @@ void SceneWindow::setTargetCameraPosition( const Vector2& position )
 
     // Set Camera Target.
     mCameraTarget.mSourceArea = RectF( position.x - (cameraSize.x*0.5f), position.y - (cameraSize.y*0.5f), cameraSize.x, cameraSize.y );
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -359,6 +519,9 @@ void SceneWindow::setTargetCameraSize( const Vector2& size )
 
     // Set Camera Target.
     mCameraTarget.mSourceArea = RectF( position.x - (size.x * 0.5f), position.y - (size.y * 0.5f), size.x, size.y );
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -378,6 +541,9 @@ void SceneWindow::setTargetCameraArea( const RectF& cameraWindow )
 
     // Set Camera Target.
     mCameraTarget.mSourceArea = cameraWindow;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -389,6 +555,9 @@ void SceneWindow::setTargetCameraZoom( const F32 zoomFactor )
 
     // Set Camera Target.
     mCameraTarget.mCameraZoom = getMax( zoomFactor, 0.000001f );
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -400,6 +569,9 @@ void SceneWindow::setTargetCameraAngle( const F32 cameraAngle )
 
     // Set Camera Target.
     mCameraTarget.mCameraAngle = mFmod( cameraAngle, b2_pi2 );
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -478,6 +650,9 @@ void SceneWindow::startCameraMove( const F32 interpolationTime )
     mCameraQueue.push_back( mCameraCurrent );
     // Clamp Queue Size.
     if ( mCameraQueue.size() > mMaxQueueItems ) mCameraQueue.pop_front();
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -495,6 +670,9 @@ void SceneWindow::stopCameraMove( void )
 
     // Reset Camera Move.
     mMovingCamera = false;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -512,6 +690,9 @@ void SceneWindow::completeCameraMove( void )
 
     // Reset Camera Move.
     mMovingCamera = false;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -551,6 +732,9 @@ void SceneWindow::undoCameraMove( const F32 interpolationTime )
 
     // Complete camera move if interpolate time is zero.
     if ( mIsZero(mCameraTransitionTime) ) completeCameraMove();
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -576,6 +760,9 @@ void SceneWindow::updateCamera( void )
     mCameraCurrent.mSourceArea.extent.y   = interpolate( mCameraSource.mSourceArea.extent.y, mCameraTarget.mSourceArea.extent.y, normCameraTime );
     mCameraCurrent.mCameraZoom            = interpolate( mCameraSource.mCameraZoom, mCameraTarget.mCameraZoom, normCameraTime );
     mCameraCurrent.mCameraAngle           = interpolate( mCameraSource.mCameraAngle, mCameraTarget.mCameraAngle, normCameraTime );
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -678,6 +865,9 @@ void SceneWindow::mount( SceneObject* pSceneObject, const Vector2& mountOffset, 
         if ( mMovingCamera ) stopCameraMove();
     }
 
+	//Are we using scroll bars? If so that's done now.
+	mShowScrollBar = false;
+
     // Set Mount Object Reference.
     mpMountedTo = pSceneObject;
 
@@ -737,6 +927,22 @@ void SceneWindow::dismount( void )
 
 //-----------------------------------------------------------------------------
 
+void SceneWindow::dismountMe(SceneObject* pSceneObject)
+{
+	// Are we mounted to the specified object?
+	if (isCameraMounted() && pSceneObject != mpMountedTo)
+	{
+		// No, so warn.
+		Con::warnf("SceneWindow::dismountMe() - Object is not mounted by the camera!");
+		return;
+	}
+
+	// Dismount Object.
+	dismount();
+}
+
+//-----------------------------------------------------------------------------
+
 void SceneWindow::setViewLimitOn( const Vector2& limitMin, const Vector2& limitMax )
 {
     // Activate View Limit.
@@ -748,6 +954,9 @@ void SceneWindow::setViewLimitOn( const Vector2& limitMin, const Vector2& limitM
 
     // Calculate Camera Area.
     mViewLimitArea = mViewLimitMax - mViewLimitMin;
+
+	//Update the Scroll Bar
+	updateScrollBar();
 }
 
 //-----------------------------------------------------------------------------
@@ -771,6 +980,44 @@ void SceneWindow::clampCameraViewLimit( void )
         // No, so adjust the source position to be at the same position as the destination i.e. don't change the source area.
         mCameraCurrent.mSourceArea.point += destinationCentre - sourceCentre;
     }
+}
+
+//-----------------------------------------------------------------------------
+
+void SceneWindow::setShowScrollBar(bool setting)
+{
+	//Warn if we don't have a view limit
+	if(setting && !mViewLimitActive)
+	{
+		Con::warnf("SceneWindow::setShowScrollBar - View Limit must be turned off for scroll bars to appear!");
+	}
+
+	// Unmount the camera if it is mounted
+	if(setting && isCameraMounted())
+	{
+		dismount();
+	}
+
+	mShowScrollBar = setting;
+
+	if(setting)
+	{
+		//now wake the scrollbar
+		if(mAwake)
+		{
+			mScrollBar->onWake();
+		}
+
+		updateScrollBar();
+	}
+}
+
+void SceneWindow::updateScrollBar()
+{
+	if (mShowScrollBar)
+	{
+		mScrollBar->computeSizes();
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -1144,7 +1391,7 @@ void SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& e
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseEnter( const GuiEvent& event )
+void SceneWindow::onTouchEnter( const GuiEvent& event )
 {
     // Dispatch input event.
     dispatchInputEvent(mouseEventEnterName, event);
@@ -1152,16 +1399,32 @@ void SceneWindow::onMouseEnter( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseLeave( const GuiEvent& event )
+void SceneWindow::onTouchLeave( const GuiEvent& event )
 {
+	if (mShowScrollBar)
+	{
+		mScrollBar->onTouchLeave(event);
+	}
+
     // Dispatch input event.
     dispatchInputEvent(mouseEventLeaveName, event);
 }
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseDown( const GuiEvent& event )
+void SceneWindow::onTouchDown( const GuiEvent& event )
 {
+	if (mShowScrollBar)
+	{
+		mScrollBar->curHitRegion = mScrollBar->findHitRegion(mScrollBar->globalToLocalCoord(event.mousePoint));
+		if (mScrollBar->curHitRegion != GuiScrollCtrl::None)
+		{
+			setUpdate();
+			mScrollBar->onTouchDown(event);
+			return;
+		}
+	}
+
     // Lock Mouse (if necessary).
     if(mLockMouse)
         mouseLock();
@@ -1172,7 +1435,7 @@ void SceneWindow::onMouseDown( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseUp( const GuiEvent& event )
+void SceneWindow::onTouchUp( const GuiEvent& event )
 {
     // Lock Mouse (if necessary).
     if(mLockMouse)
@@ -1184,15 +1447,20 @@ void SceneWindow::onMouseUp( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseMove( const GuiEvent& event )
+void SceneWindow::onTouchMove( const GuiEvent& event )
 {
+	if (mShowScrollBar)
+	{
+		mScrollBar->onTouchMove(event);
+	}
+
     // Dispatch input event.
     dispatchInputEvent(inputEventMovedName, event);
 }
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::onMouseDragged( const GuiEvent& event )
+void SceneWindow::onTouchDragged( const GuiEvent& event )
 {
     // Dispatch input event.
     dispatchInputEvent(inputEventDraggedName, event);
@@ -1266,6 +1534,12 @@ void SceneWindow::onRightMouseDragged( const GuiEvent& event )
 
 bool SceneWindow::onMouseWheelUp( const GuiEvent& event )
 {
+	if (mShowScrollBar && ((mMouseWheelScrolls && !(event.modifier & SI_SHIFT)) || (!mMouseWheelScrolls && (event.modifier & SI_SHIFT))))
+	{
+		mScrollBar->onMouseWheelUp(event);
+		return true;
+	}
+
    // Call Parent.
    Parent::onMouseWheelUp( event );
 
@@ -1280,6 +1554,12 @@ bool SceneWindow::onMouseWheelUp( const GuiEvent& event )
 
 bool SceneWindow::onMouseWheelDown( const GuiEvent& event )
 {
+	if (mShowScrollBar && ((mMouseWheelScrolls && !(event.modifier & SI_SHIFT)) || (!mMouseWheelScrolls && (event.modifier & SI_SHIFT))))
+	{
+		mScrollBar->onMouseWheelDown(event);
+		return true;
+	}
+
    // Call Parent.
    Parent::onMouseWheelDown( event );
 
@@ -1453,6 +1733,9 @@ void SceneWindow::resize(const Point2I &newPosition, const Point2I &newExtent)
     // Resize Parent.
     Parent::resize( newPosition, newExtent);
 
+	//Update the Scroll Bar
+	updateScrollBar();
+
     // Argument Buffer.
     char argBuffer[64];
 
@@ -1460,7 +1743,8 @@ void SceneWindow::resize(const Point2I &newPosition, const Point2I &newExtent)
     dSprintf( argBuffer, 64, "%d %d %d %d", newPosition.x, newPosition.y, newExtent.x, newExtent.y );
 
     // Resize Callback.
-    Con::executef( this, 2, "onExtentChange", argBuffer );
+	if(this->getNamespace())
+		Con::executef( this, 2, "onExtentChange", argBuffer );
 }
 
 //-----------------------------------------------------------------------------
@@ -1606,6 +1890,12 @@ void SceneWindow::onRender( Point2I offset, const RectI& updateRect )
     // Debug Profiling.
     PROFILE_SCOPE(SceneWindow_onRender);
 
+	//save the old clip
+	RectI oldClipRect = dglGetClipRect();
+
+	//clip to the updateRect
+	dglSetClipRect(updateRect);
+
     // Fetch scene.
     Scene* pScene = getScene();
 
@@ -1719,11 +2009,20 @@ void SceneWindow::onRender( Point2I offset, const RectI& updateRect )
     // Render the metrics.
     renderMetricsOverlay( offset, updateRect );
 
+	// Render scrollBar.
+	if (mShowScrollBar)
+	{
+		mScrollBar->onRender(offset, updateRect);
+	}
+
     // Render Children.
-    renderChildControls( offset, updateRect );
+    renderChildControls( offset, mBounds, updateRect );
 
     // Update Window.
     setUpdate();
+
+	//return the clip rect
+	dglSetClipRect(oldClipRect);
 }
 
 //------------------------------------------------------------------------------
@@ -1784,7 +2083,7 @@ void SceneWindow::renderMetricsOverlay( Point2I offset, const RectI& updateRect 
     // Calculate Debug Banner Offset.
     Point2I bannerOffset = updateRect.point + Point2I(8,8);
 
-    static GLfloat sWindowVertices[] = {
+    GLfloat sWindowVertices[] = {
         (GLfloat)updateRect.point.x, (GLfloat)updateRect.point.y,
         (GLfloat)updateRect.point.x + updateRect.extent.x, (GLfloat)updateRect.point.y,
         (GLfloat)updateRect.point.x, (GLfloat)updateRect.point.y + bannerHeight + 16,

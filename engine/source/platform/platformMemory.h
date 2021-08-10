@@ -31,7 +31,7 @@
 
 //------------------------------------------------------------------------------
 
-#if defined(TORQUE_OS_WIN32)
+#if defined(TORQUE_OS_WIN)
 extern void* FN_CDECL operator new(dsize_t size, void* ptr);
 #endif
 

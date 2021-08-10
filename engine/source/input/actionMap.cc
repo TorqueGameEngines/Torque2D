@@ -314,7 +314,7 @@ bool ActionMap::createEventDescriptor(const char* pEventString, EventDescriptor*
             pDescriptor->flags |= SI_LSHIFT;
          } else if (dStricmp(pModifier, "rshift") == 0) {
             pDescriptor->flags |= SI_RSHIFT;
-         } else if (dStricmp(pModifier, "ctrl") == 0) {
+         } else if (dStricmp(swapCtrlForCmd(pModifier), "ctrl") == 0) {
             pDescriptor->flags |= SI_CTRL;
          } else if (dStricmp(pModifier, "lctrl") == 0) {
             pDescriptor->flags |= SI_LCTRL;
@@ -326,7 +326,7 @@ bool ActionMap::createEventDescriptor(const char* pEventString, EventDescriptor*
             pDescriptor->flags |= SI_LALT;
          } else if (dStricmp(pModifier, "ralt") == 0) {
             pDescriptor->flags |= SI_RALT;
-         } else if (dStricmp(pModifier, "cmd") == 0) {
+         } else if (dStricmp(swapCtrlForCmd(pModifier), "cmd") == 0) {
             pDescriptor->flags |= SI_ALT;
          } else if (dStricmp(pModifier, "opt") == 0) {
             pDescriptor->flags |= SI_MAC_OPT;
@@ -412,6 +412,14 @@ bool ActionMap::createEventDescriptor(const char* pEventString, EventDescriptor*
       }
    }
    return false;
+}
+
+const char* ActionMap::swapCtrlForCmd(const char* input)
+{
+#ifdef TORQUE_OS_OSX
+	return dStrcmp(input, "Ctrl") == 0 ? "Cmd" : input;
+#endif
+	return input;
 }
 
 //------------------------------------------------------------------------------
@@ -2075,7 +2083,7 @@ CodeMapping gVirtualMap[] =
    { "lpov2",         SI_POV,    SI_LPOV2        },
    { "rpov2",         SI_POV,    SI_RPOV2        },
 
-   #if defined( TORQUE_OS_WIN32 ) || defined( TORQUE_OS_XENON )
+   #if defined( TORQUE_OS_WIN ) || defined( TORQUE_OS_XENON )
    //-------------------------------------- XINPUT EVENTS
    // Controller connect / disconnect:
    { "connect",       XI_BUTTON, XI_CONNECT     },

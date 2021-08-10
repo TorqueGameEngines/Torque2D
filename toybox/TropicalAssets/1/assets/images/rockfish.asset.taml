@@ -1,0 +1,7 @@
+<ImageAsset
+    AssetName="rockfish"
+    ImageFile="rockfish.png"
+    CellCountX="2"
+    CellCountY="2"
+    CellWidth="256"
+    CellHeight="128" />

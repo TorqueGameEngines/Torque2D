@@ -1,7 +1,7 @@
 
 /* pngwtran.c - transforms the data in a row for PNG writers
  *
- * Last changed in libpng 1.5.13 [September 27, 2012]
+ * Copyright (c) 1998-2002,2004,2006-2012 Glenn Randers-Pehrson
  * Copyright (c) 1998-2012 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)

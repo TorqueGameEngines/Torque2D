@@ -23,19 +23,23 @@
 #ifndef _H_GUIDEFAULTCONTROLRENDER_
 #define _H_GUIDEFAULTCONTROLRENDER_
 
+#ifndef _GUITYPES_H_
+#include "gui/guiTypes.h"
+#endif
+
 class GuiControlProfile;
 
-void renderRaisedBox(RectI &bounds, GuiControlProfile *profile);
-void renderSlightlyRaisedBox(RectI &bounds, GuiControlProfile *profile);
-void renderLoweredBox(RectI &bounds, GuiControlProfile *profile);
-void renderSlightlyLoweredBox(RectI &bounds, GuiControlProfile *profile, bool active = true);
-void renderBorder(RectI &bounds, GuiControlProfile *profile);
-void renderFilledBorder( RectI &bounds, GuiControlProfile *profile );
-void renderFilledBorder( RectI &bounds, ColorI &borderColor, ColorI &fillColor );
-void renderSizableBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile); // DAW: Added
-void renderSizableBitmapBordersFilledIndex(RectI &bounds, S32 startIndex, GuiControlProfile *profile);
-void renderFixedBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile); // DAW: Added
-void renderFixedBitmapBordersFilled(RectI &bounds, S32 startIndex, GuiControlProfile *profile);
-void renderFixedBitmapBordersStretchYFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile); // DAW: Added
+void renderUniversalRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor = "White", const bool bUseFillColor = false);
+void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state);
+void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor);
+void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profile, GuiControlState state);
+void renderSizableBorderedImageAsset(RectI &bounds, U8 frame, ImageAsset *mImageAsset, S32 frameCount);
+void renderSizableBorderedBitmap(RectI &bounds, U8 frame, TextureHandle &texture, RectI *bitmapBounds, S32 frameCount);
+void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &TopLeft, RectI &Top, RectI &TopRight, RectI &Left, RectI &Fill, RectI &Right, RectI &BottomLeft, RectI &Bottom, RectI &BottomRight);
+void renderFixedBitmapBordersFilled(RectI &bounds, S32 baseMultiplier, GuiControlProfile *profile);
+void renderStretchedBitmap(RectI &bounds, U8 frame, GuiControlProfile *profile);
+void renderStretchedImageAsset(RectI &bounds, U8 frame, GuiControlProfile *profile);
+void renderColorBullet(RectI &bounds, ColorI &color, S32 maxSize, bool useCircle = false);
+void renderTriangleIcon(RectI &bounds, ColorI &color, GuiDirection pointsToward, S32 maxSize);
 
 #endif

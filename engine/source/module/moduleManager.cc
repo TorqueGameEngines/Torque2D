@@ -1888,7 +1888,7 @@ bool ModuleManager::registerModule( const char* pModulePath, const char* pModule
 
     // Make the module path a full-path.
     char fullPathBuffer[1024];
-    Platform::makeFullPathName( pModulePath, fullPathBuffer, sizeof(fullPathBuffer) );
+    Platform::makeFullPathName( Platform::makeRelativePathName(pModulePath, Platform::getMainDotCsDir()), fullPathBuffer, sizeof(fullPathBuffer) );
     pModulePath = fullPathBuffer;
 
 

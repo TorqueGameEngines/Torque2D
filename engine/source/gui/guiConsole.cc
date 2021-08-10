@@ -41,9 +41,6 @@ bool GuiConsole::onWake()
    if (! Parent::onWake())
       return false;
 
-   //get the font
-   mFont = mProfile->mFont;
-
    return true;
 }
 
@@ -60,7 +57,7 @@ S32 GuiConsole::getMaxWidth(S32 startIndex, S32 endIndex)
 
    S32 result = 0;
    for(S32 i = startIndex; i <= endIndex; i++)
-      result = getMax(result, (S32)(mFont->getStrWidth((const UTF8 *)log[i].mString)));
+      result = getMax(result, (S32)(mProfile->mFont->getStrWidth((const UTF8 *)log[i].mString)));
    
    Con::unlockLog();
    
@@ -92,7 +89,7 @@ void GuiConsole::onPreRender()
       //find the max cell width for the new entries
       S32 newMax = getMaxWidth(0, size - 1);
       if(newMax > mCellSize.x)
-         mCellSize.set(newMax, mFont->getHeight());
+         mCellSize.set(newMax, mProfile->mFont->getHeight());
 
       //set the array size
       mSize.set(1, size);
@@ -100,13 +97,13 @@ void GuiConsole::onPreRender()
       //resize the control
       resize(mBounds.point, Point2I(mCellSize.x, mCellSize.y * size));
 
-      //if the console was not scrolled, make the last entry visible
+      //if the console was scrolled to the bottom then make sure any new row is also visible
       if (scrolled)
          scrollCellVisible(Point2I(0,mSize.y - 1));
    }
 }
 
-void GuiConsole::onRenderCell(Point2I offset, Point2I cell, bool /*selected*/, bool /*mouseOver*/)
+void GuiConsole::onRenderCell(Point2I offset, Point2I cell, bool selected, bool mouseOver)
 {
    U32 size;
    ConsoleLogEntry *log;
@@ -121,7 +118,7 @@ void GuiConsole::onRenderCell(Point2I offset, Point2I cell, bool /*selected*/, b
       case ConsoleLogEntry::Error:    dglSetBitmapModulation(mProfile->mFontColorNA); break;
       case ConsoleLogEntry::NUM_CLASS: Con::errorf("Unhandled case in GuiConsole::onRenderCell, NUM_CLASS");
    }
-   dglDrawText(mFont, Point2I(offset.x + 3, offset.y), entry.mString, mProfile->mFontColors);
+   dglDrawText(mProfile->mFont, Point2I(offset.x + 3, offset.y), entry.mString, mProfile->mFontColors);
    
    Con::unlockLog();
 }

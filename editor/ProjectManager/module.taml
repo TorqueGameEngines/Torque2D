@@ -1,0 +1,8 @@
+<ModuleDefinition
+	ModuleId="ProjectManager"
+	VersionId="1"
+	Dependencies="EditorCore=1"
+	Description="Responsible for creating and loading projects."
+	ScriptFile="ProjectManager.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy" />

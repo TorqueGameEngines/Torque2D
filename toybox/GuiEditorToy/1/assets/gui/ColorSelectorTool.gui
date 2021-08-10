@@ -1,0 +1,184 @@
+//--- Created With GUIEDITORTOY ---//
+%guiContent = new GuiControl(ColorPick) {
+   canSaveDynamicFields = "0";
+   isContainer = "1";
+   Profile = "GuiDefaultProfile";
+   HorizSizing = "width";
+   VertSizing = "height";
+   Position = "0 0";
+   Extent = "1024 748";
+   MinExtent = "8 2";
+   canSave = "1";
+   Visible = "1";
+   Active = "0";
+   tooltipWidth = "250";
+   hovertime = "1000";
+
+   new GuiWindowCtrl(CBBWindow) {
+      canSaveDynamicFields = "0";
+      isContainer = "1";
+      Profile = "GuiWindowProfile";
+      HorizSizing = "right";
+      VertSizing = "bottom";
+      Position = "384 272";
+      Extent = "220 220";
+      MinExtent = "8 2";
+      canSave = "1";
+      Visible = "1";
+      Active = "1";
+      tooltipWidth = "250";
+      hovertime = "1000";
+      Text = "Colour Picker";
+      resizeWidth = "1";
+      resizeHeight = "1";
+      canMove = "1";
+      canClose = "1";
+      canMinimize = "0";
+      canMaximize = "0";
+      minSize = "50 50";
+
+      new GuiColorPickerCtrl(CBBC) {
+         canSaveDynamicFields = "0";
+         isContainer = "0";
+         Profile = "GuiDefaultProfile";
+         HorizSizing = "right";
+         VertSizing = "bottom";
+         Position = "16 32";
+         Extent = "136 128";
+         MinExtent = "8 2";
+         canSave = "1";
+         Visible = "1";
+         Active = "1";
+		 Command = "colorCallbackExec();";
+         tooltipWidth = "250";
+         hovertime = "1000";
+         BaseColor = "Red";
+         PickColor = "Black";
+         SelectorGap = "1";
+         DisplayMode = "BlendColor";
+         ActionOnMove = "1";
+         ShowSelector = "1";
+      };
+      new GuiColorPickerCtrl(CBVC) {
+         canSaveDynamicFields = "0";
+         isContainer = "0";
+         Profile = "GuiDefaultProfile";
+         HorizSizing = "right";
+         VertSizing = "bottom";
+         Position = "160 32";
+         Extent = "24 128";
+         MinExtent = "8 2";
+         canSave = "1";
+         Visible = "1";
+         Active = "1";
+         tooltipWidth = "250";
+         hovertime = "1000";
+		 Command = "updatePickerBaseColor();";
+         BaseColor = "Red";
+         PickColor = "Black";
+         SelectorGap = "1";
+         DisplayMode = "VertColor";
+         ActionOnMove = "1";
+         ShowSelector = "1";
+      };
+      new GuiSliderCtrl(CBAC) {
+         canSaveDynamicFields = "0";
+         isContainer = "0";
+         Profile = "GuiSliderProfile";
+         HorizSizing = "right";
+         VertSizing = "bottom";
+         Position = "16 168";
+         Extent = "168 16";
+         MinExtent = "8 2";
+         canSave = "1";
+         Visible = "1";
+         Active = "1";
+		 Command = "colorCallbackExec();";
+         tooltipWidth = "250";
+         hovertime = "1000";
+         range = "0.000 1.000";
+         ticks = "0";
+      };
+   };
+};
+//--- GUIEDITORTOY END ---//
+
+$Callback = "";
+$CallbackType = 1;
+
+function updatePickerBaseColor()
+{
+	%pickColor = CBVC.getValue();
+	%red = getWord(%pickColor, 0);
+	%green = getWord(%pickColor, 1);
+	%blue = getWord(%pickColor, 2);
+
+	CBBC.baseColor = %red SPC %green SPC %blue SPC "1.0";
+
+	CBBC.updateColor();
+	colorCallbackExec();
+}
+
+function getColorI(%color, %callback)
+{
+	$Callback = %callback;
+	$CallbackType = 1;
+	%act = 1.0 / 255.0;
+
+	%red = getWord(%color, 0) * %act;
+	%green = getWord(%color, 1) * %act;
+	%blue = getWord(%color, 2) * %act;
+	%alpha = getWord(%color, 3) * %act;
+	if(%alpha == "")
+		%alpha = "1.0";
+
+	echo(%red SPC %green SPC %blue SPC %alpha);
+
+	CBBC.pickColor = %red SPC %green SPC %blue SPC "1.0";
+	CBBC.updateColor();
+	CBAC.setValue(%alpha);
+
+	Canvas.pushDialog(ColorPick);
+}
+
+function getColorF(%color, %callback)
+{
+	$Callback = %callback;
+	$CallbackType = 2;
+
+	%red = getWord(%color, 0);
+	%green = getWord(%color, 1);
+	%blue = getWord(%color, 2);
+	%alpha = getWord(%color, 3);
+	if(%alpha $= "")
+		%alpha = "1.0";
+
+	CBBC.pickColor = %red SPC %green SPC %blue SPC "1.0";
+	CBBC.updateColor();
+	CBAC.setValue(%alpha);
+
+	Canvas.pushDialog(ColorPick);
+}
+
+function constructCallbackColor(%pickColor)
+{
+	%red = getWord(%pickColor, 0);
+	%green = getWord(%pickColor, 1);
+	%blue = getWord(%pickColor, 2);
+	%alpha = CBAC.getValue();
+
+	if($CallbackType == 1)
+		return mCeil(%red * 255) SPC mCeil(%green * 255) SPC mCeil(%blue * 255) SPC mCeil( %alpha * 255 );
+	else
+		return %red SPC %green SPC %blue SPC %alpha;
+}
+
+function colorCallbackExec()
+{
+	eval($Callback @ "(\"" @ constructCallbackColor(CBBC.getValue()) @ "\");");
+}
+
+function CBBWindow::onClose()
+{
+	Canvas.popDialog(ColorPick);
+}

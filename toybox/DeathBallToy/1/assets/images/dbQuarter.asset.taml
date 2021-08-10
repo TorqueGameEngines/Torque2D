@@ -1,0 +1,7 @@
+<ImageAsset
+    AssetName="dbQuarter"
+    ImageFile="dbQuarter.png"
+    CellCountX="4"
+    CellCountY="4"
+    CellWidth="256"
+    CellHeight="256" />

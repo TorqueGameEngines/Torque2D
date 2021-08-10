@@ -41,9 +41,9 @@ class GuiMLTextCtrl : public GuiControl
   public:
    enum Justification
    {
-      LeftJustify,
-      RightJustify,
-      CenterJustify,
+      LeftAlign,
+      RightAlign,
+      CenterAlign,
    };
 
    struct Font {
@@ -250,7 +250,7 @@ class GuiMLTextCtrl : public GuiControl
    bool  mAllowColorChars;
 
    // Too many chars sound:
-   AssetPtr<AudioAsset>  mDeniedSound;
+   AssetPtr<AudioAsset>  mDeniedSound; 
 
    //-------------------------------------- Protected interface
   protected:

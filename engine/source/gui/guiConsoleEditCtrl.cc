@@ -34,6 +34,8 @@ GuiConsoleEditCtrl::GuiConsoleEditCtrl()
    mSinkAllKeyEvents = true;
    mSiblingScroller = NULL;
    mUseSiblingScroller = true;
+   mHistorySize = 40;
+   mReturnCausesTab = false;
 }
 
 void GuiConsoleEditCtrl::initPersistFields()
@@ -52,13 +54,13 @@ bool GuiConsoleEditCtrl::onKeyDown(const GuiEvent &event)
    if (event.keyCode == KEY_TAB) 
    {
       // Get a buffer that can hold the completed text...
-      FrameTemp<UTF8> tmpBuff(GuiTextCtrl::MAX_STRING_LENGTH);
+      FrameTemp<UTF8> tmpBuff(GuiTextEditCtrl::MAX_STRING_LENGTH);
       // And copy the text to be completed into it.
-      mTextBuffer.getCopy8(tmpBuff, GuiTextCtrl::MAX_STRING_LENGTH);
+      mTextBuffer.getCopy8(tmpBuff, GuiTextEditCtrl::MAX_STRING_LENGTH);
 
       // perform the completion
       bool forward = event.modifier & SI_SHIFT;
-      mCursorPos = Con::tabComplete(tmpBuff, mCursorPos, GuiTextCtrl::MAX_STRING_LENGTH, forward);
+      mCursorPos = Con::tabComplete(tmpBuff, mCursorPos, GuiTextEditCtrl::MAX_STRING_LENGTH, forward);
 
       // place results in our buffer.
       mTextBuffer.set(tmpBuff);

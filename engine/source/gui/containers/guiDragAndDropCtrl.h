@@ -31,10 +31,11 @@
 #include "console/console.h"
 #include "console/consoleTypes.h"
 
-class GuiDragAndDropControl : public GuiControl
+class GuiDragAndDropCtrl : public GuiControl
 {
 private:
    typedef GuiControl Parent;
+
 
    // The mouse down offset from the upper left of the control.
    Point2I mOffset;
@@ -48,17 +49,17 @@ private:
    GuiControl* findDragTarget(Point2I mousePoint, const char* method);
 
 public:
-   GuiDragAndDropControl() { }
+   GuiDragAndDropCtrl();
 
    void startDragging(Point2I offset = Point2I(0, 0));
 
-   virtual void onMouseDown(const GuiEvent& event);
-   virtual void onMouseDragged(const GuiEvent& event);
-   virtual void onMouseUp(const GuiEvent& event);
+   virtual void onTouchDown(const GuiEvent& event);
+   virtual void onTouchDragged(const GuiEvent& event);
+   virtual void onTouchUp(const GuiEvent& event);
 
    static void initPersistFields();
 
-   DECLARE_CONOBJECT(GuiDragAndDropControl);
+   DECLARE_CONOBJECT(GuiDragAndDropCtrl);
 };
 
 #endif

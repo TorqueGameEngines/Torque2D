@@ -25,11 +25,72 @@
 #include "gui/guiCanvas.h"
 #include "gui/buttons/guiRadioCtrl.h"
 #include "console/consoleTypes.h"
+#include "gui/guiDefaultControlRender.h"
 
 //---------------------------------------------------------------------------
 IMPLEMENT_CONOBJECT(GuiRadioCtrl);
 
 GuiRadioCtrl::GuiRadioCtrl()
 {
-   mButtonType = ButtonTypeRadio;
+}
+
+
+void GuiRadioCtrl::initPersistFields()
+{
+	Parent::initPersistFields();
+	addField("groupNum", TypeS32, Offset(mRadioGroup, GuiRadioCtrl));
+}
+
+void GuiRadioCtrl::renderInnerControl(RectI &boxRect, const GuiControlState currentState)
+{
+	U8 stateIndex = currentState;
+
+	if (mProfile->usesAssetRendering(currentState) || mProfile->usesBitmapRendering(currentState))
+	{
+		renderUniversalRect(boxRect, mProfile, currentState);
+	}
+	else 
+	{
+		S32 radius = boxRect.extent.x;
+		if (boxRect.extent.y < radius)
+		{
+			radius = boxRect.extent.y;
+		}
+		radius = (S32)round(radius / 2);
+		Point2I center = Point2I(boxRect.point.x + (boxRect.extent.x / 2), boxRect.point.y + (boxRect.extent.y / 2));
+		renderBorderedCircle(center, radius, mProfile, currentState);
+	}
+}
+
+void GuiRadioCtrl::onAction()
+{
+	if (!mActive)
+		return;
+
+	mStateOn = false;
+
+	Parent::onAction();
+
+	messageSiblings(mRadioGroup);
+}
+
+void GuiRadioCtrl::setStateOn(bool bStateOn)
+{
+	if (!mActive)
+		return;
+
+	mStateOn = true;
+	messageSiblings(mRadioGroup);
+
+	setUpdate();
+}
+
+void GuiRadioCtrl::onMessage(GuiControl *sender, S32 msg)
+{
+	Parent::onMessage(sender, msg);
+	if (mRadioGroup == msg)
+	{
+		mStateOn = (sender == this);
+		setUpdate();
+	}
 }

@@ -41,7 +41,7 @@ $Scripts::ignoreDSOs = true;
 // The name of the game. Used to form the path to save preferences. Defaults to C++ engine define TORQUE_GAME_NAME
 // if not specified.
 // Appending version string to avoid conflicts with existing versions and other versions.
-setCompanyAndProduct("GarageGames", "Torque 2D" );
+setCompanyAndProduct("GarageGames", "Torque2D" );
 
 // Set module database information echo.
 ModuleDatabase.EchoInfo = false;
@@ -53,17 +53,21 @@ AssetDatabase.EchoInfo = false;
 // This cases assets to stay in memory unless assets are purged.
 AssetDatabase.IgnoreAutoUnload = true;
 
-// Scan modules.
-ModuleDatabase.scanModules( "./modules" );
+// Scan modules in your game. This defaults to the toybox for now. You should make an empty game folder, move some modules into it from the library, and change this to scan it.
+ModuleDatabase.scanModules( "./toybox" );
 
-// Load AppCore module.
+// You'll need to load a starting module for your game. This will likely be the AppCore.
 ModuleDatabase.LoadExplicit( "AppCore" );
+
+// Starts the editor.
+exec("./editor/main.cs");
 
 //-----------------------------------------------------------------------------
 
 function onExit()
 {
-    // Unload the AppCore module.
+    // Unload the AppCore or EditorCore modules.
+    EditorManager.unloadGroup( "EditorGroup" );
     ModuleDatabase.unloadExplicit( "AppCore" );
 }
 

@@ -61,7 +61,6 @@ public:
    void getText(char *dest);  // dest must be of size
                                       // StructDes::MAX_STRING_LEN + 1
 
-   void setText(S32 tag);
    void setText(const char *txt);
 
    void setValue();
@@ -70,9 +69,9 @@ public:
    void timeInc(U32 elapseTime);
 
    bool onKeyDown(const GuiEvent &event);
-   void onMouseDown(const GuiEvent &event);
-   void onMouseDragged(const GuiEvent &event);
-   void onMouseUp(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &event);
+   void onTouchDragged(const GuiEvent &event);
+   void onTouchUp(const GuiEvent &event);
 
 
    void onPreRender();

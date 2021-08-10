@@ -77,12 +77,6 @@
 /// This is used to interpolate between 32ms ticks. The argument passed to
 /// interpolateTick is the time since the last call to processTick.
 ///
-/// This is an extremely powerful interface when used properly. An example of a class
-/// that properly uses this interface is GuiTickCtrl. The documentation for that
-/// class describes why it was created and why it was important that it use
-/// a consistant update frequency for its effects.
-/// @see GuiTickCtrl
-///
 /// @todo Support processBefore/After and move the GameBase processing over to use Tickable
 class Tickable
 {

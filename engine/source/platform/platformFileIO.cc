@@ -207,7 +207,7 @@ inline void catPath(char *dst, const char *src, U32 len)
 
 // converts the posix root path "/" to "c:/" for win32
 // FIXME: this is not ideal. the c: drive is not guaranteed to exist.
-#if defined(TORQUE_OS_WIN32)
+#if defined(TORQUE_OS_WIN)
 static inline void _resolveLeadingSlash(char* buf, U32 size)
 {
    if(buf[0] != '/')
@@ -235,7 +235,7 @@ char * Platform::makeFullPathName(const char *path, char *buffer, U32 size, cons
    if(Platform::isFullPath(bspath))
    {
       // Already a full path
-      #if defined(TORQUE_OS_WIN32)
+      #if defined(TORQUE_OS_WIN)
          _resolveLeadingSlash(bspath, sizeof(bspath));
       #endif
       dStrncpy(buffer, bspath, size);
@@ -244,7 +244,7 @@ char * Platform::makeFullPathName(const char *path, char *buffer, U32 size, cons
    }
 
    if(cwd == NULL)
-      cwd = Platform::getCurrentDirectory();
+      cwd = Platform::getMainDotCsDir();
 
    dStrncpy(buffer, cwd, size);
    buffer[size-1] = 0;
@@ -266,6 +266,9 @@ char * Platform::makeFullPathName(const char *path, char *buffer, U32 size, cons
          {
             // Parent
             endptr = dStrrchr(buffer, '/');
+
+			if (endptr)
+				*endptr-- = 0;
          }
          else if(dStrcmp(ptr, ".") == 0)
          {

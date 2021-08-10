@@ -1,0 +1,10 @@
+<ModuleDefinition
+    ModuleId="EditorToy"
+    VersionId="1"
+	Enabled="1"
+    Description="Editor for T2D MIT."
+    Type="toy"
+    ToyCategoryIndex="2"
+    ScriptFile="main.cs"
+    CreateFunction="create"
+    DestroyFunction="destroy"/>

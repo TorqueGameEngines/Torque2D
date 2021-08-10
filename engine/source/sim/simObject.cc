@@ -46,6 +46,8 @@ namespace Sim
 }
 
 //-----------------------------------------------------------------------------
+bool SimObject::disableNameChanging = false;
+//-----------------------------------------------------------------------------
 
 SimObject::SimObject()
 {
@@ -541,10 +543,6 @@ void SimObject::setDataField(StringTableEntry slotName, const char *array, const
 
             if( (*fld->setDataFn)( this, bufferSecure ) )
                Con::setData(fld->type, (void *) (((const char *)this) + fld->offset), array1, 1, &value, fld->table);
-
-            onStaticModified( slotName, value );
-
-            return;
          }
 
          if(fld->validator)
@@ -850,33 +848,21 @@ SimObject::~SimObject()
 
 //---------------------------------------------------------------------------
 
-bool SimObject::isLocked()
-{
-   if(!mFieldDictionary)
-      return false;
-
-   const char * val = mFieldDictionary->getFieldValue( StringTable->insert( "locked", false ) );
-
-   return( val ? dAtob(val) : false );
-}
 
 void SimObject::setLocked( bool b = true )
 {
-   setDataField(StringTable->insert("locked", false), NULL, b ? "true" : "false" );
-}
-
-bool SimObject::isHidden()
-{
-   if(!mFieldDictionary)
-      return false;
-
-   const char * val = mFieldDictionary->getFieldValue( StringTable->insert( "hidden", false ) );
-   return( val ? dAtob(val) : false );
+   if (b)
+      mFlags.set(Locked);
+   else
+      mFlags.clear(Locked);
 }
 
 void SimObject::setHidden(bool b = true)
 {
-   setDataField(StringTable->insert("hidden", false), NULL, b ? "true" : "false" );
+   if (b)
+      mFlags.set(Hidden);
+   else
+      mFlags.clear(Hidden);
 }
 
 //---------------------------------------------------------------------------
@@ -1083,10 +1069,13 @@ void SimObject::clearAllNotifications()
 void SimObject::initPersistFields()
 {
    Parent::initPersistFields();
+
+   
    addGroup("SimBase");
-   addField("canSaveDynamicFields",   TypeBool,   Offset(mCanSaveFieldDictionary, SimObject), &writeCanSaveDynamicFields, "");
+   addProtectedField("name", TypeName, Offset(objectName, SimObject), &setProtectedName, &defaultProtectedGetFn, "Name for the object.");
+   addField("canSaveDynamicFields",    TypeBool,         Offset(mCanSaveFieldDictionary, SimObject), &writeCanSaveDynamicFields, "");
    addField("internalName",            TypeString,       Offset(mInternalName, SimObject), &writeInternalName, "");   
-   addProtectedField("parentGroup",        TypeSimObjectPtr, Offset(mGroup, SimObject), &setParentGroup, &defaultProtectedGetFn, &writeParentGroup, "Group hierarchy parent of the object." );
+   addProtectedField("parentGroup",    TypeSimObjectPtr, Offset(mGroup, SimObject), &setParentGroup, &defaultProtectedGetFn, &writeParentGroup, "Group hierarchy parent of the object." );
    endGroup("SimBase");
 
    // Namespace Linking.
@@ -1094,7 +1083,30 @@ void SimObject::initPersistFields()
    addProtectedField("superclass", TypeString, Offset(mSuperClassName, SimObject), &setSuperClass, &defaultProtectedGetFn, &writeSuperclass, "Script Class of object.");
    addProtectedField("class",      TypeString, Offset(mClassName,      SimObject), &setClass,      &defaultProtectedGetFn, &writeClass, "Script SuperClass of object.");
    endGroup("Namespace Linking");
+
+   addGroup("Editing");
+
+   addProtectedField("hidden", TypeBool, NULL, &_setHidden, &_getHidden, &_writeHidden, "Whether the object is visible.");
+   addProtectedField("locked", TypeBool, NULL, &_setLocked, &_getLocked, &_writeLocked, "Whether the object can be edited.");
+
+   endGroup("Editing");
 }
+
+//-----------------------------------------------------------------------------
+
+bool SimObject::setProtectedName(void *obj, const char *data)
+{
+   if (disableNameChanging)
+      return false;
+   SimObject *object = static_cast<SimObject*>(obj);
+
+   if (object->isProperlyAdded())
+      object->assignName(data);
+
+   // always return false because we assign the name here
+   return false;
+}
+
 
 //-----------------------------------------------------------------------------
 

@@ -1,0 +1,189 @@
+<ImageAsset
+    AssetName="labCoatBanner1"
+    ImageFile="@assetFile=banner1.png"
+	AssetInternal="1" 
+    FilterMode="NEAREST"
+    ExplicitMode="true">
+    <ImageAsset.Cells>
+        <Cell
+            RegionName="TL1"
+            Offset="0 0"
+            Width="28"
+            Height="8" />
+        <Cell
+            RegionName="TC1"
+            Offset="28 0"
+            Width="2"
+            Height="8" />
+        <Cell
+            RegionName="TR1"
+            Offset="30 0"
+            Width="59"
+            Height="8" />
+        <Cell
+            RegionName="ML1"
+            Offset="0 8"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="MC1"
+            Offset="28 8"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="MR1"
+            Offset="30 8"
+            Width="59"
+            Height="2" />
+        <Cell
+            RegionName="BL1"
+            Offset="0 10"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="BC1"
+            Offset="28 10"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="BR1"
+            Offset="30 10"
+            Width="59"
+            Height="2" />
+        <Cell
+            RegionName="TL2"
+            Offset="0 12"
+            Width="28"
+            Height="8" />
+        <Cell
+            RegionName="TC2"
+            Offset="28 12"
+            Width="2"
+            Height="8" />
+        <Cell
+            RegionName="TR2"
+            Offset="30 12"
+            Width="59"
+            Height="8" />
+        <Cell
+            RegionName="ML2"
+            Offset="0 20"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="MC2"
+            Offset="28 20"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="MR2"
+            Offset="30 20"
+            Width="59"
+            Height="2" />
+        <Cell
+            RegionName="BL2"
+            Offset="0 22"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="BC2"
+            Offset="28 22"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="BR2"
+            Offset="30 22"
+            Width="59"
+            Height="2" />
+        <Cell
+            RegionName="TL3"
+            Offset="0 24"
+            Width="28"
+            Height="8" />
+        <Cell
+            RegionName="TC3"
+            Offset="28 24"
+            Width="2"
+            Height="8" />
+        <Cell
+            RegionName="TR3"
+            Offset="30 24"
+            Width="59"
+            Height="8" />
+        <Cell
+            RegionName="ML3"
+            Offset="0 32"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="MC3"
+            Offset="28 32"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="MR3"
+            Offset="30 32"
+            Width="59"
+            Height="2" />
+        <Cell
+            RegionName="BL3"
+            Offset="0 34"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="BC3"
+            Offset="28 34"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="BR3"
+            Offset="30 34"
+            Width="59"
+            Height="2" />
+        <Cell
+            RegionName="TL4"
+            Offset="0 36"
+            Width="28"
+            Height="8" />
+        <Cell
+            RegionName="TC4"
+            Offset="28 36"
+            Width="2"
+            Height="8" />
+        <Cell
+            RegionName="TR4"
+            Offset="30 36"
+            Width="59"
+            Height="8" />
+        <Cell
+            RegionName="ML4"
+            Offset="0 44"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="MC4"
+            Offset="28 44"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="MR4"
+            Offset="30 44"
+            Width="59"
+            Height="2" />
+        <Cell
+            RegionName="BL4"
+            Offset="0 46"
+            Width="28"
+            Height="2" />
+        <Cell
+            RegionName="BC4"
+            Offset="28 46"
+            Width="2"
+            Height="2" />
+        <Cell
+            RegionName="BR4"
+            Offset="30 46"
+            Width="59"
+            Height="2" />
+    </ImageAsset.Cells>
+</ImageAsset>

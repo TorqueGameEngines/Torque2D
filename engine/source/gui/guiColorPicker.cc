@@ -211,8 +211,8 @@ void GuiColorPickerCtrl::renderColorBox(RectI &bounds)
    pickerBounds.extent.x = bounds.extent.x-1;
    pickerBounds.extent.y = bounds.extent.y-1;
    
-   if (mProfile->mBorder)
-      dglDrawRect(bounds, mProfile->mBorderColor);
+   //if (mProfile->mBorder)
+   //   dglDrawRect(bounds, mProfile->mBorderColor);
       
    Point2I selectorPos = Point2I(bounds.point.x+mSelectorPos.x+1, bounds.point.y+mSelectorPos.y+1);
 
@@ -472,8 +472,8 @@ void GuiColorPickerCtrl::renderColorBox(RectI &bounds)
    pickerBounds.extent.x = bounds.extent.x-1;
    pickerBounds.extent.y = bounds.extent.y-1;
    
-   if (mProfile->mBorder)
-      dglDrawRect(bounds, mProfile->mBorderColor);
+   if (mProfile->mBorderDefault && mProfile->mBorderDefault->mBorder > 0)
+      dglDrawRect(bounds, mProfile->mBorderDefault->mBorderColor[0]);
       
    Point2I selectorPos = Point2I(bounds.point.x+mSelectorPos.x+1, bounds.point.y+mSelectorPos.y+1);
 
@@ -607,7 +607,7 @@ void GuiColorPickerCtrl::onRender(Point2I offset, const RectI& updateRect)
    }
    
    //render the children
-   renderChildControls( offset, updateRect);
+   renderChildControls( offset, mBounds, updateRect);
 }
 
 //--------------------------------------------------------------------------
@@ -793,7 +793,7 @@ Point2I GuiColorPickerCtrl::getSelectorPositionForColor(RectI &bounds, ColorF ta
 
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onMouseDown(const GuiEvent &event)
+void GuiColorPickerCtrl::onTouchDown(const GuiEvent &event)
 {
    if (!mActive)
       return;
@@ -812,11 +812,11 @@ void GuiColorPickerCtrl::onMouseDown(const GuiEvent &event)
    
    mMouseDown = true;
 
-   Con::executef(this, 1, "onMouseDown");
+   Con::executef(this, 1, "onTouchDown");
 }
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onMouseDragged(const GuiEvent &event)
+void GuiColorPickerCtrl::onTouchDragged(const GuiEvent &event)
 {
    if ((mActive && mMouseDown) || (mActive && (mDisplayMode == pDropperBackground)))
    {
@@ -828,38 +828,38 @@ void GuiColorPickerCtrl::onMouseDragged(const GuiEvent &event)
    if (!mActionOnMove && mAltConsoleCommand[0] )
       Con::evaluate( mAltConsoleCommand, false );
 
-   Con::executef(this, 1, "onMouseDragged");
+   Con::executef(this, 1, "onTouchDragged");
 }
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onMouseMove(const GuiEvent &event)
+void GuiColorPickerCtrl::onTouchMove(const GuiEvent &event)
 {
    // Only for dropper mode
    if (mActive && (mDisplayMode == pDropperBackground))
       setSelectorPos(globalToLocalCoord(event.mousePoint));
 
-   Con::executef(this, 1, "onMouseMove");
+   Con::executef(this, 1, "onTouchMove");
 }
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onMouseEnter(const GuiEvent &event)
+void GuiColorPickerCtrl::onTouchEnter(const GuiEvent &event)
 {
    mMouseOver = true;
 
-   Con::executef(this, 1, "onMouseEnter");
+   Con::executef(this, 1, "onTouchEnter");
 }
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onMouseLeave(const GuiEvent &)
+void GuiColorPickerCtrl::onTouchLeave(const GuiEvent &)
 {
    // Reset state
    mMouseOver = false;
 
-   Con::executef(this, 1, "onMouseLeave");
+   Con::executef(this, 1, "onTouchLeave");
 }
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onMouseUp(const GuiEvent &)
+void GuiColorPickerCtrl::onTouchUp(const GuiEvent &)
 {
    //if we released the mouse within this control, perform the action
    if (mActive && mMouseDown && (mDisplayMode != pDropperBackground)) 
@@ -876,7 +876,7 @@ void GuiColorPickerCtrl::onMouseUp(const GuiEvent &)
    
    mouseUnlock();
 
-   Con::executef(this, 1, "onMouseUp");
+   Con::executef(this, 1, "onTouchUp");
 }
 
 //--------------------------------------------------------------------------

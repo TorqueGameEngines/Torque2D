@@ -998,50 +998,45 @@ bool Platform::hasSubDirectory(const char *pPath)
 static bool recurseDumpDirectories(const char *basePath, const char *subPath, Vector<StringTableEntry> &directoryVector, S32 currentDepth, S32 recurseDepth, bool noBasePath)
 {
    char search[1024];
-   WIN32_FIND_DATAA findData;
 
    //-----------------------------------------------------------------------------
    // Compose our search string - Format : ([path]/[subpath]/*)
    //-----------------------------------------------------------------------------
 
-   char trail = basePath[ dStrlen(basePath) - 1 ];
-   char subTrail;
-   char subLead;
-   if( subPath )
-   {
-       subTrail = subPath[ dStrlen(subPath) - 1 ];
-       subLead = subPath[0];
-   }
+   dsize_t trLen = basePath ? dStrlen(basePath) : 0;
+   dsize_t subtrLen = subPath ? dStrlen(subPath) : 0;
+   char trail = trLen > 0 ? basePath[trLen - 1] : '\0';
+   char subTrail = subtrLen > 0 ? subPath[subtrLen - 1] : '\0';
+   char subLead = subtrLen > 0 ? subPath[0] : '\0';
 
-
-   if( trail == '/' )
+   if (trail == '/')
    {
       // we have a sub path and it's not an empty string
-      if(  subPath  && ( dStrncmp( subPath, "", 1 ) != 0 ) )
+      if (subPath && (dStrncmp(subPath, "", 1) != 0))
       {
-         if( subTrail == '/' )
-            dSprintf(search, 1024, "%s%s*", basePath,subPath );
+         if (subTrail == '/')
+            dSprintf(search, 1024, "%s%s*", basePath, subPath);
          else
-            dSprintf(search, 1024, "%s%s/*", basePath,subPath );
+            dSprintf(search, 1024, "%s%s/*", basePath, subPath);
       }
       else
-         dSprintf( search, 1024, "%s*", basePath );
+         dSprintf(search, 1024, "%s*", basePath);
    }
    else
    {
-      if(  subPath  && ( dStrncmp( subPath, "", 1 ) != 0 ) )
-         if( subTrail == '/' )
-            dSprintf(search, 1024, "%s%s*", basePath,subPath );
+      if (subPath && (dStrncmp(subPath, "", 1) != 0))
+         if (subTrail == '/')
+            dSprintf(search, 1024, "%s%s*", basePath, subPath);
          else
-            dSprintf(search, 1024, "%s%s/*", basePath,subPath );
+            dSprintf(search, 1024, "%s%s/*", basePath, subPath);
       else
-         dSprintf(search, 1024, "%s/*", basePath );
+         dSprintf(search, 1024, "%s/*", basePath);
    }
 
    //-----------------------------------------------------------------------------
    // See if we get any hits
    //-----------------------------------------------------------------------------
-
+   WIN32_FIND_DATAA findData;
    HANDLE handle = FindFirstFileA(search, &findData);
    if (handle == INVALID_HANDLE_VALUE)
       return false;
@@ -1049,39 +1044,39 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
    //-----------------------------------------------------------------------------
    // add path to our return list ( provided it is valid )
    //-----------------------------------------------------------------------------
-   if( !Platform::isExcludedDirectory( subPath ) )
+   if (!Platform::isExcludedDirectory(subPath))
    {
 
-      if( noBasePath )
+      if (noBasePath)
       {
          // We have a path and it's not an empty string or an excluded directory
-         if( ( subPath  && ( dStrncmp( subPath, "", 1 ) != 0 ) ) )
-            directoryVector.push_back( StringTable->insert( subPath ) );
+         if ((subPath && (dStrncmp(subPath, "", 1) != 0)))
+            directoryVector.push_back(StringTable->insert(subPath));
       }
       else
       {
-         if( ( subPath  && ( dStrncmp( subPath, "", 1 ) != 0 ) ) )
+         if ((subPath && (dStrncmp(subPath, "", 1) != 0)))
          {
-            char szPath [ 1024 ];
-            dMemset( szPath, 0, 1024 );
-            if ( trail == '/' )
+            char szPath[1024];
+            dMemset(szPath, 0, 1024);
+            if (trail == '/')
             {
-                if ( subLead == '/' )
-                   dSprintf( szPath, 1024, "%s%s", basePath, &subPath[1] );
-                else
-                   dSprintf( szPath, 1024, "%s%s", basePath, subPath );
+               if (subLead == '/')
+                  dSprintf(szPath, 1024, "%s%s", basePath, &subPath[1]);
+               else
+                  dSprintf(szPath, 1024, "%s%s", basePath, subPath);
             }
             else
             {
-                if( subLead == '/' )
-                   dSprintf( szPath, 1024, "%s%s", basePath, subPath );
-                else
-                   dSprintf( szPath, 1024, "%s/%s", basePath, subPath );
+               if (subLead == '/')
+                  dSprintf(szPath, 1024, "%s%s", basePath, subPath);
+               else
+                  dSprintf(szPath, 1024, "%s/%s", basePath, subPath);
             }
-            directoryVector.push_back( StringTable->insert( szPath ) );
+            directoryVector.push_back(StringTable->insert(szPath));
          }
          else
-            directoryVector.push_back( StringTable->insert( basePath ) );
+            directoryVector.push_back(StringTable->insert(basePath));
       }
    }
 
@@ -1098,41 +1093,41 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
             continue;
 
          // skip excluded directories
-         if( Platform::isExcludedDirectory( findData.cFileName ) )
+         if (Platform::isExcludedDirectory(findData.cFileName))
             continue;
 
-         if( ( subPath  && ( dStrncmp( subPath, "", 1 ) != 0 ) ))
+         if ((subPath && (dStrncmp(subPath, "", 1) != 0)))
          {
             char child[1024];
 
-            if( subTrail == '/' )
+            if (subTrail == '/')
                dSprintf(child, sizeof(child), "%s%s", subPath, findData.cFileName);
             else
                dSprintf(child, sizeof(child), "%s/%s", subPath, findData.cFileName);
 
-            if( currentDepth < recurseDepth || recurseDepth == -1 )
-               recurseDumpDirectories(basePath, child, directoryVector, currentDepth+1, recurseDepth, noBasePath );
+            if (currentDepth < recurseDepth || recurseDepth == -1)
+               recurseDumpDirectories(basePath, child, directoryVector, currentDepth + 1, recurseDepth, noBasePath);
 
          }
          else
          {
             char child[1024];
 
-            if( trail == '/' )
-               dStrcpy( child, findData.cFileName );
+            if (trail == '/')
+               dStrcpy(child, findData.cFileName);
             else
                dSprintf(child, sizeof(child), "/%s", findData.cFileName);
 
-            if( currentDepth < recurseDepth || recurseDepth == -1 )
-               recurseDumpDirectories(basePath, child, directoryVector, currentDepth+1, recurseDepth, noBasePath );
+            if (currentDepth < recurseDepth || recurseDepth == -1)
+               recurseDumpDirectories(basePath, child, directoryVector, currentDepth + 1, recurseDepth, noBasePath);
          }
-      }      
-   }
-   while(FindNextFileA(handle, &findData));
+      }
+   } while (FindNextFileA(handle, &findData));
 
    FindClose(handle);
    return true;
 }
+
 
 bool Platform::dumpDirectories( const char *path, Vector<StringTableEntry> &directoryVector, S32 depth, bool noBasePath )
 {

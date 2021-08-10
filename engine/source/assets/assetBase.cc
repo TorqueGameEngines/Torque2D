@@ -276,6 +276,12 @@ void AssetBase::refreshAsset( void )
 
     // Yes, so refresh the asset via the asset manager.
     mpOwningAssetManager->refreshAsset( getAssetId() );
+
+	//Inform those who want to know
+	if (isMethod("onRefresh"))
+	{
+		Con::executef(this, 1, "onRefresh");
+	}
 }
 
 //-----------------------------------------------------------------------------

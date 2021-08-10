@@ -1,0 +1,7 @@
+<ImageAsset
+    AssetName="pufferfish"
+    ImageFile="pufferfish.png"
+    CellCountX="2"
+    CellCountY="2"
+    CellWidth="256"
+    CellHeight="256" />

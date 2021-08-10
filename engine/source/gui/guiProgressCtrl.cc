@@ -23,70 +23,138 @@
 #include "console/console.h"
 #include "console/consoleTypes.h"
 #include "graphics/dgl.h"
+#include "gui/guiDefaultControlRender.h"
 
 #include "gui/guiProgressCtrl.h"
+
+#include "gui/guiProgressCtrl_ScriptBinding.h"
 
 IMPLEMENT_CONOBJECT(GuiProgressCtrl);
 
 GuiProgressCtrl::GuiProgressCtrl()
 {
-   mProgress = 0.0f;
+	mBounds.extent.set(230, 24);
+   mCurrent = 0.0f;
+   mStart = 0.0f;
+   mEnd = 0.0f;
+
+   setAnimationLength(250);
+   setEasingFunction(EaseInOut);
+
+   setField("profile", "GuiProgressProfile");
+}
+
+void GuiProgressCtrl::initPersistFields()
+{
+	Parent::initPersistFields();
+
+	addField("animationTime", TypeS32, Offset(mAnimationLength, GuiProgressCtrl));
 }
 
 const char* GuiProgressCtrl::getScriptValue()
 {
    char * ret = Con::getReturnBuffer(64);
-   dSprintf(ret, 64, "%g", mProgress);
+   dSprintf(ret, 64, "%g", mCurrent);
    return ret;
 }
 
 void GuiProgressCtrl::setScriptValue(const char *value)
 {
    //set the value
-   if (! value)
-      mProgress = 0.0f;
-   else
-      mProgress = dAtof(value);
+   F32 target = 0.0f;
+   if (value)
+	   target = dAtof(value);
+
+	setCurrentProgress(target);
+}
+
+void GuiProgressCtrl::setCurrentProgress(F32 target)
+{
+	setCurrentProgress(target, mAnimationLength);
+}
+
+void GuiProgressCtrl::setCurrentProgress(F32 target, S32 time)
+{
+	mAnimationLength = time;
 
    //validate the value
-   mProgress = mClampF(mProgress, 0.f, 1.f);
+   target = mClampF(target, 0.f, 1.f);
+
+   if (target != mCurrent)
+   {
+		mStart = mCurrent;
+		mEnd = target;
+		startFluidAnimation();
+		setProcessTicks(true);
+   }
+
    setUpdate();
 }
 
-void GuiProgressCtrl::onPreRender()
+void GuiProgressCtrl::resetProgress()
 {
-   const char * var = getVariable();
-   if(var)
-   {
-      F32 value = mClampF(dAtof(var), 0.f, 1.f);
-      if(value != mProgress)
-      {
-         mProgress = value;
-         setUpdate();
-      }
-   }
+	setCurrentProgress(0.0f);
 }
 
 void GuiProgressCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-   RectI ctrlRect(offset, mBounds.extent);
+	//Render the background box
+	RectI backRect = applyMargins(offset, mBounds.extent, NormalState, mProfile);
+	renderUniversalRect(backRect, mProfile, NormalState);
 
-   //draw the progress
-   S32 width = (S32)((F32)mBounds.extent.x * mProgress);
-   if (width > 0)
-   {
-      RectI progressRect = ctrlRect;
-      progressRect.extent.x = width;
-      dglDrawRectFill(progressRect, mProfile->mFillColor);
-   }
+	if (mCurrent == 0.0f)
+	{
+		return;
+	}
 
-   //now draw the border
-   if (mProfile->mBorder)
-      dglDrawRect(ctrlRect, mProfile->mBorderColor);
+	GuiControlState currentState = SelectedState;
+	if(mCurrent < 1.0f)
+	{
+		currentState = HighlightState;
+	}
 
-   Parent::onRender( offset, updateRect );
+	//Render the progress bar
+	RectI ctrlRect = applyMargins(offset, mBounds.extent, currentState, mProfile);
+	ctrlRect.extent.x = ctrlRect.extent.x * mCurrent;
+	renderUniversalRect(ctrlRect, mProfile, currentState);
 
-   //render the children
-   renderChildControls(offset, updateRect);
+	//Render Text
+	dglSetBitmapModulation(mProfile->getFontColor(currentState));
+	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
+	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
+
+	if (contentRect.isValidRect())
+	{
+		renderText(contentRect.point, contentRect.extent, mText, mProfile);
+	}
 }
+
+void GuiProgressCtrl::processTick()
+{
+	bool shouldWeContinue = false;
+
+	//Expanding
+	shouldWeContinue |= animateProgressBar();
+
+	if (!shouldWeContinue)
+	{
+		setProcessTicks(false);
+	}
+}
+
+bool GuiProgressCtrl::animateProgressBar()
+{
+	F32 progress = getProgress(32.0f);
+
+	setUpdate();
+	mCurrent = processValue(progress, mStart, mEnd);
+
+	if (mAnimationProgress >= 1.0f)
+	{
+		mAnimationProgress = 1.0f;
+		return false;
+	}
+	return true;
+}
+	
 

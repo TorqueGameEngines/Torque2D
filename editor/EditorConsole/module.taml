@@ -1,0 +1,8 @@
+<ModuleDefinition
+	ModuleId="EditorConsole"
+	VersionId="1"
+	Dependencies="EditorCore=1"
+	Description="Console for the Editor"
+	ScriptFile="EditorConsole.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy" />

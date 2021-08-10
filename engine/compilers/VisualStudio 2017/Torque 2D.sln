@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Express 2013 for Windows Desktop
-VisualStudioVersion = 12.0.40629.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.1300
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Torque2D", "Torque 2D.vcxproj", "{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -33,7 +33,8 @@ Global
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Debug|Win32.ActiveCfg = Debug|Win32
 		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Debug|Win32.Build.0 = Debug|Win32
-		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Debug|x64.ActiveCfg = Debug|Win32
+		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Debug|x64.ActiveCfg = Debug|x64
+		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Debug|x64.Build.0 = Debug|x64
 		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Release|Win32.ActiveCfg = Release|Win32
 		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Release|Win32.Build.0 = Release|Win32
 		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Release|x64.ActiveCfg = Release|Win32
@@ -42,7 +43,8 @@ Global
 		{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}.Shipping|x64.ActiveCfg = Shipping|Win32
 		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Debug|Win32.ActiveCfg = Debug|Win32
 		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Debug|Win32.Build.0 = Debug|Win32
-		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Debug|x64.ActiveCfg = Debug|Win32
+		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Debug|x64.ActiveCfg = Debug|x64
+		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Debug|x64.Build.0 = Debug|x64
 		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Release|Win32.ActiveCfg = Release|Win32
 		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Release|Win32.Build.0 = Release|Win32
 		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Release|x64.ActiveCfg = Release|Win32
@@ -51,7 +53,8 @@ Global
 		{0B07BA94-AA53-4FD4-ADB4-79EC2DA53B36}.Shipping|x64.ActiveCfg = Shipping|Win32
 		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Debug|Win32.ActiveCfg = Debug|Win32
 		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Debug|Win32.Build.0 = Debug|Win32
-		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Debug|x64.ActiveCfg = Debug|Win32
+		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Debug|x64.ActiveCfg = Debug|x64
+		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Debug|x64.Build.0 = Debug|x64
 		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Release|Win32.ActiveCfg = Release|Win32
 		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Release|Win32.Build.0 = Release|Win32
 		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Release|x64.ActiveCfg = Release|Win32
@@ -60,7 +63,8 @@ Global
 		{AF1179E3-A838-46A3-A427-1E62AA4C52F4}.Shipping|x64.ActiveCfg = Shipping|Win32
 		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Debug|Win32.ActiveCfg = Debug|Win32
 		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Debug|Win32.Build.0 = Debug|Win32
-		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Debug|x64.ActiveCfg = Debug|Win32
+		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Debug|x64.ActiveCfg = Debug|x64
+		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Debug|x64.Build.0 = Debug|x64
 		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Release|Win32.ActiveCfg = Release|Win32
 		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Release|Win32.Build.0 = Release|Win32
 		{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}.Release|x64.ActiveCfg = Release|Win32
@@ -94,5 +98,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A22C1FEC-DB0E-418F-8851-2DCB8230E6D6}
 	EndGlobalSection
 EndGlobal

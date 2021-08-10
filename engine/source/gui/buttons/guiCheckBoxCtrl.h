@@ -23,32 +23,50 @@
 #ifndef _GUICHECKBOXCTRL_H_
 #define _GUICHECKBOXCTRL_H_
 
-#ifndef _GUIBUTTONBASECTRL_H_
-#include "gui/buttons/guiButtonBaseCtrl.h"
+#ifndef _GUIBUTTONCTRL_H_
+#include "gui/buttons/guiButtonCtrl.h"
 #endif
 
-class GuiCheckBoxCtrl : public GuiButtonBaseCtrl
+class GuiCheckBoxCtrl : public GuiButtonCtrl
 {
-   typedef GuiButtonBaseCtrl Parent;
-
-   bool mUseInactiveState;
+   typedef GuiButtonCtrl Parent;
 
 protected:
+	bool mStateOn;
+	Point2I mBoxOffset;
+	Point2I mBoxExtent;
+	Point2I mTextOffset;
+	Point2I mTextExtent;
+	
 public:
-   S32 mIndent;
    DECLARE_CONOBJECT(GuiCheckBoxCtrl);
    GuiCheckBoxCtrl();
 
-   void setStateOn(S32 state);
-   virtual const char* getScriptValue();
-
-   virtual void onMouseDown(const GuiEvent& event);
-   virtual void onMouseUp(const GuiEvent& event);
-   virtual void onAction();
-   void onRender(Point2I offset, const RectI &updateRect);
    bool onWake();
-
    static void initPersistFields();
+
+   bool getStateOn(void) { return mStateOn; }
+   void setStateOn(bool bStateOn);
+
+   const Point2I&   getBoxOffset() { return mBoxOffset; } 
+   const Point2I&   getBoxExtent() { return mBoxExtent; }
+
+   void setBoxOffset(const Point2I &newOffset) { mBoxOffset = newOffset; }
+   void setBoxExtent(const Point2I &newExtent) { mBoxExtent = newExtent; }
+
+   const Point2I&   getTextOffset() { return mTextOffset; }
+   const Point2I&   getTextExtent() { return mTextExtent; }
+
+   void setTextOffset(const Point2I &newOffset) { mTextOffset = newOffset; }
+   void setTextExtent(const Point2I &newExtent) { mTextExtent = newExtent; }
+
+   void onRender(Point2I offset, const RectI &updateRect);
+   virtual void renderInnerControl(RectI &boxRect, const GuiControlState currentState);
+   void setScriptValue(const char *value);
+   const char *getScriptValue();
+
+   void onMessage(GuiControl *, S32 msg);
+   void onAction();
 };
 
 #endif //_GUI_CHECKBOX_CTRL_H

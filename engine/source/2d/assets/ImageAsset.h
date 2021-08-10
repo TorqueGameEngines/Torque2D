@@ -90,6 +90,7 @@ public:
                 mPixelHeight = pixelFrameHeight;
                 mRegionName = StringTable->insert(regionName);
             };
+			inline RectI toRectI(void) const { return RectI(mPixelOffset, Point2I(mPixelWidth, mPixelHeight)); }
 
             Point2I mPixelOffset;
             U32 mPixelWidth;
@@ -298,7 +299,7 @@ protected:
     static bool writeForce16Bit( void* obj, StringTableEntry pFieldName )   { return static_cast<ImageAsset*>(obj)->getForce16Bit() == true; }
 
     static bool setFilterMode( void* obj, const char* data );
-    static bool writeFilterMode( void* obj, StringTableEntry pFieldName )   { return static_cast<ImageAsset*>(obj)->getFilterMode() != FILTER_BILINEAR; }
+    static bool writeFilterMode( void* obj, StringTableEntry pFieldName )   { return static_cast<ImageAsset*>(obj)->getFilterMode() != FILTER_INVALID; }
 
     static bool setExplicitMode( void* obj, const char* data )              { static_cast<ImageAsset*>(obj)->setExplicitMode(dAtob(data)); return false; }
     static bool writeExplicitMode(void* obj, StringTableEntry pFieldName) { ImageAsset* pImageAsset = static_cast<ImageAsset*>(obj); return pImageAsset->getExplicitMode(); }

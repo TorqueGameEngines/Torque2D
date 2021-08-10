@@ -29,7 +29,7 @@
 #endif
 
 #ifndef _COLOR_H_
-#include "graphics/color.h"
+#include "graphics/gColor.h"
 #endif
 
 #ifndef _BITSTREAM_H_

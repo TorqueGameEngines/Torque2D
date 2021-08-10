@@ -1,0 +1,13 @@
+<ModuleDefinition
+	ModuleId="AssetAdmin"
+	VersionId="1"
+	Dependencies="EditorCore=1"
+	Description="Provides controls to view and edit assets."
+	ScriptFile="AssetAdmin.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy">
+		<DeclaredAssets
+			Path="images"
+			Extension="asset.taml"
+			Recurse="true"/>
+</ModuleDefinition>

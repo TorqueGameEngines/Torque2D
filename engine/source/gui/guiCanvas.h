@@ -136,6 +136,12 @@ protected:
    S32                        mDoubleClickHeight;
    S32                        mDoubleClickTime;
 
+   Point2F					  mPrevMouseMovePosition; ///< Holds the previous position of the mouse the last time a mouse move event was processed.
+   S32						  mTouchDetectionSize; ///< Changes in the x or y position of the mouse greater than this value will could be touch events.
+   bool						  mPotentialTouchEvent; ///< True if the mouse made a jump that looks like a touch event.
+   U8						  mPotentialMouseEventCount; ///< Counts how many small mouse movements have occured in a row that to determine if touch has been abandoned.
+   bool						  mHideCursorBecauseOfTouch; ///< Touch event has been detected. Hide the cursor.
+
    virtual void findMouseControl(const GuiEvent &event);
    virtual void refreshMouseControl();
    /// @}
@@ -154,6 +160,15 @@ protected:
       U32 index;
       U32 keyCode;
       U32 modifier;
+
+	  inline bool IsKeyCodeEqual(U32 testCode)
+	  {
+		  return (testCode == keyCode ||
+			  (keyCode == KEY_ALT && (testCode == KEY_RALT || testCode == KEY_LALT)) ||
+			  (keyCode == KEY_SHIFT && (testCode == KEY_RSHIFT || testCode == KEY_LSHIFT)) || 
+			  (keyCode == KEY_CONTROL && (testCode == KEY_RCONTROL || testCode == KEY_LCONTROL)) || 
+			  (keyCode == KEY_MAC_OPT && (testCode == KEY_MAC_ROPT || testCode == KEY_MAC_LOPT)));
+	  }
    };
    Vector <AccKeyMap> mAcceleratorMap;
 
@@ -279,7 +294,7 @@ public:
 
    /// Enable/disable rendering of the cursor.
    /// @param   state    True if we should render cursor
-   virtual void showCursor(bool state)            { mShowCursor = state; Input::setCursorState(state); }
+   virtual void showCursor(bool state)            { mShowCursor = state; }
 
    /// Returns true if the cursor is being rendered.
    virtual bool isCursorShown()                   { return(mShowCursor); }

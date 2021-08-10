@@ -223,8 +223,8 @@ ParticleAssetEmitter::ParticleAssetEmitter() :
     // Initialize particle fields.
     mParticleFields.addField( mParticleLife.getBase(), "Lifetime", 1000.0f, 0.0f, 10000.0f, 2.0f );
     mParticleFields.addField( mParticleLife.getVariation(), "LifetimeVariation", 1000.0f, 0.0f, 5000.0f, 0.0f  );
-    mParticleFields.addField( mQuantity.getBase(), "Quantity", 1000.0f, 0.0f, 100000.0f, 10.0f );
-    mParticleFields.addField( mQuantity.getVariation(), "QuantityVariation", 1000.0f, 0.0f, 100000.0f, 0.0f );
+    mParticleFields.addField( mQuantity.getBase(), "Quantity", 1000.0f, 0.0f, 1000.0f, 10.0f );
+    mParticleFields.addField( mQuantity.getVariation(), "QuantityVariation", 1000.0f, 0.0f, 1000.0f, 0.0f );
     mParticleFields.addField( mSizeX.getBase(), "SizeX",  1000.0f, 0.0f, 100.0f, 2.0f );
     mParticleFields.addField( mSizeX.getVariation(), "SizeXVariation", 1000.0f, 0.0f, 200.0f, 0.0f );
     mParticleFields.addField( mSizeX.getLife(), "SizeXLife", 1.0f, -100.0f, 100.0f, 1.0f );
@@ -281,9 +281,10 @@ void ParticleAssetEmitter::initPersistFields()
     addProtectedField("IsTargeting", TypeBool, Offset(mTargetParticle, ParticleAssetEmitter), &setIsTargeting, &defaultProtectedGetFn, &writeTargetParticle, "");
     addProtectedField("TargetPosition", TypeVector2, Offset(mTargetPosition, ParticleAssetEmitter), &setTargetPosition, &defaultProtectedGetFn, &writeTargetPosition, "");
 
+	//NOTE: long-term we plan to move physics particles to their own emmitter type.
     //Physics Particles
-    addProtectedField("PhysicsParticle", TypeBool, Offset(mPhysicsParticles, ParticleAssetEmitter), &setPhysicsParticles, &defaultProtectedGetFn, &writePhysicsParticles, "");
-    addProtectedField("PhysicsParticleType", TypeEnum, Offset(mPhysicsParticleType, ParticleAssetEmitter), &setPhysicsParticleType, &defaultProtectedGetFn, &writePhysicsParticleType, 1, &PhysicsParticleTypeTable);
+    //addProtectedField("PhysicsParticle", TypeBool, Offset(mPhysicsParticles, ParticleAssetEmitter), &setPhysicsParticles, &defaultProtectedGetFn, &writePhysicsParticles, "");
+    //addProtectedField("PhysicsParticleType", TypeEnum, Offset(mPhysicsParticleType, ParticleAssetEmitter), &setPhysicsParticleType, &defaultProtectedGetFn, &writePhysicsParticleType, 1, &PhysicsParticleTypeTable);
     //Physics Particles end---
 
     addProtectedField("EmitterAngle", TypeF32, Offset(mEmitterAngle, ParticleAssetEmitter), &setEmitterAngle, &defaultProtectedGetFn, &writeEmitterAngle, "");
@@ -394,8 +395,11 @@ void ParticleAssetEmitter::setEmitterName( const char* pEmitterName )
 
 void ParticleAssetEmitter::setOwner( ParticleAsset* pParticleAsset )
 {
-    // Sanity!
-    AssertFatal( mOwner == NULL, "ParticleAssetEmitter::setOwner() - Cannot set an owner when one is already assigned." );
+	if(pParticleAsset != NULL)
+	{
+		// Sanity!
+		AssertFatal( mOwner == NULL, "ParticleAssetEmitter::setOwner() - Cannot set an owner when one is already assigned." );
+	}
 
     // Set owner.
     mOwner = pParticleAsset;

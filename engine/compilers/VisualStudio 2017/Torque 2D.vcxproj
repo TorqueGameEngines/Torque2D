@@ -5,23 +5,40 @@
       <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Release|Win32">
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
     <ProjectConfiguration Include="Shipping|Win32">
       <Configuration>Shipping</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Shipping|x64">
+      <Configuration>Shipping</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}</ProjectGuid>
     <RootNamespace>TorqueGame</RootNamespace>
     <ProjectName>Torque2D</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v141</PlatformToolset>
@@ -31,7 +48,17 @@
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v141</PlatformToolset>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>false</UseOfMfc>
+    <PlatformToolset>v141</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
     <PlatformToolset>v141</PlatformToolset>
@@ -43,11 +70,23 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
     <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
   </ImportGroup>
@@ -58,15 +97,25 @@
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     </LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../../</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">../../../</OutDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
     <IntDir Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">false</LinkIncremental>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">false</LinkIncremental>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Torque2D_DEBUG</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Torque2D_DEBUG</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Torque2D</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Torque2D</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">Torque2D</TargetName>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">Torque2D</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>../../../</OutDir>
+    <IntDir>../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
@@ -116,6 +165,55 @@
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
     </Link>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TypeLibraryName>$(OutDir)Torque2D.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../Lib/libogg/include;../../Lib/libvorbis/include;../../Lib/LeapSDK/include;../../Lib/zlib;../../Lib/lpng;../../Lib/ljpeg;../../Lib/openal/win32;../../source;../../source/persistence/rapidjson/include;../../source/persistence/libjson;../../source/testing/googleTest;../../source/testing/googleTest/include;../../source/spine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TORQUE_DEBUG;TORQUE_DEBUG_GUARD;_CRT_SECURE_NO_DEPRECATE;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <BrowseInformation>false</BrowseInformation>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <WarningLevel>Level3</WarningLevel>
+      <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <ShowIncludes>false</ShowIncludes>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>../../Lib/MSPlatformSDK/Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>COMCTL32.LIB;COMDLG32.LIB;USER32.LIB;ADVAPI32.LIB;GDI32.LIB;RPCRT4.LIB;WINMM.LIB;WS2_32.LIB;vfw32.lib;Imm32.lib;shell32.lib;shlwapi.lib;ole32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>../../../Torque2D_DEBUG.exe</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../../Lib/unicode;../../lib/MSPlatformSDK/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+      <AdditionalOptions>/NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+  </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Midl>
       <TypeLibraryName>$(OutDir)Torque2D.tlb</TypeLibraryName>
@@ -162,6 +260,65 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <TargetMachine>MachineX86</TargetMachine>
+      <EnableUAC>false</EnableUAC>
+      <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep />
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TypeLibraryName>$(OutDir)Torque2D.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../Lib/libogg/include;../../Lib/libvorbis/include;../../Lib/LeapSDK/include;../../Lib/zlib;../../Lib/lpng;../../Lib/ljpeg;../../Lib/openal/win32;../../source;../../source/persistence/rapidjson/include;../../source/persistence/libjson;../../source/testing/googleTest;../../source/testing/googleTest/include;../../source/spine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>UNICODE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <BrowseInformation>false</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>../../Lib/MSPlatformSDK/Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>COMCTL32.LIB;COMDLG32.LIB;USER32.LIB;ADVAPI32.LIB;GDI32.LIB;WINMM.LIB;WS2_32.LIB;vfw32.lib;Imm32.lib;shell32.lib;shlwapi.lib;ole32.lib;RPCRT4.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>../../../Torque2D.exe</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../../Lib/unicode;../../Lib/MSPlatformSDK/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
       <EnableUAC>false</EnableUAC>
       <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
       <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
@@ -236,6 +393,65 @@
       </Outputs>
     </CustomBuildStep>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">
+    <Midl>
+      <TypeLibraryName>$(OutDir)Torque2D.tlb</TypeLibraryName>
+      <HeaderFileName>
+      </HeaderFileName>
+    </Midl>
+    <ClCompile>
+      <Optimization>MinSpace</Optimization>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <AdditionalIncludeDirectories>../../Lib/LeapSDK/include;../../Lib/zlib;../../Lib/lpng;../../Lib/ljpeg;../../Lib/openal/win32;../../Source;../../Source/persistence/rapidjson/include;../../Source/persistence/libjson;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>TORQUE_SHIPPING;UNICODE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <TreatWChar_tAsBuiltInType>false</TreatWChar_tAsBuiltInType>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <AssemblerListingLocation>$(OutDir)</AssemblerListingLocation>
+      <ProgramDataBaseFileName>$(IntDir)$(ProjectName).pdb</ProgramDataBaseFileName>
+      <BrowseInformation>false</BrowseInformation>
+      <WarningLevel>Level3</WarningLevel>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsCpp</CompileAs>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+    </ClCompile>
+    <ResourceCompile>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <Culture>0x0409</Culture>
+      <AdditionalIncludeDirectories>../../Lib/MSPlatformSDK/Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+    <Link>
+      <AdditionalDependencies>COMCTL32.LIB;COMDLG32.LIB;USER32.LIB;ADVAPI32.LIB;GDI32.LIB;WINMM.LIB;WS2_32.LIB;vfw32.lib;Imm32.lib;shell32.lib;shlwapi.lib;ole32.lib;RPCRT4.LIB;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>../../../Torque2D.exe</OutputFile>
+      <SuppressStartupBanner>false</SuppressStartupBanner>
+      <AdditionalLibraryDirectories>../../Lib/unicode;../../Lib/MSPlatformSDK/Lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreSpecificDefaultLibraries>LIBC;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(IntDir)$(ProjectName).pdb</ProgramDatabaseFile>
+      <SubSystem>Windows</SubSystem>
+      <RandomizedBaseAddress>false</RandomizedBaseAddress>
+      <DataExecutionPrevention>
+      </DataExecutionPrevention>
+      <EnableUAC>false</EnableUAC>
+      <UACExecutionLevel>HighestAvailable</UACExecutionLevel>
+      <ImageHasSafeExceptionHandlers>false</ImageHasSafeExceptionHandlers>
+    </Link>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+    </CustomBuildStep>
+    <CustomBuildStep />
+    <CustomBuildStep>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />
   </ItemGroup>
@@ -247,7 +463,6 @@
     <ClCompile Include="..\..\source\2d\assets\ParticleAssetEmitter.cc" />
     <ClCompile Include="..\..\source\2d\assets\ParticleAssetField.cc" />
     <ClCompile Include="..\..\source\2d\assets\ParticleAssetFieldCollection.cc" />
-    <ClCompile Include="..\..\source\2d\assets\SkeletonAsset.cc" />
     <ClCompile Include="..\..\source\2d\controllers\AmbientForceController.cc" />
     <ClCompile Include="..\..\source\2d\controllers\core\GroupedSceneController.cc" />
     <ClCompile Include="..\..\source\2d\controllers\core\PickingSceneController.cc" />
@@ -265,8 +480,9 @@
     <ClCompile Include="..\..\source\2d\core\SpriteBatchQuery.cc" />
     <ClCompile Include="..\..\source\2d\core\Utility.cc" />
     <ClCompile Include="..\..\source\2d\core\Vector2.cc" />
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToySceneWindow.cc" />
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToyTool.cc" />
     <ClCompile Include="..\..\source\2d\experimental\composites\WaveComposite.cc" />
-    <ClCompile Include="..\..\source\2d\gui\guiImageButtonCtrl.cc" />
     <ClCompile Include="..\..\source\2d\gui\guiSceneObjectCtrl.cc" />
     <ClCompile Include="..\..\source\2d\gui\guiSpriteCtrl.cc" />
     <ClCompile Include="..\..\source\2d\gui\SceneWindow.cc" />
@@ -279,7 +495,6 @@
     <ClCompile Include="..\..\source\2d\sceneobject\Scroller.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\LightObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\ShapeVector.cc" />
-    <ClCompile Include="..\..\source\2d\sceneobject\SkeletonObject.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\Sprite.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\TextSprite.cc" />
     <ClCompile Include="..\..\source\2d\sceneobject\Trigger.cc" />
@@ -363,6 +578,7 @@
     <ClCompile Include="..\..\source\collection\nameTags.cpp" />
     <ClCompile Include="..\..\source\collection\undo.cc" />
     <ClCompile Include="..\..\source\collection\vector.cc" />
+    <ClCompile Include="..\..\source\console\arrayObject.cpp" />
     <ClCompile Include="..\..\source\console\consoleBaseType.cc" />
     <ClCompile Include="..\..\source\console\consoleDictionary.cc" />
     <ClCompile Include="..\..\source\console\consoleExprEvalState.cc" />
@@ -381,7 +597,7 @@
     <ClCompile Include="..\..\source\graphics\bitmapBmp.cc" />
     <ClCompile Include="..\..\source\graphics\bitmapJpeg.cc" />
     <ClCompile Include="..\..\source\graphics\bitmapPng.cc" />
-    <ClCompile Include="..\..\source\graphics\color.cc" />
+    <ClCompile Include="..\..\source\graphics\gColor.cc" />
     <ClCompile Include="..\..\source\graphics\dgl.cc" />
     <ClCompile Include="..\..\source\graphics\dglMatrix.cc" />
     <ClCompile Include="..\..\source\graphics\DynamicTexture.cc" />
@@ -393,37 +609,32 @@
     <ClCompile Include="..\..\source\graphics\TextureDictionary.cc" />
     <ClCompile Include="..\..\source\graphics\TextureHandle.cc" />
     <ClCompile Include="..\..\source\graphics\TextureManager.cc" />
+    <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\editor\guiParticleGraphInspector.cc" />
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiBackgroundCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiBitmapBorderCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiBitmapCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiCanvas.cc" />
     <ClCompile Include="..\..\source\gui\guiColorPicker.cc" />
     <ClCompile Include="..\..\source\gui\guiConsole.cc" />
     <ClCompile Include="..\..\source\gui\guiConsoleEditCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiConsoleTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiControl.cc" />
     <ClCompile Include="..\..\source\gui\guiDefaultControlRender.cc" />
-    <ClCompile Include="..\..\source\gui\guiFadeinBitmapCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiListBoxCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMLTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMLTextEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrlEx.cc" />
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiScriptNotifyControl.cc" />
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTabPageCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiTickCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTypes.cc" />
     <ClCompile Include="..\..\source\gui\language\lang.cc" />
@@ -455,6 +666,7 @@
     <ClCompile Include="..\..\source\io\zip\zipSubStream.cc" />
     <ClCompile Include="..\..\source\io\zip\zipTempStream.cc" />
     <ClCompile Include="..\..\source\math\math_ScriptBinding.cc" />
+    <ClCompile Include="..\..\source\math\mFluid.cpp" />
     <ClCompile Include="..\..\source\math\mPoint.cpp" />
     <ClCompile Include="..\..\source\math\rectClipper.cpp" />
     <ClCompile Include="..\..\source\memory\dataChunker.cc" />
@@ -601,64 +813,27 @@
     <ClCompile Include="..\..\source\sim\SimObjectList.cc" />
     <ClCompile Include="..\..\source\sim\simSerialize.cpp" />
     <ClCompile Include="..\..\source\sim\simSet.cc" />
-    <ClCompile Include="..\..\source\spine\Animation.c" />
-    <ClCompile Include="..\..\source\spine\AnimationState.c" />
-    <ClCompile Include="..\..\source\spine\AnimationStateData.c" />
-    <ClCompile Include="..\..\source\spine\Atlas.c" />
-    <ClCompile Include="..\..\source\spine\AtlasAttachmentLoader.c" />
-    <ClCompile Include="..\..\source\spine\Attachment.c" />
-    <ClCompile Include="..\..\source\spine\AttachmentLoader.c" />
-    <ClCompile Include="..\..\source\spine\Bone.c" />
-    <ClCompile Include="..\..\source\spine\BoneData.c" />
-    <ClCompile Include="..\..\source\spine\BoundingBoxAttachment.c" />
-    <ClCompile Include="..\..\source\spine\Event.c" />
-    <ClCompile Include="..\..\source\spine\EventData.c" />
-    <ClCompile Include="..\..\source\spine\extension.c" />
-    <ClCompile Include="..\..\source\spine\Json.c" />
-    <ClCompile Include="..\..\source\spine\RegionAttachment.c" />
-    <ClCompile Include="..\..\source\spine\Skeleton.c" />
-    <ClCompile Include="..\..\source\spine\SkeletonBounds.c" />
-    <ClCompile Include="..\..\source\spine\SkeletonData.c" />
-    <ClCompile Include="..\..\source\spine\SkeletonJson.c" />
-    <ClCompile Include="..\..\source\spine\Skin.c" />
-    <ClCompile Include="..\..\source\spine\Slot.c" />
-    <ClCompile Include="..\..\source\spine\SlotData.c" />
     <ClCompile Include="..\..\source\string\findMatch.cc" />
     <ClCompile Include="..\..\source\string\stringBuffer.cc" />
     <ClCompile Include="..\..\source\string\stringStack.cc" />
     <ClCompile Include="..\..\source\string\stringTable.cc" />
     <ClCompile Include="..\..\source\string\stringUnit.cpp" />
     <ClCompile Include="..\..\source\string\unicode.cc" />
-    <ClCompile Include="..\..\source\gui\buttons\guiBitmapButtonCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\buttons\guiBorderButton.cc" />
-    <ClCompile Include="..\..\source\gui\buttons\guiButtonBaseCtrl.cc" />
     <ClCompile Include="..\..\source\gui\buttons\guiButtonCtrl.cc" />
     <ClCompile Include="..\..\source\gui\buttons\guiCheckBoxCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\buttons\guiIconButtonCtrl.cc" />
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\buttons\guiToolboxButtonCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiCtrlArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiPaneCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiStackCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabBookCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiControlListPopup.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiDebugger.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiImageList.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiMenuBar.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiSeparatorCtrl.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformFileIoTests.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformMemoryTests.cc" />
     <ClCompile Include="..\..\source\testing\tests\platformStringTests.cc" />
@@ -677,8 +852,6 @@
     <ClInclude Include="..\..\source\2d\assets\ParticleAssetField.h" />
     <ClInclude Include="..\..\source\2d\assets\ParticleAssetFieldCollection.h" />
     <ClInclude Include="..\..\source\2d\assets\ParticleAsset_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\2d\assets\SkeletonAsset.h" />
-    <ClInclude Include="..\..\source\2d\assets\SkeletonAsset_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\controllers\AmbientForceController.h" />
     <ClInclude Include="..\..\source\2d\controllers\AmbientForceController_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\controllers\core\GroupedSceneController.h" />
@@ -707,10 +880,11 @@
     <ClInclude Include="..\..\source\2d\core\Utility_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\core\Vector2.h" />
     <ClInclude Include="..\..\source\2d\core\Vector2_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow.h" />
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToyTool.h" />
     <ClInclude Include="..\..\source\2d\experimental\composites\WaveComposite.h" />
     <ClInclude Include="..\..\source\2d\experimental\composites\WaveComposite_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl.h" />
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl_ScriptBindings.h" />
     <ClInclude Include="..\..\source\2d\gui\guiSceneObjectCtrl.h" />
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl.h" />
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl_ScriptBindings.h" />
@@ -735,8 +909,6 @@
     <ClInclude Include="..\..\source\2d\sceneobject\LightObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ShapeVector.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\ShapeVector_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\2d\sceneobject\SkeletonObject.h" />
-    <ClInclude Include="..\..\source\2d\sceneobject\SkeletonObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Sprite.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\Sprite_ScriptBinding.h" />
     <ClInclude Include="..\..\source\2d\sceneobject\TextSprite.h" />
@@ -868,6 +1040,8 @@
     <ClInclude Include="..\..\source\component\behaviors\behaviorTemplate_ScriptBinding.h" />
     <ClInclude Include="..\..\source\component\dynamicConsoleMethodComponent_ScriptBinding.h" />
     <ClInclude Include="..\..\source\component\simComponent_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\console\arrayObject.h" />
+    <ClInclude Include="..\..\source\console\arrayObject_ScriptBinding.h" />
     <ClInclude Include="..\..\source\console\consoleBaseType.h" />
     <ClInclude Include="..\..\source\console\consoleDictionary.h" />
     <ClInclude Include="..\..\source\console\consoleDoc_ScriptBinding.h" />
@@ -901,8 +1075,8 @@
     <ClInclude Include="..\..\source\game\gameInterface.h" />
     <ClInclude Include="..\..\source\game\gameInterface_ScriptBinding.h" />
     <ClInclude Include="..\..\source\game\version_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\graphics\color.h" />
-    <ClInclude Include="..\..\source\graphics\color_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\graphics\gColor.h" />
+    <ClInclude Include="..\..\source\graphics\gColor_ScriptBinding.h" />
     <ClInclude Include="..\..\source\graphics\dgl.h" />
     <ClInclude Include="..\..\source\graphics\dglMac_Scriptbinding.h" />
     <ClInclude Include="..\..\source\graphics\dgl_ScriptBinding.h" />
@@ -919,37 +1093,50 @@
     <ClInclude Include="..\..\source\graphics\TextureManager.h" />
     <ClInclude Include="..\..\source\graphics\TextureManager_ScriptBinding.h" />
     <ClInclude Include="..\..\source\graphics\TextureObject.h" />
+    <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl.h" />
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiSceneScrollCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector.h" />
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiBackgroundCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiColorPicker.h" />
     <ClInclude Include="..\..\source\gui\guiConsole.h" />
     <ClInclude Include="..\..\source\gui\guiConsoleEditCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiConsoleTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiControl.h" />
     <ClInclude Include="..\..\source\gui\guiControl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiDefaultControlRender.h" />
     <ClInclude Include="..\..\source\gui\guiInputCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMLTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMLTextEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrlEx.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiScriptNotifyControl.h" />
+    <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTabPageCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTextCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiTextEditCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTextListCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiTickCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTypes.h" />
     <ClInclude Include="..\..\source\gui\language\lang.h" />
@@ -986,6 +1173,7 @@
     <ClInclude Include="..\..\source\io\zip\zipTempStream.h" />
     <ClInclude Include="..\..\source\math\box_ScriptBinding.h" />
     <ClInclude Include="..\..\source\math\matrix_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\math\mFluid.h" />
     <ClInclude Include="..\..\source\math\mNormalDistribution.h" />
     <ClInclude Include="..\..\source\math\random_ScriptBinding.h" />
     <ClInclude Include="..\..\source\math\rectClipper.h" />
@@ -1207,29 +1395,6 @@
     <ClInclude Include="..\..\source\sim\simSerialize_ScriptBinding.h" />
     <ClInclude Include="..\..\source\sim\simSet.h" />
     <ClInclude Include="..\..\source\sim\simSet_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\spine\Animation.h" />
-    <ClInclude Include="..\..\source\spine\AnimationState.h" />
-    <ClInclude Include="..\..\source\spine\AnimationStateData.h" />
-    <ClInclude Include="..\..\source\spine\Atlas.h" />
-    <ClInclude Include="..\..\source\spine\AtlasAttachmentLoader.h" />
-    <ClInclude Include="..\..\source\spine\Attachment.h" />
-    <ClInclude Include="..\..\source\spine\AttachmentLoader.h" />
-    <ClInclude Include="..\..\source\spine\Bone.h" />
-    <ClInclude Include="..\..\source\spine\BoneData.h" />
-    <ClInclude Include="..\..\source\spine\BoundingBoxAttachment.h" />
-    <ClInclude Include="..\..\source\spine\Event.h" />
-    <ClInclude Include="..\..\source\spine\EventData.h" />
-    <ClInclude Include="..\..\source\spine\extension.h" />
-    <ClInclude Include="..\..\source\spine\Json.h" />
-    <ClInclude Include="..\..\source\spine\RegionAttachment.h" />
-    <ClInclude Include="..\..\source\spine\Skeleton.h" />
-    <ClInclude Include="..\..\source\spine\SkeletonBounds.h" />
-    <ClInclude Include="..\..\source\spine\SkeletonData.h" />
-    <ClInclude Include="..\..\source\spine\SkeletonJson.h" />
-    <ClInclude Include="..\..\source\spine\Skin.h" />
-    <ClInclude Include="..\..\source\spine\Slot.h" />
-    <ClInclude Include="..\..\source\spine\SlotData.h" />
-    <ClInclude Include="..\..\source\spine\spine.h" />
     <ClInclude Include="..\..\source\string\findMatch.h" />
     <ClInclude Include="..\..\source\string\stringBuffer.h" />
     <ClInclude Include="..\..\source\string\stringBuffer_ScriptBinding.h" />
@@ -1238,71 +1403,25 @@
     <ClInclude Include="..\..\source\string\stringUnit.h" />
     <ClInclude Include="..\..\source\string\stringUnit_ScriptBinding.h" />
     <ClInclude Include="..\..\source\string\unicode.h" />
-    <ClInclude Include="..\..\source\gui\buttons\guiBitmapButtonCtrl.h" />
-    <ClInclude Include="..\..\source\gui\buttons\guiButtonBaseCtrl.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl.h" />
-    <ClInclude Include="..\..\source\gui\buttons\guiIconButtonCtrl.h" />
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h" />
-    <ClInclude Include="..\..\source\gui\buttons\guiToolboxButtonCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiCtrlArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiPaneCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiStackCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiDebugger.h" />
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiImageList.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiMenuBar.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiSeparatorCtrl.h" />
     <ClInclude Include="..\..\source\testing\unitTesting.h" />
     <ClInclude Include="..\..\source\testing\unitTesting_ScriptBinding.h" />
     <ClInclude Include="..\..\source\torqueConfig.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\math\mMathAMD_ASM.asm">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\math\mMathSSE_ASM.asm">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\platform\platformCPUInfo.asm">
-      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Command Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">"$(SolutionDir)..\..\Bin\nasm\nasmw.exe" -f win32 "%(FullPath)" -o "$(IntDir)%(Filename).obj"</Command>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-      <Outputs Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">$(IntDir)%(Filename).obj;%(Outputs)</Outputs>
-    </CustomBuild>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="libogg.vcxproj">
@@ -1333,6 +1452,9 @@
       <Project>{86cb2525-0cf3-40d3-bf42-a0a95035ee8c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Torque 2D.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\source\Box2D\Particle\b2ParticleAssembly.neon.s" />

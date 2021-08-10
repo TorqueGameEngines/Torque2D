@@ -310,6 +310,8 @@ public:
 
    virtual void onRemove();
 
+   virtual void onChildRemoved(SimObject*);
+
    /// Find an object in the group.
    virtual SimObject* findObject(const char* name);
 

@@ -1,8 +1,8 @@
 
 /* pngrtran.c - transforms the data in a row for PNG readers
  *
- * Last changed in libpng 1.5.22 [March 26, 2015]
- * Copyright (c) 1998-2015 Glenn Randers-Pehrson
+ * Last changed in libpng 1.5.24 [November 12, 2015]
+ * Copyright (c) 1998-2002,2004,2006-2015 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
  *
@@ -2056,10 +2056,10 @@ png_read_transform_info(png_structp png_ptr, png_infop info_ptr)
 defined(PNG_READ_USER_TRANSFORM_SUPPORTED)
    if (png_ptr->transformations & PNG_USER_TRANSFORM)
    {
-      if (info_ptr->bit_depth < png_ptr->user_transform_depth)
+      if (png_ptr->user_transform_depth)
          info_ptr->bit_depth = png_ptr->user_transform_depth;
 
-      if (info_ptr->channels < png_ptr->user_transform_channels)
+      if (png_ptr->user_transform_channels)
          info_ptr->channels = png_ptr->user_transform_channels;
    }
 #endif
@@ -2969,13 +2969,13 @@ png_do_read_filler(png_row_infop row_info, png_bytep row,
             png_bytep dp = sp  + (png_size_t)row_width * 2;
             for (i = 1; i < row_width; i++)
             {
-               *(--dp) = hi_filler;
                *(--dp) = lo_filler;
+               *(--dp) = hi_filler;
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
             }
-            *(--dp) = hi_filler;
             *(--dp) = lo_filler;
+            *(--dp) = hi_filler;
             row_info->channels = 2;
             row_info->pixel_depth = 32;
             row_info->rowbytes = row_width * 4;
@@ -2990,8 +2990,8 @@ png_do_read_filler(png_row_infop row_info, png_bytep row,
             {
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
-               *(--dp) = hi_filler;
                *(--dp) = lo_filler;
+               *(--dp) = hi_filler;
             }
             row_info->channels = 2;
             row_info->pixel_depth = 32;
@@ -3050,8 +3050,8 @@ png_do_read_filler(png_row_infop row_info, png_bytep row,
             png_bytep dp = sp  + (png_size_t)row_width * 2;
             for (i = 1; i < row_width; i++)
             {
-               *(--dp) = hi_filler;
                *(--dp) = lo_filler;
+               *(--dp) = hi_filler;
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
@@ -3059,8 +3059,8 @@ png_do_read_filler(png_row_infop row_info, png_bytep row,
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
             }
-            *(--dp) = hi_filler;
             *(--dp) = lo_filler;
+            *(--dp) = hi_filler;
             row_info->channels = 4;
             row_info->pixel_depth = 64;
             row_info->rowbytes = row_width * 8;
@@ -3079,8 +3079,8 @@ png_do_read_filler(png_row_infop row_info, png_bytep row,
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
                *(--dp) = *(--sp);
-               *(--dp) = hi_filler;
                *(--dp) = lo_filler;
+               *(--dp) = hi_filler;
             }
 
             row_info->channels = 4;

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 android {
-    compileSdkVersion 25
-    buildToolsVersion '26.0.2'
+    compileSdkVersion 28
+    buildToolsVersion '28.0.3'
     externalNativeBuild {
         ndkBuild {
             path './src/main/jni/Android.mk'
@@ -10,7 +10,7 @@ android {
     defaultConfig {
         applicationId "com.garagegames.torque2d"
         minSdkVersion 19
-        targetSdkVersion 25
+        targetSdkVersion 28
 
         sourceSets.main {
             assets.srcDirs = [
@@ -19,7 +19,7 @@ android {
             ]
 
             ndk {
-                abiFilters 'x86', 'x86_64', 'armeabi-v7a'
+                abiFilters 'x86', 'x86_64', 'armeabi-v7a' , 'arm64-v8a'
             }
         }
 

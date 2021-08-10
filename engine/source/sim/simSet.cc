@@ -377,8 +377,14 @@ void SimGroup::removeObject(SimObject* obj)
       nameDictionary.remove(obj);
       objectList.remove(obj);
       obj->mGroup = 0;
+	  onChildRemoved(obj);
    }
    unlock();
+}
+
+void SimGroup::onChildRemoved(SimObject* obj)
+{
+	//Left blank...
 }
 
 //////////////////////////////////////////////////////////////////////////

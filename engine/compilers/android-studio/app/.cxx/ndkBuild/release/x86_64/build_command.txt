@@ -1,0 +1,17 @@
+Executable : C:\Users\Peter\AppData\Local\Android\Sdk\ndk-bundle\ndk-build.cmd
+arguments : 
+NDK_PROJECT_PATH=null
+APP_BUILD_SCRIPT=C:\Users\Peter\Documents\GitHub\GGTorque2D\Torque2D\engine\compilers\android-studio\app\src\main\jni\Android.mk
+NDK_APPLICATION_MK=C:\Users\Peter\Documents\GitHub\GGTorque2D\Torque2D\engine\compilers\android-studio\app\src\main\jni\Application.mk
+APP_ABI=x86_64
+NDK_ALL_ABIS=x86_64
+NDK_DEBUG=0
+APP_PLATFORM=android-19
+NDK_OUT=C:/Users/Peter/Documents/GitHub/GGTorque2D/Torque2D/engine/compilers/android-studio/app/build/intermediates/ndkBuild/release/obj
+NDK_LIBS_OUT=C:\Users\Peter\Documents\GitHub\GGTorque2D\Torque2D\engine\compilers\android-studio\app\build\intermediates\ndkBuild\release\lib
+APP_SHORT_COMMANDS=false
+LOCAL_SHORT_COMMANDS=false
+-B
+-n
+jvmArgs : 
+

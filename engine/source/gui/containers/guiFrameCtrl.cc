@@ -489,16 +489,16 @@ void GuiFrameSetCtrl::onRender(Point2I offset, const RectI &updateRect )
    RectI r(offset.x, offset.y, mBounds.extent.x, mBounds.extent.y);
 
    // draw the border of the frameset if specified
-   if (mProfile->mOpaque)
-      dglDrawRectFill(r, mProfile->mFillColor);
+   //if (mProfile->mOpaque)
+   //   dglDrawRectFill(r, mProfile->mFillColor);
 
    drawDividers(offset);
 
-   if (mProfile->mBorder)
-      dglDrawRect(r, mProfile->mBorderColor);
+   //if (mProfile->mBorder)
+   //   dglDrawRect(r, mProfile->mBorderColor);
 
    // draw the frame contents
-   renderChildControls(offset, updateRect);
+   renderChildControls(offset, mBounds, updateRect);
 }
 
 //-----------------------------------------------------------------------------

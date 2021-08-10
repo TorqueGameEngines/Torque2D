@@ -509,7 +509,14 @@ void Input::setCursorPos(S32 x, S32 y)
 // Set the cursor to draw (true) or not (false)
 void Input::setCursorState(bool on)
 {
-   ShowCursor(on);
+	if (on)
+	{
+		while (ShowCursor(TRUE) < 0);
+	}
+	else
+	{
+		while (ShowCursor(FALSE) >= 0);
+	}
 }
 
 //------------------------------------------------------------------------------

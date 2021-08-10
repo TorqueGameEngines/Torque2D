@@ -29,7 +29,7 @@
 #define TORQUE_GAME_ENGINE          1000
 
 /// What's the name of your game? Used in a variety of places.
-#define TORQUE_GAME_NAME            "Torque 2D MIT"
+#define TORQUE_GAME_NAME            "Torque 2D 4.0: Rocket Edition"
 
 /// Human readable version string.
 #define TORQUE_GAME_VERSION_STRING  "Open Source"

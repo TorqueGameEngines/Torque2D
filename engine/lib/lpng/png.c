@@ -2,7 +2,7 @@
 /* png.c - location for general purpose libpng functions
  *
  * Last changed in libpng 1.5.23 [July 23, 2015]
- * Copyright (c) 1998-2015 Glenn Randers-Pehrson
+ * Copyright (c) 1998-2002,2004,2006-2015 Glenn Randers-Pehrson
  * (Version 0.96 Copyright (c) 1996, 1997 Andreas Dilger)
  * (Version 0.88 Copyright (c) 1995, 1996 Guy Eric Schalnat, Group 42, Inc.)
  *
@@ -14,7 +14,7 @@
 #include "pngpriv.h"
 
 /* Generate a compiler error if there is an old png.h in the search path. */
-typedef png_libpng_version_1_5_23 Your_png_h_is_not_version_1_5_23;
+typedef png_libpng_version_1_5_26 Your_png_h_is_not_version_1_5_26;
 
 /* Tells libpng that we have already handled the first "num_bytes" bytes
  * of the PNG file signature.  If the PNG data is embedded into another
@@ -26,15 +26,20 @@ typedef png_libpng_version_1_5_23 Your_png_h_is_not_version_1_5_23;
 void PNGAPI
 png_set_sig_bytes(png_structp png_ptr, int num_bytes)
 {
+   unsigned int nb = (unsigned int)num_bytes;
+
    png_debug(1, "in png_set_sig_bytes");
 
    if (png_ptr == NULL)
       return;
 
-   if (num_bytes > 8)
+   if (num_bytes < 0)
+      nb = 0;
+
+   if (nb > 8)
       png_error(png_ptr, "Too many bytes for PNG signature");
 
-   png_ptr->sig_bytes = (png_byte)(num_bytes < 0 ? 0 : num_bytes);
+   png_ptr->sig_bytes = (png_byte)nb;
 }
 
 /* Checks whether the supplied bytes match the PNG signature.  We allow
@@ -306,6 +311,8 @@ png_info_init_3(png_infopp ptr_ptr, png_size_t png_info_struct_size)
       png_destroy_struct(info_ptr);
       info_ptr = (png_infop)png_create_struct(PNG_STRUCT_INFO);
       *ptr_ptr = info_ptr;
+      if (info_ptr == NULL)
+         return;
    }
 
    /* Set everything to 0 */
@@ -648,14 +655,15 @@ png_get_copyright(png_const_structp png_ptr)
 #else
 #  ifdef __STDC__
    return PNG_STRING_NEWLINE \
-     "libpng version 1.5.23 - July 23, 2015" PNG_STRING_NEWLINE \
-     "Copyright (c) 1998-2015 Glenn Randers-Pehrson" PNG_STRING_NEWLINE \
+     "libpng version 1.5.26 - December 17, 2015" PNG_STRING_NEWLINE \
+     "Copyright (c) 1998-2002,2004,2006-2015 Glenn Randers-Pehrson" \
+     PNG_STRING_NEWLINE \
      "Copyright (c) 1996-1997 Andreas Dilger" PNG_STRING_NEWLINE \
      "Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc." \
      PNG_STRING_NEWLINE;
 #  else
-      return "libpng version 1.5.23 - July 23, 2015\
-      Copyright (c) 1998-2015 Glenn Randers-Pehrson\
+      return "libpng version 1.5.26 - December 17, 2015\
+      Copyright (c) 1998-2002,2004,2006-2015 Glenn Randers-Pehrson\
       Copyright (c) 1996-1997 Andreas Dilger\
       Copyright (c) 1995-1996 Guy Eric Schalnat, Group 42, Inc.";
 #  endif

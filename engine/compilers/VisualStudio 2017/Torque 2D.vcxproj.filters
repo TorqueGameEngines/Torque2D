@@ -193,14 +193,14 @@
     <Filter Include="persistence\taml\xml">
       <UniqueIdentifier>{cc1c1416-376b-4686-a4ac-21d1a35c9390}</UniqueIdentifier>
     </Filter>
-    <Filter Include="spine">
-      <UniqueIdentifier>{bb776838-ed6f-477c-b366-dd0c5c60ae5f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="bitmapFont">
       <UniqueIdentifier>{447ecd65-a7a2-4e18-9c55-b53356c6f7a9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Box2D\Particle">
       <UniqueIdentifier>{b2903a96-6c49-4961-82a8-f1832989d4a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="2d\editorToy">
+      <UniqueIdentifier>{598766e4-7dc1-45b8-8acf-f133f4fced82}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -453,49 +453,16 @@
     <ClCompile Include="..\..\source\platformWin32\threads\thread.cc">
       <Filter>platformWin32\threads</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\buttons\guiBitmapButtonCtrl.cc">
-      <Filter>gui\buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\buttons\guiBorderButton.cc">
-      <Filter>gui\buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\buttons\guiButtonBaseCtrl.cc">
-      <Filter>gui\buttons</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\buttons\guiButtonCtrl.cc">
       <Filter>gui\buttons</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\buttons\guiCheckBoxCtrl.cc">
       <Filter>gui\buttons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\buttons\guiIconButtonCtrl.cc">
-      <Filter>gui\buttons</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc">
       <Filter>gui\buttons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\buttons\guiToolboxButtonCtrl.cc">
-      <Filter>gui\buttons</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiAutoScrollCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiCtrlArrayCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiFormCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiPaneCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
@@ -504,17 +471,11 @@
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiStackCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiTabBookCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc">
       <Filter>gui\containers</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiControlListPopup.cc">
-      <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiDebugger.cc">
       <Filter>gui\editor</Filter>
@@ -528,19 +489,10 @@
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiImageList.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiMenuBar.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiSeparatorCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Collision\b2BroadPhase.cpp">
@@ -777,18 +729,6 @@
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBackgroundCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBitmapBorderCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBitmapCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiBubbleTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiCanvas.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -801,16 +741,10 @@
     <ClCompile Include="..\..\source\gui\guiConsoleEditCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiConsoleTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiControl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiDefaultControlRender.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiFadeinBitmapCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc">
@@ -831,37 +765,16 @@
     <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiPopUpCtrlEx.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiScriptNotifyControl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTabPageCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTextCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTextListCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTickCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc">
@@ -1173,9 +1086,6 @@
     <ClCompile Include="..\..\source\2d\scene\WorldQuery.cc">
       <Filter>2d\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\2d\gui\guiImageButtonCtrl.cc">
-      <Filter>2d\gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\2d\gui\guiSpriteCtrl.cc">
       <Filter>2d\gui</Filter>
     </ClCompile>
@@ -1229,9 +1139,6 @@
     </ClCompile>
     <ClCompile Include="..\..\source\platformWin32\nativeDialogs\win32FileDialog.cc">
       <Filter>platformWin32\nativeDialogs</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\graphics\color.cc">
-      <Filter>graphics</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\2d\assets\ParticleAsset.cc">
       <Filter>2d\assets</Filter>
@@ -1341,78 +1248,6 @@
     <ClCompile Include="..\..\source\math\mPoint.cpp">
       <Filter>math</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\spine\Animation.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\AnimationState.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\AnimationStateData.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Atlas.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\AtlasAttachmentLoader.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Attachment.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\AttachmentLoader.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Bone.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\BoneData.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\BoundingBoxAttachment.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Event.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\EventData.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\extension.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Json.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\RegionAttachment.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Skeleton.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\SkeletonBounds.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\SkeletonData.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\SkeletonJson.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Skin.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\Slot.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\spine\SlotData.c">
-      <Filter>spine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\2d\assets\SkeletonAsset.cc">
-      <Filter>2d\assets</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\2d\sceneobject\SkeletonObject.cc">
-      <Filter>2d\sceneobject</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\audio\vorbisStreamSource.cc">
       <Filter>audio</Filter>
     </ClCompile>
@@ -1435,6 +1270,9 @@
     <ClCompile Include="..\..\source\platform\platformNet.cpp" />
     <ClCompile Include="..\..\source\platform\platformNetAsync.cpp" />
     <ClCompile Include="..\..\source\platform\platformNet_ScriptBinding.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\source\Box2D\Particle\b2Particle.cpp">
       <Filter>Box2D\Particle</Filter>
     </ClCompile>
@@ -1464,6 +1302,45 @@
     </ClCompile>
     <ClCompile Include="..\..\source\2d\sceneobject\Path.cc">
       <Filter>2d\sceneobject</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\graphics\gColor.cc">
+      <Filter>graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\console\arrayObject.cpp">
+      <Filter>console</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\math\mFluid.cpp">
+      <Filter>math</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToySceneWindow.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\2d\editorToy\EditorToyTool.cc">
+      <Filter>2d\editorToy</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc">
+      <Filter>gui\buttons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\editor\guiMenuBarCtrl.cc">
+      <Filter>gui\editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc">
+      <Filter>gui\containers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\editor\guiParticleGraphInspector.cc">
+      <Filter>gui\editor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1737,55 +1614,22 @@
     <ClInclude Include="..\..\source\platformWin32\nativeDialogs\win32DirectoryResolver.h">
       <Filter>platformWin32\nativeDialogs</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\buttons\guiBitmapButtonCtrl.h">
-      <Filter>gui\buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\buttons\guiButtonBaseCtrl.h">
-      <Filter>gui\buttons</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl.h">
       <Filter>gui\buttons</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl.h">
       <Filter>gui\buttons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\buttons\guiIconButtonCtrl.h">
-      <Filter>gui\buttons</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h">
       <Filter>gui\buttons</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\buttons\guiToolboxButtonCtrl.h">
-      <Filter>gui\buttons</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiAutoScrollCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiCtrlArrayCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiDynamicCtrlArrayCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiFormCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiPaneCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiStackCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl.h">
@@ -1806,19 +1650,10 @@
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiImageList.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiMenuBar.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiSeparatorCtrl.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Box2D.h">
@@ -2100,15 +1935,6 @@
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBackgroundCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBitmapCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiBubbleTextCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiCanvas.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -2119,9 +1945,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiConsoleEditCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiConsoleTextCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiControl.h">
@@ -2148,37 +1971,16 @@
     <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiPopUpCtrlEx.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiScriptNotifyControl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTabPageCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTextCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTextListCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTickCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h">
@@ -2306,9 +2108,6 @@
     </ClInclude>
     <ClInclude Include="..\..\source\algorithm\hashFunction.h">
       <Filter>algorithm</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\graphics\color.h">
-      <Filter>graphics</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\collection\bitMatrix.h">
       <Filter>collection</Filter>
@@ -2594,12 +2393,6 @@
     </ClInclude>
     <ClInclude Include="..\..\source\2d\scene\WorldQuery.h">
       <Filter>2d\scene</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl.h">
-      <Filter>2d\gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\gui\guiImageButtonCtrl_ScriptBindings.h">
-      <Filter>2d\gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\2d\gui\guiSpriteCtrl.h">
       <Filter>2d\gui</Filter>
@@ -2898,9 +2691,6 @@
     <ClInclude Include="..\..\source\console\expando_ScriptBinding.h">
       <Filter>console</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\graphics\color_ScriptBinding.h">
-      <Filter>graphics</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\sim\simObject_ScriptBinding.h">
       <Filter>sim</Filter>
     </ClInclude>
@@ -3091,87 +2881,6 @@
     <ClInclude Include="..\..\source\console\Package.h">
       <Filter>console</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\spine\Animation.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\AnimationState.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\AnimationStateData.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Atlas.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\AtlasAttachmentLoader.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Attachment.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\AttachmentLoader.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Bone.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\BoneData.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\BoundingBoxAttachment.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Event.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\EventData.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\extension.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Json.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\RegionAttachment.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Skeleton.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\SkeletonBounds.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\SkeletonData.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\SkeletonJson.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Skin.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\Slot.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\SlotData.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\spine\spine.h">
-      <Filter>spine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\assets\SkeletonAsset.h">
-      <Filter>2d\assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\assets\SkeletonAsset_ScriptBinding.h">
-      <Filter>2d\assets</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\sceneobject\SkeletonObject_ScriptBinding.h">
-      <Filter>2d\sceneobject</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\2d\sceneobject\SkeletonObject.h">
-      <Filter>2d\sceneobject</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\audio\vorbisStreamSource.h">
       <Filter>audio</Filter>
     </ClInclude>
@@ -3213,6 +2922,22 @@
     <ClInclude Include="..\..\source\platform\tmm_off.h" />
     <ClInclude Include="..\..\source\platform\tmm_on.h" />
     <ClInclude Include="..\..\source\platform\typetraits.h" />
+    <ClInclude Include="..\..\source\gui\buttons\guiCheckBoxCtrl_ScriptBinding.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiTabPageCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
     <ClInclude Include="..\..\source\Box2D\Particle\b2VoronoiDiagram.h">
       <Filter>Box2D\Particle</Filter>
     </ClInclude>
@@ -3261,23 +2986,96 @@
     <ClInclude Include="..\..\source\2d\sceneobject\LightObject_ScriptBinding.h">
       <Filter>2d\sceneobject</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <CustomBuild Include="..\..\source\math\mMath_ASM.asm">
+    <ClInclude Include="..\..\source\graphics\gColor.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\graphics\gColor_ScriptBinding.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\console\arrayObject.h">
+      <Filter>console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\console\arrayObject_ScriptBinding.h">
+      <Filter>console</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\mFluid.h">
       <Filter>math</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\math\mMathAMD_ASM.asm">
-      <Filter>math</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\math\mMathSSE_ASM.asm">
-      <Filter>math</Filter>
-    </CustomBuild>
-    <CustomBuild Include="..\..\source\platform\platformCPUInfo.asm">
-      <Filter>platform</Filter>
-    </CustomBuild>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiButtonCtrl_ScriptBinding.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiChainCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToySceneWindow_ScriptBinding.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\2d\editorToy\EditorToyTool.h">
+      <Filter>2d\editorToy</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\buttons\guiDropDownCtrl_ScriptBinding.h">
+      <Filter>gui\buttons</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiMenuBarCtrl_ScriptBinding.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiTextEditCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiSceneScrollCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector_ScriptBinding.h">
+      <Filter>gui\editor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Torque 2D.ico" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\source\Box2D\Particle\b2ParticleAssembly.neon.s">

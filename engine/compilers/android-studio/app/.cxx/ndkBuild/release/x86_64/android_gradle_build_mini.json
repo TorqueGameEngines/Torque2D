@@ -1,0 +1,18 @@
+{
+  "buildFiles": [
+    "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Android.mk",
+    "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Application.mk"
+  ],
+  "cleanCommands": [
+    "C:\\Users\\Peter\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Application.mk APP_ABI\u003dx86_64 NDK_ALL_ABIS\u003dx86_64 NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-19 NDK_OUT\u003dC:/Users/Peter/Documents/GitHub/GGTorque2D/Torque2D/engine/compilers/android-studio/app/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates\\ndkBuild\\release\\lib clean"
+  ],
+  "buildTargetsCommand": "C:\\Users\\Peter\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Application.mk APP_ABI\u003dx86_64 NDK_ALL_ABIS\u003dx86_64 NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-19 NDK_OUT\u003dC:/Users/Peter/Documents/GitHub/GGTorque2D/Torque2D/engine/compilers/android-studio/app/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates\\ndkBuild\\release\\lib {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "torque2d-release-x86_64": {
+      "artifactName": "torque2d",
+      "buildCommand": "C:\\Users\\Peter\\AppData\\Local\\Android\\Sdk\\ndk-bundle\\ndk-build.cmd NDK_PROJECT_PATH\u003dnull APP_BUILD_SCRIPT\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Android.mk NDK_APPLICATION_MK\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\src\\main\\jni\\Application.mk APP_ABI\u003dx86_64 NDK_ALL_ABIS\u003dx86_64 NDK_DEBUG\u003d0 APP_PLATFORM\u003dandroid-19 NDK_OUT\u003dC:/Users/Peter/Documents/GitHub/GGTorque2D/Torque2D/engine/compilers/android-studio/app/build/intermediates/ndkBuild/release/obj NDK_LIBS_OUT\u003dC:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates\\ndkBuild\\release\\lib C:/Users/Peter/Documents/GitHub/GGTorque2D/Torque2D/engine/compilers/android-studio/app/build/intermediates/ndkBuild/release/obj/local/x86_64/libtorque2d.so",
+      "abi": "x86_64",
+      "output": "C:\\Users\\Peter\\Documents\\GitHub\\GGTorque2D\\Torque2D\\engine\\compilers\\android-studio\\app\\build\\intermediates\\ndkBuild\\release\\obj\\local\\x86_64\\libtorque2d.so"
+    }
+  }
+}

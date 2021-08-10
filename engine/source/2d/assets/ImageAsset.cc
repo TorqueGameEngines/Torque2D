@@ -122,7 +122,8 @@ static StringTableEntry cellNameEntryName           = StringTable->insert( "Name
 static EnumTable::Enums textureFilterLookup[] =
                 {
                 { ImageAsset::FILTER_NEAREST,     "NEAREST"     },
-                { ImageAsset::FILTER_BILINEAR,    "BILINEAR"    },
+				{ ImageAsset::FILTER_BILINEAR,    "BILINEAR"    },
+				{ ImageAsset::FILTER_INVALID,    "DEFAULT"    }
                 };
 
 EnumTable textureFilterTable(sizeof(textureFilterLookup) / sizeof(EnumTable::Enums), &textureFilterLookup[0]);
@@ -195,7 +196,7 @@ void ImageAsset::initPersistFields()
 
     // Fields.
     addProtectedField("ImageFile", TypeAssetLooseFilePath, Offset(mImageFile, ImageAsset), &setImageFile, &getImageFile, &defaultProtectedWriteFn, "");
-    addProtectedField("Force16bit", TypeBool, Offset(mForce16Bit, ImageAsset), &setForce16Bit, &defaultProtectedGetFn, &writeForce16Bit, "");
+    addProtectedField("Force16bit", TypeBool, Offset(mForce16Bit, ImageAsset), &setForce16Bit, &defaultProtectedGetFn, &writeForce16Bit, "Forces the image into 16 bit mode.");
     addProtectedField("FilterMode", TypeEnum, Offset(mLocalFilterMode, ImageAsset), &setFilterMode, &defaultProtectedGetFn, &writeFilterMode, 1, &textureFilterTable);   
     addProtectedField("ExplicitMode", TypeBool, Offset(mExplicitMode, ImageAsset), &setExplicitMode, &defaultProtectedGetFn, &writeExplicitMode, "");
 
@@ -323,14 +324,6 @@ void ImageAsset::setFilterMode( const ImageAsset::TextureFilterMode filterMode )
     // Ignore no change,
     if ( filterMode == mLocalFilterMode )
         return;
-
-    // Invalid filter mode?
-    if ( filterMode == FILTER_INVALID )
-    {
-        // Yes, so warn.
-        Con::warnf( "Cannot set an invalid filter mode." );
-        return;
-    }
 
     // Update.
     mLocalFilterMode = filterMode;

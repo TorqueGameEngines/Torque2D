@@ -231,7 +231,7 @@ void GuiFilterCtrl::onRender(Point2I offset, const RectI &updateRect)
       dglDrawRectFill(r, ColorI(255,0,0));
    }
 
-   renderChildControls(offset, updateRect);
+   renderChildControls(offset, mBounds, updateRect);
 }
 
 

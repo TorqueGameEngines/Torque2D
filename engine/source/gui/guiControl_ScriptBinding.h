@@ -108,7 +108,7 @@ ConsoleMethodWithDocs( GuiControl, getValue, ConsoleString, 2, 2, ())
 }
 
 /*! Use the setActive method to (de)activate this control. Once active, a control can accept inputs. Controls automatically re-shade/skin themselves to reflect their active/inactive state.
-    @param isActive A boolean value. f isActive is true, this control is activated, else it is set to inactive.
+    @param isActive A boolean value. If isActive is true, this control is activated, else it is set to inactive.
     @return No return value
 */
 ConsoleMethodWithDocs( GuiControl, setActive, ConsoleVoid, 3, 3, ( isActive ))
@@ -117,7 +117,7 @@ ConsoleMethodWithDocs( GuiControl, setActive, ConsoleVoid, 3, 3, ( isActive ))
 }
 
 /*! Use the isActive method to determine if this control is active.
-    An inactive control may visible, but will not accept inputs. It will also normally re-shade or re-skin itself to reflect its inactive state
+    An inactive control may be visible, but will not accept inputs. It will also normally re-shade or re-skin itself to reflect its inactive state
     @return Returns true if this control is active.
 */
 ConsoleMethodWithDocs( GuiControl, isActive, ConsoleBool, 2, 2, ())
@@ -278,6 +278,7 @@ ConsoleMethodWithDocs( GuiControl, setExtent, ConsoleVoid, 4, 4, (int width, int
 {
    Point2I kExt(dAtoi(argv[2]), dAtoi(argv[3]));
    object->setExtent(kExt);
+   object->resetStoredExtent();
 }
 
 /*! Get the minimum allowed size of the control.
@@ -306,6 +307,51 @@ ConsoleMethodWithDocs( GuiControl, findHitControl, ConsoleInt, 4, 4, (int x, int
 ConsoleMethodWithDocs(GuiControl, setFirstResponder, ConsoleVoid, 2, 2, ())
 {
    object->setFirstResponder();
+}
+
+/*! Simulates a click on the control.
+*/
+ConsoleMethodWithDocs(GuiControl, performClick, ConsoleVoid, 2, 2, ())
+{
+	object->onAction();
+}
+
+/*! Sets the text of the control to the string.
+*/
+ConsoleMethodWithDocs(GuiControl, setText, ConsoleVoid, 3, 3, (text))
+{
+	object->setText(argv[2]);
+}
+
+/*! Sets the text of the control to the localized string.
+*/
+ConsoleMethodWithDocs(GuiControl, setTextID, ConsoleVoid, 3, 3, (id))
+{
+	object->setTextID(argv[2]);
+}
+
+/*! returns the text of the control.
+*/
+ConsoleMethodWithDocs(GuiControl, getText, ConsoleString, 2, 2, ())
+{
+	return object->getText();
+}
+
+/*! Turns on or off text wrap.
+	@param setting True turns on text wrap.
+	@return No return value
+*/
+ConsoleMethodWithDocs(GuiControl, setTextWrap, ConsoleVoid, 3, 3, (setting))
+{
+	object->setTextWrap(dAtob(argv[2]));
+}
+
+/*! Returns if text wrap is on.
+	@return Returns the state of text wrap.
+*/
+ConsoleMethodWithDocs(GuiControl, getTextWrap, ConsoleBool, 2, 2, ())
+{
+	return object->getTextWrap();
 }
 
 ConsoleMethodGroupEndWithDocs(GuiControl)

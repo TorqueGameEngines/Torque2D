@@ -19,7 +19,12 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
+#include "platform/platform.h"
 #include "gui/guiListBoxCtrl.h"
+#include "gui/guiCanvas.h"
+#include <algorithm>
+
+#include "guiListBoxCtrl_ScriptBinding.h"
 
 IMPLEMENT_CONOBJECT(GuiListBoxCtrl);
 
@@ -31,6 +36,11 @@ GuiListBoxCtrl::GuiListBoxCtrl()
    mFitParentWidth = true;
    mItemSize = Point2I(10,20);
    mLastClickItem = NULL;
+   mIsContainer = false;
+   mActive = true;
+   caller = this;
+
+   setField("profile", "GuiListBoxProfile");
 }
 
 GuiListBoxCtrl::~GuiListBoxCtrl()
@@ -56,23 +66,13 @@ bool GuiListBoxCtrl::onWake()
    return true;
 }
 
-//////////////////////////////////////////////////////////////////////////
-// Item Accessors
-//////////////////////////////////////////////////////////////////////////
-ConsoleMethod( GuiListBoxCtrl, setMultipleSelection, void, 3, 3, "(bool setMS) Set the MultipleSelection field.\n"
-              "@return No return value.\n"
-              "@note %listBox.setMultipleSelection([true/false])")
+void GuiListBoxCtrl::addObject(SimObject *obj)
 {
-   object->setMultipleSelection( dAtob( argv[2] ) );
+	AssertWarn(0, "GuiListBoxCtrl::addObject: cannot add children to the GuiListBoxCtrl. It is not a container. Child was not added.");
+	removeObject(obj);
 }
 
-
-ConsoleMethod( GuiListBoxCtrl, clearItems, void, 2, 2, "() Clears all the items in the listbox\n" 
-              "@return No return value.")
-{
-   object->clearItems();
-}
-
+#pragma region ItemAccessors
 void GuiListBoxCtrl::clearItems()
 {
    // Free item list allocated memory
@@ -84,12 +84,6 @@ void GuiListBoxCtrl::clearItems()
    mSelectedItems.clear();
 }
 
-
-ConsoleMethod( GuiListBoxCtrl, clearSelection, void, 2, 2, "() Sets all currently selected items to unselected\n"
-              "@return No return value.")
-{
-   object->clearSelection();
-}
 void GuiListBoxCtrl::clearSelection()
 {
    if( !mSelectedItems.size() )
@@ -100,22 +94,6 @@ void GuiListBoxCtrl::clearSelection()
       (*i)->isSelected = false;
 
    mSelectedItems.clear();
-}
-
-
-ConsoleMethod( GuiListBoxCtrl, setSelected, void, 3, 4, "(S32 index, bool setting) Sets the item at the index specified to selected or not"
-              "@param index The index of the item you wish to modify.\n"
-              "@param setting A boolean value. True sets it as selected; false, not selected.\n"
-              "@return No return value.")
-{
-   bool value = true;
-   if( argc == 4 )
-      value = dAtob( argv[3] );
-
-   if( value == true )
-      object->addSelection( dAtoi( argv[2] ) );
-   else
-      object->removeSelection( dAtoi( argv[2] ) );
 }
 
 void GuiListBoxCtrl::removeSelection( S32 index )
@@ -143,7 +121,7 @@ void GuiListBoxCtrl::removeSelection( LBItem *item, S32 index )
       {
          mSelectedItems.erase( &mSelectedItems[i] );
          item->isSelected = false;
-         Con::executef(this, 3, "onUnSelect", Con::getIntArg( index ), item->itemText);
+         Con::executef(caller, 3, "onUnSelect", Con::getIntArg( index ), item->itemText, item->ID);
          return;
       }
    }
@@ -159,7 +137,6 @@ void GuiListBoxCtrl::addSelection( S32 index )
    }
 
    addSelection( mItems[index], index );
-
 }
 void GuiListBoxCtrl::addSelection( LBItem *item, S32 index )
 {
@@ -189,7 +166,10 @@ void GuiListBoxCtrl::addSelection( LBItem *item, S32 index )
    item->isSelected = true;
    mSelectedItems.push_front( item );
 
-   Con::executef(this, 3, "onSelect", Con::getIntArg( index ), item->itemText);
+   ScrollToIndex(index);
+
+   if(caller->isMethod("onSelect"))
+		Con::executef(caller, 3, "onSelect", Con::getIntArg( index ), item->itemText, item->ID);
 
 }
 
@@ -206,30 +186,16 @@ S32 GuiListBoxCtrl::getItemIndex( LBItem *item )
    return -1;
 }
 
-ConsoleMethod( GuiListBoxCtrl, getItemCount, S32, 2, 2, "()\n @return Returns the number of items in the list")
-{
-   return object->getItemCount();
-}
-
 S32 GuiListBoxCtrl::getItemCount()
 {
    return mItems.size();
 }
 
-ConsoleMethod( GuiListBoxCtrl, getSelCount, S32, 2, 2, "()\n @return Returns the number of items currently selected")
-{
-   return object->getSelCount();
-}
 S32 GuiListBoxCtrl::getSelCount()
 {
    return mSelectedItems.size();
 }
 
-ConsoleMethod( GuiListBoxCtrl, getSelectedItem, S32, 2, 2, "()\n @return Returns the selected items index or -1 if none. "
-              "If multiple selections exist it returns the first selected item" )
-{
-   return object->getSelectedItem();
-}
 S32 GuiListBoxCtrl::getSelectedItem()
 {
    if( mSelectedItems.empty() || mItems.empty() )
@@ -242,33 +208,6 @@ S32 GuiListBoxCtrl::getSelectedItem()
    return -1;
 }
 
-ConsoleMethod( GuiListBoxCtrl, getSelectedItems, const char*, 2, 2, "()\n @return Returns a space delimited list "
-              "of the selected items indexes in the list")
-{
-   S32 selCount = object->getSelCount();
-   if( selCount == -1 || selCount == 0 )
-      return StringTable->lookup("-1");
-   else if( selCount == 1 )
-      return Con::getIntArg(object->getSelectedItem());
-
-   Vector<S32> selItems;
-   object->getSelectedItems( selItems );
-
-   if( selItems.empty() )
-      return StringTable->lookup("-1");
-
-   UTF8 *retBuffer = Con::getReturnBuffer( selItems.size() * 4 );
-   dMemset( retBuffer, 0, selItems.size() * 4 );
-   Vector<S32>::iterator i = selItems.begin();
-   for( ; i != selItems.end(); i++ )
-   {
-      UTF8 retFormat[12];
-      dSprintf( retFormat, 12, "%d ", (*i) );
-      dStrcat( retBuffer, retFormat );
-   }
-
-   return retBuffer;
-}
 void GuiListBoxCtrl::getSelectedItems( Vector<S32> &Items )
 {
    // Clear our return vector
@@ -281,20 +220,6 @@ void GuiListBoxCtrl::getSelectedItems( Vector<S32> &Items )
    for( S32 i = 0; i < mItems.size(); i++ )
       if( mItems[i]->isSelected )
          Items.push_back( i );
-}
-
-ConsoleMethod(GuiListBoxCtrl, findItemText, S32, 3, 4, " (string itemText, bool caseSensitive) Find the item with the given text.\n"
-              "@param itemText The text to search for.\n"
-              "@param caseSensitive Sets whether or not to ignore text in the search.\n"
-              "@return Returns index of item with matching text or -1 if none"
-              "@note %listBox.findItemText( myItemText, [?caseSensitive - false] )")
-{
-   bool bCaseSensitive = false;
-
-   if( argc == 4 )
-      bCaseSensitive = dAtob( argv[3] );
-
-   return object->findItemText( argv[2], bCaseSensitive );
 }
 
 S32 GuiListBoxCtrl::findItemText( StringTableEntry text, bool caseSensitive )
@@ -324,11 +249,18 @@ S32 GuiListBoxCtrl::findItemText( StringTableEntry text, bool caseSensitive )
    return -1;
 }
 
-ConsoleMethod(GuiListBoxCtrl, setCurSel, void, 3, 3, "(index) Sets the currently selected item at the specified index\n"
-              "@return No return value.")
+void GuiListBoxCtrl::setSelectionInternal(StringTableEntry text)
 {
-   object->setCurSel( dAtoi( argv[2] ) );
+	S32 index = findItemText(text);
+	if (index != -1)
+	{
+		mSelectedItems.clear();
+		LBItem *item = mItems[index];
+		item->isSelected = true;
+		mSelectedItems.push_front(item);
+	}
 }
+
 void GuiListBoxCtrl::setCurSel( S32 index )
 {
    // Range Check
@@ -347,20 +279,8 @@ void GuiListBoxCtrl::setCurSel( S32 index )
 
    // Add the selection
    addSelection( mItems[ index ], index );
-
 }
 
-ConsoleMethod( GuiListBoxCtrl, setCurSelRange, void, 3, 4, "(start,[stop]) Sets the current selection range from"
-              "index start to stop.\n"
-              "@param start The start of the selection range.\n"
-              "@param stop The stopping point of the selection range. If no stop is specified it sets from start index to the end of the list\n"
-              "@return No return value.")
-{
-   if( argc == 4 )
-      object->setCurSelRange( dAtoi(argv[2]) , dAtoi( argv[3] ) );
-   else
-      object->setCurSelRange( dAtoi(argv[2]), 999999 );
-}
 void GuiListBoxCtrl::setCurSelRange( S32 start, S32 stop )
 {
    // Verify Selection Range
@@ -381,39 +301,6 @@ void GuiListBoxCtrl::setCurSelRange( S32 start, S32 stop )
       addSelection( mItems[iterStart], iterStart );
 }
 
-
-ConsoleMethod( GuiListBoxCtrl, addItem, void, 3, 4, "(text, [color]) Adds an item to the end of the list with an optional color\n" 
-              "@param text The object text.\n"
-              "@param color Optional color setting.\n"
-              "@return No return value.")
-{
-   if(argc == 3)
-   {
-      object->addItem( argv[2] );
-   } else if(argc == 4)
-   {
-      U32 elementCount = GuiListBoxCtrl::getStringElementCount(argv[3]);
-
-      if(elementCount == 3)
-      {
-         F32 red, green, blue;
-
-         red = dAtof(GuiListBoxCtrl::getStringElement( argv[3], 0 ));
-         green = dAtof(GuiListBoxCtrl::getStringElement( argv[3], 1 ));
-         blue = dAtof(GuiListBoxCtrl::getStringElement( argv[3], 2 ));
-
-         object->addItemWithColor( argv[2], ColorF(red, green, blue) );
-      } 
-     else
-      {
-         Con::warnf("GuiListBoxCtrl::addItem() - Invalid number of parameters for the color!");
-      }
-
-   } else
-   {
-      Con::warnf("GuiListBoxCtrl::addItem() - Invalid number of parameters!");
-   }  
-}
 S32 GuiListBoxCtrl::addItem( StringTableEntry text, void *itemData )
 {
    // This just calls insert item at the end of the list
@@ -426,23 +313,11 @@ S32 GuiListBoxCtrl::addItemWithColor( StringTableEntry text, ColorF color, void 
    return insertItemWithColor( mItems.size(), text, color, itemData );
 }
 
-ConsoleMethod(GuiListBoxCtrl, setItemColor, void, 4, 4, "(index, color) Sets the color of the item at given index.\n"
-              "@param index The index of the item you wish to modify.\n"
-              "@param color The color you wish to set the object to.\n"
-              "@return No return value.")
+S32	GuiListBoxCtrl::addItemWithID(StringTableEntry text, S32 ID, void *itemData)
 {
-   U32 elementCount = GuiListBoxCtrl::getStringElementCount(argv[3]);
-
-   if(elementCount == 3)
-   {
-      F32 red = dAtof(GuiListBoxCtrl::getStringElement( argv[3], 0 ));
-      F32 green = dAtof(GuiListBoxCtrl::getStringElement( argv[3], 1 ));
-      F32 blue = dAtof(GuiListBoxCtrl::getStringElement( argv[3], 2 ));
-
-      object->setItemColor( dAtoi(argv[2]), ColorF(red, green, blue) );
-   }
-   else
-      Con::warnf("GuiListBoxCtrl::addItem() - Invalid number of parameters for the color!");
+	S32 index = insertItem( mItems.size(), text, itemData);
+	setItemID(index, ID);
+	return index;
 }
 
 void GuiListBoxCtrl::setItemColor( S32 index, ColorF color )
@@ -458,31 +333,129 @@ void GuiListBoxCtrl::setItemColor( S32 index, ColorF color )
    item->color = color;
 }
 
-ConsoleMethod(GuiListBoxCtrl, clearItemColor, void, 3, 3, "(index) Clears the color of the item at index.\n"
-              "@param index The index of the item to modify.\n"
-              "@return No return value.")
+void GuiListBoxCtrl::clearItemColor(S32 index)
 {
-   object->clearItemColor(dAtoi(argv[2]));
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemColor - invalid index");
+		return;
+	}
+
+	LBItem* item = mItems[index];
+	item->hasColor = false;
 }
 
-void GuiListBoxCtrl::clearItemColor( S32 index )
+void GuiListBoxCtrl::clearAllColors()
 {
-   if ((index >= mItems.size()) || index < 0)
-   {
-      Con::warnf("GuiListBoxCtrl::setItemColor - invalid index");
-      return;
-   }
+	if (!mSelectedItems.size())
+		return;
 
-   LBItem* item = mItems[index];
-   item->hasColor = false;
+	VectorPtr<LBItem*>::iterator i = mSelectedItems.begin();
+	for (; i != mSelectedItems.end(); i++)
+		(*i)->hasColor = false;
 }
 
-ConsoleMethod( GuiListBoxCtrl, insertItem, void, 4, 4, "( text, index ) Inserts an item into the list at the specified index.\n"
-              "@param text The desired object text.\n"
-              "@param index The index to set the object at.\n"
-              "@return Returns the index assigned or -1 on error")
+ColorF GuiListBoxCtrl::getItemColor(S32 index)
 {
-   object->insertItem( dAtoi( argv[3] ), argv[2] );
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::getItemColor - invalid index");
+		return ColorF(0,0,0,0);
+	}
+
+	LBItem* item = mItems[index];
+	return item->color;
+}
+
+bool GuiListBoxCtrl::getItemHasColor(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::getItemHasColor - invalid index");
+		return false;
+	}
+
+	LBItem* item = mItems[index];
+	return item->hasColor;
+}
+
+void GuiListBoxCtrl::setItemID(S32 index, S32 ID)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemID - invalid index");
+		return;
+	}
+
+	LBItem* item = mItems[index];
+	item->ID = ID;
+}
+
+S32 GuiListBoxCtrl::getItemID(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemID - invalid index");
+		return 0;
+	}
+
+	LBItem* item = mItems[index];
+	return item->ID;
+}
+
+S32 GuiListBoxCtrl::findItemID(S32 ID)
+{
+	// Check Items Exist.
+	if (mItems.empty())
+		return -1;
+
+	// Lookup the index of an item in our list, by the pointer to the item
+	for (S32 i = 0; i < mItems.size(); i++)
+	{
+		if (mItems[i]->ID == ID)
+		{
+			return i;
+		}
+	}
+
+	// Not Found!
+	return -1;
+}
+
+void GuiListBoxCtrl::setItemActive(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemActive - invalid index");
+		return;
+	}
+
+	LBItem* item = mItems[index];
+	item->isActive = true;
+}
+
+void GuiListBoxCtrl::setItemInactive(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::setItemInactive - invalid index");
+		return;
+	}
+
+	LBItem* item = mItems[index];
+	item->isActive = false;
+}
+
+bool GuiListBoxCtrl::getItemActive(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiListBoxCtrl::getItemActive - invalid index");
+		return true;
+	}
+
+	LBItem* item = mItems[index];
+	return item->isActive;
 }
 
 S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData )
@@ -506,10 +479,12 @@ S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData
    }
 
    // Assign item data
-   newItem->itemText    = StringTable->insert(text);
-   newItem->itemData    = itemData;
-   newItem->isSelected  = false;
-   newItem->hasColor    = false;
+   newItem->itemText = StringTable->insert(text, true);
+   newItem->isSelected = false;
+   newItem->isActive = true;
+   newItem->ID = 0;
+   newItem->itemData = itemData;
+   newItem->hasColor = false;
 
    // Add to list
    mItems.insert(index);
@@ -520,59 +495,25 @@ S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData
 
    // Return our index in list (last)
    return index;
-
 }
 
 S32 GuiListBoxCtrl::insertItemWithColor( S32 index, StringTableEntry text, ColorF color, void *itemData )
 {
-   // If the index is greater than our list size, insert it at the end
-   if( index >= mItems.size() )
-      index = mItems.size();
+	if( color == ColorF(-1, -1, -1) )
+	{
+		Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL color" );
+			return -1;
+	}
 
-   // Sanity checking
-   if( !text )
-   {
-      Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL string" );
-      return -1;
-   }
+	index = insertItem(index, text, itemData);
 
-   if( color == ColorF(-1, -1, -1) )
-   {
-      Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL color" );
-      return -1;
-   }
+	if(index != -1)
+	{
+		setItemColor(index, color);
+	}
 
-   LBItem *newItem = new LBItem;
-   if( !newItem )
-   {
-      Con::warnf("GuiListBoxCtrl::insertItem - error allocating item memory!" );
-      return -1;
-   }
-
-   // Assign item data
-   newItem->itemText    = StringTable->insert(text);
-   newItem->itemData    = itemData;
-   newItem->isSelected  = false;
-   newItem->hasColor    = true;
-   newItem->color       = color;
-
-   // Add to list
-   mItems.insert(index);
-   mItems[index] = newItem;
-
-   // Resize our list to fit our items
-   updateSize();
-
-   // Return our index in list (last)
-   return index;
-
-}
-
-ConsoleMethod ( GuiListBoxCtrl, deleteItem, void, 3, 3, "(index) Deletes the item at the given index.\n"
-               "@param index The index of the item to delete.\n"
-               "@return No return value.")
-{
-   object->deleteItem( dAtoi( argv[2] ) );
+	// Return our index in list (last)
+	return index;
 }
 
 void  GuiListBoxCtrl::deleteItem( S32 index )
@@ -612,12 +553,6 @@ void  GuiListBoxCtrl::deleteItem( S32 index )
    delete item;
 }
 
-
-ConsoleMethod( GuiListBoxCtrl, getItemText, const char*, 3, 3, "(index) \n @return Returns the text of the item at the specified index")
-{
-   return object->getItemText( dAtoi( argv[2] ) );
-}
-
 StringTableEntry GuiListBoxCtrl::getItemText( S32 index )
 {
    // Range Checking
@@ -630,14 +565,6 @@ StringTableEntry GuiListBoxCtrl::getItemText( S32 index )
    return mItems[ index ]->itemText;   
 }
 
-
-ConsoleMethod( GuiListBoxCtrl, setItemText, void, 4, 4, "(index, newtext) Sets the item's text at the specified index\n"
-              "@param index The index of the item to modify.\n"
-              "@param newtext The new text to set to the object.\n"
-              "@return No return value.")
-{
-   object->setItemText( dAtoi( argv[2] ), argv[3] );
-}
 void GuiListBoxCtrl::setItemText( S32 index, StringTableEntry text )
 {
    // Sanity Checking
@@ -655,20 +582,18 @@ void GuiListBoxCtrl::setItemText( S32 index, StringTableEntry text )
 
    mItems[ index ]->itemText = StringTable->insert( text );
 }
-//////////////////////////////////////////////////////////////////////////
-// Sizing Functions
-//////////////////////////////////////////////////////////////////////////
+#pragma endregion
+
+#pragma region Sizing
 void GuiListBoxCtrl::updateSize()
 {
-   if( !mProfile )
+   if( !mProfile || !mProfile->mFont )
       return;
 
    GFont *font = mProfile->mFont;
-   GuiScrollCtrl* parent = dynamic_cast<GuiScrollCtrl *>(getParent());
+   Point2I contentSize = Point2I(10, font->getHeight() + 2);
 
-   if ( mFitParentWidth && parent )
-      mItemSize.x = parent->getContentExtent().x;
-   else
+   if (!mFitParentWidth)
    {
       // Find the maximum width cell:
       S32 maxWidth = 1;
@@ -678,14 +603,19 @@ void GuiListBoxCtrl::updateSize()
          if( width > maxWidth )
             maxWidth = width;
       }
-      mItemSize.x = maxWidth + 6;
+      contentSize.x = maxWidth + 6;
    }
 
-   mItemSize.y = font->getHeight() + 2;
+   mItemSize = this->getOuterExtent(contentSize, NormalState, mProfile);
+   Point2I newExtent = Point2I(mItemSize.x, mItemSize.y * mItems.size());
 
-   Point2I newExtent( mItemSize.x, mItemSize.y * mItems.size() );
+   //Don't update the extent.x if we are matching our parent's size. We will handle it during rendering.
+   if (mFitParentWidth)
+   {
+	   newExtent.x = mBounds.extent.x;
+   }
+
    resize( mBounds.point, newExtent );
-
 }
 
 void GuiListBoxCtrl::parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent)
@@ -694,93 +624,127 @@ void GuiListBoxCtrl::parentResized(const Point2I &oldParentExtent, const Point2I
 
    updateSize();
 }
+#pragma endregion
 
-//////////////////////////////////////////////////////////////////////////
-// Overrides
-//////////////////////////////////////////////////////////////////////////
+#pragma region Rendering
 void GuiListBoxCtrl::onRender( Point2I offset, const RectI &updateRect )
 {
-   RectI clipRect(updateRect.point, updateRect.extent);
+	RectI clip = dglGetClipRect();
+	if (mFitParentWidth && ( mBounds.extent.x != clip.extent.x || mItemSize.x != clip.extent.x))
+	{
+		mBounds.extent.x = clip.extent.x;
+		mItemSize.x = clip.extent.x;
+	}
 
-   if( !mProfile )
-      return;
 
-   // Save our original clip rect
-   RectI oldClipRect = clipRect;
+	for ( S32 i = 0; i < mItems.size(); i++)
+	{
+		// Only render visible items
+		if ((i + 1) * mItemSize.y + offset.y < updateRect.point.y)
+		continue;
 
-   for ( S32 i = 0; i < mItems.size(); i++)
+		// Break out once we're no longer in visible item range
+		if( i * mItemSize.y + offset.y >= updateRect.point.y + updateRect.extent.y)
+		break;
+
+		RectI itemRect = RectI( offset.x, offset.y + ( i * mItemSize.y ), mItemSize.x, mItemSize.y );
+
+		// Render our item
+		onRenderItem( itemRect, mItems[i] );
+	}
+}
+
+void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
+{
+   Point2I cursorPt = Point2I(0,0);
+   GuiCanvas *root = getRoot();
+   if (root)
    {
-      S32 colorBoxSize = 0;
-      ColorI boxColor = ColorI(0, 0, 0);
-      // Only render visible items
-      if ((i + 1) * mItemSize.y + offset.y < updateRect.point.y)
-         continue;
+	   cursorPt = root->getCursorPos();
+   }
+   GuiControlState currentState = GuiControlState::NormalState;
+   if (!mActive || !item->isActive)
+	   currentState = GuiControlState::DisabledState;
+   else if (item->isSelected)
+	   currentState = GuiControlState::SelectedState;
+   else if (itemRect.pointInRect(cursorPt))
+	   currentState = GuiControlState::HighlightState;
+   RectI ctrlRect = applyMargins(itemRect.point, itemRect.extent, currentState, mProfile);
 
-      // Break our once we're no longer in visible item range
-      if( i * mItemSize.y + offset.y >= updateRect.point.y + updateRect.extent.y)
-         break;
-
-      // Render color box if needed
-      if(mItems[i]->hasColor)
-      {
-         // Set the size of the color box to be drawn next to the item text
-         colorBoxSize = 3;
-         boxColor = ColorI(mItems[i]->color);
-         // Draw the box first
-         ColorI black = ColorI(0, 0, 0);
-         drawBox(  Point2I(offset.x + mProfile->mTextOffset.x + colorBoxSize, offset.y + ( i * mItemSize.y ) + 8), colorBoxSize, black, boxColor );
-      }
-
-      RectI itemRect = RectI( offset.x + mProfile->mTextOffset.x + (colorBoxSize * 2), offset.y + ( i * mItemSize.y ), mItemSize.x, mItemSize.y );
-
-      // Render our item
-      onRenderItem( itemRect, mItems[i] );
+   if (!ctrlRect.isValidRect())
+   {
+	   return;
    }
 
-   dglSetClipRect( oldClipRect );
+   renderUniversalRect(ctrlRect, mProfile, currentState);
+
+   //Render Text
+   dglSetBitmapModulation(mProfile->getFontColor(currentState));
+   RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
+   RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
+
+   // Render color bullet if needed
+   if (item->hasColor)
+   {
+	   RectI drawArea = RectI(contentRect.point.x, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
+	   renderColorBullet(drawArea, ColorI(item->color), 5);
+
+	   contentRect.point.x += contentRect.extent.y;
+	   contentRect.extent.x -= contentRect.extent.y;
+   }
+
+   renderText(contentRect.point, contentRect.extent, item->itemText, mProfile);
 }
 
-void GuiListBoxCtrl::onRenderItem( RectI itemRect, LBItem *item )
+void GuiListBoxCtrl::ScrollToIndex(const S32 targetIndex)
 {
-   if( item->isSelected )
-      dglDrawRectFill( itemRect, mProfile->mFillColor );
-
-   dglSetBitmapModulation(mProfile->mFontColor);
-   renderJustifiedText(itemRect.point + Point2I( 2, 0 ), itemRect.extent, item->itemText);
+	GuiScrollCtrl* parent = dynamic_cast<GuiScrollCtrl *>(getParent());
+	if (parent)
+		parent->scrollRectVisible(RectI(0, mItemSize.y * targetIndex, mItemSize.x, mItemSize.y));
 }
+#pragma endregion
 
-void GuiListBoxCtrl::drawBox(const Point2I &box, S32 size, ColorI &outlineColor, ColorI &boxColor)
+#pragma region InputEvents
+void GuiListBoxCtrl::onTouchDragged(const GuiEvent &event)
 {
-   RectI r(box.x - size, box.y - size, 2 * size + 1, 2 * size + 1);
-   r.inset(1, 1);
-   dglDrawRectFill(r, boxColor);
-   r.inset(-1, -1);
-   dglDrawRect(r, outlineColor);
-}
+	if (!mActive)
+	{
+		return;
+	}
 
-//////////////////////////////////////////////////////////////////////////
-// Mouse Events
-//////////////////////////////////////////////////////////////////////////
+   Parent::onTouchDragged(event);
 
-void GuiListBoxCtrl::onMouseDragged(const GuiEvent &event)
-{
-   Parent::onMouseDragged(event);
-
-   if(isMethod("onMouseDragged"))
-      Con::executef(this, 1, "onMouseDragged");
-}
-
-void GuiListBoxCtrl::onMouseDown( const GuiEvent &event )
-{
    Point2I localPoint = globalToLocalCoord(event.mousePoint);
-   
+   S32 itemHit = (localPoint.y < 0) ? -1 : (S32)mFloor((F32)localPoint.y / (F32)mItemSize.y);
+
+   if (itemHit >= mItems.size() || itemHit == -1)
+	   return;
+
+   LBItem *hitItem = mItems[itemHit];
+   if (hitItem == NULL || !hitItem->isActive)
+	   return;
+
+   if(caller->isMethod("onTouchDragged"))
+      Con::executef(caller, 3, "onTouchDragged", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
+}
+
+void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
+{
+	if (!mActive)
+	{
+		return;
+	}
+
+	setFirstResponder();
+
+   Point2I localPoint = globalToLocalCoord(event.mousePoint);
    S32 itemHit = ( localPoint.y < 0 ) ? -1 : (S32)mFloor( (F32)localPoint.y / (F32)mItemSize.y );
 
    if ( itemHit >= mItems.size() || itemHit == -1 )
       return;
 
    LBItem *hitItem = mItems[ itemHit ];
-   if ( hitItem == NULL )
+   if ( hitItem == NULL || !hitItem->isActive)
       return;
 
    // If we're not a multiple selection listbox, we simply select/unselect an item
@@ -795,18 +759,20 @@ void GuiListBoxCtrl::onMouseDown( const GuiEvent &event )
       // Set the current selection
       setCurSel( itemHit );
 
-      if( itemHit == selItem && event.mouseClickCount == 2 && isMethod("onDoubleClick") )
-         Con::executef( this, 2, "onDoubleClick" );
+		if( itemHit == selItem && event.mouseClickCount == 2)
+		{
+			if(caller->isMethod("onDoubleClick") )
+				Con::executef(caller, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
+		}
+		else if (caller->isMethod("onClick"))
+		{
+			Con::executef(caller, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
+		}
 
       // Store the clicked item
       mLastClickItem = hitItem;
 
-      // Evaluate the console command if we clicked the same item twice
-      if( selItem == itemHit && event.mouseClickCount > 1 && mAltConsoleCommand[0] )
-         Con::evaluate( mAltConsoleCommand, false );
-
       return;
-
    }
    
    // Deal with multiple selections
@@ -841,214 +807,91 @@ void GuiListBoxCtrl::onMouseDown( const GuiEvent &event )
       addSelection( hitItem, itemHit );
    }
 
-   if( hitItem == mLastClickItem && event.mouseClickCount == 2 && isMethod("onDoubleClick") )
-      Con::executef( this, 2, "onDoubleClick" );
+   if( hitItem == mLastClickItem && event.mouseClickCount == 2)
+   {
+		if(caller->isMethod("onDoubleClick") )
+			Con::executef(caller, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
+	}
+   else if (caller->isMethod("onClick"))
+   {
+	   Con::executef(caller, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
+   }
 
    mLastClickItem = hitItem;
-
-
 }
 
-U32 GuiListBoxCtrl::getStringElementCount( const char* inString )
+bool GuiListBoxCtrl::onKeyDown(const GuiEvent &event)
 {
-    // Non-whitespace chars.
-    static const char* set = " \t\n";
+	//if this control is a dead end, make sure the event stops here
+	if (!mVisible || !mActive || !mAwake || mItems.size() == 0)
+		return true;
 
-    // End of string.
-    if ( *inString == 0 )
-        return 0;
-
-    U32 wordCount = 0;
-    U8 search = 0;
-
-    // Search String.
-    while( *inString )
-    {
-        // Get string element.
-        search = *inString;
-
-        // End of string?
-        if ( search == 0 )
-            break;
-
-        // Move to next element.
-        inString++;
-
-        // Search for seperators.
-        for( U32 i = 0; set[i]; i++ )
-        {
-            // Found one?
-            if( search == set[i] )
-            {
-                // Yes...
-                search = 0;
-                break;
-            }   
-        }
-
-        // Found a seperator?
-        if ( search == 0 )
-            continue;
-
-        // We've found a non-seperator.
-        wordCount++;
-
-        // Search for end of non-seperator.
-        while( 1 )
-        {
-            // Get string element.
-            search = *inString;
-
-            // End of string?
-            if ( search == 0 )
-                break;
-
-            // Move to next element.
-            inString++;
-
-            // Search for seperators.
-            for( U32 i = 0; set[i]; i++ )
-            {
-                // Found one?
-                if( search == set[i] )
-                {
-                    // Yes...
-                    search = 0;
-                    break;
-                }   
-            }
-
-            // Found Seperator?
-            if ( search == 0 )
-                break;
-        }
-
-        // End of string?
-        if ( *inString == 0 )
-        {
-            // Bah!
-            break;
-        }
-    }
-
-    // We've finished.
-    return wordCount;
+	S32 index = getSelectedItem();
+	switch (event.keyCode)
+	{
+	case KEY_RETURN:
+		if (mAltConsoleCommand[0])
+			Con::evaluate(mAltConsoleCommand, false);
+		break;
+	case KEY_LEFT:
+	case KEY_UP:
+		if (index == -1)
+		{
+			//Select the bottom item
+			addSelection(mItems.size() - 1);
+		}
+		else if(index != 0)
+		{
+			addSelection(index - 1);
+		}
+		break;
+	case KEY_DOWN:
+	case KEY_RIGHT:
+		if (index == -1)
+		{
+			//Select the top item
+			addSelection(0);
+		}
+		else if (index != (mItems.size() - 1))
+		{
+			addSelection(index + 1);
+		}
+		break;
+	case KEY_HOME:
+		addSelection(0);
+		break;
+	case KEY_END:
+		addSelection(mItems.size() - 1);
+		break;
+	case KEY_DELETE:
+		if (index != -1 && isMethod("onDeleteKey"))
+			Con::executef(caller, 3, "onDeleteKey", Con::getIntArg(index), getItemText(index), getItemID(index));
+		break;
+	default:
+		return(Parent::onKeyDown(event));
+		break;
+	};
 }
+#pragma endregion
 
-//------------------------------------------------------------------------------
-// Get String Element.
-//------------------------------------------------------------------------------
-const char* GuiListBoxCtrl::getStringElement( const char* inString, const U32 index )
+#pragma region sorting
+bool GuiListBoxCtrl::LBItem::sIncreasing = true;
+
+void GuiListBoxCtrl::sortByText(bool increasing)
 {
-    // Non-whitespace chars.
-    static const char* set = " \t\n";
+	if (mItems.size() < 2)
+		return;
 
-    U32 wordCount = 0;
-    U8 search = 0;
-    const char* pWordStart = NULL;
-
-    // End of string?
-    if ( *inString != 0 )
-    {
-        // No, so search string.
-        while( *inString )
-        {
-            // Get string element.
-            search = *inString;
-
-            // End of string?
-            if ( search == 0 )
-                break;
-
-            // Move to next element.
-            inString++;
-
-            // Search for seperators.
-            for( U32 i = 0; set[i]; i++ )
-            {
-                // Found one?
-                if( search == set[i] )
-                {
-                    // Yes...
-                    search = 0;
-                    break;
-                }   
-            }
-
-            // Found a seperator?
-            if ( search == 0 )
-                continue;
-
-            // Found are word?
-            if ( wordCount == index )
-            {
-                // Yes, so mark it.
-                pWordStart = inString-1;
-            }
-
-            // We've found a non-seperator.
-            wordCount++;
-
-            // Search for end of non-seperator.
-            while( 1 )
-            {
-                // Get string element.
-                search = *inString;
-
-                // End of string?
-                if ( search == 0 )
-                    break;
-
-                // Move to next element.
-                inString++;
-
-                // Search for seperators.
-                for( U32 i = 0; set[i]; i++ )
-                {
-                    // Found one?
-                    if( search == set[i] )
-                    {
-                        // Yes...
-                        search = 0;
-                        break;
-                    }   
-                }
-
-                // Found Seperator?
-                if ( search == 0 )
-                    break;
-            }
-
-            // Have we found our word?
-            if ( pWordStart )
-            {
-                // Yes, so we've got our word...
-
-                // Result Buffer.
-                static char buffer[4096];
-
-                // Calculate word length.
-                const U32 length = (const U32)(inString - pWordStart - ((*inString)?1:0));
-
-                // Copy Word.
-                dStrncpy( buffer, pWordStart, length);
-                buffer[length] = '\0';
-
-                // Return Word.
-                return buffer;
-            }
-
-            // End of string?
-            if ( *inString == 0 )
-            {
-                // Bah!
-                break;
-            }
-        }
-    }
-
-    // Sanity!
-    AssertFatal( false, "SceneObject::getStringElement() - Couldn't find specified string element!" );
-    // Didn't find it
-    return " ";
+	LBItem::sIncreasing = increasing;
+	std::sort(mItems.begin(), mItems.end(), LBItem::compByText);
 }
+
+void GuiListBoxCtrl::sortByID(bool increasing)
+{
+	if (mItems.size() < 2)
+		return;
+
+	LBItem::sIncreasing = increasing;
+	std::sort(mItems.begin(), mItems.end(), LBItem::compByID);
+}
+#pragma endregion

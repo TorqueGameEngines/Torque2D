@@ -1,0 +1,217 @@
+%guiContent = new GuiControl(GuiToolboxGui) {
+    position = "0 0";
+    extent = "1024 768";
+    minExtent = "8 2";
+    horizSizing = "right";
+    vertSizing = "bottom";
+    profile = "GuiDefaultProfile";
+    visible = "1";
+    active = "1";
+    tooltipProfile = "GuiToolTipProfile";
+    hovertime = "1000";
+    isContainer = "1";
+    canSave = "1";
+    canSaveDynamicFields = "1";
+
+	new GuiWindowCtrl(GuiToolbox) {
+		canSaveDynamicFields = "0";
+		internalName = "toolbox";
+		isContainer = "1";
+		Profile = "GuiWindowProfile";
+		ContentProfile = "GuiWindowContentProfile";
+		CloseButtonProfile = "GuiWindowCloseButtonProfile";
+		MinButtonProfile = "GuiWindowMinButtonProfile";
+		MaxButtonProfile = "GuiWindowMaxButtonProfile";
+		titleHeight = "20";
+		HorizSizing = "left";
+		VertSizing = "bottom";
+		position = "640 40";
+		Extent = "220 380";
+		MinExtent = "100 100";
+		canSave = "1";
+		Visible = "1";
+		hovertime = "1000";
+		text = "GUI Toolbox";
+		resizeWidth = "3";
+		resizeHeight = "3";
+		canMove = "1";
+		canClose = "0";
+		canMinimize = "1";
+		canMaximize = "0";
+
+		new GuiScrollCtrl() {
+            canSaveDynamicFields = "0";
+            isContainer = "1";
+            Profile="GuiTransparentScrollProfile";
+			ThumbProfile = "GuiScrollThumbProfile";
+			TrackProfile = "GuiScrollTrackProfile";
+			ArrowProfile = "GuiScrollArrowProfile";
+            HorizSizing = "width";
+            VertSizing = "height";
+            position = "0 0";
+            Extent = "214 357";
+            MinExtent = "8 2";
+            canSave = "1";
+            Visible = "1";
+            hovertime = "1000";
+            willFirstRespond = "1";
+            hScrollBar = "alwaysOff";
+            vScrollBar = "dynamic";
+			constantThumbHeight="0";
+			showArrowButtons="0";
+			scrollBarThickness="14";
+
+			new GuiListBoxCtrl() {
+				canSaveDynamicFields = "0";
+				internalName = "toolboxList";
+				superclass = "GuiEditorToolboxDrag";
+				isContainer = "0";
+				Profile = "GuiListBoxProfile";
+				HorizSizing = "width";
+				VertSizing = "height";
+				position = "0 0";
+				Extent = "218 1260";
+				MinExtent = "8 2";
+				canSave = "1";
+				Visible = "1";
+				hovertime = "1000";
+				AllowMultipleSelections = "0";
+				fitParentWidth = "1";
+			};
+		};
+	};
+
+	new GuiWindowCtrl(GuiInspectorWindow) {
+		canSaveDynamicFields = "0";
+		isContainer = "1";
+		Profile = "GuiWindowProfile";
+		ContentProfile = "GuiWindowContentProfile";
+		CloseButtonProfile = "GuiWindowCloseButtonProfile";
+		MinButtonProfile = "GuiWindowMinButtonProfile";
+		MaxButtonProfile = "GuiWindowMaxButtonProfile";
+		titleHeight = "20";
+		HorizSizing = "left";
+		VertSizing = "bottom";
+		position = "60 40";
+		Extent = "360 380";
+		MinExtent = "100 100";
+		canSave = "1";
+		Visible = "1";
+		hovertime = "1000";
+		text = "GUI Inspector";
+		maxLength = "1024";
+		resizeWidth = "1";
+		resizeHeight = "1";
+		canMove = "1";
+		canClose = "0";
+		canMinimize = "1";
+		canMaximize = "0";
+		minSize = "50 50";
+
+		new GuiScrollCtrl() {
+            canSaveDynamicFields = "0";
+            isContainer = "1";
+            Profile="GuiTransparentScrollProfile";
+			ThumbProfile = "GuiScrollThumbProfile";
+			TrackProfile = "GuiScrollTrackProfile";
+			ArrowProfile = "GuiScrollArrowProfile";
+            HorizSizing = "width";
+            VertSizing = "height";
+            position = "0 0";
+            Extent = "354 357";
+            MinExtent = "8 2";
+            canSave = "1";
+            Visible = "1";
+            hovertime = "1000";
+            willFirstRespond = "1";
+            hScrollBar = "alwaysOff";
+            vScrollBar = "alwaysOn";
+			constantThumbHeight="0";
+			showArrowButtons="0";
+			scrollBarThickness="14";
+
+			new GuiChainCtrl(GuiEditorCtrlProperties) {
+                isContainer = "1";
+                Position = "0 0";
+                Extent = "340 40";
+				HorizSizing = "width";
+				VertSizing = "height";
+            };
+		};
+	};
+
+	new GuiWindowCtrl(GuiTreeViewWindow) {
+		canSaveDynamicFields = "0";
+		isContainer = "1";
+		Profile = "GuiWindowProfile";
+		ContentProfile = "GuiWindowContentProfile";
+		CloseButtonProfile = "GuiWindowCloseButtonProfile";
+		MinButtonProfile = "GuiWindowMinButtonProfile";
+		MaxButtonProfile = "GuiWindowMaxButtonProfile";
+		titleHeight = "20";
+		HorizSizing = "left";
+		VertSizing = "bottom";
+		position = "360 40";
+		Extent = "220 380";
+		MinExtent = "100 100";
+		canSave = "1";
+		Visible = "1";
+		hovertime = "1000";
+		text = "Current GUI";
+		maxLength = "1024";
+		resizeWidth = "1";
+		resizeHeight = "1";
+		canMove = "1";
+		canClose = "0";
+		canMinimize = "1";
+		canMaximize = "0";
+		minSize = "50 50";
+
+		new GuiScrollCtrl() {
+            canSaveDynamicFields = "0";
+            isContainer = "1";
+            Profile="GuiTransparentScrollProfile";
+			ThumbProfile = "GuiScrollThumbProfile";
+			TrackProfile = "GuiScrollTrackProfile";
+			ArrowProfile = "GuiScrollArrowProfile";
+            HorizSizing = "width";
+            VertSizing = "height";
+            position = "0 0";
+            Extent = "214 357";
+            MinExtent = "8 2";
+            canSave = "1";
+            Visible = "1";
+            hovertime = "1000";
+            willFirstRespond = "1";
+            hScrollBar = "alwaysOff";
+            vScrollBar = "alwaysOn";
+			constantThumbHeight="0";
+			showArrowButtons="0";
+			scrollBarThickness="14";
+
+			new GuiTreeViewCtrl(GuiEditorTreeView) {
+               canSaveDynamicFields = "0";
+               isContainer = "1";
+               Profile = "GuiTreeViewProfile";
+               HorizSizing = "width";
+               VertSizing = "height";
+               Position = "1 1";
+               Extent = "200 20";
+               MinExtent = "8 2";
+               canSave = "1";
+               Visible = "1";
+               hovertime = "1000";
+               tabSize = "16";
+               textOffset = "2";
+               fullRowSelect = "0";
+               itemHeight = "21";
+               destroyTreeOnSleep = "1";
+               MouseDragging = "1";
+               MultipleSelections = "1";
+               DeleteObjectAllowed = "1";
+               DragToItemAllowed = "1";
+            };
+		};
+	};
+
+};

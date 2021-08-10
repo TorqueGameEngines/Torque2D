@@ -278,14 +278,9 @@ SET(T2D_SRCS
 	../../source/graphics/TextureDictionary.cc
 	../../source/graphics/TextureHandle.cc
 	../../source/graphics/TextureManager.cc
-	../../source/gui/buttons/guiBitmapButtonCtrl.cc
-	../../source/gui/buttons/guiBorderButton.cc
-	../../source/gui/buttons/guiButtonBaseCtrl.cc
 	../../source/gui/buttons/guiButtonCtrl.cc
 	../../source/gui/buttons/guiCheckBoxCtrl.cc
-	../../source/gui/buttons/guiIconButtonCtrl.cc
 	../../source/gui/buttons/guiRadioCtrl.cc
-	../../source/gui/buttons/guiToolboxButtonCtrl.cc
 	../../source/gui/containers/guiAutoScrollCtrl.cc
 	../../source/gui/containers/guiCtrlArrayCtrl.cc
 	../../source/gui/containers/guiDragAndDropCtrl.cc

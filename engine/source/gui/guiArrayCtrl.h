@@ -26,18 +26,17 @@
 #ifndef _GUITYPES_H_
 #include "gui/guiTypes.h"
 #endif
-#ifndef _GUITEXTCTRL_H_
-#include "gui/guiTextCtrl.h"
+#ifndef _GUISCROLLCTRL_H_
+#include "gui/containers/guiScrollCtrl.h"
 #endif
 
-/// Renders a grid of cells.
+/// Renders a grid of cells. Gives common functionality to a few controls that inherit from it, but has no conObject.
 class GuiArrayCtrl : public GuiControl
 {
    typedef GuiControl Parent;
 
 protected:
 
-   Point2I mHeaderDim;
    Point2I mSize;
    Point2I mCellSize;
    Point2I mSelectedCell;
@@ -51,7 +50,6 @@ protected:
 public:
 
    GuiArrayCtrl();
-   DECLARE_CONOBJECT(GuiArrayCtrl);
 
    bool onWake();
    void onSleep();
@@ -60,7 +58,6 @@ public:
    /// @{
    Point2I getSize() { return mSize; }
    virtual void setSize(Point2I size);
-   void setHeaderDim(const Point2I &dim) { mHeaderDim = dim; }
    void getScrollDimensions(S32 &cell_size, S32 &num_cells);
    /// @}
 
@@ -75,19 +72,17 @@ public:
 
    /// @name Rendering methods
    /// @{
-   virtual void onRenderColumnHeaders(Point2I offset, Point2I parentOffset, Point2I headerDim);
-   virtual void onRenderRowHeader(Point2I offset, Point2I parentOffset, Point2I headerDim, Point2I cell);
-   virtual void onRenderCell(Point2I offset, Point2I cell, bool selected, bool mouseOver);
+   virtual void onRenderCell(Point2I offset, Point2I cell, bool selected, bool mouseOver) = 0;
    void onRender(Point2I offset, const RectI &updateRect);
    /// @}
 
    /// @name Mouse input methods
    /// @{
-   void onMouseDown(const GuiEvent &event);
-   void onMouseMove(const GuiEvent &event);
-   void onMouseDragged(const GuiEvent &event);
-   void onMouseEnter(const GuiEvent &event);
-   void onMouseLeave(const GuiEvent &event);
+   void onTouchDown(const GuiEvent &event);
+   void onTouchMove(const GuiEvent &event);
+   void onTouchDragged(const GuiEvent &event);
+   void onTouchEnter(const GuiEvent &event);
+   void onTouchLeave(const GuiEvent &event);
    bool onKeyDown(const GuiEvent &event);
    void onRightMouseDown(const GuiEvent &event);
    /// @}

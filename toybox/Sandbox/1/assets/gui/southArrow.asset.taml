@@ -1,0 +1,7 @@
+<ImageAsset
+    AssetName="southArrow"
+    ImageFile="southArrow"
+	CellCountX="1"
+	CellCountY="3"
+	CellWidth="69"
+	CellHeight="23" />

@@ -1,0 +1,7 @@
+<ImageAsset
+    AssetName="seahorse"
+    ImageFile="seahorse.png"
+    CellCountX="4"
+    CellCountY="1"
+    CellWidth="128"
+    CellHeight="256" />

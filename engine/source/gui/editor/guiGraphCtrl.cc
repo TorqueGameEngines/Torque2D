@@ -71,11 +71,11 @@ bool GuiGraphCtrl::onWake()
 
 void GuiGraphCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-	if (mProfile->mBorder)
+	/*if (mProfile->mBorder)
 	{
 		RectI rect(offset.x, offset.y, mBounds.extent.x, mBounds.extent.y);
 		dglDrawRect(rect, mProfile->mBorderColor);
-	}
+	}*/
 
 	glBlendFunc(GL_SRC_COLOR, GL_ONE_MINUS_SRC_COLOR);
 	glEnable(GL_BLEND);
