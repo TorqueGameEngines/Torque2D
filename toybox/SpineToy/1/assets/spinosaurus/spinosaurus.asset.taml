@@ -1,0 +1,4 @@
+<SkeletonAsset
+        AssetName="spinosaurus"
+		AtlasFile="spinosaurus.atlas"
+        SkeletonFile="spinosaurus.json"/>

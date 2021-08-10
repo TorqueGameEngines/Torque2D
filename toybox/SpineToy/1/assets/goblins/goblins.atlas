@@ -1,0 +1,284 @@
+goblins.png
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+gg-left-upper-leg
+  rotate: false
+  xy: 26, 300
+  size: 33, 70
+  orig: 33, 70
+  offset: 0, 0
+  index: -1
+undies
+  rotate: false
+  xy: 59, 477
+  size: 36, 29
+  orig: 36, 29
+  offset: 0, 0
+  index: -1
+gg-left-foot
+  rotate: false
+  xy: 164, 207
+  size: 65, 31
+  orig: 65, 31
+  offset: 0, 0
+  index: -1
+gg-torso
+  rotate: false
+  xy: 59, 153
+  size: 68, 96
+  orig: 68, 96
+  offset: 0, 0
+  index: -1
+gg-head
+  rotate: false
+  xy: 59, 2
+  size: 103, 81
+  orig: 103, 81
+  offset: 0, 0
+  index: -1
+gg-dagger
+  rotate: false
+  xy: 2, 372
+  size: 26, 108
+  orig: 26, 108
+  offset: 0, 0
+  index: -1
+gg-right-upper-leg
+  rotate: false
+  xy: 135, 443
+  size: 34, 63
+  orig: 34, 63
+  offset: 0, 0
+  index: -1
+torso
+  rotate: false
+  xy: 164, 76
+  size: 68, 96
+  orig: 68, 96
+  offset: 0, 0
+  index: -1
+left-shoulder
+  rotate: false
+  xy: 26, 2
+  size: 29, 44
+  orig: 29, 44
+  offset: 0, 0
+  index: -1
+gg-right-hand
+  rotate: false
+  xy: 215, 394
+  size: 36, 37
+  orig: 36, 37
+  offset: 0, 0
+  index: -1
+right-upper-leg
+  rotate: false
+  xy: 103, 378
+  size: 34, 63
+  orig: 34, 63
+  offset: 0, 0
+  index: -1
+gg-dagger-tip
+  rotate: false
+  xy: 236, 2
+  size: 17, 17
+  orig: 17, 17
+  offset: 0, 0
+  index: -1
+gg-right-lower-leg
+  rotate: false
+  xy: 30, 378
+  size: 36, 76
+  orig: 36, 76
+  offset: 0, 0
+  index: -1
+gg-right-arm
+  rotate: false
+  xy: 26, 48
+  size: 28, 50
+  orig: 28, 50
+  offset: 0, 0
+  index: -1
+gg-pelvis
+  rotate: false
+  xy: 61, 333
+  size: 62, 43
+  orig: 62, 43
+  offset: 0, 0
+  index: -1
+pelvis
+  rotate: false
+  xy: 164, 275
+  size: 62, 43
+  orig: 62, 43
+  offset: 0, 0
+  index: -1
+left-hand
+  rotate: false
+  xy: 139, 378
+  size: 36, 41
+  orig: 36, 41
+  offset: 0, 0
+  index: -1
+right-lower-leg
+  rotate: false
+  xy: 126, 300
+  size: 36, 76
+  orig: 36, 76
+  offset: 0, 0
+  index: -1
+gg-left-shoulder
+  rotate: false
+  xy: 26, 100
+  size: 28, 46
+  orig: 28, 46
+  offset: 0, 0
+  index: -1
+gg-neck
+  rotate: false
+  xy: 164, 320
+  size: 35, 41
+  orig: 35, 41
+  offset: 0, 0
+  index: -1
+undie-straps
+  rotate: false
+  xy: 2, 482
+  size: 55, 19
+  orig: 55, 19
+  offset: 0, 0
+  index: -1
+right-shoulder
+  rotate: false
+  xy: 26, 251
+  size: 39, 45
+  orig: 39, 45
+  offset: 0, 0
+  index: -1
+right-arm
+  rotate: false
+  xy: 30, 148
+  size: 23, 50
+  orig: 23, 50
+  offset: 0, 0
+  index: -1
+gg-left-lower-leg
+  rotate: false
+  xy: 68, 378
+  size: 33, 70
+  orig: 33, 70
+  offset: 0, 0
+  index: -1
+gg-undies
+  rotate: false
+  xy: 171, 475
+  size: 36, 29
+  orig: 36, 29
+  offset: 0, 0
+  index: -1
+gg-undie-straps
+  rotate: false
+  xy: 30, 456
+  size: 55, 19
+  orig: 55, 19
+  offset: 0, 0
+  index: -1
+right-hand
+  rotate: false
+  xy: 177, 394
+  size: 36, 37
+  orig: 36, 37
+  offset: 0, 0
+  index: -1
+left-foot
+  rotate: false
+  xy: 164, 174
+  size: 65, 31
+  orig: 65, 31
+  offset: 0, 0
+  index: -1
+gg-left-hand
+  rotate: false
+  xy: 171, 433
+  size: 35, 40
+  orig: 35, 40
+  offset: 0, 0
+  index: -1
+gg-right-shoulder
+  rotate: false
+  xy: 67, 251
+  size: 39, 45
+  orig: 39, 45
+  offset: 0, 0
+  index: -1
+gg-left-arm
+  rotate: false
+  xy: 201, 357
+  size: 37, 35
+  orig: 37, 35
+  offset: 0, 0
+  index: -1
+neck
+  rotate: false
+  xy: 97, 450
+  size: 36, 41
+  orig: 36, 41
+  offset: 0, 0
+  index: -1
+right-foot
+  rotate: false
+  xy: 61, 298
+  size: 63, 33
+  orig: 63, 33
+  offset: 0, 0
+  index: -1
+left-upper-leg
+  rotate: false
+  xy: 129, 153
+  size: 33, 73
+  orig: 33, 73
+  offset: 0, 0
+  index: -1
+left-arm
+  rotate: false
+  xy: 201, 320
+  size: 37, 35
+  orig: 37, 35
+  offset: 0, 0
+  index: -1
+left-lower-leg
+  rotate: false
+  xy: 129, 228
+  size: 33, 70
+  orig: 33, 70
+  offset: 0, 0
+  index: -1
+head
+  rotate: false
+  xy: 59, 85
+  size: 103, 66
+  orig: 103, 66
+  offset: 0, 0
+  index: -1
+gg-right-foot
+  rotate: false
+  xy: 164, 240
+  size: 63, 33
+  orig: 63, 33
+  offset: 0, 0
+  index: -1
+spear
+  rotate: false
+  xy: 2, 2
+  size: 22, 368
+  orig: 22, 368
+  offset: 0, 0
+  index: -1
+shield
+  rotate: false
+  xy: 164, 2
+  size: 70, 72
+  orig: 70, 72
+  offset: 0, 0
+  index: -1
