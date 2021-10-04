@@ -6,7 +6,18 @@ SHARED_LIB_TARGETS_DEBUG :=
 APP_TARGETS :=
 APP_TARGETS_DEBUG :=
 
+build-in-docker: docker-buildenv
+	docker run  \
+		--rm \
+		-v $(shell readlink -e ../../../ ):/torque2d-engine-build/ \
+		-w /torque2d-engine-build/engine/compilers/Make/ \
+		torque2d-linux32-build-env \
+			make -j all
+
 all: debug release
+
+docker-buildenv: Dockerfile
+	docker build -t torque2d-linux32-build-env .
 
 clean:
 	rm -rf Debug

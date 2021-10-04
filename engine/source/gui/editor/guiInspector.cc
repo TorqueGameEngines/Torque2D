@@ -583,7 +583,8 @@ bool GuiInspectorField::onAdd()
 	setControlProfile(mGroup->mInspector->mLabelProfile);
 
 	//Find the target width
-	RectI innerRect = getInnerRect(Point2I(0,0), mGroup->mInspector->mFieldCellSize, NormalState, mProfile);
+   Point2I origin = Point2I(0,0);
+	RectI innerRect = getInnerRect(origin, mGroup->mInspector->mFieldCellSize, NormalState, mProfile);
 	mEdit = constructEditControl(innerRect.extent.x);
 
 	if( mEdit == NULL )

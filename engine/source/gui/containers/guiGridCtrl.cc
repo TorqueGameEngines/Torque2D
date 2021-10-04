@@ -123,7 +123,8 @@ void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	//call set update both before and after
 	setUpdate();
 
-	RectI innerRect = getInnerRect(Point2I(mBounds.point.Zero), actualNewExtent, NormalState, mProfile);
+	Point2I zero = mBounds.point.Zero;
+	RectI innerRect = getInnerRect(zero, actualNewExtent, NormalState, mProfile);
 	if (!innerRect.isValidRect() && !mIsExtentDynamic)
 	{
 		return;

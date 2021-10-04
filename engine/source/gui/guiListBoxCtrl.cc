@@ -687,7 +687,8 @@ void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
    if (item->hasColor)
    {
 	   RectI drawArea = RectI(contentRect.point.x, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
-	   renderColorBullet(drawArea, ColorI(item->color), 5);
+      ColorI color = item->color;
+	   renderColorBullet(drawArea, color, 5);
 
 	   contentRect.point.x += contentRect.extent.y;
 	   contentRect.extent.x -= contentRect.extent.y;

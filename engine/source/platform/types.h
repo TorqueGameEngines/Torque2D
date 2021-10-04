@@ -178,7 +178,7 @@ inline U32 endianSwap(const U32 in_swap)
 #define Offset(x, cls) _Offset_Normal(x, cls)
 #define OffsetNonConst(x, cls) _Offset_Variant_1(x, cls)
 
-#elif defined(TORQUE_COMPILER_GCC) && (__GNUC__ == 5)
+#elif defined(TORQUE_COMPILER_GCC) && (__GNUC__ >= 5)
 #include <stddef.h>
 #define Offset(x, cls) offsetof(cls, x)
 #define OffsetNonConst(x, cls) _Offset_Normal(x, cls)

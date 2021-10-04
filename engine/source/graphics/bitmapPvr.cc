@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef TORQUE_OS_IOS
 #include "graphics/gBitmap.h"
 #include "graphics/gPalette.h"
 #include "io/stream.h"
@@ -307,3 +308,5 @@ bool GBitmap::writePvr(Stream& io_rStream) const
 {
 	return false; // can't write PVR files
 }
+
+#endif

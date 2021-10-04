@@ -77,8 +77,9 @@ typedef unsigned long long  U64;
 #elif defined(linux)
 #  define TORQUE_OS_STRING "Linux"
 #  define TORQUE_OS_LINUX
-#  define TORQUE_SUPPORTS_NASM
-#  define TORQUE_SUPPORTS_GCC_INLINE_X86_ASM
+// Don't use assembly when building linux.
+//#  define TORQUE_SUPPORTS_NASM
+//#  define TORQUE_SUPPORTS_GCC_INLINE_X86_ASM
 #  include "platform/types.posix.h"
 
 #elif defined(__OpenBSD__)

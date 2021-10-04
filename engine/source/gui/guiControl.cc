@@ -442,7 +442,8 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
 	if(mHorizSizing == horizResizeCenter || mVertSizing == vertResizeCenter)
 	{
 		//This is based on the "new" outer extent of the parent.
-		parentInnerExt = getInnerRect(Point2I(0, 0), parent->mBounds.extent, NormalState, parent->mProfile).extent;
+      Point2I origin = Point2I(0, 0);
+		parentInnerExt = getInnerRect(origin, parent->mBounds.extent, NormalState, parent->mProfile).extent;
 	}
 
     if (mHorizSizing == horizResizeCenter)

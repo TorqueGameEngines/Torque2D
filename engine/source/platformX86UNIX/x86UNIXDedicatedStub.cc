@@ -20,6 +20,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+#ifdef DEDICATED
 
 
 // GL stubs
@@ -110,3 +111,4 @@ InputManager* Input::getManager() { return NULL; }
 void GLLoader::OpenGLShutdown() {}
 bool OpenGLInit() { return false; }
 
+#endif
