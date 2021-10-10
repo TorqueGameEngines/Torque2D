@@ -1,0 +1,76 @@
+# I release this sample under the MIT license: free for any use, provided 
+# you hold me harmless from any such use you make, and you retain my 
+# copyright on the actual sources.
+# Copyright 2005 Jon Watte.
+
+LIBNAME := zlib
+SOURCES := ../../lib/zlib/adler32.c \
+../../lib/zlib/zutil.c \
+../../lib/zlib/crc32.c \
+../../lib/zlib/trees.c \
+../../lib/zlib/inflate.c \
+../../lib/zlib/inftrees.c \
+../../lib/zlib/gzclose.c \
+../../lib/zlib/gzread.c \
+../../lib/zlib/infback.c \
+../../lib/zlib/uncompr.c \
+../../lib/zlib/deflate.c \
+../../lib/zlib/inffast.c \
+../../lib/zlib/gzwrite.c \
+../../lib/zlib/compress.c \
+../../lib/zlib/gzlib.c \
+
+LDFLAGS_zlib := -g -m
+
+CFLAGS_zlib := -MMD -I. -m64 -msse -mmmx -march=x86-64
+
+CFLAGS_zlib += -I../../lib/zlib
+
+CFLAGS_zlib += -DUNICODE
+CFLAGS_zlib += -DLINUX
+
+CFLAGS_DEBUG_zlib := $(CFLAGS_zlib) -ggdb
+CFLAGS_DEBUG_zlib += -DTORQUE_DEBUG
+CFLAGS_DEBUG_zlib += -DTORQUE_DEBUG_GUARD
+CFLAGS_DEBUG_zlib += -DTORQUE_NET_STATS
+
+CFLAGS_zlib += -O3
+
+CC := gcc
+LD := gcc
+
+TARGET_zlib := lib/zlib.a
+TARGET_zlib_DEBUG := lib/zlib_DEBUG.a
+
+LIB_TARGETS += $(TARGET_zlib)
+LIB_TARGETS_DEBUG += $(TARGET_zlib_DEBUG)
+
+OBJS_zlib := $(patsubst ../../lib/zlib/%,Release/zlib/%.o,$(SOURCES))
+OBJS_zlib_DEBUG := $(patsubst ../../lib/zlib/%,Debug/zlib/%.o,$(SOURCES))
+
+# Deriving the variable name from the target name is the secret sauce 
+# of the build system.
+#
+$(TARGET_zlib):	$(OBJS_zlib)
+	@mkdir -p $(dir $@)
+	ar cr $@ $(OBJS_zlib)
+   
+$(TARGET_zlib_DEBUG):	$(OBJS_zlib_DEBUG)
+	@mkdir -p $(dir $@)
+	ar cr $@ $(OBJS_zlib_DEBUG)
+
+Release/zlib/%.o:	../../lib/zlib/%
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS_zlib) $< -o $@
+   
+Debug/zlib/%.o:	../../lib/zlib/%
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS_DEBUG_zlib) $< -o $@
+   
+release_zlib: $(TARGET_zlib)
+debug_zlib: $(TARGET_zlib_DEBUG)
+
+.PHONY: debug_zlib release_zlib
+
+DEPS += $(patsubst %.o,%.d,$(OBJS_zlib))
+DEPS += $(patsubst %.o,%.d,$(OBJS_zlib_DEBUG))

@@ -1,0 +1,78 @@
+# I release this sample under the MIT license: free for any use, provided 
+# you hold me harmless from any such use you make, and you retain my 
+# copyright on the actual sources.
+# Copyright 2005 Jon Watte.
+
+LIBNAME := lpng
+SOURCES := ../../lib/lpng/pngerror.c \
+../../lib/lpng/pngwrite.c \
+../../lib/lpng/pngread.c \
+../../lib/lpng/pngmem.c \
+../../lib/lpng/pngset.c \
+../../lib/lpng/pngwio.c \
+../../lib/lpng/pngrtran.c \
+../../lib/lpng/pngtrans.c \
+../../lib/lpng/pngrutil.c \
+../../lib/lpng/pngwtran.c \
+../../lib/lpng/png.c \
+../../lib/lpng/pngrio.c \
+../../lib/lpng/pngwutil.c \
+../../lib/lpng/pngget.c \
+../../lib/lpng/pngpread.c \
+
+LDFLAGS_lpng := -g -m64
+#LDLIBS_lpng := -lstdc++
+CFLAGS_lpng := -MMD -I. -m64 -msse -mmmx -march=x86-64
+
+CFLAGS_lpng += -I../../lib/zlib
+CFLAGS_lpng += -I../../lib/lpng
+
+CFLAGS_lpng += -DUNICODE
+CFLAGS_lpng += -DLINUX
+
+
+CFLAGS_DEBUG_lpng := $(CFLAGS_lpng) -ggdb
+CFLAGS_DEBUG_lpng += -DTORQUE_DEBUG
+CFLAGS_DEBUG_lpng += -DTORQUE_DEBUG_GUARD
+CFLAGS_DEBUG_lpng += -DTORQUE_NET_STATS
+
+CFLAGS_lpng += -O3
+
+CC := gcc
+LD := gcc
+
+TARGET_lpng := lib/lpng.a
+TARGET_lpng_DEBUG := lib/lpng_DEBUG.a
+
+LIB_TARGETS += $(TARGET_lpng)
+LIB_TARGETS_DEBUG += $(TARGET_lpng_DEBUG)
+
+OBJS_lpng := $(patsubst ../../lib/lpng/%,Release/lpng/%.o,$(SOURCES))
+OBJS_lpng_DEBUG := $(patsubst ../../lib/lpng/%,Debug/lpng/%.o,$(SOURCES))
+
+# Deriving the variable name from the target name is the secret sauce 
+# of the build system.
+#
+$(TARGET_lpng):	$(OBJS_lpng)
+	@mkdir -p $(dir $@)
+	ar cr $@ $(OBJS_lpng)
+   
+$(TARGET_lpng_DEBUG):	$(OBJS_lpng_DEBUG)
+	@mkdir -p $(dir $@)
+	ar cr $@ $(OBJS_lpng_DEBUG)
+
+Release/lpng/%.o:	../../lib/lpng/%
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS_lpng) $< -o $@
+   
+Debug/lpng/%.o:	../../lib/lpng/%
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS_DEBUG_lpng) $< -o $@
+   
+release_lpng: $(TARGET_lpng)
+debug_lpng: $(TARGET_lpng_DEBUG)
+
+.PHONY: debug_lpng release_lpng
+
+DEPS += $(patsubst %.o,%.d,$(OBJS_lpng))
+DEPS += $(patsubst %.o,%.d,$(OBJS_lpng_DEBUG))
