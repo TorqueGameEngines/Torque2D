@@ -25,26 +25,26 @@
 #include "platformX86UNIX/platformX86UNIX.h"
 #include <stdlib.h>
 
-void* dMemcpy(void *dst, const void *src, unsigned size)
+void* dMemcpy(void *dst, const void *src, size_t size)
 {
    return memcpy(dst,src,size);
 }   
 
 
 //--------------------------------------
-void* dMemmove(void *dst, const void *src, unsigned size)
+void* dMemmove(void *dst, const void *src, size_t size)
 {
    return memmove(dst,src,size);
 }  
  
 //--------------------------------------
-void* dMemset(void *dst, S32 c, unsigned size)
+void* dMemset(void *dst, S32 c, size_t size)
 {
    return memset(dst,c,size);   
 }   
 
 //--------------------------------------
-S32 dMemcmp(const void *ptr1, const void *ptr2, unsigned len)
+S32 dMemcmp(const void *ptr1, const void *ptr2, size_t len)
 {
    return memcmp(ptr1, ptr2, len);
 }
@@ -59,7 +59,7 @@ S32 dMemcmp(const void *ptr1, const void *ptr2, unsigned len)
 //   return (ptr);
 //}   
 
-void* dRealMalloc(dsize_t s)
+void* dRealMalloc(size_t s)
 {
    return malloc(s);
 }

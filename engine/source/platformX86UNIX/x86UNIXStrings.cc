@@ -105,7 +105,7 @@ char *stristr(char *szStringToBeSearched, const char *szSubstringToSearchFor)
    return pPos;
 } // stristr(...)
 
-char *dStrdup_r(const char *src, const char *fileName, U32 lineNumber)
+char *dStrdup_r(const char *src, const char *fileName, size_t lineNumber)
 {
    char *buffer = (char *) dMalloc_r(dStrlen(src) + 1, fileName, lineNumber);
    dStrcpy(buffer, src);
@@ -117,7 +117,7 @@ char* dStrcat(char *dst, const char *src)
    return strcat(dst,src);
 }   
 
-char* dStrncat(char *dst, const char *src, U32 len)
+char* dStrncat(char *dst, const char *src, size_t len)
 {
    return strncat(dst,src,len);
 }
@@ -125,7 +125,7 @@ char* dStrncat(char *dst, const char *src, U32 len)
 // concatenates a list of src's onto the end of dst
 // the list of src's MUST be terminated by a NULL parameter
 // dStrcatl(dst, sizeof(dst), src1, src2, NULL);
-char* dStrcatl(char *dst, U32 dstSize, ...)
+char* dStrcatl(char *dst, size_t dstSize, ...)
 {
    const char* src;
    char *p = dst;
@@ -160,7 +160,7 @@ char* dStrcatl(char *dst, U32 dstSize, ...)
 // copy a list of src's into dst
 // the list of src's MUST be terminated by a NULL parameter
 // dStrccpyl(dst, sizeof(dst), src1, src2, NULL);
-char* dStrcpyl(char *dst, U32 dstSize, ...)
+char* dStrcpyl(char *dst, size_t dstSize, ...)
 {
    const char* src;
    char *p = dst;
@@ -219,12 +219,12 @@ S32 dStricmp(const char *str1, const char *str2)
    return strcasecmp(str1, str2);   
 }  
 
-S32 dStrncmp(const char *str1, const char *str2, U32 len)
+S32 dStrncmp(const char *str1, const char *str2, size_t len)
 {
    return strncmp(str1, str2, len);   
 }  
  
-S32 dStrnicmp(const char *str1, const char *str2, U32 len)
+S32 dStrnicmp(const char *str1, const char *str2, size_t len)
 {
    return strncasecmp(str1, str2, len);   
 }   
@@ -234,7 +234,7 @@ char* dStrcpy(char *dst, const char *src)
    return strcpy(dst,src);
 }   
 
-char* dStrncpy(char *dst, const char *src, U32 len)
+char* dStrncpy(char *dst, const char *src, size_t len)
 {
    return strncpy(dst,src,len);
 }   
@@ -361,7 +361,7 @@ S32 dVprintf(const char *format, va_list arglist)
    return (len);
 }   
 
-S32 dSprintf(char *buffer, U32 bufferSize, const char *format, ...)
+S32 dSprintf(char *buffer, size_t bufferSize, const char *format, ...)
 {
    va_list args;
    va_start(args, format);
@@ -374,7 +374,7 @@ S32 dSprintf(char *buffer, U32 bufferSize, const char *format, ...)
 }   
 
 
-S32 dVsprintf(char *buffer, U32 bufferSize, const char *format, va_list arglist)
+S32 dVsprintf(char *buffer, size_t bufferSize, const char *format, va_list arglist)
 {
    S32 len = vsnprintf(buffer, bufferSize, format, arglist);
 

@@ -9,8 +9,9 @@ APP_TARGETS_DEBUG :=
 build-in-docker: docker-buildenv
 	docker run  \
 		--rm \
+		--user $(shell id -u):$(shell id -g) \
 		-v $(shell readlink -e ../../../ ):/torque2d-engine-build/ \
-		-w /torque2d-engine-build/engine/compilers/Make/ \
+		-w /torque2d-engine-build/engine/compilers/Make-32bit/ \
 		torque2d-linux32-build-env \
 			make -j all
 
