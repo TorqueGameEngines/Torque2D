@@ -31,9 +31,9 @@
 #include "2d/assets/ParticleAsset.h"
 #endif
 
-#include "gui/editor/GuiParticleGraphInspector.h"
+#include "gui/editor/guiParticleGraphInspector.h"
 
-#include "gui/editor/GuiParticleGraphInspector_ScriptBinding.h"
+#include "gui/editor/guiParticleGraphInspector_ScriptBinding.h"
 
 IMPLEMENT_CONOBJECT(GuiParticleGraphInspector);
 

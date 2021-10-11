@@ -653,7 +653,8 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 	}
 
 	//Render the title bar
-	RectI ctrlRectTitle = applyMargins(offset, Point2I(mBounds.extent.x, mTitleHeight), currentState, mProfile);
+   Point2I extent = Point2I(mBounds.extent.x, mTitleHeight);
+	RectI ctrlRectTitle = applyMargins(offset, extent, currentState, mProfile);
 	if (!ctrlRectTitle.isValidRect())
 	{
 		return;
@@ -676,7 +677,9 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 	if (!mMinimized)
 	{
 		currentState = currentState != SelectedState ? NormalState : SelectedState;
-		RectI ctrlRectWindow = applyMargins(Point2I(offset.x, offset.y + mTitleHeight), Point2I(mBounds.extent.x, mBounds.extent.y - mTitleHeight), currentState, mContentProfile);
+      Point2I offsetWithTileHeight = Point2I(offset.x, offset.y + mTitleHeight);
+      Point2I boundsExtentMinusTileHeight = Point2I(mBounds.extent.x, mBounds.extent.y - mTitleHeight);
+		RectI ctrlRectWindow = applyMargins(offsetWithTileHeight, boundsExtentMinusTileHeight, currentState, mContentProfile);
 		if (!ctrlRectWindow.isValidRect())
 		{
 			return;
@@ -756,7 +759,9 @@ RectI GuiWindowCtrl::renderButtons(const Point2I &offset, const RectI &contentRe
 
 RectI GuiWindowCtrl::renderButton(const RectI &contentRect, S32 distanceFromEdge, GuiControlState buttonState, GuiControlProfile *profile, Icon defaultIcon)
 {
-	RectI buttonContent = applyMargins(Point2I(contentRect.point), Point2I(contentRect.extent), buttonState, profile);
+   Point2I offset = Point2I(contentRect.point);
+   Point2I extent = Point2I(contentRect.extent);
+	RectI buttonContent = applyMargins(offset, extent, buttonState, profile);
 	S32 horizMarginSize = contentRect.extent.x - buttonContent.extent.x;
 	RectI finalButtonRect = RectI(contentRect.point, Point2I(buttonContent.extent.y + horizMarginSize, contentRect.extent.y));
 	if (mProfile->mAlignment != GuiControlProfile::AlignmentType::RightAlign)

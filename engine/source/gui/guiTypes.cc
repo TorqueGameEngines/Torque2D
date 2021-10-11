@@ -765,7 +765,7 @@ void GuiControlProfile::decRefCount()
    // following the way this works, it seems that a profile
    // is being removed before it is added =/
 
-   AssertFatal(mRefCount, "GuiControlProfile::%s::decRefCount: zero ref count", this->getName());
+   AssertFatal(mRefCount, avar("GuiControlProfile::%s::decRefCount: zero ref count", this->getName()));
    if(!mRefCount)
 	  return;
    --mRefCount;

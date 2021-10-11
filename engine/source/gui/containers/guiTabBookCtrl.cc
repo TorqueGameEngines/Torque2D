@@ -324,7 +324,8 @@ void GuiTabBookCtrl::onPreRender()
 
 void GuiTabBookCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-	RectI ctrlRect = applyMargins(offset + mTabRect.point, mTabRect.extent, NormalState, mProfile);
+   Point2I totalOffset = offset + mTabRect.point;
+	RectI ctrlRect = applyMargins(totalOffset, mTabRect.extent, NormalState, mProfile);
 
 	if (!ctrlRect.isValidRect())
 	{
@@ -520,7 +521,8 @@ S32 GuiTabBookCtrl::calculatePageTabWidth( GuiTabPageCtrl *page )
 
 	S32 textLength = mTabProfile->mFont->getStrNWidth(text, dStrlen(text));
 
-	Point2I outerExtent = getOuterExtent(Point2I(textLength, textLength), NormalState, mTabProfile);
+   Point2I innerExtent = Point2I(textLength, textLength);
+	Point2I outerExtent = getOuterExtent(innerExtent, NormalState, mTabProfile);
 
 	if (mTabPosition == AlignTop || mTabPosition == AlignBottom)
 	{
@@ -547,7 +549,8 @@ void GuiTabBookCtrl::calculatePageTabs()
    S32 currY      = 0;
    S32 tabHeight  = 0;
    RectI innerRect = getInnerRect(mBounds.point, mBounds.extent, NormalState, mProfile);
-   Point2I fontBasedBounds = getOuterExtent(Point2I(mTabProfile->mFont->getHeight(), mTabProfile->mFont->getHeight()), NormalState, mTabProfile);
+   Point2I innerExtent = Point2I(mTabProfile->mFont->getHeight(), mTabProfile->mFont->getHeight());
+   Point2I fontBasedBounds = getOuterExtent(innerExtent, NormalState, mTabProfile);
    mFontHeight = mTabProfile->mFont->getHeight();
 
    if (mTabPosition == AlignTop || mTabPosition == AlignBottom)
@@ -632,7 +635,8 @@ void GuiTabBookCtrl::calculatePageTabs()
    currRow++;
    currColumn++;
 
-   Point2I outerExtent = getOuterExtent(Point2I(currColumn * tabHeight, currRow * tabHeight), NormalState, mProfile);
+   Point2I colExtent = Point2I(currColumn * tabHeight, currRow * tabHeight);
+   Point2I outerExtent = getOuterExtent(colExtent, NormalState, mProfile);
 
    // Calculate 
    switch( mTabPosition )

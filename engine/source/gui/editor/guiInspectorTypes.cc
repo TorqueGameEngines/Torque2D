@@ -500,8 +500,8 @@ GuiControl * GuiInspectorTypeS32::constructEditControl(S32 width)
 		 {
 			 U32 xNeeded = checkBox->getBoxOffset().x + checkBox->getBoxExtent().x;
 			 U32 yNeeded = checkBox->getBoxOffset().y + checkBox->getBoxExtent().y;
-
-			 Point2I outerExt = checkBox->getOuterExtent(Point2I(xNeeded, yNeeded), NormalState, checkBox->mProfile);
+          Point2I needed = Point2I(xNeeded, yNeeded);
+			 Point2I outerExt = checkBox->getOuterExtent(needed, NormalState, checkBox->mProfile);
 
 			 x = (U32)outerExt.x;
 			 y = (U32)outerExt.y;
@@ -520,7 +520,8 @@ GuiControl * GuiInspectorTypeS32::constructEditControl(S32 width)
 
       allButton->setText("All");
       noneButton->setText("None");
-	  Point2I buttonExt = noneButton->getOuterExtent(Point2I(noneButton->mProfile->mFont->getStrWidth("None"), noneButton->mProfile->mFont->getHeight()), NormalState, noneButton->mProfile);
+      Point2I innerExt = Point2I(noneButton->mProfile->mFont->getStrWidth("None"), noneButton->mProfile->mFont->getHeight());
+	   Point2I buttonExt = noneButton->getOuterExtent(innerExt, NormalState, noneButton->mProfile);
 
       retCtrl->mCellSizeX = getMax(x, (U32)buttonExt.x);
       retCtrl->mCellSizeY = getMax(y, (U32)buttonExt.y);

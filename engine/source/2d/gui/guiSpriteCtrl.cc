@@ -269,7 +269,7 @@ U32 GuiSpriteCtrl::constructBitmapArray()
 	return mBitmapArrayRects.size();
 }
 
-Point2I& GuiSpriteCtrl::constrain(Point2I &point, bool grow)
+Point2I GuiSpriteCtrl::constrain(Point2I &point, bool grow)
 {
 	if (!mConstrainProportions)
 	{
@@ -289,7 +289,7 @@ Point2I& GuiSpriteCtrl::constrain(Point2I &point, bool grow)
 	return point;
 }
 
-Point2I& GuiSpriteCtrl::constrainLockX(Point2I &point)
+Point2I GuiSpriteCtrl::constrainLockX(Point2I &point)
 {
 	if (!mConstrainProportions)
 	{
@@ -300,7 +300,7 @@ Point2I& GuiSpriteCtrl::constrainLockX(Point2I &point)
 	return Point2I(point.x, mRound(point.x * targetRatio));
 }
 
-Point2I& GuiSpriteCtrl::constrainLockY(Point2I &point)
+Point2I GuiSpriteCtrl::constrainLockY(Point2I &point)
 {
 	if (!mConstrainProportions)
 	{
@@ -606,7 +606,7 @@ void GuiSpriteCtrl::onRender(Point2I offset, const RectI &updateRect)
 
 void GuiSpriteCtrl::RenderImage(RectI &bounds, Point2I &offset, Point2I &size)
 {
-	TextureObject* texture = usesAsset() ? getProviderTexture() : (TextureObject *)mBitmapTextureHandle;
+	TextureObject* texture = usesAsset() ?  (TextureObject *) getProviderTexture() : (TextureObject *)mBitmapTextureHandle;
 
 	RectI srcRegion = getSourceRect(texture);
 	if (!srcRegion.isValidRect())
@@ -620,7 +620,7 @@ void GuiSpriteCtrl::RenderImage(RectI &bounds, Point2I &offset, Point2I &size)
 
 void GuiSpriteCtrl::RenderTiledImage(RectI &bounds, Point2I &start, Point2I &size)
 {
-	TextureObject* texture = usesAsset() ? getProviderTexture() : (TextureObject *)mBitmapTextureHandle;
+	TextureObject* texture = usesAsset() ? (TextureObject *)getProviderTexture() : (TextureObject *)mBitmapTextureHandle;
 
 	RectI srcRegion = getSourceRect(texture);
 	if (!srcRegion.isValidRect())

@@ -73,9 +73,9 @@ public:
 	void RenderTiledImage(RectI &bounds, Point2I &start, Point2I &size);
 
 	//positioning and sizing
-	Point2I& constrain(Point2I &point, bool grow = true);
-	Point2I& constrainLockX(Point2I &point);
-	Point2I& constrainLockY(Point2I &point);
+	Point2I constrain(Point2I &point, bool grow = true);
+	Point2I constrainLockX(Point2I &point);
+	Point2I constrainLockY(Point2I &point);
 	F32 getAspectRatio();
 	Point2I& applyAlignment(RectI &bounds, Point2I &size);
 

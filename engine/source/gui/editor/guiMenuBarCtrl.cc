@@ -137,7 +137,9 @@ void GuiMenuBarCtrl::onChildRemoved(SimObject *child)
 
 void GuiMenuBarCtrl::calculateMenus()
 {
-	RectI innerRect = getInnerRect(Point2I(mBounds.point.Zero), Point2I(getExtent()), NormalState, mProfile);
+	Point2I zero = mBounds.point.Zero;
+	Point2I extent = getExtent();
+	RectI innerRect = getInnerRect(zero, extent, NormalState, mProfile);
 	iterator i;
 	S32 length = 0;
 	for (i = begin(); i != end(); i++)
@@ -146,7 +148,8 @@ void GuiMenuBarCtrl::calculateMenus()
 		if (ctrl->isVisible())
 		{
 			S32 width = ctrl->mProfile->mFont->getStrWidth((const UTF8*)ctrl->getText());
-			Point2I outerExtent = getOuterExtent(Point2I(width, 0), NormalState, ctrl->mProfile);
+			Point2I innerExtent = Point2I(width, 0);
+			Point2I outerExtent = getOuterExtent(innerExtent, NormalState, ctrl->mProfile);
 			ctrl->mBounds.set(Point2I(length, 0), Point2I(outerExtent.x, innerRect.extent.y));
 			length += ctrl->getExtent().x;
 		}
@@ -1311,7 +1314,8 @@ bool GuiMenuListCtrl::onRenderItem(RectI &itemRect, GuiMenuItemCtrl *item)
 		{
 			S32 size = (profile->mFont->getHeight() / 2);
 			rightIconRect.inset(2, 0);
-			renderTriangleIcon(rightIconRect, ColorI(profile->getFontColor(currentState)), GuiDirection::Right, size);
+			ColorI color = ColorI(profile->getFontColor(currentState));
+			renderTriangleIcon(rightIconRect, color, GuiDirection::Right, size);
 		}
 
 		//Text Space

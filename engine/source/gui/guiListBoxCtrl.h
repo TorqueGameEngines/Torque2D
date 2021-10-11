@@ -156,7 +156,7 @@ public:
    // Mouse Events
    virtual void      onTouchDown( const GuiEvent &event );
    virtual void      onTouchDragged(const GuiEvent &event);
-   virtual bool		 GuiListBoxCtrl::onKeyDown(const GuiEvent &event);
+   virtual bool		onKeyDown(const GuiEvent &event);
 
    // Sorting
    virtual void		 sortByText(bool increasing = true);
