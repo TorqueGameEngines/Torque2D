@@ -1040,105 +1040,119 @@ bool dPathCopy(const char *fromName, const char *toName, bool nooverwrite)
  
  static bool recurseDumpDirectories(const char *basePath, const char *subPath, Vector<StringTableEntry> &directoryVector, S32 currentDepth, S32 recurseDepth, bool noBasePath)
  {
+   // Assemble a path to open.
    char Path[1024];
-   DIR *dip;
-   struct dirent *d;
- 
-   if (subPath && (dStrncmp(subPath, "", 1) != 0))
-     {
+   dMemset(Path, 0, 1024);
+
+   // Check if subPath is not null, and not an empty string. 
+   if (subPath && (dStrncmp(subPath, "", 1) != 0)){
+      // Concatenate it onto the basepath, accounting for if the basepath ends in a / or not
        if ((basePath[dStrlen(basePath) - 1]) == '/')
-    dSprintf(Path, 1024, "%s%s", basePath, subPath);
+         dSprintf(Path, 1024, "%s%s", basePath, subPath);
        else
-    dSprintf(Path, 1024, "%s/%s", basePath, subPath);
-     }
-   else
-     dSprintf(Path, 1024, "%s", basePath);
+         dSprintf(Path, 1024, "%s/%s", basePath, subPath);
+   } else {
+      // subPath is null or an empty string.
+      // Just look in the basePath then.
+      dSprintf(Path, 1024, "%s", basePath);
+   }
+
+   // Open the sanitized path constructed above.
+   DIR *dip;
    dip = opendir(Path);
+
+   // Quit if it didn't open.
    if (dip == NULL)
      return false;
-   //////////////////////////////////////////////////////////////////////////
-   // add path to our return list ( provided it is valid )
-   //////////////////////////////////////////////////////////////////////////
-   if (!Platform::isExcludedDirectory(subPath))
-     {
-       if (noBasePath)
-    {
-      // We have a path and it's not an empty string or an excluded directory
-      if ( (subPath && (dStrncmp (subPath, "", 1) != 0)) )
-        directoryVector.push_back(StringTable->insert(subPath));
-    }
-       else
-    {
-      if ( (subPath && (dStrncmp(subPath, "", 1) != 0)) )
-        {
-          char szPath[1024];
-          dMemset(szPath, 0, 1024);
-          if ( (basePath[dStrlen(basePath) - 1]) != '/')
-        dSprintf(szPath, 1024, "%s%s", basePath, subPath);
-          else
-        dSprintf(szPath, 1024, "%s%s", basePath, &subPath[1]);
-          directoryVector.push_back(StringTable->insert(szPath));
-        }
-      else
-        directoryVector.push_back(StringTable->insert(basePath));
-    }
-     }
-   //////////////////////////////////////////////////////////////////////////
-   // Iterate through and grab valid directories
-   //////////////////////////////////////////////////////////////////////////
- 
-    while (d = readdir(dip))
-    {
-        bool	isDir;
-        isDir = false;
-        if (d->d_type == DT_UNKNOWN) 
-        {
-            char child [1024];
-            if ((Path[dStrlen(Path) - 1] == '/'))
-                dSprintf(child, 1024, "%s%s", Path, d->d_name);
+
+   // Add path to our return list (provided it is valid).
+   if (!Platform::isExcludedDirectory(subPath)){
+      if (noBasePath && (subPath && (dStrncmp (subPath, "", 1) != 0)) ){
+         // There is no base path to concatenate with, and this subpath is nonempty.
+         // Store the subPath as a starting point.
+         directoryVector.push_back(StringTable->insert(subPath));
+      } else {
+         // There is a base path. Store the concatenated path.
+         directoryVector.push_back(StringTable->insert(Path));
+      }
+   }
+
+   // Iterate through the items in the current directory.
+   struct dirent *d;
+   while (d = readdir(dip)) {
+      bool	isDir;
+      isDir = false;
+      if (d->d_type == DT_UNKNOWN) {
+         // If it's an unknown type, try to construct it as a path.
+         char child [1024];
+
+         // Use "/" as a separator correctly.
+         if ((Path[dStrlen(Path) - 1] == '/'))
+            dSprintf(child, 1024, "%s%s", Path, d->d_name);
+         else
+            dSprintf(child, 1024, "%s/%s", Path, d->d_name);
+         
+         // Now ask the platform if the constructed path is a directory.
+         isDir = Platform::isDirectory(child);
+      }
+      else if (d->d_type & DT_DIR){
+         // If it's a directory, cool.
+         isDir = true;
+      }
+
+      // If the current directory item is itself a directory, iterate into it.
+      if (isDir){
+         // Bail for current directory or parent directory shorthands.
+         if (dStrcmp(d->d_name, ".") == 0 || dStrcmp(d->d_name, "..") == 0)
+            continue;
+
+         // Bail for excluded directories.
+         if (Platform::isExcludedDirectory(d->d_name))
+            continue;
+
+         // Now recurse into this directory.
+         if ( (subPath && (dStrncmp(subPath, "", 1) != 0))){
+            // The subpath we're basing on isn't an empty string.
+
+            // To recurse down, cat the child directory's name with the current subpath.
+            char child[1024];
+
+            // Use "/" as a separator correctly.
+            if ((subPath[dStrlen(subPath) - 1] == '/'))
+               dSprintf(child, 1024, "%s%s", subPath, d->d_name);
             else
-                dSprintf(child, 1024, "%s/%s", Path, d->d_name);
-            isDir = Platform::isDirectory (child);
-        }
-        else if (d->d_type & DT_DIR)
-        isDir = true;
-            
-       if ( isDir )
-    {
-      if (dStrcmp(d->d_name, ".") == 0 ||
-          dStrcmp(d->d_name, "..") == 0)
-        continue;
-      if (Platform::isExcludedDirectory(d->d_name))
-        continue;
-      if ( (subPath && (dStrncmp(subPath, "", 1) != 0)) )
-        {
-          char child[1024];
-          if ((subPath[dStrlen(subPath) - 1] == '/'))
-        dSprintf(child, 1024, "%s%s", subPath, d->d_name);
-          else
-        dSprintf(child, 1024, "%s/%s", subPath, d->d_name);
-          if (currentDepth < recurseDepth || recurseDepth == -1 )
-        recurseDumpDirectories(basePath, child, directoryVector,
-                       currentDepth + 1, recurseDepth,
-                       noBasePath);
-        }
-      else
-        {
-          char child[1024];
-          if ( (basePath[dStrlen(basePath) - 1]) == '/')
-        dStrcpy (child, d->d_name);
-          else
-        dSprintf(child, 1024, "/%s", d->d_name);
-          if (currentDepth < recurseDepth || recurseDepth == -1)
-        recurseDumpDirectories(basePath, child, directoryVector, 
-                       currentDepth + 1, recurseDepth, 
-                       noBasePath);
-        }
-    }
-     }
+               dSprintf(child, 1024, "%s/%s", subPath, d->d_name);
+
+            // If we haven't recursed too far, recurse once more with the synthesized child pathname.
+            if (currentDepth < recurseDepth || recurseDepth == -1 ){
+               recurseDumpDirectories(basePath, child, directoryVector, currentDepth + 1, recurseDepth, noBasePath);
+            }
+
+         } else {
+            // The subpath we're basing on is an empty string.
+            // Just name sure that we're not duplicating a "/" by concatenating the child directory with the base path.
+            char child[1024];
+            if ( (basePath[dStrlen(basePath) - 1]) == '/'){
+               dStrcpy (child, d->d_name);
+            }
+            else{
+               dSprintf(child, 1024, "/%s", d->d_name);
+            }
+
+            // If we haven't recursed too far, recurse once more with the synthesized child pathname.
+            if (currentDepth < recurseDepth || recurseDepth == -1){
+               recurseDumpDirectories(basePath, child, directoryVector, currentDepth + 1, recurseDepth, noBasePath);
+            }
+         }
+      }
+   }
+
+   // Close this directory.
    closedir(dip);
+
+   // End recursive calls.
    return true;
- }
+}
  
  bool Platform::dumpDirectories(const char *path, Vector<StringTableEntry> &directoryVector, S32 depth, bool noBasePath)
  {
