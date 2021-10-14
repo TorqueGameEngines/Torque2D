@@ -30,7 +30,7 @@
     <ProjectGuid>{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}</ProjectGuid>
     <RootNamespace>TorqueGame</RootNamespace>
     <ProjectName>Torque2D</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -114,6 +114,10 @@
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'">Torque2D</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>../../../</OutDir>
+    <IntDir>../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>../../../</OutDir>
     <IntDir>../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
   </PropertyGroup>
