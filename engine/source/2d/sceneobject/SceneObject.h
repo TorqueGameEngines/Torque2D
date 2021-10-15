@@ -373,7 +373,7 @@ public:
     /// Body.
     virtual ePhysicsProxyType getPhysicsProxyType( void ) const         { return PhysicsProxy::PHYSIC_PROXY_SCENEOBJECT; }
     inline b2Body*          getBody( void ) const                       { return mpBody; }
-    void                    setBodyType( const b2BodyType type );
+    virtual void                    setBodyType( const b2BodyType type );
     inline b2BodyType       getBodyType(void) const                     { if ( mpScene ) return mpBody->GetType(); else return mBodyDefinition.type; }
     inline void             setActive( const bool active )              { if ( mpScene ) mpBody->SetActive( active ); else mBodyDefinition.active = active; }
     inline bool             getActive(void) const                       { if ( mpScene ) return mpBody->IsActive(); else return mBodyDefinition.active; }

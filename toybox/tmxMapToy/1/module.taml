@@ -1,0 +1,10 @@
+<ModuleDefinition
+	ModuleId="TmxMapToy"
+	VersionId="1"
+	Description="Demonstrates rendering TMX tile maps"
+	Dependencies="ToyAssets=1"
+	Type="toy"
+	ToyCategoryIndex="6"
+	ScriptFile="main.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy"/>

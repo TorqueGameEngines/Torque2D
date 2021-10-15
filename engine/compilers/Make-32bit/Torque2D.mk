@@ -78,9 +78,12 @@ CFLAGS += -I../../lib/freetype
 CFLAGS += -I../../lib/libvorbis/include
 CFLAGS += -I../../lib/libogg/include
 CFLAGS += -I../../lib/openal/LINUX/
+CFLAGS += -I../../lib/TmxParser/
 
 CFLAGS += -DLINUX
 CFLAGS += -Di386
+
+CFLAGS += -Wno-invalid-offsetof
 
 
 CFLAGS_DEBUG := $(CFLAGS) -ggdb
