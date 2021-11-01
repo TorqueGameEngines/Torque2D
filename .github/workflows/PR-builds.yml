@@ -1,5 +1,5 @@
 name: Build Packages
-on: [push, pull_request]
+on: [push, pull_request, workflow_dispatch]
 jobs:
   Build-Windows-32bit-VS2019:
     name: 32-bit Windows On VS2019
