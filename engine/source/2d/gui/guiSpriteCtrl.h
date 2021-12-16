@@ -77,7 +77,7 @@ public:
 	Point2I constrainLockX(Point2I &point);
 	Point2I constrainLockY(Point2I &point);
 	F32 getAspectRatio();
-	Point2I& applyAlignment(RectI &bounds, Point2I &size);
+	Point2I applyAlignment(RectI &bounds, Point2I &size);
 
 	//Animation Functions
 	void moveTo(S32 x, S32 y, S32 time, EasingFunction ease = Linear);

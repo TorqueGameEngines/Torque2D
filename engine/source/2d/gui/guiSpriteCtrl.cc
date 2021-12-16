@@ -321,7 +321,7 @@ F32 GuiSpriteCtrl::getAspectRatio()
 	return 1.0;
 }
 
-Point2I& GuiSpriteCtrl::applyAlignment(RectI &bounds, Point2I &size)
+Point2I GuiSpriteCtrl::applyAlignment(RectI &bounds, Point2I &size)
 {
 	Point2I offset = Point2I(0, 0);
 
