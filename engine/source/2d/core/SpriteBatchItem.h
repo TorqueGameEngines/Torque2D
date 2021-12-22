@@ -48,7 +48,7 @@ public:
 	
 	// Holds items required by call to SubmitTriangles.  Currently, this is only used when
 	// mTriangleRun is true due to processing of Spine's mesh attachments.
-	typedef struct
+	typedef struct DrawDatType
 	{
 		U32 vertexCount;
 		vector<Vector2> vertexArray;
