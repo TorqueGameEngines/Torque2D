@@ -63,86 +63,122 @@ void EditorToyTool::onRelinquishObj(SceneObject * obj)
 
 bool EditorToyTool::onTouchMove(const GuiEvent &e)
 {
-   if (!mUseMouseDown)
-      return false;
-
-   Con::executef(this, 2, "onTouchMove", e.mousePoint);
-   return true;
+    if (mUseMouseDown && isMethod("onTouchMove"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onTouchMove", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onTouchDown(const GuiEvent &e)
 {
-   if (!mUseMouseDown)
-      return false;
-
-   Con::executef(this, 2, "onTouchDown", e.mousePoint);
-
-   return true;
+    if (mUseMouseDown && isMethod("onTouchDown"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onTouchDown", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onTouchDragged(const GuiEvent &e)
 {
-   Con::executef(this, 2, "onTouchDragged", e.mousePoint);
-
-   return true;
+    if (isMethod("onTouchDragged"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onTouchDragged", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onTouchUp(const GuiEvent &e)
 {
-   if (!mUseMouseDown)
-      return false;
-
-   Con::executef(this, 2, "onTouchUp", e.mousePoint);
-
-   return true;
+    if (mUseMouseDown && isMethod("onTouchUp"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onTouchUp", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onRightMouseDown(const GuiEvent &e)
 {
-   if (!mUseRightMouseDown)
-      return false;
-
-   Con::executef(this,2, "onRightMouseDown", e.mousePoint);
-   return true;
+   if (mUseRightMouseDown && isMethod("onRightMouseDown"))
+   {
+       char* point = Con::getArgBuffer(32);
+       dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+       Con::executef(this, 2, "onRightMouseDown", point);
+       return true;
+   }
+   return false;
 }
 
 bool EditorToyTool::onRightMouseDragged(const GuiEvent &e)
 {
-   Con::executef(this,2, "onRightMouseDragged", e.mousePoint);
-   return true;
+    if (isMethod("onRightMouseDragged"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onRightMouseDragged", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onRightMouseUp(const GuiEvent &e)
 {
-   if (!mUseRightMouseDown)
-      return false;
-
-   Con::executef(this,2, "onRightMouseUp", e.mousePoint);
-   return true;
+    if (mUseRightMouseDown && isMethod("onRightMouseUp"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onRightMouseUp", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onMiddleMouseDown(const GuiEvent &e)
 {
-   if (!mUseMiddleMouseDown)
-      return false;
-
-   Con::executef(this,2, "onMiddleMouseDown", e.mousePoint);
-   return true;
+    if (mUseMiddleMouseDown && isMethod("onMiddleMouseDown"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onMiddleMouseDown", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onMiddleMouseDragged(const GuiEvent &e)
 {
-   Con::executef(this,2, "onMiddleMouseDragged", e.mousePoint);
-   return true;
+    if (isMethod("onMiddleMouseDragged"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onMiddleMouseDragged", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onMiddleMouseUp(const GuiEvent &e)
 {
-   if (!mUseMiddleMouseDown)
-      return false;
-
-   Con::executef(this,2, "onMiddleMouseUp", e.mousePoint);
-   return true;
+    if (mUseMiddleMouseDown && isMethod("onMiddleMouseUp"))
+    {
+        char* point = Con::getArgBuffer(32);
+        dSprintf(point, 32, "%d %d", e.mousePoint.x, e.mousePoint.y);
+        Con::executef(this, 2, "onMiddleMouseUp", point);
+        return true;
+    }
+    return false;
 }
 
 bool EditorToyTool::onInputEvent(const GuiEvent &e)

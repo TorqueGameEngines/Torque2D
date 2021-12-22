@@ -436,14 +436,14 @@ void Namespace::dumpClasses( bool dumpScript, bool dumpEngine )
          {
             switch((*fieldList)[j].type)
             {
-            case AbstractClassRep::StartGroupFieldType:
+            case static_cast<U32>(AbstractClassRep::StartGroupFieldType):
                printGroupStart((*fieldList)[j].pGroupname, (*fieldList)[j].pFieldDocs);
                break;
-            case AbstractClassRep::EndGroupFieldType:
+            case static_cast<U32>(AbstractClassRep::EndGroupFieldType):
                printGroupEnd();
                break;
             default:
-            case AbstractClassRep::DepricatedFieldType:
+            case static_cast<U32>(AbstractClassRep::DepricatedFieldType):
                {
                   bool isDeprecated = ((*fieldList)[j].type == AbstractClassRep::DepricatedFieldType);
 
