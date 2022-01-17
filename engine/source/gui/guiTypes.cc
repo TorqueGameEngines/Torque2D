@@ -81,7 +81,7 @@ void GuiCursor::render(const Point2I &pos)
 
    // Render the cursor centered according to dimensions of texture
    S32 texWidth = mTextureHandle.getWidth();
-   S32 texHeight = mTextureHandle.getWidth();
+   S32 texHeight = mTextureHandle.getHeight();
 
    Point2I renderPos = pos;
    renderPos.x -= (S32)( texWidth  * mRenderOffset.x );
@@ -298,6 +298,9 @@ GuiControlProfile::GuiControlProfile(void) :
    mFontColorHL(mFontColors[ColorHL]),
    mFontColorNA(mFontColors[ColorNA]),
    mFontColorSL(mFontColors[ColorSL]),
+   mFontColorLink(mFontColors[ColorLink]),
+   mFontColorLinkHL(mFontColors[ColorLinkHL]),
+   mFontColorTextSL(mFontColors[ColorTextSL]),
    mImageAssetID( StringTable->EmptyString )
 {
 	mRefCount = 0;
@@ -343,6 +346,7 @@ GuiControlProfile::GuiControlProfile(void) :
 	mFillColorHL.set(0, 0, 0, 0);
 	mFillColorSL.set(0, 0, 0, 0);
 	mFillColorNA.set(0, 0, 0, 0);
+	mFillColorTextSL.set(100, 100, 100, 255);
    mCategory = StringTable->EmptyString;
 
    GuiControlProfile *def = dynamic_cast<GuiControlProfile*>(Sim::findObject("GuiDefaultProfile"));
@@ -353,7 +357,9 @@ GuiControlProfile::GuiControlProfile(void) :
 
       mFillColor = def->mFillColor;
       mFillColorHL = def->mFillColorHL;
+	  mFillColorSL = def->mFillColorSL;
       mFillColorNA = def->mFillColorNA;
+	  mFillColorTextSL = def->mFillColorTextSL;
 
       mBorderDefault = def->mBorderDefault;
       mLeftProfileName = def->mLeftProfileName;
@@ -399,29 +405,35 @@ void GuiControlProfile::initPersistFields()
       addField("mouseOverSelected", TypeBool,   Offset(mMouseOverSelected, GuiControlProfile));
    endGroup("Behavior");
 
-   addField("fillColor",     TypeColorI,     Offset(mFillColor, GuiControlProfile));
-   addField("fillColorHL",   TypeColorI,     Offset(mFillColorHL, GuiControlProfile));
-   addField("fillColorSL",   TypeColorI,     Offset(mFillColorSL, GuiControlProfile));
-   addField("fillColorNA",   TypeColorI,     Offset(mFillColorNA, GuiControlProfile));
+   addGroup("FillColor");
+	   addField("fillColor",     TypeColorI,     Offset(mFillColor, GuiControlProfile));
+	   addField("fillColorHL",   TypeColorI,     Offset(mFillColorHL, GuiControlProfile));
+	   addField("fillColorSL",   TypeColorI,     Offset(mFillColorSL, GuiControlProfile));
+	   addField("fillColorNA",   TypeColorI,     Offset(mFillColorNA, GuiControlProfile));
+	   addField("fillColorTextSL", TypeColorI,   Offset(mFillColorTextSL, GuiControlProfile));
+   endGroup("FillColor");
 
-   addField("borderDefault", TypeGuiBorderProfile, Offset(mBorderDefault, GuiControlProfile));
-   addField("borderLeft",    TypeString, Offset(mLeftProfileName, GuiControlProfile));
-   addField("borderRight",   TypeString, Offset(mRightProfileName, GuiControlProfile));
-   addField("borderTop",     TypeString, Offset(mTopProfileName, GuiControlProfile));
-   addField("borderBottom",  TypeString, Offset(mBottomProfileName, GuiControlProfile));
+   addGroup("Border");
+	   addField("borderDefault", TypeGuiBorderProfile, Offset(mBorderDefault, GuiControlProfile));
+	   addField("borderLeft",    TypeString, Offset(mLeftProfileName, GuiControlProfile));
+	   addField("borderRight",   TypeString, Offset(mRightProfileName, GuiControlProfile));
+	   addField("borderTop",     TypeString, Offset(mTopProfileName, GuiControlProfile));
+	   addField("borderBottom",  TypeString, Offset(mBottomProfileName, GuiControlProfile));
+   endGroup("Border");
 
    addGroup("Font");
-   addField("fontType",      TypeString,     Offset(mFontType, GuiControlProfile));
-   addField("fontSize",      TypeS32,        Offset(mFontSize, GuiControlProfile));
-   addField("fontDirectory", TypeString,	 Offset(mFontDirectory, GuiControlProfile));
-   addField("fontCharset",   TypeEnum,       Offset(mFontCharset, GuiControlProfile), 1, &gCharsetTable);
-   addField("fontColors",    TypeColorI,     Offset(mFontColors, GuiControlProfile), 10);
-   addField("fontColor",     TypeColorI,     Offset(mFontColors[BaseColor], GuiControlProfile));
-   addField("fontColorHL",   TypeColorI,     Offset(mFontColors[ColorHL], GuiControlProfile));
-   addField("fontColorNA",   TypeColorI,     Offset(mFontColors[ColorNA], GuiControlProfile));
-   addField("fontColorSL",   TypeColorI,     Offset(mFontColors[ColorSL], GuiControlProfile));
-   addField("fontColorLink", TypeColorI,     Offset(mFontColors[ColorUser0], GuiControlProfile));
-   addField("fontColorLinkHL", TypeColorI,     Offset(mFontColors[ColorUser1], GuiControlProfile));
+	   addField("fontType",      TypeString,     Offset(mFontType, GuiControlProfile));
+	   addField("fontSize",      TypeS32,        Offset(mFontSize, GuiControlProfile));
+	   addField("fontDirectory", TypeString,	 Offset(mFontDirectory, GuiControlProfile));
+	   addField("fontCharset",   TypeEnum,       Offset(mFontCharset, GuiControlProfile), 1, &gCharsetTable);
+	   addField("fontColors",    TypeColorI,     Offset(mFontColors, GuiControlProfile), 10);
+	   addField("fontColor",     TypeColorI,     Offset(mFontColors[BaseColor], GuiControlProfile));
+	   addField("fontColorHL",   TypeColorI,     Offset(mFontColors[ColorHL], GuiControlProfile));
+	   addField("fontColorNA",   TypeColorI,     Offset(mFontColors[ColorNA], GuiControlProfile));
+	   addField("fontColorSL",   TypeColorI,     Offset(mFontColors[ColorSL], GuiControlProfile));
+	   addField("fontColorLink", TypeColorI,     Offset(mFontColors[ColorLink], GuiControlProfile));
+	   addField("fontColorLinkHL", TypeColorI, Offset(mFontColors[ColorLinkHL], GuiControlProfile));
+	   addField("fontColorTextSL", TypeColorI, Offset(mFontColors[ColorTextSL], GuiControlProfile));
    endGroup("Font");
 
    addField("align", TypeEnum, Offset(mAlignment, GuiControlProfile), 1, &gAlignTable);

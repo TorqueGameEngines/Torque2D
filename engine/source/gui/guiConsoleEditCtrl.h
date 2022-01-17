@@ -33,14 +33,37 @@
 #include "gui/containers/guiScrollCtrl.h"
 #endif
 
+class GuiConsoleEditHistory
+{
+private:
+	vector<string> historyList;
+	string workingText;
+	U32 index;
+
+public:
+	GuiConsoleEditHistory();
+	inline void clearHistory() { historyList.clear(); workingText.clear(); index = 0; }
+	inline void updateHistory(const string& text) { historyList.push_back(text); index = historyList.size(); workingText.clear(); }
+	inline void setWorkingText(const string& text) { workingText = text; index = historyList.size(); }
+	const string& getPrevHistory();
+	const string& getNextHistory();
+
+};
+
 class GuiConsoleEditCtrl : public GuiTextEditCtrl
 {
 private:
    typedef GuiTextEditCtrl Parent;
+   GuiConsoleEditHistory mHistory;
 
 protected:
    bool mUseSiblingScroller;
    GuiScrollCtrl* mSiblingScroller;
+   virtual bool handleCharacterInput(const GuiEvent& event);
+   virtual bool handleEnterKey();
+   virtual bool handleArrowKey(GuiDirection direction);
+   virtual bool handleBackSpace();
+   virtual bool handleDelete();
 
 public:
    GuiConsoleEditCtrl();

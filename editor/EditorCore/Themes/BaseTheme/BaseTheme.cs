@@ -1005,18 +1005,20 @@ function BaseTheme::makeTextEditProfile(%this)
 		borderDefault = %labelBorder;
 	};
 
-	//border for text boxes never use the HL state.
 	%textBorderV = new GuiBorderProfile()
 	{
 		padding = 2;
+		paddingHL = 2;
 		paddingSL = 2;
 		paddingNA = 2;
 
 		border = %this.borderSize;
+		borderHL = %this.borderSize;
 		borderSL = %this.borderSize;
 		borderNA = %this.borderSize;
 
 		borderColor = %this.color3;
+		borderColorHL = %this.adjustValue(%this.color5, 10);
 		borderColorSL = %this.color5;
 		borderColorNA = %this.setAlpha(%this.color3, 100);
 	};
@@ -1024,14 +1026,17 @@ function BaseTheme::makeTextEditProfile(%this)
 	%textBorderH = new GuiBorderProfile()
 	{
 		padding = 10;
+		paddingHL = 10;
 		paddingSL = 10;
 		paddingNA = 10;
 
 		border = %this.borderSize;
+		borderHL = %this.borderSize;
 		borderSL = %this.borderSize;
 		borderNA = %this.borderSize;
 
 		borderColor = %this.color3;
+		borderColorHL = %this.adjustValue(%this.color5, 10);
 		borderColorSL = %this.color5;
 		borderColorNA = %this.setAlpha(%this.color3, 100);
 	};
@@ -1039,9 +1044,10 @@ function BaseTheme::makeTextEditProfile(%this)
 	%this.textEditProfile = new GuiControlProfile()
 	{
 		fillColor = %this.color4;
-		fillColorHL = %this.color5;//used for selected text
+		fillColorHL = %this.adjustValue(%this.color4, 10);
 		fillColorSL = %this.color4;
 		fillColorNA = %this.setAlpha(%this.color4, 80);
+		fillColorTextSL = %this.color5;
 
 		fontType = %this.font[3];
 		fontDirectory = %this.fontDirectory;
@@ -1050,14 +1056,16 @@ function BaseTheme::makeTextEditProfile(%this)
 		fontColorHL = %this.adjustValue(%this.color1, 10);
 		fontColorSL = %this.color1;
 		fontColorNA = %this.setAlpha(%this.color1, 100);
+		fontColorTextSL = %this.color1;
 		align = left;
-		cursorColor = %this.color1;
+		vAlign = middle;
+		cursorColor = %this.color2;
 
 		borderDefault = %textBorderV;
 		borderRight = %textBorderH;
 		borderLeft = %textBorderH;
 
-		tab = false;
+		tab = true;
 		canKeyFocus = true;
 		returnTab = true;
 		useInput = true;

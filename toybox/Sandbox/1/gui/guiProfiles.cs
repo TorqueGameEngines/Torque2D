@@ -114,6 +114,13 @@ new GuiCursor(MoveCursor)
    bitmapName = "./Images/move";
 };
 
+new GuiCursor(EditCursor)
+{
+   hotSpot = "0 0";
+   renderOffset = "0.5 0.5";
+   bitmapName = "./Images/ibeam";
+};
+
 if (!isObject(GuiDefaultBorderProfile)) new GuiBorderProfile (GuiDefaultBorderProfile)
 {
 	// Default margin
@@ -470,11 +477,12 @@ if (!isObject(GuiCheckBoxProfile)) new GuiControlProfile (GuiCheckBoxProfile : G
 if (!isObject(GuiTextEditProfile)) new GuiControlProfile (GuiTextEditProfile : GuiDefaultProfile)
 {
     fillColor = "232 240 248 255";
-    fillColorHL = "251 170 0 255";
+    fillColorHL = "242 250 255 255";
     fillColorNA = "127 127 127 52";
+	fillColorTextSL = "251 170 0 255";
     bitmap = "^Sandbox/gui/images/smallButtonContainer.png";
     fontColor = "27 59 95 255";
-    fontColorHL = "232 240 248 255";
+    fontColorHL = "27 59 95 255";
     fontColorNA = "0 0 0 52";
     fontColorSL = "0 0 0 255";
     textOffset = "5 2";
@@ -676,16 +684,18 @@ if (!isObject(GuiSliderNoTextProfile)) new GuiControlProfile (GuiSliderNoTextPro
 if (!isObject(GuiSpinnerProfile)) new GuiControlProfile (GuiSpinnerProfile : GuiDefaultProfile)
 {
     fillColor = $color3;
-    fillColorHL = $color5;
+    fillColorHL = $color3;
 	fillColorSL = $color3;
     fillColorNA = SetColorAlpha(%this.color3, 100);
+	fillColorTextSL = $color5;
     numbersOnly = true;
 
 	fontSize = $platformFontSize + 2;
     fontColor = $color1;
-    fontColorHL = $color4;
+    fontColorHL = $color1;
 	fontColorSL = $color1;
     fontColorNA = SetColorAlpha($color1, 100);
+	fontColorTextSL = $color4;
 
 	borderTop = "GuiDarkBorderProfile";
 	borderBottom = "GuiBrightBorderProfile";

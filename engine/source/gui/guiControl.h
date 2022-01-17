@@ -725,7 +725,10 @@ public:
     /// Renders justified text using the profile.
     ///
     /// @note This should move into the graphics library at some point
-    void renderText(Point2I &offset, Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
+    void renderText(const Point2I &offset, const Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
+    virtual void renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot = tRotateNone);
+    virtual vector<string> getLineList(const char* text, GuiControlProfile* profile, S32 totalWidth);
+    virtual void renderTextLine(const Point2I& startPoint, const string line, GuiControlProfile* profile, F32 rotationInDegrees, U32 ibeamPosAtLineStart, U32 lineNumber);
 
 	/// Returns a new rect based on the margins.
 	RectI applyMargins(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);

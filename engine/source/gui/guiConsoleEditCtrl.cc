@@ -27,6 +27,23 @@
 #include "gui/guiConsoleEditCtrl.h"
 #include "memory/frameAllocator.h"
 
+GuiConsoleEditHistory::GuiConsoleEditHistory() 
+{ 
+    historyList = vector<string>();
+}
+
+const string& GuiConsoleEditHistory::getPrevHistory()
+{
+    index = static_cast<U32>(getMax(static_cast<S32>(index - 1), 0));
+    return historyList.size() == 0 ? workingText : historyList[index];
+}
+const string& GuiConsoleEditHistory::getNextHistory()
+{
+    index = getMin(index + 1, historyList.size());
+    return historyList.size() == index ? workingText : historyList[index];
+}
+
+
 IMPLEMENT_CONOBJECT(GuiConsoleEditCtrl);
 
 GuiConsoleEditCtrl::GuiConsoleEditCtrl()
@@ -34,8 +51,8 @@ GuiConsoleEditCtrl::GuiConsoleEditCtrl()
    mSinkAllKeyEvents = true;
    mSiblingScroller = NULL;
    mUseSiblingScroller = true;
-   mHistorySize = 40;
    mReturnCausesTab = false;
+   mHistory = GuiConsoleEditHistory();
 }
 
 void GuiConsoleEditCtrl::initPersistFields()
@@ -47,56 +64,117 @@ void GuiConsoleEditCtrl::initPersistFields()
    endGroup("GuiConsoleEditCtrl");
 }
 
-bool GuiConsoleEditCtrl::onKeyDown(const GuiEvent &event)
+bool GuiConsoleEditCtrl::onKeyDown(const GuiEvent& event)
 {
-   setUpdate();
+    setUpdate();
 
-   if (event.keyCode == KEY_TAB) 
-   {
-      // Get a buffer that can hold the completed text...
-      FrameTemp<UTF8> tmpBuff(GuiTextEditCtrl::MAX_STRING_LENGTH);
-      // And copy the text to be completed into it.
-      mTextBuffer.getCopy8(tmpBuff, GuiTextEditCtrl::MAX_STRING_LENGTH);
+    if (event.keyCode == KEY_TAB)
+    {
+        // Get a buffer that can hold the completed text...
+        FrameTemp<UTF8> tmpBuff(GuiTextEditCtrl::MAX_STRING_LENGTH);
+        // And copy the text to be completed into it.
+        StringBuffer strBuff(mTextBuffer.c_str());
+        strBuff.getCopy8(tmpBuff, GuiTextEditCtrl::MAX_STRING_LENGTH);
 
-      // perform the completion
-      bool forward = event.modifier & SI_SHIFT;
-      mCursorPos = Con::tabComplete(tmpBuff, mCursorPos, GuiTextEditCtrl::MAX_STRING_LENGTH, forward);
+        // perform the completion
+        bool forward = event.modifier & SI_SHIFT;
+        //mCursorPos = Con::tabComplete(tmpBuff, mCursorPos, GuiTextEditCtrl::MAX_STRING_LENGTH, forward);
 
-      // place results in our buffer.
-      mTextBuffer.set(tmpBuff);
-      return true;
-   }
-   else if ((event.keyCode == KEY_PAGE_UP) || (event.keyCode == KEY_PAGE_DOWN)) 
-   {
-      // See if there's some other widget that can scroll the console history.
-      if (mUseSiblingScroller) 
-      {
-         if (mSiblingScroller) 
-         {
-            return mSiblingScroller->onKeyDown(event);
-         }
-         else 
-         {
-            // Let's see if we can find it...
-            SimGroup* pGroup = getGroup();
-            if (pGroup) 
+        // place results in our buffer.
+        mTextBuffer.assign(tmpBuff);
+        return true;
+    }
+    else if ((event.keyCode == KEY_PAGE_UP) || (event.keyCode == KEY_PAGE_DOWN))
+    {
+        // See if there's some other widget that can scroll the console history.
+        if (mUseSiblingScroller)
+        {
+            if (mSiblingScroller)
             {
-               // Find the first scroll control in the same group as us.
-               for (SimSetIterator itr(pGroup); *itr; ++itr) 
-               {
-                  if ((mSiblingScroller = dynamic_cast<GuiScrollCtrl*>(*itr))) 
-                  {
-                     return mSiblingScroller->onKeyDown(event);
-                  }
-               }
+                return mSiblingScroller->onKeyDown(event);
             }
+            else
+            {
+                // Let's see if we can find it...
+                SimGroup* pGroup = getGroup();
+                if (pGroup)
+                {
+                    // Find the first scroll control in the same group as us.
+                    for (SimSetIterator itr(pGroup); *itr; ++itr)
+                    {
+                        if ((mSiblingScroller = dynamic_cast<GuiScrollCtrl*>(*itr)))
+                        {
+                            return mSiblingScroller->onKeyDown(event);
+                        }
+                    }
+                }
 
-            // No luck... so don't try, next time.
-            mUseSiblingScroller = false;
-         }
-      }
-   }
+                // No luck... so don't try, next time.
+                mUseSiblingScroller = false;
+            }
+        }
+    }
 
    return Parent::onKeyDown(event);
 }
+
+bool GuiConsoleEditCtrl::handleEnterKey()
+{
+    mHistory.updateHistory(mTextBuffer);
+    
+    return Parent::handleEnterKey();
+}
+
+bool GuiConsoleEditCtrl::handleArrowKey(GuiDirection direction)
+{
+    if (!mTextWrap && (direction == GuiDirection::Up || direction == GuiDirection::Down))
+    {
+        string historyText = (direction == GuiDirection::Up ? mHistory.getPrevHistory() : mHistory.getNextHistory());
+        setText(historyText);
+        mSelector.setTextLength(historyText.length());
+        mSelector.setCursorPosition(historyText.length());
+        return true;
+    }
+    else
+    {
+        return Parent::handleArrowKey(direction);
+    }
+}
+
+bool GuiConsoleEditCtrl::handleCharacterInput(const GuiEvent& event)
+{
+    string before = mTextBuffer;
+    bool result = Parent::handleCharacterInput(event);
+
+    if (before != mTextBuffer)
+    {
+        mHistory.setWorkingText(mTextBuffer);
+    }
+    return result;
+}
+
+bool GuiConsoleEditCtrl::handleBackSpace()
+{
+    string before = mTextBuffer;
+    bool result = Parent::handleBackSpace();
+
+    if (before != mTextBuffer)
+    {
+        mHistory.setWorkingText(mTextBuffer);
+    }
+    return result;
+}
+
+bool GuiConsoleEditCtrl::handleDelete()
+{
+    string before = mTextBuffer;
+    bool result = Parent::handleDelete();
+
+    if (before != mTextBuffer)
+    {
+        mHistory.setWorkingText(mTextBuffer);
+    }
+    return result;
+}
+
 

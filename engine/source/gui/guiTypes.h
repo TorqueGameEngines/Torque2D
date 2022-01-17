@@ -173,6 +173,7 @@ public:
    ColorI mFillColorHL; //The highlight fill color used when the cursor enters the control.
    ColorI mFillColorSL;	//Color used when the control is selected.
    ColorI mFillColorNA; //Used if the object is not active or disabled.
+   ColorI mFillColorTextSL; //Background color used when text is selected.
 
    GuiBorderProfile* mBorderDefault;					//The default border settings.
    // top profile
@@ -197,18 +198,21 @@ public:
       ColorHL,
       ColorNA,
       ColorSL,
+      ColorLink,
+      ColorLinkHL,
+      ColorTextSL,
       ColorUser0,
       ColorUser1,
       ColorUser2,
-      ColorUser3,
-      ColorUser4,
-      ColorUser5,
    };
    ColorI  mFontColors[10];                        ///< Array of font colors used for drawText with escape characters for changing color mid-string
    ColorI& mFontColor;                             ///< Main font color
    ColorI& mFontColorHL;                           ///< Highlited font color
    ColorI& mFontColorNA;                           ///< Font color when object is not active/disabled
    ColorI& mFontColorSL;                          ///< Font color when object/text is selected
+   ColorI& mFontColorLink;
+   ColorI& mFontColorLinkHL;
+   ColorI& mFontColorTextSL;
    FontCharset mFontCharset;                       ///< Font character set
 
    Resource<GFont>   mFont;                        ///< Font resource

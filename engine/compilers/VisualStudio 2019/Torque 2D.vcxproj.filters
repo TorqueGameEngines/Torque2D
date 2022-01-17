@@ -756,12 +756,6 @@
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiMLTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiMLTextEditCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -1960,12 +1954,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiMLTextCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiMLTextEditCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h">

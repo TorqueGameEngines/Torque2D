@@ -34,6 +34,7 @@
 #include "gui/editor/guiEditCtrl.h"
 #include "string/unicode.h"
 #include "collection/vector.h"
+#include "2d/core/Utility.h"
 
 #include <sstream>
 #include <iostream>
@@ -1687,127 +1688,159 @@ void GuiControl::getScrollLineSizes(U32 *rowHeight, U32 *columnWidth)
     *rowHeight = 30;
 }
 
-void GuiControl::renderText(Point2I &offset, Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot)
+void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const char* text, GuiControlProfile* profile, TextRotationOptions rot)
 {
-	RectI old = dglGetClipRect();
-	RectI clipRect = RectI(offset, extent);
-	if (clipRect.intersect(old))
+    RectI old = dglGetClipRect();
+    RectI clipRect = RectI(offset, extent);
+    if (clipRect.intersect(old))
+    {
+        dglSetClipRect(clipRect);
+
+        const S32 textHeight = profile->mFont->getHeight();
+        S32 totalWidth = (rot == tRotateNone) ? extent.x : extent.y;
+        S32 totalHeight = (rot == tRotateNone) ? extent.y : extent.x;
+
+        S32 startOffsetY = 0;
+
+        vector<string> lineList = getLineList(text, profile, totalWidth);
+
+        //first align vertical
+        S32 blockHeight = textHeight * lineList.size();
+        if (blockHeight < totalHeight)
+        {
+            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, profile->mVAlignment);
+        }
+        else if (!mTextWrap)
+        {
+            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, GuiControlProfile::VertAlignmentType::MiddleVAlign);
+        }
+        else
+        {
+            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, GuiControlProfile::VertAlignmentType::TopVAlign);
+        }
+
+        renderLineList(offset, extent, startOffsetY, lineList, profile, rot);
+        dglSetClipRect(old);
+    }
+}
+
+void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot)
+{
+    const S32 textHeight = profile->mFont->getHeight();
+    S32 totalWidth = (rot == tRotateNone) ? extent.x : extent.y;
+
+	//Now print each line
+    U32 ibeamPos = 0;
+    U32 lineNumber = 0;
+    S32 offsetX = 0;
+    S32 offsetY = startOffsetY;
+	for(string line : lineList)
 	{
-		dglSetClipRect(clipRect);
-
-	   GFont *font = profile->mFont;
-	   S32 textWidth = 0;
-	   const S32 textHeight = font->getHeight();
-	   S32 totalWidth = extent.x;
-	   S32 totalHeight = extent.y;
-
-	   if (rot != tRotateNone)
-	   {
-		   totalWidth = extent.y;
-		   totalHeight = extent.x;
-	   }
-
-	   Point2I startOffset = Point2I(0,0);
-
-	   vector<string> lineList = vector<string>();
-
-	   if (!mTextWrap)
-	   {
-		   lineList.push_back(text);
-	   }
-	   else
-	   {
-			vector<string> paragraphList = vector<string>();
-			istringstream f(text);
-			string s;
-			while(getline(f, s)) {
-				paragraphList.push_back(s);
-			}
-
-			for (string &paragraph : paragraphList)
-			{
-				vector<string> wordList = vector<string>();
-				istringstream f2(paragraph);
-				string s2;
-				while (getline(f2, s2, ' ')) {
-					wordList.push_back(s2);
-				}
-
-				//now process the word list
-				string line;
-				line.clear();
-				for (string &word : wordList)
-				{
-					if (font->getStrWidth(word.c_str()) >= totalWidth)
-					{
-						if (line.size() > 0)
-						{
-							lineList.push_back(string(line));
-							line.clear();
-						}
-						lineList.push_back(word);
-						continue;
-					}
-
-					string prevLine = string(line);
-					line += (line.size() > 0) ? " " + word : word;
-					if (font->getStrWidth(line.c_str()) >= totalWidth)
-					{
-						lineList.push_back(prevLine);
-						line = word;
-					}
-				}
-				lineList.push_back(string(line));
-			}
-	   }
-
-	   //first align vertical
-	   S32 blockHeight = textHeight * lineList.size();
-		if (blockHeight < totalHeight)
+		// align the horizontal
+        string trimmedLine = Utility::trim_copy(line);
+		U32 textWidth = profile->mFont->getStrWidth(trimmedLine.c_str());
+		if(textWidth < totalWidth)
 		{
-			startOffset.y = getTextVerticalOffset(blockHeight, totalHeight, profile->mVAlignment);
-		}
-		else
-		{
-			startOffset.y = getTextVerticalOffset(blockHeight, totalHeight, GuiControlProfile::VertAlignmentType::MiddleVAlign);
+            offsetX = getTextHorizontalOffset(textWidth, totalWidth, profile->mAlignment);
 		}
 
-	   //Now print each line
-	   for(string &line : lineList)
-	   {
-		   // align the horizontal
-		   textWidth = font->getStrWidth(line.c_str());
-		   if(textWidth < totalWidth)
-		   {
-				startOffset.x = getTextHorizontalOffset(textWidth, totalWidth, profile->mAlignment);
-		   }
+		Point2I start = Point2I(0, 0);
+		F32 rotation;
+		if (rot == tRotateNone)
+		{
+            start.x += offsetX;
+            start.y += offsetY;
+			rotation = 0.0f;
+		}
+		else if (rot == tRotateLeft)
+		{
+			start.x = offsetY;
+			start.y = extent.y + offsetX;
+			rotation = 90.0f;
+		}
+		else if (rot == tRotateRight)
+		{
+			start.x = extent.x - offsetY;
+			start.y = offsetX;
+			rotation = -90.0f;
+		}
 
-			Point2I start = Point2I(0, 0);
-			F32 rotation;
-			if (rot == tRotateNone)
-			{
-				start += startOffset;
-				rotation = 0.0f;
-			}
-			else if (rot == tRotateLeft)
-			{
-				start.x = startOffset.y;
-				start.y = extent.y + startOffset.x;
-				rotation = 90.0f;
-			}
-			else if (rot == tRotateRight)
-			{
-				start.x = extent.x - startOffset.y;
-				start.y = startOffset.x;
-				rotation = -90.0f;
-			}
-
-			dglDrawText( font, start + offset + profile->mTextOffset, line.c_str(), profile->mFontColors, 9, rotation );
+        renderTextLine(start + offset + profile->mTextOffset, trimmedLine, profile, rotation, ibeamPos, lineNumber);
 			
-			startOffset.y += textHeight;
-		}
-		dglSetClipRect(old);
+		offsetY += textHeight;
+        ibeamPos += line.length();
+        lineNumber++;
 	}
+}
+
+vector<string> GuiControl::getLineList(const char* text, GuiControlProfile* profile, S32 totalWidth)
+{
+    GFont* font = profile->mFont;
+    vector<string> lineList = vector<string>();
+
+    if (!mTextWrap)
+    {
+        lineList.push_back(text);
+    }
+    else
+    {
+        vector<string> paragraphList = vector<string>();
+        istringstream f(text);
+        string s;
+        while (getline(f, s)) {
+            paragraphList.push_back(s);
+        }
+
+        for (string& paragraph : paragraphList)
+        {
+            vector<string> wordList = vector<string>();
+            istringstream f2(paragraph);
+            string s2;
+            while (getline(f2, s2, ' ')) {
+                wordList.push_back(s2);
+            }
+
+            //now process the word list
+            string line;
+            bool newLine = true;
+            line.clear();
+            for (string& word : wordList)
+            {
+                if (font->getStrWidth(word.c_str()) >= totalWidth)
+                {
+                    if (line.size() > 0)
+                    {
+                        lineList.push_back(string(line + " "));
+                        line.clear();
+                    }
+                    lineList.push_back(word + " ");
+                    newLine = true;
+                    continue;
+                }
+
+                string prevLine = string(line);
+                line += (!newLine) ? " " + word : word;
+                newLine = false;
+                if (font->getStrWidth(line.c_str()) >= totalWidth && word.length() != 0)
+                {
+                    lineList.push_back(prevLine + " ");
+                    line = word;
+                }
+            }
+            if (paragraph.back() == ' ')
+            {
+                line += " ";
+            }
+            lineList.push_back(string(line));
+        }
+    }
+
+    return lineList;
+}
+
+void GuiControl::renderTextLine(const Point2I& startPoint, const string line, GuiControlProfile* profile, F32 rotationInDegrees, [[maybe_unused]] U32 ibeamPosAtLineStart, [[maybe_unused]] U32 lineNumber)
+{
+    dglDrawText(profile->mFont, startPoint, line.c_str(), profile->mFontColors, 9, rotationInDegrees);
 }
 
 S32 GuiControl::getTextHorizontalOffset(S32 textWidth, S32 totalWidth, GuiControlProfile::AlignmentType align)

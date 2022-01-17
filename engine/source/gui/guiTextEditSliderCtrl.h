@@ -73,8 +73,6 @@ public:
    void onTouchDragged(const GuiEvent &event);
    void onTouchUp(const GuiEvent &event);
 
-
-   void onPreRender();
    void onRender(Point2I offset, const RectI &updateRect);
 
 

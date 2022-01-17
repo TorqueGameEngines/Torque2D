@@ -52,11 +52,6 @@ void GuiTextEditSliderCtrl::initPersistFields()
    addField("increment", TypeF32,     Offset(mIncAmount,     GuiTextEditSliderCtrl));
 }
 
-void GuiTextEditSliderCtrl::getText(char *dest)
-{
-   Parent::getText(dest);
-}
-
 void GuiTextEditSliderCtrl::setText(const char *txt)
 {
    mValue = dAtof(txt);
@@ -86,9 +81,7 @@ void GuiTextEditSliderCtrl::setValue()
 
 void GuiTextEditSliderCtrl::onTouchDown(const GuiEvent &event)
 {
-   char txt[20];
-   Parent::getText(txt);
-   mValue = dAtof(txt);
+   mValue = dAtof(mText);
 
    mMouseDownTime = Sim::getCurrentTime();
    GuiControl *parent = getParent();
@@ -310,35 +303,6 @@ void GuiTextEditSliderCtrl::onRender(Point2I offset, const RectI &updateRect)
       }
    glEnd();
 #endif
-}
-
-void GuiTextEditSliderCtrl::onPreRender()
-{
-   if (isFirstResponder())
-   {
-      U32 timeElapsed = Platform::getVirtualMilliseconds() - mTimeLastCursorFlipped;
-      mNumFramesElapsed++;
-      if ((timeElapsed > 500) && (mNumFramesElapsed > 3))
-      {
-         mCursorOn = !mCursorOn;
-         mTimeLastCursorFlipped = Sim::getCurrentTime();
-         mNumFramesElapsed = 0;
-         setUpdate();
-      }
-
-      //update the cursor if the text is scrolling
-      if (mDragHit)
-      {
-         if ((mScrollDir < 0) && (mCursorPos > 0))
-         {
-            mCursorPos--;
-         }
-         else if ((mScrollDir > 0) && (mCursorPos < (S32)dStrlen(mText)))
-         {
-            mCursorPos++;
-         }
-      }
-   }
 }
 
 
