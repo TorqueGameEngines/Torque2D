@@ -143,6 +143,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
       <ShowIncludes>false</ShowIncludes>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -192,6 +193,7 @@
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
       <ShowIncludes>false</ShowIncludes>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -241,6 +243,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -301,6 +304,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -360,6 +364,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -420,6 +425,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <LanguageStandard>stdcpp14</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -628,8 +634,6 @@
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiListBoxCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiMLTextCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiMLTextEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc" />
@@ -1128,8 +1132,6 @@
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiMLTextCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiMLTextEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h" />

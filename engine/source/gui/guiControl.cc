@@ -1838,7 +1838,7 @@ vector<string> GuiControl::getLineList(const char* text, GuiControlProfile* prof
     return lineList;
 }
 
-void GuiControl::renderTextLine(const Point2I& startPoint, const string line, GuiControlProfile* profile, F32 rotationInDegrees, [[maybe_unused]] U32 ibeamPosAtLineStart, [[maybe_unused]] U32 lineNumber)
+void GuiControl::renderTextLine(const Point2I& startPoint, const string line, GuiControlProfile* profile, F32 rotationInDegrees, U32, U32)
 {
     dglDrawText(profile->mFont, startPoint, line.c_str(), profile->mFontColors, 9, rotationInDegrees);
 }
