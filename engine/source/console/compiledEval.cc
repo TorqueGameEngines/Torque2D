@@ -1437,7 +1437,7 @@ breakContinue:
 #ifdef TORQUE_64
             *((U64*)(code+ip+2)) = ((U64)nsEntry);
 #else
-            code[ip+2] = ((U32)nsEntry);
+            code[ip+2] = ((U32)(size_t)nsEntry);
 #endif
             code[ip-1] = OP_CALLFUNC;
 

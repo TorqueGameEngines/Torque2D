@@ -77,7 +77,7 @@ namespace Compiler
 #ifdef TORQUE_64
       *((U64*)(codeStream+ip)) = (U64)ste;
 #else
-      codeStream[ip] = (U32)ste;
+      codeStream[ip] = (U32)(size_t)ste;
 #endif
    }
    

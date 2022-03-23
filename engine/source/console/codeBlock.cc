@@ -463,7 +463,7 @@ bool CodeBlock::read(StringTableEntry fileName, Stream &st)
 #ifdef TORQUE_64
          *(U64*)(code+ip) = (U64)ste;
 #else
-         code[ip] = (U32)ste;
+         code[ip] = (U32)(size_t)ste;
 #endif
       }
    }
