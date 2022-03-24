@@ -4,7 +4,7 @@
  */
 
 #include "gzguts.h"
-#if defined(_MAC)
+#if (defined(TORQUE_OS_OSX) || defined(TORQUE_OS_IOS))
 #include "unistd.h"
 #endif
 
