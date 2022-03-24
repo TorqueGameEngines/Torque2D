@@ -4,7 +4,9 @@
  */
 
 #include "gzguts.h"
+#if defined(_MAC)
 #include "unistd.h"
+#endif
 
 /* Local functions */
 local int gz_init OF((gz_statep));
