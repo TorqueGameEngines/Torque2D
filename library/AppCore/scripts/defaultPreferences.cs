@@ -21,8 +21,8 @@
 //-----------------------------------------------------------------------------
 
 /// Game
-$Game::CompanyName              = "GarageGames LLC";
-$Game::ProductName              = "Torque 2D";
+$Game::CompanyName              = "Torque Game Engines";
+$Game::ProductName              = "Torque2D";
 
 /// iOS
 $pref::iOS::ScreenOrientation   = $iOS::constant::Landscape;
@@ -59,10 +59,9 @@ $pref::T2D::JSONStrict = 1;
 
 /// Video
 $pref::Video::appliedPref = 0;
-$pref::Video::disableVerticalSync = 1;
 $pref::Video::displayDevice = "OpenGL";
 $pref::Video::preferOpenGL = 1;
-$pref::Video::fullScreen = 1;
+$pref::Video::fullScreen = 0;
 $pref::Video::defaultResolution = "1024 768";
 $pref::Video::windowedRes = "1024 768 32";
 $pref::OpenGL::gammaCorrection = 0.5;

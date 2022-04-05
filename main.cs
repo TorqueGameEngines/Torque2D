@@ -41,7 +41,7 @@ $Scripts::ignoreDSOs = true;
 // The name of the game. Used to form the path to save preferences. Defaults to C++ engine define TORQUE_GAME_NAME
 // if not specified.
 // Appending version string to avoid conflicts with existing versions and other versions.
-setCompanyAndProduct("GarageGames", "Torque2D" );
+setCompanyAndProduct("Torque Game Engines", "Torque2D" );
 
 // Set module database information echo.
 ModuleDatabase.EchoInfo = false;

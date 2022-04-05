@@ -1,0 +1,821 @@
+//-----------------------------------------------------------------------------
+// Copyright (c) 2013 GarageGames, LLC
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
+//-----------------------------------------------------------------------------
+
+if ($platform $= "windows")
+	$platformFontType = "share tech mono";
+else if ($platform $= "Android")
+	$platformFontType = "Droid";
+else
+	$platformFontType = "monaco";
+if ($platform $= "ios")
+	$platformFontSize = 18;
+else if ($platform $= "Android")
+	$platformFontSize = 14;
+else
+	$platformFontSize = 12;
+
+$color[1] = "43 43 43 255";
+$color[2] = "81 92 102 255";
+$color[3] = "224 224 224 255";
+$color[4] = "54 135 196 255";
+$color[5] = "245 210 50 255";
+$color[6] = "196 54 71 255";
+
+function AdjustColorValue(%color, %percent)
+{
+	%red = getWord(%color, 0);
+	%green = getWord(%color, 1);
+	%blue = getWord(%color, 2);
+	%alpha = getWord(%color, 3);
+
+	%largest = mGetMax(%red, mGetMax(%blue, %green));
+	%currentValue = %largest / 255;
+	%fullRed = %red / %currentValue;
+	%fullGreen = %green / %currentValue;
+	%fullBlue = %blue / %currentValue;
+
+	%newValue = %currentValue += (%percent/100);
+	%newValue = mClamp(%newValue, 0, 100);
+	%newColor = mRound(mClamp((%fullRed * %newValue), 0, 255)) SPC
+		mRound(mClamp((%fullGreen * %newValue), 0, 255)) SPC
+		mRound(mClamp((%fullBlue * %newValue), 0, 255)) SPC %alpha;
+
+	return %newColor;
+}
+
+function SetColorAlpha(%color, %newAlpha)
+{
+	%red = getWord(%color, 0);
+	%green = getWord(%color, 1);
+	%blue = getWord(%color, 2);
+	return %red SPC %green SPC %blue SPC mRound(mClamp(%newAlpha, 0, 255));
+}
+
+//-----------------------------------------------------------------------------
+
+new GuiCursor(DefaultCursor)
+{
+    hotSpot = "1 1";
+    renderOffset = "0 0";
+    bitmapName = "^AppCore/gui/images/cursors/defaultCursor";
+};
+
+new GuiCursor(LeftRightCursor)
+{
+   hotSpot = "0.5 0";
+   renderOffset = "0.5 0";
+   bitmapName = "^AppCore/gui/images/cursors/leftRight";
+};
+
+new GuiCursor(UpDownCursor)
+{
+   hotSpot = "1 1";
+   renderOffset = "0 1";
+   bitmapName = "^AppCore/gui/images/cursors/upDown";
+};
+
+new GuiCursor(NWSECursor)
+{
+   hotSpot = "1 1";
+   renderOffset = "0.5 0.5";
+   bitmapName = "^AppCore/gui/images/cursors/NWSE";
+};
+
+new GuiCursor(NESWCursor)
+{
+   hotSpot = "1 1";
+   renderOffset = "0.5 0.5";
+   bitmapName = "^AppCore/gui/images/cursors/NESW";
+};
+
+new GuiCursor(MoveCursor)
+{
+   hotSpot = "1 1";
+   renderOffset = "0.5 0.5";
+   bitmapName = "^AppCore/gui/images/cursors/move";
+};
+
+new GuiCursor(EditCursor)
+{
+   hotSpot = "0 0";
+   renderOffset = "0.5 0.5";
+   bitmapName = "^AppCore/gui/images/cursors/ibeam";
+};
+
+//The Torque gods will be displeased if you change the default gui profile! Consider making a new child profile instead.
+if (!isObject(GuiDefaultBorderProfile)) new GuiBorderProfile (GuiDefaultBorderProfile)
+{
+	// Default margin
+	margin = 0;
+	marginHL = 0;
+	marginSL = 0;
+	marginNA = 0;
+	//Default Border
+	border = 0;
+	borderHL = 0;
+	borderSL = 0;
+	borderNA = 0;
+	//Default border color
+	borderColor   = $color1;
+    borderColorHL = AdjustColorValue($color1, 10);
+    borderColorSL = AdjustColorValue($color1, 10);
+    borderColorNA = SetColorAlpha($color1, 100);
+	//Default Padding
+	padding = 0;
+	paddingHL = 0;
+	paddingSL = 0;
+	paddingNA = 0;
+	//Default underfill
+	underfill = true;
+};
+
+if(!isObject(GuiDefaultProfile)) new GuiControlProfile (GuiDefaultProfile)
+{
+    // fill color
+    fillColor = "0 0 0 0";
+
+    // font
+    fontType = $platformFontType;
+	fontDirectory = expandPath( "^AppCore/fonts" );
+    fontSize = $platformFontSize;
+    fontColor = "255 255 255 255";
+	align = center;
+	vAlign = middle;
+
+	cursorColor = "0 0 0 255";
+
+	borderDefault = GuiDefaultBorderProfile;
+	category = "default";
+};
+
+if (!isObject(GuiBrightBorderProfile)) new GuiBorderProfile (GuiBrightBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 2;
+	borderHL = 2;
+	borderSL = 2;
+	borderNA = 2;
+
+	borderColor = "255 255 255 50";
+	borderColorHL = "255 255 255 50";
+	borderColorSL = "255 255 255 50";
+	borderColorNA = "255 255 255 50";
+
+	underfill = true;
+};
+
+if (!isObject(GuiDarkBorderProfile)) new GuiBorderProfile (GuiDarkBorderProfile : GuiBrightBorderProfile)
+{
+	borderColor = "0 0 0 50";
+	borderColorHL = "0 0 0 50";
+	borderColorSL = "0 0 0 50";
+	borderColorNA = "0 0 0 50";
+};
+
+if(!isObject(GuiPanelProfile)) new GuiControlProfile (GuiPanelProfile : GuiDefaultProfile)
+{
+	fillColor = $color1;
+    fillColorHL = AdjustColorValue($color1, 10);
+    fillColorSL = AdjustColorValue($color1, 15);
+    fillColorNA = SetColorAlpha($color1, 100);
+	borderDefault = GuiBrightBorderProfile;
+	category = "defaultPanel";
+};
+
+if (!isObject(GuiListBoxBorderProfile)) new GuiBorderProfile (GuiListBoxBorderProfile : GuiDefaultBorderProfile)
+{
+	margin = 1;
+	marginHL = 1;
+	marginSL = 1;
+	marginNA = 1;
+
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+};
+
+if(!isObject(GuiListBoxProfile)) new GuiControlProfile (GuiListBoxProfile : GuiDefaultProfile)
+{
+    // fill color
+    fillColor = $color1;
+    fillColorHL = AdjustColorValue($color1, 10);
+    fillColorSL = $color4;
+    fillColorNA = SetColorAlpha($color1, 100);
+	align = left;
+
+	tab = false;
+	canKeyFocus = true;
+	category = "defaultListBox";
+
+	fontColor = $color3;
+	fontColorHL = AdjustColorValue($color3, 20);
+	fontColorSL = AdjustColorValue($color3, 20);
+	fontColorNA = AdjustColorValue($color3, -30);
+
+	borderDefault = GuiListBoxBorderProfile;
+};
+
+if(!isObject(GuiWindowBorderProfile)) new GuiBorderProfile (GuiWindowBorderProfile : GuiDefaultBorderProfile)
+{
+	padding = 10;
+	paddingHL = 10;
+	paddingSL = 10;
+	paddingNA = 4;
+};
+
+if(!isObject(GuiWindowProfile)) new GuiControlProfile (GuiWindowProfile : GuiDefaultProfile)
+{
+   fillColor = AdjustColorValue($color1, 10);
+   fillColorHL = AdjustColorValue($color1, 12);
+   fillColorSL = $color4;
+   fillColorNA = $color1;
+   category = "defaultWindow";
+   align = "Left";
+
+   fontColorSL = $color5;
+
+   borderLeft = GuiWindowBorderProfile;
+};
+
+if(!isObject(GuiWindowContentBorderProfile)) new GuiBorderProfile (GuiWindowContentBorderProfile : GuiDefaultBorderProfile)
+{
+	borderColor = AdjustColorValue($color1, 10);
+	borderColorSL = AdjustColorValue($color4, -10);
+
+	border = 3;
+	borderSL = 3;
+};
+
+if(!isObject(GuiWindowContentProfile)) new GuiControlProfile (GuiWindowContentProfile : GuiDefaultProfile)
+{
+	fillColor = AdjustColorValue($color1, -10);
+	fillColorSL = AdjustColorValue($color1, -10);
+
+	borderDefault = GuiWindowContentBorderProfile;
+	borderTop = GuiDefaultBorderProfile;
+};
+
+if(!isObject(GuiWindowButtonBorderProfile)) new GuiBorderProfile (GuiWindowButtonBorderProfile : GuiDefaultBorderProfile)
+{
+	margin = 1;
+	marginHL = 1;
+	marginSL = 1;
+	marginNA = 1;
+
+	padding = 3;
+	paddingHL = 3;
+	paddingSL = 3;
+	paddingNA = 3;
+};
+
+if(!isObject(GuiWindowCloseButtonProfile)) new GuiControlProfile (GuiWindowCloseButtonProfile : GuiDefaultProfile)
+{
+   fillColor = SetColorAlpha($color1, 150);
+   fillColorHL = SetColorAlpha($color6, 150);
+   fillColorSL = AdjustColorValue($color6, 10);
+   fillColorNA = $color1;
+
+   fontColor = SetColorAlpha($color3, 150);
+   fontColorHL = SetColorAlpha($color3, 170);
+   fontColorSL = $color5;
+   fontColorNA = SetColorAlpha($color3, 150);
+
+   borderDefault = GuiWindowButtonBorderProfile;
+};
+
+if(!isObject(GuiWindowMinButtonProfile)) new GuiControlProfile (GuiWindowMinButtonProfile : GuiWindowCloseButtonProfile)
+{
+   fillColorHL = SetColorAlpha($color4, 150);
+   fillColorSL = AdjustColorValue($color4, 10);
+};
+
+if(!isObject(GuiWindowMaxButtonProfile)) new GuiControlProfile (GuiWindowMaxButtonProfile : GuiWindowMinButtonProfile);
+if(!isObject(GuiTransparentProfile)) new GuiControlProfile (GuiTransparentProfile : GuiDefaultProfile);
+if(!isObject(GuiGridProfile)) new GuiControlProfile (GuiGridProfile : GuiDefaultProfile);
+if(!isObject(GuiChainProfile)) new GuiControlProfile (GuiChainProfile : GuiDefaultProfile);
+if(!isObject(GuiTabBookProfile)) new GuiControlProfile (GuiTabBookProfile : GuiDefaultProfile)
+{
+	fillColor = SetColorAlpha($color1, 100);
+	category = "defaultTabBook";
+};
+if(!isObject(GuiTabProfile)) new GuiControlProfile (GuiTabProfile : GuiDefaultProfile)
+{
+	fontColor = "255 255 255 255";
+    fontColorHL = "232 240 248 255";
+    fontColorSL= "255 255 255 255";
+    fontColorNA = "0 0 0 255";
+	fillColor = $color1;
+	fillColorHL = AdjustColorValue($color1, 10);
+	fillColorSL = AdjustColorValue($color1, 15);
+	fillColorNA = SetColorAlpha($color1, 100);
+	borderDefault = GuiBrightBorderProfile;
+	align = Center;
+	category = "defaultTab";
+};
+if(!isObject(GuiTabPageProfile)) new GuiControlProfile (GuiTabPageProfile : GuiDefaultProfile)
+{
+	fillColor = $color1;
+	fillColorHL = AdjustColorValue($color1, 10);
+	fillColorSL = AdjustColorValue($color1, 15);
+	fillColorNA = SetColorAlpha($color1, 100);
+	category = "defaultTabPage";
+};
+
+
+if(!isObject(GuiSpriteProfile)) new GuiControlProfile (GuiSpriteProfile : GuiDefaultProfile);
+
+if (!isObject(GuiTreeViewProfile)) new GuiControlProfile (GuiTreeViewProfile : GuiDefaultProfile)
+{
+	fontColor = "255 255 255 255";
+    fontColorHL = "232 240 248 255";
+    fontColorSL= "255 255 255 255";
+    fontColorNA = "0 0 0 255";
+	fillColor = $color1;
+	fillColorHL = AdjustColorValue($color1, 10);
+	fillColorSL = AdjustColorValue($color1, 15);
+	fillColorNA = SetColorAlpha($color1, 100);
+	bitmap = "./images/treeView";
+	canKeyFocus = true;
+	autoSizeHeight = true;
+};
+
+if (!isObject(GuiSolidBorderProfile)) new GuiBorderProfile (GuiSolidBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 1;
+
+	padding = 10;
+	paddingHL = 10;
+	paddingSL = 10;
+	paddingNA = 10;
+};
+
+if(!isObject(GuiSolidProfile)) new GuiControlProfile (GuiSolidProfile : GuiDefaultProfile)
+{
+	// fill color
+    fillColor = $color1;
+    fillColorHL = AdjustColorValue($color1, 10);
+    fillColorSL = AdjustColorValue($color1, 15);
+    fillColorNA = SetColorAlpha($color1, 100);
+
+	borderDefault = GuiSolidBorderProfile;
+};
+
+if (!isObject(GuiToolTipProfile)) new GuiControlProfile (GuiToolTipProfile : GuiSolidProfile)
+{
+    fillColor = SetColorAlpha($color1, 220);
+	fontColor = $color5;
+
+	borderDefault = GuiBrightBorderProfile;
+};
+
+if (!isObject(GuiTextProfile)) new GuiControlProfile (GuiTextProfile : GuiDefaultProfile)
+{
+    fontColor = $color3;
+
+    align = "left";
+    autoSizeWidth = false;
+    autoSizeHeight = false;
+    returnTab = false;
+    numbersOnly = false;
+    cursorColor = "0 0 0 255";
+};
+
+if(!isObject(GuiTextArrayProfile)) new GuiControlProfile (GuiTextArrayProfile : GuiTextProfile)
+{
+   fontColorHL = $color3;
+   fillColorHL = AdjustColorValue($color1, 10);
+};
+
+if (!isObject(GuiTextRightProfile)) new GuiControlProfile (GuiTextRightProfile : GuiTextProfile)
+{
+    align = "right";
+};
+
+if (!isObject(GuiCheckBoxProfile)) new GuiControlProfile (GuiCheckBoxProfile : GuiDefaultProfile)
+{
+    fillColor = $color3;
+    fillColorHL = AdjustColorValue($color3, -10);
+    fillColorSL = $color4;
+    fillColorNA = SetColorAlpha($color3, 100);
+
+    fontColor = $color3;
+	fontColorHL = AdjustColorValue($color5, -10);
+	fontColorSL = $color5;
+	fontColorNA = SetColorAlpha($color3, 100);
+    align = "left";
+	tab = true;
+
+	borderDefault = "GuiBrightBorderProfile";
+	borderRight = "GuiDarkBorderProfile";
+	borderBottom = "GuiDarkBorderProfile";
+};
+
+if (!isObject(GuiTextEditProfile)) new GuiControlProfile (GuiTextEditProfile : GuiDefaultProfile)
+{
+    fillColor = "232 240 248 255";
+    fillColorHL = "242 250 255 255";
+    fillColorNA = "127 127 127 52";
+	fillColorTextSL = "251 170 0 255";
+    fontColor = "27 59 95 255";
+    fontColorHL = "27 59 95 255";
+    fontColorNA = "0 0 0 52";
+    fontColorSL = "0 0 0 255";
+    textOffset = "5 2";
+    autoSizeWidth = false;
+    autoSizeHeight = false;
+    tab = false;
+    canKeyFocus = true;
+    returnTab = true;
+};
+
+if(!isObject(GuiScrollTrackProfile)) new GuiControlProfile (GuiScrollTrackProfile : GuiDefaultProfile)
+{
+	fillColor = $color1;
+    fillColorHL = $color1;
+    fillColorSL = $color1;
+    fillColorNA = $color1;
+};
+
+if (!isObject(GuiScrollBrightBorderProfile)) new GuiBorderProfile (GuiScrollBrightBorderProfile : GuiBrightBorderProfile)
+{
+	padding = 3;
+	paddingHL = 2;
+	paddingSL = 2;
+	paddingNA = 3;
+
+	border = 1;
+	borderHL = 2;
+	borderSL = 2;
+	borderNA = 1;
+};
+
+if (!isObject(GuiScrollDarkBorderProfile)) new GuiBorderProfile (GuiScrollDarkBorderProfile : GuiScrollBrightBorderProfile)
+{
+	borderColor = "0 0 0 20";
+	borderColorHL = "0 0 0 20";
+	borderColorSL = "0 0 0 20";
+	borderColorNA = "0 0 0 20";
+};
+
+if(!isObject(GuiScrollThumbProfile)) new GuiControlProfile (GuiScrollThumbProfile : GuiDefaultProfile)
+{
+	fillColor = $color3;
+    fillColorHL = AdjustColorValue($color3, 10);
+    fillColorSL = $color4;
+    fillColorNA = SetColorAlpha($color3, 100);
+
+	borderDefault = GuiScrollBrightBorderProfile;
+	borderRight = GuiScrollDarkBorderProfile;
+	borderBottom = GuiScrollDarkBorderProfile;
+};
+
+if(!isObject(GuiScrollArrowProfile)) new GuiControlProfile (GuiScrollArrowProfile : GuiScrollThumbProfile)
+{
+	fontColor = "0 0 0 100";
+    fontColorHL = "0 0 0 150";
+    fontColorSL = $color5;
+    fontColorNA = "0 0 0 50";
+
+	borderDefault = GuiScrollBrightBorderProfile;
+	borderRight = GuiScrollDarkBorderProfile;
+	borderBottom = GuiScrollDarkBorderProfile;
+};
+
+if(!isObject(GuiScrollProfile)) new GuiControlProfile (GuiScrollProfile)
+{
+    fillColor = $color2;
+    borderDefault = GuiDefaultBorderProfile;
+};
+
+if(!isObject(GuiTransparentScrollProfile)) new GuiControlProfile (GuiTransparentScrollProfile : GuiScrollProfile)
+{
+   fillColor = "255 255 255 0";
+};
+
+if (!isObject(GuiDarkButtonBorderProfile)) new GuiBorderProfile (GuiDarkButtonBorderProfile : GuiDarkBorderProfile)
+{
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+
+	border = 3;
+	borderHL = 3;
+	borderSL = 3;
+	borderNA = 3;
+};
+
+if (!isObject(GuiBrightButtonBorderProfile)) new GuiBorderProfile (GuiBrightButtonBorderProfile : GuiBrightBorderProfile)
+{
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+
+	border = 3;
+	borderHL = 3;
+	borderSL = 3;
+	borderNA = 3;
+};
+
+if (!isObject(GuiButtonProfile)) new GuiControlProfile (GuiButtonProfile : GuiDefaultProfile)
+{
+	fillColor = $color3;
+	fillColorHL = AdjustColorValue($color3, 10);
+	fillColorSL = AdjustColorValue($color3, 15);
+	fillColorNA = SetColorAlpha($color3, 80);
+
+	fontColor = $color1;
+	fontColorHL = $color4;
+	fontColorSL = $color1;
+	fontColorNA = SetColorAlpha($color1, 100);
+	align = center;
+	vAlign = middle;
+
+	borderLeft = GuiBrightButtonBorderProfile;
+	borderRight = GuiDarkButtonBorderProfile;
+	borderTop = GuiBrightButtonBorderProfile;
+	borderBottom = GuiDarkButtonBorderProfile;
+
+	canKeyFocus = true;
+	tab = true;
+};
+
+if (!isObject(GuiRadioProfile)) new GuiControlProfile (GuiRadioProfile : GuiDefaultProfile)
+{
+	fillColor = $color3;
+    fillColorHL = AdjustColorValue($color3, -10);
+    fillColorSL = $color4;
+    fillColorNA = SetColorAlpha($color3, 100);
+
+    fontColor = $color3;
+	fontColorHL = AdjustColorValue($color5, -10);
+	fontColorSL = $color5;
+	fontColorNA = SetColorAlpha($color3, 100);
+    align = "left";
+	tab = true;
+
+	borderLeft = GuiBrightButtonBorderProfile;
+	borderRight = GuiDarkButtonBorderProfile;
+	borderTop = GuiBrightButtonBorderProfile;
+	borderBottom = GuiDarkButtonBorderProfile;
+
+	canKeyFocus = true;
+	tab = true;
+};
+
+if (!isObject(GuiHeaderProfile)) new GuiControlProfile (GuiHeaderProfile : GuiSolidProfile)
+{
+    fillColor = $color2;
+	fontColor = $color3;
+	fontSize = $platformFontSize + 2;
+	align = "left";
+
+	borderDefault = "GuiBrightBorderProfile";
+	borderRight = "GuiDarkBorderProfile";
+	borderBottom = "GuiDarkBorderProfile";
+};
+
+if (!isObject(GuiLabelProfile)) new GuiControlProfile (GuiLabelProfile : GuiDefaultProfile)
+{
+	fontColor = "255 255 255 255";
+	fontSize = $platformFontSize;
+	align = "left";
+};
+
+if(!isObject(GuiDragAndDropProfile)) new GuiControlProfile (GuiDragAndDropProfile : GuiDefaultProfile)
+{
+   fillColor = SetColorAlpha($color4, 50);
+   fontColor = $color5;
+};
+
+if (!isObject(GuiProgressBorderProfile)) new GuiBorderProfile (GuiProgressBorderProfile : GuiDefaultBorderProfile)
+{
+	padding = 2;
+	paddingHL = 0;
+	paddingSL = 0;
+
+	border = 2;
+	borderHL = 2;
+	borderSL = 2;
+
+	margin = 0;
+	marginHL = 3;
+	marginSL = 3;
+
+	borderColor = AdjustColorValue($color1, -10);
+	borderColorHL = "255 255 255 50";
+	borderColorSL = "255 255 255 50";
+};
+
+if (!isObject(GuiProgressDarkBorderProfile)) new GuiBorderProfile (GuiProgressDarkBorderProfile : GuiProgressBorderProfile)
+{
+	borderColorHL = "0 0 0 50";
+	borderColorSL = "0 0 0 50";
+};
+
+if(!isObject(GuiProgressProfile)) new GuiControlProfile (GuiProgressProfile : GuiDefaultProfile)
+{
+   fillColor = $color1;
+   fillColorHL = $color4;
+   fillColorSL = AdjustColorValue($color4, 10);
+
+   fontColorHL = $color3;
+   fontColorSL = $color5;
+
+   borderDefault = GuiProgressBorderProfile;
+   borderBottom = GuiProgressDarkBorderProfile;
+   borderRight = GuiProgressDarkBorderProfile;
+};
+
+if (!isObject(GuiDropDownDarkBorderProfile)) new GuiBorderProfile (GuiDropDownDarkBorderProfile : GuiDarkBorderProfile)
+{
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+};
+
+if (!isObject(GuiDropDownBrightBorderProfile)) new GuiBorderProfile (GuiDropDownBrightBorderProfile : GuiBrightBorderProfile)
+{
+	padding = 4;
+	paddingHL = 4;
+	paddingSL = 4;
+	paddingNA = 4;
+};
+
+if(!isObject(GuiDropDownProfile)) new GuiControlProfile (GuiDropDownProfile : GuiDefaultProfile)
+{
+    // fill color
+    fillColor = AdjustColorValue($color3, -15);
+	fillColorHL = AdjustColorValue($color3, -8);
+	fillColorSL = $color4;
+	fillColorNA = SetColorAlpha($color3, 100);
+
+    fontColor = $color1;
+	fontColorHL = $color1;
+	fontColorSL = $color3;
+	fontColorNA = SetColorAlpha($color1, 100);
+	align = "left";
+
+	tab = true;
+	canKeyFocus = true;
+
+	borderDefault = GuiDropDownBrightBorderProfile;
+	borderRight = GuiDropDownDarkBorderProfile;
+	borderBottom = GuiDropDownDarkBorderProfile;
+	category = "dropDown";
+};
+
+if (!isObject(GuiMenuBarBorderProfile)) new GuiBorderProfile (GuiMenuBarBorderProfile : GuiDefaultBorderProfile)
+{
+	padding = 2;
+};
+
+if(!isObject(GuiMenuBarProfile)) new GuiControlProfile (GuiMenuBarProfile : GuiDefaultProfile)
+{
+	fillColor = AdjustColorValue($color1, -7);
+	canKeyFocus = true;
+	borderDefault = GuiMenuBarBorderProfile;
+	category = "defaultMenuBar";
+};
+
+if (!isObject(GuiMenuBorderProfile)) new GuiBorderProfile (GuiMenuBorderProfile : GuiDefaultBorderProfile)
+{
+	margin = 2;
+	marginHL = 0;
+	marginSL = 0;
+	marginNA = 2;
+
+	border = 0;
+	borderHL = 2;
+	borderSL = 2;
+	borderNA = 0;
+
+	borderColorHL = "255 255 255 30";
+	borderColorSL = $color4;
+};
+
+if (!isObject(GuiMenuBottomBorderProfile)) new GuiBorderProfile (GuiMenuBottomBorderProfile : GuiMenuBorderProfile)
+{
+	paddingSL = 2;
+	marginSL = 0;
+	borderSL = 0;
+};
+
+if (!isObject(GuiMenuSideBorderProfile)) new GuiBorderProfile (GuiMenuSideBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 0;
+	borderHL = 2;
+	borderSL = 2;
+	borderNA = 0;
+
+	padding = 10;
+	paddingHL = 8;
+	paddingSL = 8;
+	paddingNA = 10;
+
+	borderColorHL = "255 255 255 30";
+	borderColorSL = $color4;
+};
+
+if(!isObject(GuiMenuProfile)) new GuiControlProfile (GuiMenuProfile : GuiDefaultProfile)
+{
+	fillColor = "0 0 0 0";
+	fillColorHL = "255 255 255 10";
+	fillColorSL = AdjustColorValue($color4, -15);
+	fillColorNA = "0 0 0 0";
+
+	borderDefault = GuiMenuBorderProfile;
+	borderLeft = GuiMenuSideBorderProfile;
+	borderRight = GuiMenuSideBorderProfile;
+	borderBottom = GuiMenuBottomBorderProfile;
+	category = "defaultMenuBar";
+
+	fontColor = $color3;
+	fontColorHL = AdjustColorValue($color3, 10);
+	fontColorSL = $color3;
+	fontColorNA = SetColorAlpha($color3, 100);
+};
+
+if (!isObject(GuiMenuContentVertBorderProfile)) new GuiBorderProfile (GuiMenuContentVertBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 2;
+	padding = 4;
+	borderColor = $color4;
+};
+
+if (!isObject(GuiMenuContentSideBorderProfile)) new GuiBorderProfile (GuiMenuContentSideBorderProfile : GuiDefaultBorderProfile)
+{
+	border = 2;
+	padding = 0;
+	borderColor = $color4;
+};
+
+if(!isObject(GuiMenuContentProfile)) new GuiControlProfile (GuiMenuContentProfile : GuiDefaultBorderProfile)
+{
+	fillColor = AdjustColorValue($color1, -5);
+
+	borderDefault = GuiMenuContentSideBorderProfile;
+	borderTop = GuiMenuContentVertBorderProfile;
+	borderBottom = GuiMenuContentVertBorderProfile;
+};
+
+if (!isObject(GuiMenuItemBorderTopProfile)) new GuiBorderProfile (GuiMenuItemBorderTopProfile : GuiDefaultBorderProfile)
+{
+	padding = 6;
+	paddingHL = 6;
+	paddingSL = 0;
+	paddingNA = 6;
+
+	marginSL = 4;
+	borderSL = 1;
+	borderColorSL = "0 0 0 50";
+};
+
+if (!isObject(GuiMenuItemBorderBottomProfile)) new GuiBorderProfile (GuiMenuItemBorderBottomProfile : GuiMenuItemBorderTopProfile)
+{
+	borderColorSL = "255 255 255 50";
+};
+
+if (!isObject(GuiMenuItemBorderSideProfile)) new GuiBorderProfile (GuiMenuItemBorderSideProfile : GuiMenuItemBorderTopProfile)
+{
+	marginSL = 0;
+	borderSL = 0;
+	paddingSL = 6;
+};
+
+if(!isObject(GuiMenuItemProfile)) new GuiControlProfile (GuiMenuItemProfile : GuiDefaultProfile)
+{
+	fillColor = AdjustColorValue($color1, -5);
+	fillColorHL = AdjustColorValue($color4, -15);
+	fillColorNA = $color1;
+	align = left;
+
+	fontColor = $color3;
+	fontColorHL = AdjustColorValue($color3, 10);
+	fontColorNA = SetColorAlpha($color3, 150);
+
+	borderDefault = GuiMenuItemBorderSideProfile;
+	borderTop = GuiMenuItemBorderTopProfile;
+	borderBottom = GuiMenuItemBorderBottomProfile;
+};

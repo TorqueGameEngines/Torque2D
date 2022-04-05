@@ -1,0 +1,13 @@
+<GuiSpriteCtrl
+	Name="DefaultGui"
+	Profile = "GuiDefaultProfile"
+	HorizSizing = "relative"
+	VertSizing = "relative"
+	Position = "0 0"
+	Extent = "1024 768"
+	Image = "AppCore:torqueBG"
+	SingleFrameBitmap = "1"
+	TileImage = "0"
+	FullSize = "1"
+	ConstrainProportions = "1"
+	ImageColor = "255 255 255 255" />

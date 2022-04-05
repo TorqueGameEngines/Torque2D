@@ -1,7 +1,0 @@
-<ModuleDefinition
-	ModuleId="AppCore"
-	VersionId="1"
-	Description="Barebones startup module"
-	ScriptFile="main.cs"
-	CreateFunction="create"
-	DestroyFunction="destroy" />

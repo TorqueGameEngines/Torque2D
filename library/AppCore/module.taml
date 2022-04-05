@@ -1,0 +1,16 @@
+<ModuleDefinition
+	ModuleId="AppCore"
+	VersionId="1"
+	Description="Barebones startup module"
+	ScriptFile="main.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy" >
+	<DeclaredAssets
+		Path="gui"
+		Extension="asset.taml"
+		Recurse="true"/>
+	<DeclaredAssets
+		Path="fonts"
+		Extension="asset.taml"
+		Recurse="false"/>
+</ModuleDefinition>
