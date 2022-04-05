@@ -16,9 +16,9 @@ function BaseTheme::onAdd(%this)
 		borderNA = 0;
 		//Default border color
 		borderColor   = $color1;
-	    borderColorHL = AdjustColorValue($color1, 10);
-	    borderColorSL = AdjustColorValue($color1, 10);
-	    borderColorNA = SetColorAlpha($color1, 100);
+	    borderColorHL = %this.adjustValue($color1, 10);
+	    borderColorSL = %this.adjustValue($color1, 10);
+	    borderColorNA = %this.setAlpha($color1, 100);
 		//Default Padding
 		padding = 0;
 		paddingHL = 0;
@@ -1486,9 +1486,9 @@ function BaseTheme::makeDropDownProfile(%this)
 	%this.DropDownItemProfile = new GuiControlProfile()
 	{
 		fillColor = %this.color1;
-	    fillColorHL = AdjustColorValue(%this.color1, 10);
+	    fillColorHL = %this.adjustValue(%this.color1, 10);
 	    fillColorSL = %this.color5;
-	    fillColorNA = SetColorAlpha(%this.color1, 100);
+	    fillColorNA = %this.setAlpha(%this.color1, 100);
 
 		fontType = %this.font[3];
 		fontDirectory = %this.fontDirectory;
