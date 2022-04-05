@@ -249,6 +249,24 @@ ConsoleMethodWithDocs(SimSet, remove, ConsoleVoid, 3, 0, (obj1, [obj2]*))
    }
 }
 
+/*! Removes given SimObject (or list of SimObjects) from the SimSet with no warning.
+	@param obj_1..obj_n list of SimObjects to remove
+	The SimObjects are not deleted.  An attempt to remove a SimObject that is not present
+	in the SimSet will silently fail.
+	@return No return value
+*/
+ConsoleMethodWithDocs(SimSet, removeIfMember, ConsoleVoid, 3, 0, (obj1, [obj2] *))
+{
+	for (S32 i = 2; i < argc; i++)
+	{
+		SimObject* obj = Sim::findObject(argv[i]);
+		object->lock();
+		if (obj && object->find(object->begin(), object->end(), obj) != object->end())
+			object->removeObject(obj);
+		object->unlock();
+	}
+}
+
 //-----------------------------------------------------------------------------
 
 /*! Deletes all the objects in the SimSet.
