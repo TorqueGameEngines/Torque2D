@@ -194,7 +194,7 @@ bool Video::setDevice( const char *renderName, U32 width, U32 height, U32 bpp, b
          Game->textureResurrect();
          smNeedResurrect = false;
       }
-      Video::resetCanvas();
+      resetCanvas();
    }
 
     // Show Maximum Texture Size reported by the graphics hardware.

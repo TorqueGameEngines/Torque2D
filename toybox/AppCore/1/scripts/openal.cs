@@ -35,11 +35,9 @@ function initializeOpenAL()
     // Just in case it is already started.
     shutdownOpenAL();
 
-    echo("OpenAL Driver Init");
 
     if (!OpenALInitDriver())
     {
-        echo("OpenALInitDriver() failed");
         $Audio::initFailed = true;
     }
     else
@@ -50,8 +48,6 @@ function initializeOpenAL()
         // Set the channel volumes.
         for (%channel = 1; %channel <= 3; %channel++)
             alxSetChannelVolume(%channel, $pref::Audio::channelVolume[%channel]);
-
-        echo("OpenAL Driver Init Success");
     }
 }
 

@@ -2459,6 +2459,9 @@ void shutdownContext()
 //--------------------------------------------------------------------------
 bool OpenALInit()
 {
+   Con::printSeparator();
+   Con::printf("Audio initialization:");
+
    OpenALShutdown();
 
    if(!OpenALDLLInit())

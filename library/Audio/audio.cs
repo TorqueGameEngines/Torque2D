@@ -1,6 +1,6 @@
 function Audio::create(%this)
 {
-	if(%this.initializeOpenAL())
+	if(OpenALInitDriver())
 	{
 	    %this.MusicOn = true;
 	    %this.SoundOn = true;
@@ -14,23 +14,6 @@ function Audio::create(%this)
 function Audio::destroy( %this )
 {
 	OpenALShutdownDriver();
-}
-
-function Audio::initializeOpenAL()
-{
-    OpenALShutdownDriver();
-    echo("Initializing OpenAL Driver...");
-
-    if (!OpenALInitDriver())
-    {
-        echo("OpenAL driver failed to initialize... so quiet...");
-        return false;
-    }
-    else
-    {
-        echo("OpenAL driver initialized successfully! Let's make some noise!");
-		return true;
-    }
 }
 
 function Audio::setMasterVolume(%this, %volume)
