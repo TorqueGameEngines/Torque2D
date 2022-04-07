@@ -34,10 +34,6 @@ function AppCore::create( %this )
     // Initialize the canvas
     %this.initializeCanvas("Torque2D: Rocket Edition");
 
-    // Set the canvas color
-    Canvas.BackgroundColor = "Black";
-    Canvas.UseBackgroundColor = true;
-
 	// Load other modules
     ModuleDatabase.loadGroup("gameBase");
 

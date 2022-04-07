@@ -401,7 +401,7 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp,
 
    // repaint
    if ( repaint )
-      Con::evaluate( "resetCanvas();" );
+      Video::resetCanvas();
 
    return true;
 }
@@ -519,4 +519,3 @@ DisplayDevice* OpenGLDevice::create()
 {
    return new OpenGLDevice();
 }
-

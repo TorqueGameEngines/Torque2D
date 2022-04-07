@@ -27,58 +27,48 @@
 function AppCore::initializeCanvas(%this, %windowName)
 {
     // Don't duplicate the canvas.
-    if(%this.canvasCreated)
+    if(!isObject(Canvas))
     {
-        error("Cannot instantiate more than one canvas!");
-        return;
-    }
+	    videoSetGammaCorrection($pref::OpenGL::gammaCorrection);
 
-    videoSetGammaCorrection($pref::OpenGL::gammaCorrection);
+	    if ( !createCanvas(%windowName) )
+	    {
+	        error("Canvas creation failed. Shutting down.");
+	        quit();
+	    }
 
-    if ( !createCanvas(%windowName) )
-    {
-        error("Canvas creation failed. Shutting down.");
-        quit();
-    }
+	    if ($platform $= "iOS")
+	    {
+	        %resolution = $pref::iOS::Width SPC $pref::iOS::Height SPC $pref::iOS::ScreenDepth;
+	    }
+	    else if ($platform $= "Android")
+	    {
+	    	%resolution = GetAndroidResolution();
+	    }
+	    else
+	    {
+	        if ( $pref::Video::windowedRes !$= "" )
+	            %resolution = $pref::Video::windowedRes;
+	        else
+	            %resolution = $pref::Video::defaultResolution;
+	    }
 
-    $pref::iOS::ScreenDepth = 32;
-
-    if ($platform $= "iOS")
-    {
-        %resolution = $pref::iOS::Width SPC $pref::iOS::Height SPC 32;
-    }
-    else if ($platform $= "Android")
-    {
-    	%resolution = GetAndroidResolution();
-    }
-    else
-    {
-        if ( $pref::Video::windowedRes !$= "" )
-            %resolution = $pref::Video::windowedRes;
-        else
-            %resolution = $pref::Video::defaultResolution;
-    }
-
-    if ($platform $= "windows" || $platform $= "macos")
-    {
-        setScreenMode( %resolution._0, %resolution._1, %resolution._2, $pref::Video::fullScreen );
-    }
-    else
-    {
-        setScreenMode( %resolution._0, %resolution._1, %resolution._2, false );
-    }
-
-    $canvasCreated = true;
-}
-
-//------------------------------------------------------------------------------
-// resetCanvas
-// Forces the canvas to redraw itself.
-//------------------------------------------------------------------------------
-function AppCore::resetCanvas(%this)
-{
-    if (isObject(Canvas))
-        Canvas.repaint();
+	    if ($platform $= "windows" || $platform $= "macos")
+	    {
+	        setScreenMode( %resolution._0, %resolution._1, %resolution._2, $pref::Video::fullScreen );
+	    }
+	    else
+	    {
+	        setScreenMode( %resolution._0, %resolution._1, %resolution._2, false );
+	    }
+	}
+	else
+	{
+		Canvas.setCanvasTitle(%windowName);
+		Canvas.repaint();
+	}
+    Canvas.UseBackgroundColor = true;
+    Canvas.BackgroundColor = "Black";
 }
 
 //------------------------------------------------------------------------------

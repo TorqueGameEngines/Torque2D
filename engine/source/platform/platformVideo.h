@@ -59,6 +59,7 @@ public:
    static void destroy();                             // clean up and shut down
    static bool installDevice( DisplayDevice *dev );
    static bool setDevice( const char *renderName, U32 width, U32 height, U32 bpp, bool fullScreen );   // set the current display device
+   static void resetCanvas();
    static bool setScreenMode( U32 width, U32 height, U32 bpp, bool fullScreen );
    static void deactivate( bool force = false );      // deactivate current display device
    static void reactivate( bool force = false );      // reactivate current display device

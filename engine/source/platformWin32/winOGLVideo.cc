@@ -97,7 +97,7 @@ bool OpenGLDevice::activate( U32 width, U32 height, U32 bpp, bool fullScreen )
          ReleaseDC( winState.appWindow, winState.appDC );
          winState.appDC = NULL;
       }
-   
+
       Con::printf( "Destroying the window..." );
       DestroyWindow( winState.appWindow );
       winState.appWindow = NULL;
@@ -224,7 +224,7 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScree
             }
          }
       }
-      
+
    }
 
    //MIN_RESOLUTION defined in platformWin32/platformGL.h
@@ -315,7 +315,7 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScree
          ReleaseDC( winState.appWindow, winState.appDC );
          winState.appDC = NULL;
       }
-      
+
       // [neo, 5/31/2007 - #3174]
       if( winState.appMenu )
       {
@@ -371,7 +371,7 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScree
       {
          smIsFullScreen = false;
          Con::setBoolVariable( "$pref::Video::fullScreen", false );
-         
+
          ChangeDisplaySettings( NULL, 0 );
          Con::errorf( ConsoleLogEntry::General, "OpenGLDevice::setScreenMode - ChangeDisplaySettings failed." );
          switch( test )
@@ -402,7 +402,7 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScree
    }
 
    Con::setBoolVariable( "$pref::Video::fullScreen", smIsFullScreen );
-  
+
 
    bool newWindow = false;
    if ( !winState.appWindow )
@@ -432,7 +432,7 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScree
 
       // Center the window on the desktop:
       U32 xPos = 0, yPos = 0;
-      
+
       if(adjWidth < (U32)winState.desktopClientWidth)
          xPos = ( winState.desktopClientWidth - adjWidth ) / 2;
 
@@ -566,7 +566,7 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScree
     glClear(GL_COLOR_BUFFER_BIT);
 
     if ( repaint )
-      Con::evaluate( "resetCanvas();" );
+      Video::resetCanvas();
 
    return true;
 }

@@ -72,7 +72,7 @@ OpenGLDevice::OpenGLDevice()
 {
     // Set the device name:
     mDeviceName = "OpenGL";
-    
+
     // macs games are not generally full screen only
     mFullScreenOnly = false;
 }
@@ -81,37 +81,37 @@ OpenGLDevice::OpenGLDevice()
 void OpenGLDevice::initDevice()
 {
     //instead of caling enum monitors and enumdisplaymodes on that, we're just going to put in the ones that we know we have
-    
+
     mResolutionList.push_back(Resolution(320, 480, 16));
     mResolutionList.push_back(Resolution(480, 320, 16));
-    
+
     mResolutionList.push_back(Resolution(320, 480, 32));
     mResolutionList.push_back(Resolution(480, 320, 32));
-    
+
     mResolutionList.push_back(Resolution(640, 960, 16));
     mResolutionList.push_back(Resolution(960, 640, 16));
-    
+
     mResolutionList.push_back(Resolution(640, 960, 32));
     mResolutionList.push_back(Resolution(960, 640, 32));
-    
+
     mResolutionList.push_back(Resolution(768, 1024, 16));
     mResolutionList.push_back(Resolution(1024, 768, 16));
-    
+
     mResolutionList.push_back(Resolution(768, 1024, 32));
     mResolutionList.push_back(Resolution(1024, 768, 32));
-    
+
     mResolutionList.push_back(Resolution(1536, 2048, 16));
     mResolutionList.push_back(Resolution(2048, 1536, 16));
-    
+
     mResolutionList.push_back(Resolution(1536, 2048, 32));
     mResolutionList.push_back(Resolution(2048, 1536, 32));
-    
+
     mResolutionList.push_back(Resolution(640, 1136, 16));
     mResolutionList.push_back(Resolution(1136, 640, 16));
-    
+
     mResolutionList.push_back(Resolution(640, 1136, 32));
     mResolutionList.push_back(Resolution(1136, 640, 32));
-    
+
 }
 
 //------------------------------------------------------------------------------
@@ -122,22 +122,22 @@ void OpenGLDevice::initDevice()
 bool OpenGLDevice::activate(U32 width, U32 height, U32 bpp, bool fullScreen)
 {
     Con::printf(" OpenGLDevice activating...");
-    
+
     // gets opengl rendering capabilities of the screen pointed to by platState.hDisplay
     // sets up dgl with the capabilities info, & reports opengl status.
-    
+
     getGLCapabilities();
-    
+
     // Create the window or capture fullscreen
     if (!setScreenMode(width, height, bpp, fullScreen, true, false))
         return false;
-    
+
     // set the displayDevice pref to "OpenGL"
     Con::setVariable("$pref::Video::displayDevice", mDeviceName);
-    
+
     // set vertical sync now because it doesnt need setting every time we setScreenMode()
     setVerticalSync(!Con::getBoolVariable("$pref::Video::disableVerticalSync"));
-    
+
     return true;
 }
 
@@ -168,40 +168,40 @@ bool OpenGLDevice::setScreenMode(U32 width, U32 height, U32 bpp, bool fullScreen
                 forceIt ? "force it" : "dont force it",
                 repaint ? "repaint" : "dont repaint"
                 );
-    
+
     // validation, early outs --------------------------------------------------
     // sanity check. some scripts are liable to pass in bad values.
     if (!bpp)
         bpp = platState.desktopBitsPixel;
-    
+
     Resolution newRes = Resolution(width, height, bpp);
-    
+
     // if no values changing and we're not forcing a change, kick out. prevents thrashing.
     if (!forceIt && smIsFullScreen == fullScreen && smCurrentRes == newRes)
         return (true);
-    
+
     // we have a new context, this is now safe to do:
     // delete any contexts or windows that exist, and kill the texture manager.
     bool needResurrect = cleanupContextAndWindow();
-    
+
     Con::printf(">> Attempting to change display settings to %s %dx%dx%d...",
                 fullScreen ? "fullscreen" : "windowed", newRes.w, newRes.h, newRes.bpp);
-    
+
     // set torque variables ----------------------------------------------------
     // save window size for dgl
     Platform::setWindowSize(newRes.w, newRes.h);
-    
+
     // update smIsFullScreen and pref
     smIsFullScreen = fullScreen;
-    
+
     Con::setBoolVariable("$pref::Video::fullScreen", smIsFullScreen);
-    
+
     // save resolution
     smCurrentRes = newRes;
-    
+
     // save resolution to prefs
     char buf[32];
-    
+
     if (fullScreen)
     {
         dSprintf(buf, sizeof(buf), "%d %d %d", newRes.w, newRes.h, newRes.bpp);
@@ -212,7 +212,7 @@ bool OpenGLDevice::setScreenMode(U32 width, U32 height, U32 bpp, bool fullScreen
         dSprintf(buf, sizeof(buf), "%d %d", newRes.w, newRes.h);
         Con::setVariable("$pref::Video::windowedRes", buf);
     }
-    
+
     // begin rendering again ----------------------------------------------------
     if (needResurrect)
     {
@@ -220,10 +220,10 @@ bool OpenGLDevice::setScreenMode(U32 width, U32 height, U32 bpp, bool fullScreen
         Con::printf("Resurrecting the texture manager...");
         Game->textureResurrect();
     }
-    
+
     if (repaint)
-        Con::evaluate("resetCanvas();");
-    
+        Video::resetCanvas();
+
     return true;
 }
 
@@ -283,11 +283,11 @@ DisplayDevice *OpenGLDevice::create()
     // this will be replaced later with the window's context,
     // but we need agl_ctx to be valid at all times,
     // since some things try to make gl calls before the device is activated.
-    
+
     // create the DisplayDevice
     OpenGLDevice *newOGLDevice = new OpenGLDevice();
-    
+
     newOGLDevice->initDevice();
-    
+
     return newOGLDevice;
 }
