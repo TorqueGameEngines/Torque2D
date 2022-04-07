@@ -22,28 +22,33 @@
 
 function AppCore::create( %this )
 {
+	// Init variables
+	%this.canvasCreated = false;
+
     // Load system scripts
     exec("./scripts/constants.cs");
     exec("./scripts/defaultPreferences.cs");
 	exec("./gui/guiProfiles.cs");
     exec("./scripts/canvas.cs");
-    exec("./scripts/openal.cs");
 
     // Initialize the canvas
-    initializeCanvas("Torque2D: Rocket Edition");
+    %this.initializeCanvas("Torque2D: Rocket Edition");
 
     // Set the canvas color
     Canvas.BackgroundColor = "Black";
     Canvas.UseBackgroundColor = true;
-
-    // Initialize audio
-    initializeOpenAL();
 
 	// Load other modules
     ModuleDatabase.loadGroup("gameBase");
 
 	// Put a gui in the Canvas
 	Canvas.setContent(TamlRead("./gui/defaultGui.gui.taml"));
+
+	// Play Music - If you are using the standard Audio module
+	if(isObject(Audio))
+	{
+		Audio.PlayMusic("planetfall");
+	}
 }
 
 //-----------------------------------------------------------------------------

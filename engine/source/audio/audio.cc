@@ -2148,9 +2148,7 @@ void alxUpdateMaxDistance()
 //--------------------------------------------------------------------------
 void alxUpdate()
 {
-   //if(mForceMaxDistanceUpdate)
-      alxUpdateMaxDistance();
-
+   alxUpdateMaxDistance();
    alxCloseHandles();
    alxUpdateScores(false);
    alxLoopingUpdate();

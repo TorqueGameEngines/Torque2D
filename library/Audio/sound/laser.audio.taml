@@ -1,0 +1,4 @@
+<AudioAsset
+    AssetName="laser"
+    AudioFile="laser.wav"
+ 	VolumeChannel="1" />

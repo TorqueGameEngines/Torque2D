@@ -24,11 +24,10 @@
 // initializeCanvas
 // Constructs and initializes the default canvas window.
 //------------------------------------------------------------------------------
-$canvasCreated = false;
-function initializeCanvas(%windowName)
+function AppCore::initializeCanvas(%this, %windowName)
 {
     // Don't duplicate the canvas.
-    if($canvasCreated)
+    if(%this.canvasCreated)
     {
         error("Cannot instantiate more than one canvas!");
         return;
@@ -76,7 +75,7 @@ function initializeCanvas(%windowName)
 // resetCanvas
 // Forces the canvas to redraw itself.
 //------------------------------------------------------------------------------
-function resetCanvas()
+function AppCore::resetCanvas(%this)
 {
     if (isObject(Canvas))
         Canvas.repaint();
@@ -86,12 +85,12 @@ function resetCanvas()
 // iOSResolutionFromSetting
 // Helper function that grabs resolution strings based on device type
 //------------------------------------------------------------------------------
-function iOSResolutionFromSetting( %deviceType, %deviceScreenOrientation )
+function AppCore::iOSResolutionFromSetting( %this, %deviceType, %deviceScreenOrientation )
 {
     // A helper function to get a string based resolution from the settings given.
     %x = 0;
     %y = 0;
-    
+
     %scaleFactor = $pref::iOS::RetinaEnabled ? 2 : 1;
 
     switch(%deviceType)
@@ -132,6 +131,6 @@ function iOSResolutionFromSetting( %deviceType, %deviceScreenOrientation )
                 %y =  $iOS::constant::iPhone5Width;
             }
     }
-   
+
     return %x @ " " @ %y;
 }

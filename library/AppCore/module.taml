@@ -1,8 +1,8 @@
 <ModuleDefinition
 	ModuleId="AppCore"
 	VersionId="1"
-	Description="Barebones startup module"
-	ScriptFile="main.cs"
+	Description="Provides critical initialization and functionality needed for every project."
+	ScriptFile="appCore.cs"
 	CreateFunction="create"
 	DestroyFunction="destroy" >
 	<DeclaredAssets

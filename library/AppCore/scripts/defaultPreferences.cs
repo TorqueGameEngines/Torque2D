@@ -35,17 +35,6 @@ $pref::iOS::EnableOrientationRotation = 1;
 $pref::iOS::EnableOtherOrientationRotation = 1;
 $pref::iOS::StatusBarType       = 0;
 
-/// Audio
-$pref::Audio::driver = "OpenAL";
-$pref::Audio::forceMaxDistanceUpdate = 0;
-$pref::Audio::environmentEnabled = 0;
-$pref::Audio::masterVolume   = 1.0;
-$pref::Audio::channelVolume1 = 1.0;
-$pref::Audio::channelVolume2 = 1.0;
-$pref::Audio::channelVolume3 = 1.0;
-$pref::Audio::sfxVolume = 1.0;
-$pref::Audio::musicVolume = 1.0;
-
 /// T2D
 $pref::T2D::ParticlePlayerEmissionRateScale = 1.0;
 $pref::T2D::ParticlePlayerSizeScale = 1.0;
