@@ -135,7 +135,7 @@ GuiBorderProfile::GuiBorderProfile()
 		mPadding[i] = 0;
 	}
 
-   GuiBorderProfile *def = dynamic_cast<GuiBorderProfile*>(Sim::findObject("GuiDefaultProfile"));
+   GuiBorderProfile *def = dynamic_cast<GuiBorderProfile*>(Sim::findObject("GuiDefaultBorderProfile"));
    if (def)
    {
       for (S32 i = 0; i < 4; i++)

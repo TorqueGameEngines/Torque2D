@@ -94,6 +94,7 @@ GuiControl::GuiControl()
    mTooltipWidth		= 250;
    mIsContainer         = false;
    mTextWrap			= false;
+   mTextExtend          = false;
 }
 
 GuiControl::~GuiControl()
@@ -202,6 +203,7 @@ void GuiControl::initPersistFields()
    addProtectedField("text", TypeCaseString, Offset(mText, GuiControl), setTextProperty, getTextProperty, "");
    addField("textID", TypeString, Offset(mTextID, GuiControl));
    addField("textWrap", TypeBool, Offset(mTextWrap, GuiControl), &writeTextWrapFn, "If true, text will wrap to additional lines.");
+   addField("textExtend", TypeBool, Offset(mTextExtend, GuiControl), &writeTextExtendFn, "If true, extent will change based on the size of the control's text when possible.");
    endGroup("Text");
 }
 
@@ -609,18 +611,31 @@ RectI GuiControl::getInnerRect(Point2I &offset, Point2I &extent, GuiControlState
 
 Point2I GuiControl::getOuterExtent(Point2I &innerExtent, GuiControlState currentState, GuiControlProfile *profile)
 {
-	//Get the border profiles
-	GuiBorderProfile *leftProfile = profile->getLeftBorder();
-	GuiBorderProfile *rightProfile = profile->getRightBorder();
-	GuiBorderProfile *topProfile = profile->getTopBorder();
-	GuiBorderProfile *bottomProfile = profile->getBottomBorder();
+    return Point2I(getOuterWidth(innerExtent.x, currentState, profile), getOuterHeight(innerExtent.y, currentState, profile));
+}
 
-	S32 leftSize = (leftProfile) ? leftProfile->getMargin(currentState) + leftProfile->getBorder(currentState) + leftProfile->getPadding(currentState) : 0;
-	S32 rightSize = (rightProfile) ? rightProfile->getMargin(currentState) + rightProfile->getBorder(currentState) + rightProfile->getPadding(currentState) : 0;
-	S32 topSize = (topProfile) ? topProfile->getMargin(currentState) + topProfile->getBorder(currentState) + topProfile->getPadding(currentState) : 0;
-	S32 bottomSize = (bottomProfile) ? bottomProfile->getMargin(currentState) + bottomProfile->getBorder(currentState) + bottomProfile->getPadding(currentState) : 0;
+S32 GuiControl::getOuterWidth(S32 innerWidth, GuiControlState currentState, GuiControlProfile* profile)
+{
+    //Get the border profiles
+    GuiBorderProfile* leftProfile = profile->getLeftBorder();
+    GuiBorderProfile* rightProfile = profile->getRightBorder();
 
-	return Point2I(innerExtent.x + leftSize + rightSize, innerExtent.y + topSize + bottomSize);
+    S32 leftSize = (leftProfile) ? leftProfile->getMargin(currentState) + leftProfile->getBorder(currentState) + leftProfile->getPadding(currentState) : 0;
+    S32 rightSize = (rightProfile) ? rightProfile->getMargin(currentState) + rightProfile->getBorder(currentState) + rightProfile->getPadding(currentState) : 0;
+
+    return innerWidth + leftSize + rightSize;
+}
+
+S32 GuiControl::getOuterHeight(S32 innerHeight, GuiControlState currentState, GuiControlProfile* profile)
+{
+    //Get the border profiles
+    GuiBorderProfile* topProfile = profile->getTopBorder();
+    GuiBorderProfile* bottomProfile = profile->getBottomBorder();
+
+    S32 topSize = (topProfile) ? topProfile->getMargin(currentState) + topProfile->getBorder(currentState) + topProfile->getPadding(currentState) : 0;
+    S32 bottomSize = (bottomProfile) ? bottomProfile->getMargin(currentState) + bottomProfile->getBorder(currentState) + bottomProfile->getPadding(currentState) : 0;
+
+    return innerHeight + topSize + bottomSize;
 }
 
 bool GuiControl::renderTooltip(Point2I &cursorPos, const char* tipText )
@@ -1706,6 +1721,21 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
 
         //first align vertical
         S32 blockHeight = textHeight * lineList.size();
+
+        if (mTextExtend)
+        {
+            Point2I extent = getExtent();
+            if (mTextWrap)
+            {
+                extent.y = getOuterHeight(blockHeight, NormalState, profile);
+            }
+            else
+            {
+                extent.x = getOuterWidth(profile->mFont->getStrWidth(text), NormalState, profile);
+            }
+            setExtent(extent);
+        }
+
         if (blockHeight < totalHeight)
         {
             startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, profile->mVAlignment);

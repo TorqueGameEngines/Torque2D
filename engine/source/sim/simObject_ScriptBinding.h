@@ -906,6 +906,33 @@ ConsoleMethodWithDocs(SimObject, clone, ConsoleInt, 2, 3, ([copyDynamicFields = 
     return pClonedObject->getId();
 }
 
+/*! Takes all values from one object and puts them into anther object of the same class. This includes dynamic fields.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(SimObject, assignFieldsFrom, ConsoleVoid, 3, 3, (SimObject))
+{
+	// Find the specified object.
+	SimObject* pSimObject = dynamic_cast<SimObject*>(Sim::findObject(argv[2]));
+
+	// Did we find the object?
+	if (!pSimObject)
+	{
+		// No, so warn.
+		Con::warnf("SimObject::assignFieldsFrom() - Could not find the source object '%s'.", argv[2]);
+		return;
+	}
+
+	// Do the objects have the same class?
+	if (object->getClassRep() != pSimObject->getClassRep())
+	{
+		// No, so warn.
+		Con::warnf("SimObject::assignFieldsFrom() - target object and source object must have the same class.");
+		return;
+	}
+
+	object->assignFieldsFrom(pSimObject);
+}
+
 /*! @name Timer/Scheduled Events
 	Perform timed callbacks on the object.
 	@{

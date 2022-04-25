@@ -207,6 +207,7 @@ protected:
 	StringTableEntry    mText;
 	StringTableEntry    mTextID;
 	bool				mTextWrap;
+    bool                mTextExtend;
 
     /// @}
 
@@ -310,13 +311,16 @@ public:
 	virtual void             setTextID(S32 id);
 	virtual void             setTextID(const char *id);
 	virtual const char*      getText();
-	inline void				 setTextWrap(const bool wrap) { mTextWrap = wrap; }
-	inline bool				 getTextWrap() { return mTextWrap; }
+    inline void				 setTextWrap(const bool wrap) { mTextWrap = wrap; }
+    inline bool				 getTextWrap() { return mTextWrap; }
+    inline void				 setTextExtend(const bool extend) { mTextExtend = extend; }
+    inline bool				 getTextExtend() { return mTextExtend; }
 
 	// Text Property Accessors
 	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return false; }
 	static const char* getTextProperty(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getText(); }
 	static bool writeTextWrapFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextWrap(); }
+    static bool writeTextExtendFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextExtend(); }
 
 	static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); return false; }
 	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); return false; }
@@ -744,6 +748,8 @@ public:
 
 	/// Returns the extent of the outer rect given the extent of the inner rect.
 	Point2I getOuterExtent(Point2I &innerExtent, GuiControlState currentState, GuiControlProfile *profile);
+    S32 getOuterWidth(S32 innerExtent, GuiControlState currentState, GuiControlProfile* profile);
+    S32 getOuterHeight(S32 innerExtent, GuiControlState currentState, GuiControlProfile* profile);
 
     virtual void inspectPostApply();
     virtual void inspectPreApply();
