@@ -211,7 +211,7 @@ void GuiSceneScrollCtrl::scrollByRegion(Region reg)
 		case RightPage:
 		case VertThumb:
 		case HorizThumb:
-		case None:
+		case Content:
 			//Con::errorf("Unhandled case in GuiSceneScrollCtrl::scrollByRegion");
 			break;
 		}
@@ -239,7 +239,7 @@ void GuiSceneScrollCtrl::scrollByRegion(Region reg)
 		case DownPage:
 		case VertThumb:
 		case HorizThumb:
-		case None:
+		case Content:
 			//Con::errorf("Unhandled case in GuiSceneScrollCtrl::scrollByRegion");
 			break;
 		}

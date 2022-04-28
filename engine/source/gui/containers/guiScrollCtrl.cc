@@ -52,7 +52,7 @@ GuiScrollCtrl::GuiScrollCtrl()
    mScrollBarThickness = 16;
    mScrollBarDragTolerance = 130;
    mDepressed = false;
-   curHitRegion = None;
+   curHitRegion = Content;
    mActive = true;
    mShowArrowButtons = true;
    mBaseThumbSize = (mScrollBarThickness * 2);
@@ -74,6 +74,8 @@ GuiScrollCtrl::GuiScrollCtrl()
    setField("arrowProfile", "GuiScrollArrowProfile");
    setField("trackProfile", "GuiScrollTrackProfile");
    setField("profile", "GuiScrollProfile");
+
+   mEventBubbled = false;
 }
 
 void GuiScrollCtrl::initPersistFields()
@@ -190,12 +192,12 @@ GuiControl* GuiScrollCtrl::findHitControl(const Point2I& pt, S32 initialLayer)
 			{
 				continue;
 			}
-			else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT))
+			else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mUseInput)
 			{
 				Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
 				GuiControl* hitCtrl = ctrl->findHitControl(ptemp);
 
-				if (hitCtrl->mProfile->mUseInput)
+				if (hitCtrl->mUseInput)
 					return hitCtrl;
 			}
 		}
@@ -239,7 +241,7 @@ GuiScrollCtrl::Region GuiScrollCtrl::findHitRegion(const Point2I& pt)
 				return RightPage;
 		}
 	}
-	return None;
+	return Content;
 }
 
 #pragma region CalculationFunctions
@@ -483,7 +485,7 @@ void GuiScrollCtrl::scrollByRegion(Region reg)
 		case RightPage:
 		case VertThumb:
 		case HorizThumb:
-		case None:
+		case Content:
 			//Con::errorf("Unhandled case in GuiScrollCtrl::scrollByRegion");
 			break;
 		}
@@ -511,7 +513,7 @@ void GuiScrollCtrl::scrollByRegion(Region reg)
 		case DownPage:
 		case VertThumb:
 		case HorizThumb:
-		case None:
+		case Content:
 			//Con::errorf("Unhandled case in GuiScrollCtrl::scrollByRegion");
 			break;
 		}
@@ -561,13 +563,17 @@ void GuiScrollCtrl::scrollRectVisible(RectI rect)
 void GuiScrollCtrl::onTouchMove(const GuiEvent& event)
 {
 	curHitRegion = findHitRegion(globalToLocalCoord(event.mousePoint));
+
+	GuiControl* parent = getParent();
+	if (parent)
+		parent->onTouchMove(event);
 }
 
 void GuiScrollCtrl::onTouchLeave(const GuiEvent &event)
 {
 	if (!mDepressed)
 	{
-		curHitRegion = None;
+		curHitRegion = Content;
 	}
 }
 
@@ -611,6 +617,7 @@ void GuiScrollCtrl::onTouchDown(const GuiEvent &event)
    Point2I curMousePos = globalToLocalCoord(event.mousePoint);
    curHitRegion = findHitRegion(curMousePos);
    mDepressed = true;
+   mEventBubbled = false;
 
    // Set a 0.5 second delay before we start scrolling
    mLastUpdated = Platform::getVirtualMilliseconds() + 500;
@@ -627,15 +634,34 @@ void GuiScrollCtrl::onTouchDown(const GuiEvent &event)
 	   mScrollOffsetAnchor = mScrollOffset;
       mThumbMouseDelta = curMousePos.x - mHThumbPos;
    }
+   else if (curHitRegion == Content)
+   {
+	   GuiControl* parent = getParent();
+	   if (parent)
+	   {
+		   parent->onTouchDown(event);
+		   mEventBubbled = true;
+	   }
+   }
 }
 
-void GuiScrollCtrl::onTouchUp(const GuiEvent &)
+void GuiScrollCtrl::onTouchUp(const GuiEvent &event)
 {
    mouseUnlock();
 
    setUpdate();
 
-   curHitRegion = None;
+   if (mEventBubbled)
+   {
+	   GuiControl* parent = getParent();
+	   if (parent)
+	   {
+		   parent->onTouchUp(event);
+	   }
+		mEventBubbled = false;
+   }
+
+   curHitRegion = Content;
    mDepressed = false;
 }
 
@@ -643,6 +669,16 @@ void GuiScrollCtrl::onTouchDragged(const GuiEvent &event)
 {
    Point2I curMousePos = globalToLocalCoord(event.mousePoint);
    setUpdate();
+
+   if (mEventBubbled)
+   {
+	   GuiControl* parent = getParent();
+	   if (parent)
+	   {
+		   parent->onTouchDragged(event);
+		   return;
+	   }
+   }
 
    if ( (curHitRegion != VertThumb) && (curHitRegion != HorizThumb) )
    {

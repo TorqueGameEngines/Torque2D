@@ -259,6 +259,10 @@ void GuiTabBookCtrl::onTouchDown(const GuiEvent &event)
         if( tab != NULL && tab->isActive() )
             selectPage( tab );
     }
+    else
+    {
+        Parent::onTouchDown(event);
+    }
 }
 
 void GuiTabBookCtrl::onTouchMove(const GuiEvent &event)
@@ -402,70 +406,6 @@ void GuiTabBookCtrl::renderTab( RectI tabRect, GuiTabPageCtrl *tab )
    }
 
    renderText(contentRect.point, contentRect.extent, text, mTabProfile, rot);
-
-   /*
-   // Is this a skinned control?
-   if( mHasTexture && mProfile->mBitmapArrayRects.size() >= 9 )
-   {
-      S32 indexMultiplier = 1;
-      switch( mTabPosition )
-      {
-      case AlignTop:
-      case AlignBottom:
-         
-         if ( mActivePage == tab )
-            indexMultiplier += TabSelected;
-         else if( mHoverTab == tab )
-            indexMultiplier += TabHover;
-         else
-            indexMultiplier += TabNormal;
-         
-         //dglDrawBitmapStretchSR(mProfile->mTextureHandle,tabRect,stretchRect, ( mTabPosition == AlignBottom ) ? GFlip_Y : 0 );
-         break;
-      case AlignLeft:
-      case AlignRight:
-         if ( mActivePage == tab )
-            indexMultiplier += TabSelectedVertical;
-         else if( mHoverTab == tab )
-            indexMultiplier += TabHoverVertical;
-         else
-            indexMultiplier += TabNormalVertical;
-
-         //dglDrawBitmapStretchSR(mProfile->mTextureHandle,tabRect,stretchRect, ( mTabPosition == AlignRight ) ? GFlip_X : 0 );
-         break;
-      } 
-
-      renderFixedBitmapBordersFilled( tabRect, indexMultiplier, mProfile );
-   }
-   else
-   {
-      // If this isn't a skinned control or the bitmap is simply missing, handle it WELL
-      if ( mActivePage == tab )
-         dglDrawRectFill(tabRect, mProfile->mFillColor);
-      else if( mHoverTab == tab )
-         dglDrawRectFill(tabRect, mProfile->mFillColorHL);
-      else
-         dglDrawRectFill(tabRect, mProfile->mFillColorNA);
-
-   }
-
-
-   dglSetBitmapModulation(mProfile->mFontColor);
-
-   switch( mTabPosition )
-   {
-   case AlignTop:
-   case AlignBottom:
-      renderJustifiedTextRot( tabRect.point, tabRect.extent, text, 0);
-   break;
-   case AlignLeft:
-      renderJustifiedTextRot( tabRect.point, tabRect.extent, text, -90 );
-      break;
-   case AlignRight:
-      renderJustifiedTextRot( tabRect.point, tabRect.extent, text, -90 );
-      break;
-   }
-   */
 }
 
 // This is nothing but a clever hack to allow the tab page children

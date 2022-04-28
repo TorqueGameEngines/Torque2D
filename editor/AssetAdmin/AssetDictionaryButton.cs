@@ -123,6 +123,7 @@ function AssetDictionaryButton::buildIcon(%this)
 		Position = "0 0";
 		constrainProportions = "1";
 		fullSize = "1";
+		UseInput = false;
 	};
 	ThemeManager.setProfile(%texture, "spriteProfile");
 	return %texture;

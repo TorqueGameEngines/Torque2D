@@ -95,6 +95,7 @@ GuiControl::GuiControl()
    mIsContainer         = false;
    mTextWrap			= false;
    mTextExtend          = false;
+   mUseInput            = true;
 }
 
 GuiControl::~GuiControl()
@@ -177,8 +178,9 @@ void GuiControl::initPersistFields()
    addProtectedField("MinExtent",         TypePoint2I,		Offset(mMinExtent, GuiControl), &setMinExtentFn, &defaultProtectedGetFn, &writeMinExtentFn, "The extent will not shrink below this size.");
    addField("canSave",           TypeBool,			Offset(mCanSave, GuiControl));
    addField("Visible",           TypeBool,			Offset(mVisible, GuiControl));
+   addField("useInput",          TypeBool,          Offset(mUseInput, GuiControl));
    addDepricatedField("Modal");
-   addDepricatedField("SetFirstResponder");
+   addField("SetFirstResponder", TypeBool, Offset(mFirstResponder, GuiControl));
 
    addField("Variable",          TypeString,		Offset(mConsoleVariable, GuiControl));
    addField("Command",           TypeString,		Offset(mConsoleCommand, GuiControl));
@@ -1235,12 +1237,12 @@ GuiControl* GuiControl::findHitControl(const Point2I &pt, S32 initialLayer)
       {
          continue;
       }
-      else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT))
+      else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mUseInput)
       {
          Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
          GuiControl *hitCtrl = ctrl->findHitControl(ptemp);
 
-         if(hitCtrl->mProfile->mUseInput)
+         if(hitCtrl->mUseInput)
             return hitCtrl;
       }
    }
@@ -1284,19 +1286,29 @@ bool GuiControl::onInputEvent(const InputEvent &event)
 
 void GuiControl::onTouchUp(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onTouchUp(event);
 }
 
 void GuiControl::onTouchDown(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onTouchDown(event);
 }
 
 void GuiControl::onTouchMove(const GuiEvent &event)
 {
-   //if this control is a dead end, make sure the event stops here
    if ( !mVisible || !mAwake )
       return;
 
-   //pass the event to the parent
    GuiControl *parent = getParent();
    if ( parent )
       parent->onTouchMove( event );
@@ -1304,23 +1316,29 @@ void GuiControl::onTouchMove(const GuiEvent &event)
 
 void GuiControl::onTouchDragged(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onTouchDragged(event);
 }
 
-void GuiControl::onTouchEnter(const GuiEvent &)
+void GuiControl::onTouchEnter(const GuiEvent &event)
 {
+    //Entering a child means nothing to a parent
 }
 
-void GuiControl::onTouchLeave(const GuiEvent &)
+void GuiControl::onTouchLeave(const GuiEvent &event)
 {
+    //Leaving a child means nothing to a parent
 }
 
 bool GuiControl::onMouseWheelUp( const GuiEvent &event )
 {
-   //if this control is a dead end, make sure the event stops here
    if ( !mVisible || !mAwake )
       return true;
 
-   //pass the event to the parent
    GuiControl *parent = getParent();
    if ( parent )
       return parent->onMouseWheelUp( event );
@@ -1330,11 +1348,9 @@ bool GuiControl::onMouseWheelUp( const GuiEvent &event )
 
 bool GuiControl::onMouseWheelDown( const GuiEvent &event )
 {
-   //if this control is a dead end, make sure the event stops here
    if ( !mVisible || !mAwake )
       return true;
 
-   //pass the event to the parent
    GuiControl *parent = getParent();
    if ( parent )
       return parent->onMouseWheelDown( event );
@@ -1342,28 +1358,64 @@ bool GuiControl::onMouseWheelDown( const GuiEvent &event )
       return false;
 }
 
-void GuiControl::onRightMouseDown(const GuiEvent &)
+void GuiControl::onRightMouseDown(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onRightMouseDown(event);
 }
 
-void GuiControl::onRightMouseUp(const GuiEvent &)
+void GuiControl::onRightMouseUp(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onRightMouseUp(event);
 }
 
-void GuiControl::onRightMouseDragged(const GuiEvent &)
+void GuiControl::onRightMouseDragged(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onRightMouseDragged(event);
 }
 
-void GuiControl::onMiddleMouseDown(const GuiEvent &)
+void GuiControl::onMiddleMouseDown(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onMiddleMouseDown(event);
 }
 
-void GuiControl::onMiddleMouseUp(const GuiEvent &)
+void GuiControl::onMiddleMouseUp(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onMiddleMouseUp(event);
 }
 
-void GuiControl::onMiddleMouseDragged(const GuiEvent &)
+void GuiControl::onMiddleMouseDragged(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    GuiControl* parent = getParent();
+    if (parent)
+        parent->onMiddleMouseDragged(event);
 }
 
 

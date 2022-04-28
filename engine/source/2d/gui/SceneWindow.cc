@@ -1417,7 +1417,7 @@ void SceneWindow::onTouchDown( const GuiEvent& event )
 	if (mShowScrollBar)
 	{
 		mScrollBar->curHitRegion = mScrollBar->findHitRegion(mScrollBar->globalToLocalCoord(event.mousePoint));
-		if (mScrollBar->curHitRegion != GuiScrollCtrl::None)
+		if (mScrollBar->curHitRegion != GuiScrollCtrl::Content)
 		{
 			setUpdate();
 			mScrollBar->onTouchDown(event);

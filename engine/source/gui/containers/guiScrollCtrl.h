@@ -31,6 +31,7 @@ class GuiScrollCtrl : public GuiControl
 {
 private:
    typedef GuiControl Parent;
+   bool mEventBubbled;
 
 protected:
 
@@ -84,7 +85,7 @@ public:
       RightPage,
       VertThumb,
       HorizThumb,
-      None
+      Content
    };
    enum {
       ScrollBarAlwaysOn = 0,

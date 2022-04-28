@@ -180,6 +180,7 @@ void GuiWindowCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 void GuiWindowCtrl::onTouchMove(const GuiEvent &event)
 {
 	curHitRegion = findHitRegion(globalToLocalCoord(event.mousePoint));
+	Parent::onTouchMove(event);
 }
 
 void GuiWindowCtrl::onTouchLeave(const GuiEvent &event)

@@ -309,7 +309,6 @@ GuiControlProfile::GuiControlProfile(void) :
 	
 	mTabable       = false;
 	mCanKeyFocus   = false;
-	mUseInput      = true;
 
 	mBorderDefault = NULL;
 
@@ -401,7 +400,6 @@ void GuiControlProfile::initPersistFields()
    addGroup("Behavior");
       addField("tab",           TypeBool,       Offset(mTabable, GuiControlProfile));
       addField("canKeyFocus",   TypeBool,       Offset(mCanKeyFocus, GuiControlProfile));
-      addField("useInput",      TypeBool,       Offset(mUseInput, GuiControlProfile));
       addField("mouseOverSelected", TypeBool,   Offset(mMouseOverSelected, GuiControlProfile));
    endGroup("Behavior");
 

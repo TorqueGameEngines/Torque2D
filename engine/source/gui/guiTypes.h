@@ -167,7 +167,6 @@ public:
    bool mTabable;                                  ///< True if this object is accessable from using the tab key
 
    bool mCanKeyFocus;                              ///< True if the object can be given keyboard focus (in other words, made a first responder @see GuiControl)
-   bool mUseInput;                                 ///< True if input events like a click can be passed to this object. False will pass events to the parent and this object and its children will not be evaluated.
 
    ColorI mFillColor; //Normal fill color used to fill the control area inside (and possibly under) the border.
    ColorI mFillColorHL; //The highlight fill color used when the cursor enters the control.

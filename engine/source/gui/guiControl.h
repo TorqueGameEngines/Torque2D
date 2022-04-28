@@ -140,6 +140,7 @@ public:
     bool    mSetFirstResponder;
     bool    mCanSave;
     bool    mIsContainer; ///< if true, then the GuiEditor can drag other controls into this one.
+    bool    mUseInput; ///< True if input events like a click can be passed to this gui. False will pass events to the parent and this object and its children will not process input (touch and keyboard).
 
     S32     mLayer;
     static S32     smCursorChanged; ///< Has this control modified the cursor? -1 or type
