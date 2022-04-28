@@ -182,8 +182,9 @@ public:
     void addListener( SimObject* pListener );
     void removeListener( SimObject* pListener );
 
-private:
     void clearDatabase( void );
+
+private:
     bool removeModuleDefinition( ModuleDefinition* pModuleDefinition );
     bool registerModule( const char* pModulePath, const char* pModuleFile );
 

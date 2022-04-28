@@ -421,4 +421,15 @@ ConsoleMethodWithDocs(ModuleManager, removeListener, ConsoleVoid, 3, 3, (listene
     object->removeListener( pListener );
 }
 
+//-----------------------------------------------------------------------------
+
+/*! Removes everything from the module database
+    @return No return value
+*/
+ConsoleMethodWithDocs(ModuleManager, clearDatabase, ConsoleVoid, 2, 2, ())
+{
+    // Check if module merge is available or not.
+    return object->clearDatabase();
+}
+
 ConsoleMethodGroupEndWithDocs(ModuleManager)

@@ -112,4 +112,14 @@ ConsoleMethodWithDocs(ModuleDefinition, removeDependency, ConsoleBool, 3, 3, (mo
     return object->removeDependency( pModuleId );
 }
 
+//-----------------------------------------------------------------------------
+
+/*! Returns the path to the module directory.
+    @return (bool success) Whether the module dependency was removed or not.
+*/
+ConsoleMethodWithDocs(ModuleDefinition, getModulePath, ConsoleString, 2, 2, ())
+{
+    return object->getModulePath();
+}
+
 ConsoleMethodGroupEndWithDocs(ModuleDefinition)
