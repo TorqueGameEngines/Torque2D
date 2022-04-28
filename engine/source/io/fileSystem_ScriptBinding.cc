@@ -337,9 +337,9 @@ ConsoleFunctionWithDocs(getFileList, ConsoleString, 2, 2, (strPath))
        return "";
 
    // Grab the required buffer length.
-   S32 length = 0;
+   U32 length = 0;
 
-   for (S32 i = 0; i < files.size(); i++)
+   for (U32 i = 0; i < files.size(); i++)
        length += dStrlen(files[i].pFileName) + 1;
 
    // Get a return buffer.
@@ -347,7 +347,7 @@ ConsoleFunctionWithDocs(getFileList, ConsoleString, 2, 2, (strPath))
    char* p = buffer;
 
    // Copy the directory names to the buffer.
-   for (S32 i = 0; i < files.size(); i++)
+   for (U32 i = 0; i < files.size(); i++)
    {
        dStrcpy(p, files[i].pFileName);
        p += dStrlen(files[i].pFileName);
