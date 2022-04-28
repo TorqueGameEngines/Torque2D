@@ -143,6 +143,7 @@ protected:
    bool						  mHideCursorBecauseOfTouch; ///< Touch event has been detected. Hide the cursor.
 
    virtual void findMouseControl(const GuiEvent &event);
+   bool DoesControlStackContainControl(GuiControl* stack, const GuiControl* ctrl);
    virtual void refreshMouseControl();
    /// @}
 

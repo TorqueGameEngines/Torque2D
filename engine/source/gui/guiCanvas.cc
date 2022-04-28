@@ -647,18 +647,62 @@ void GuiCanvas::findMouseControl(const GuiEvent &event)
       mMouseControl = NULL;
       return;
    }
-   GuiControl *controlHit = findHitControl(event.mousePoint);
-   if(controlHit != static_cast<GuiControl*>(mMouseControl))
+   GuiControl* leavingStack = static_cast<GuiControl*>(mMouseControl);
+   GuiControl* controlHit = findHitControl(event.mousePoint);
+   GuiControl* enteringStack = controlHit;
+   if(leavingStack != enteringStack)
    {
       if (bool(mMouseControl))
       {
-         mMouseControl->onTouchLeave(event);
-         hoverControlStart = Platform::getRealMilliseconds();
-         hoverPositionSet = false;
+          hoverControlStart = Platform::getRealMilliseconds();
+          hoverPositionSet = false;
+
+          //figure out how much of the leaving stack we are leaving.
+          while (!DoesControlStackContainControl(enteringStack, leavingStack))
+          {
+              leavingStack->onTouchLeave(event);
+              leavingStack = leavingStack->getParent();
+              if (!leavingStack)
+                  break;
+          }
       }
+
+      //figure out how much of the entering stack we are entering.
+      if (leavingStack)
+      {
+          while (!DoesControlStackContainControl(leavingStack, enteringStack))
+          {
+              enteringStack->onTouchEnter(event);
+              enteringStack = enteringStack->getParent();
+              if(!enteringStack)
+                  break;
+          }
+      }
+
       mMouseControl = controlHit;
       mMouseControl->onTouchEnter(event);
    }
+}
+
+bool GuiCanvas::DoesControlStackContainControl(GuiControl* stack, const GuiControl* ctrl)
+{
+    GuiControl* pen = stack;
+    do
+    {
+        if (pen)
+        {
+            if (pen == ctrl)
+            {
+                return true;
+            }
+            pen = pen->getParent();
+        }
+        else
+        {
+            return false;
+        }
+    } while (pen);
+    return false;
 }
 
 //Luma: Some fixes from the forums, Dave Calabrese
