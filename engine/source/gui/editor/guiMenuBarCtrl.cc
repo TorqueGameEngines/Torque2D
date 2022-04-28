@@ -1401,6 +1401,8 @@ void GuiMenuListCtrl::updateSize()
 	resize(mBounds.point, newExtent);
 }
 
+void GuiMenuListCtrl::onTouchDown(const GuiEvent &) { }
+
 void GuiMenuListCtrl::onTouchUp(const GuiEvent &event)
 {
 	GuiMenuItemCtrl *ctrl = GetHitItem(event.mousePoint);

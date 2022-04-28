@@ -216,7 +216,8 @@ public:
 
 	inline void setHoveredItem(GuiMenuItemCtrl *item) { mEnterItemTime = Platform::getVirtualMilliseconds(); mHoveredItem = item; mArmSubMenu = true; }
 
-	virtual void onTouchUp(const GuiEvent &event);
+	virtual void onTouchDown(const GuiEvent& event);
+	virtual void onTouchUp(const GuiEvent& event);
 	void processMenuItem(GuiMenuItemCtrl *ctrl);
 };
 
