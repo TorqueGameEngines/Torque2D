@@ -247,14 +247,6 @@ void GuiWindowCtrl::onTouchDown(const GuiEvent &event)
    {
       mouseLock();
    }
-   else
-   {
-
-      GuiControl *ctrl = findHitControl(localPoint);
-      if (ctrl && ctrl != this)
-         ctrl->onTouchDown(event);
-
-   }
 }
 
 void GuiWindowCtrl::onTouchDragged(const GuiEvent &event)
