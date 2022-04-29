@@ -918,7 +918,10 @@ void GuiControl::preRender()
    for(i = begin(); i != end(); i++)
    {
       GuiControl *ctrl = static_cast<GuiControl *>(*i);
-      ctrl->preRender();
+      if (ctrl->isVisible())
+      {
+          ctrl->preRender();
+      }
    }
    onPreRender();
 }

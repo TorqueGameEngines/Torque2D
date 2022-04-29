@@ -1356,9 +1356,12 @@ void GuiCanvas::renderFrame(bool preRenderOnly, bool bufferSwap /* = true */)
       for(i = begin(); i != end(); i++)
       {
          GuiControl *contentCtrl = static_cast<GuiControl*>(*i);
-         dglSetClipRect(updateUnion);
-         glDisable( GL_CULL_FACE );
-         contentCtrl->onRender(contentCtrl->getPosition(), updateUnion);
+         if (contentCtrl->isVisible())
+         {
+             dglSetClipRect(updateUnion);
+             glDisable(GL_CULL_FACE);
+             contentCtrl->onRender(contentCtrl->getPosition(), updateUnion);
+         }
       }
 
       // Tooltip resource
