@@ -72,6 +72,7 @@ public:
    static void initPersistFields();
 
    bool onKeyDown(const GuiEvent &event);
+   void onLoseFirstResponder();
 };
 
 #endif //_GUI_TEXTEDIT_CTRL_H

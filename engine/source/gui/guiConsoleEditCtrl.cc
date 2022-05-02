@@ -177,4 +177,23 @@ bool GuiConsoleEditCtrl::handleDelete()
     return result;
 }
 
+void GuiConsoleEditCtrl::onLoseFirstResponder()
+{
+    Platform::disableKeyboardTranslation();
+
+    if (isMethod("onLoseFirstResponder"))
+        Con::executef(this, 2, "onLoseFirstResponder");
+
+    mSelector.setFirstResponder(false);
+    mTextOffsetY = 0;
+    mScrollVelocity = 0;
+    if (!mTextWrap && mTextBlockList.size() > 0)
+    {
+        mTextBlockList.front().resetScroll();
+    }
+
+    // Redraw the control:
+    setUpdate();
+}
+
 
