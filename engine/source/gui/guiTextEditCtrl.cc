@@ -391,6 +391,7 @@ GuiTextEditCtrl::GuiTextEditCtrl()
    mInputMode = AllText;
    mSuspendVerticalScrollJump = false;
    mTextBlockList = TextBlockList();
+   mScrollVelocity = 0;
 }
 
 static EnumTable::Enums inputModeEnums[] =
