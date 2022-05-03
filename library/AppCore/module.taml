@@ -4,7 +4,10 @@
 	Description="Provides critical initialization and functionality needed for every project."
 	ScriptFile="appCore.cs"
 	CreateFunction="create"
-	DestroyFunction="destroy" >
+	DestroyFunction="destroy"
+	Project="New Project"
+	ProjectDescription="Set a course for adventure!"
+	Icon="projectIcon.png" >
 	<DeclaredAssets
 		Path="gui"
 		Extension="asset.taml"

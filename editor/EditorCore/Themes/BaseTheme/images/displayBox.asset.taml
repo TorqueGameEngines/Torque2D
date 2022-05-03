@@ -1,0 +1,9 @@
+<ImageAsset
+    AssetName="displayBox_BaseTheme"
+    ImageFile="displayBox.png"
+    CellCountX="9"
+    CellCountY="4"
+    CellWidth="5"
+    CellHeight="5"
+	FilterMode="Nearest"
+	AssetInternal="1" />

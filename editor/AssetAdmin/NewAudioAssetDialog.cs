@@ -36,6 +36,8 @@ function NewAudioAssetDialog::init(%this, %width, %height)
 		Position = "12 170";
 		Extent = (%width - 24) SPC 80;
 		text = "Select an Audio File to get started!";
+		textWrap = true;
+		textExtend = true;
 	};
 	ThemeManager.setProfile(%this.feedback, "infoProfile");
 
@@ -133,6 +135,7 @@ function NewAudioAssetDialog::Validate(%this)
 function NewAudioAssetDialog::onClose(%this)
 {
 	Canvas.popDialog(%this);
+	%this.postEvent("DialogClosed", %this);
 }
 
 function NewAudioAssetDialog::onCreate(%this)

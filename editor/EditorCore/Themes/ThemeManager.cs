@@ -29,6 +29,7 @@ function ThemeManager::onAdd(%this)
 
 	%this.themeList = new SimSet();
 	%this.controlList = new SimSet();
+	%this.spriteList = new SimSet();
 
 	%constructionVest = new ScriptObject()
 	{
@@ -67,6 +68,7 @@ function ThemeManager::setTheme(%this, %i)
 	%theme = %this.themeList.getObject(%i);
 	%this.activeTheme = %theme;
 	%this.refreshProfiles();
+	%this.refreshSprites();
 	%this.postEvent("ThemeChange", %theme);
 }
 
@@ -99,6 +101,30 @@ function ThemeManager::refreshProfiles(%this)
 			}
 
 			%obj.gui.setEditFieldValue(%obj.profileTag, %this.activeTheme.getFieldValue(%obj.profileName));
+
+			if(%obj.profileName $= "textEditProfile")
+			{
+				%obj.gui.editCursor = %this.activeTheme.editCursor;
+			}
+		}
+		else
+		{
+			//let's remove this corpse
+			%this.controlList.remove(%obj);
+			%this.i--;
+		}
+	}
+}
+
+function ThemeManager::refreshSprites(%this)
+{
+	for (%i = 0; %i < %this.spriteList.getCount(); %i++)
+	{
+		%obj = %this.spriteList.getObject(%i);
+
+		if(isObject(%obj.sprite))
+		{
+			%obj.sprite.setImage(%this.activeTheme.getFieldValue(%obj.imageName), %obj.frame);
 		}
 		else
 		{
@@ -128,6 +154,28 @@ function ThemeManager::setProfile(%this, %gui, %profileName, %profileTag)
 			gui = %gui;
 			profileTag = %profileTag;
 			profileName = %profileName;
+		}
+	);
+
+	if(%profileName $= "textEditProfile")
+	{
+		%gui.editCursor = %this.activeTheme.editCursor;
+	}
+}
+
+function ThemeManager::setImage(%this, %sprite, %imageName, %frame)
+{
+	if(%frame $= "")
+	{
+		%frame = 0;
+	}
+	%sprite.setImage(%this.activeTheme.getFieldValue(%imageName), %frame);
+	%this.spriteList.add(
+		new ScriptObject()
+		{
+			sprite = %sprite;
+			frame = %frame;
+			imageName = %imageName;
 		}
 	);
 }

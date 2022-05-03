@@ -40,6 +40,8 @@ function NewAnimationAssetDialog::init(%this, %width, %height)
 		Position = "12 220";
 		Extent = (%width - 24) SPC 80;
 		text = "Select an Image Asset to get started!";
+		textWrap = true;
+		textExtend = true;
 	};
 	ThemeManager.setProfile(%this.feedback, "infoProfile");
 
@@ -141,6 +143,7 @@ function NewAnimationAssetDialog::Validate(%this)
 function NewAnimationAssetDialog::onClose(%this)
 {
 	Canvas.popDialog(%this);
+	%this.postEvent("DialogClosed", %this);
 }
 
 function NewAnimationAssetDialog::onCreate(%this)

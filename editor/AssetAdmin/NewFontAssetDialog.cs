@@ -36,6 +36,8 @@ function NewFontAssetDialog::init(%this, %width, %height)
 		Position = "12 170";
 		Extent = (%width - 24) SPC 80;
 		text = "Select a Bimap Font File to get started!";
+		textWrap = true;
+		textExtend = true;
 	};
 	ThemeManager.setProfile(%this.feedback, "infoProfile");
 
@@ -133,6 +135,7 @@ function NewFontAssetDialog::Validate(%this)
 function NewFontAssetDialog::onClose(%this)
 {
 	Canvas.popDialog(%this);
+	%this.postEvent("DialogClosed", %this);
 }
 
 function NewFontAssetDialog::onCreate(%this)

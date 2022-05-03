@@ -20,6 +20,9 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
+// Set the random seed
+setRandomSeed();
+
 // Set log mode.
 setLogMode(2);
 
@@ -53,11 +56,9 @@ AssetDatabase.EchoInfo = false;
 // This cases assets to stay in memory unless assets are purged.
 AssetDatabase.IgnoreAutoUnload = true;
 
-// Scan modules in your game. This defaults to the toybox for now. You should make an empty game folder, move some modules into it from the library, and change this to scan it.
-ModuleDatabase.scanModules( "./toybox" );
-
-// You'll need to load a starting module for your game. This will likely be the AppCore.
-ModuleDatabase.LoadExplicit( "AppCore" );
+// If you want your game to start directly instead of first starting the Project Manager, you can load it here. This is an example using the toybox.
+//ModuleDatabase.scanModules( "./toybox" );
+//ModuleDatabase.LoadExplicit( "AppCore" );
 
 // Starts the editor.
 exec("./editor/main.cs");
@@ -67,8 +68,14 @@ exec("./editor/main.cs");
 function onExit()
 {
     // Unload the AppCore or EditorCore modules.
-    EditorManager.unloadGroup( "EditorGroup" );
-    ModuleDatabase.unloadExplicit( "AppCore" );
+	if(isObject(EditorManager))
+	{
+	    EditorManager.unloadGroup( "EditorGroup" );
+	}
+	if(isObject(AppCore))
+	{
+    	ModuleDatabase.unloadExplicit( "AppCore" );
+	}
 }
 
 function androidBackButton(%val)

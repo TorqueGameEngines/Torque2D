@@ -44,6 +44,8 @@ function NewParticleAssetDialog::init(%this, %width, %height)
 		Position = "12 270";
 		Extent = (%width - 24) SPC 80;
 		text = "Select an Image Asset or Animation Assset to get started!";
+		textWrap = true;
+		textExtend = true;
 	};
 	ThemeManager.setProfile(%this.feedback, "infoProfile");
 
@@ -152,6 +154,7 @@ function NewParticleAssetDialog::Validate(%this)
 function NewParticleAssetDialog::onClose(%this)
 {
 	Canvas.popDialog(%this);
+	%this.postEvent("DialogClosed", %this);
 }
 
 function NewParticleAssetDialog::onCreate(%this)

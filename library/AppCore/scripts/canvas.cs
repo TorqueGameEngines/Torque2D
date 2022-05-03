@@ -64,7 +64,7 @@ function AppCore::initializeCanvas(%this, %windowName)
 	}
 	else
 	{
-		Canvas.setCanvasTitle(%windowName);
+		setCanvasTitle(%windowName);
 		Canvas.repaint();
 	}
     Canvas.UseBackgroundColor = true;

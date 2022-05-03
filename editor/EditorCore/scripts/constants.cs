@@ -20,20 +20,32 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-new ModuleManager(EditorManager);
-EditorManager.addListener(AssetDatabase);
-EditorManager.EchoInfo = false;
+$iOS::constant::iPhone = 0;
+$iOS::constant::iPad = 1;
+$iOS::constant::iPhone5 = 2;
 
-// Scans for the modules that make up the editors.
-EditorManager.scanModules( "./" );
+$iOS::constant::Landscape = 0;
+$iOS::constant::Portrait = 1;
+$iOS::constant::ResolutionFull = 0;
+$iOS::constant::ResolutionSmall = 1;
 
-// Load various editors
-EditorManager.LoadExplicit("EditorConsole");
-//Editormanager.LoadExplicit("ProjectManager");//Someday soon...
-EditorManager.LoadExplicit("AssetAdmin");
+$iOS::constant::iPhoneWidth = 480;
+$iOS::constant::iPhoneHeight = 320;
 
-if(!isObject(AppCore))
-{
-	EditorCore.open();
-	EditorCore.showProjectSelector();
-}
+$iOS::constant::iPhone4Width = 960;
+$iOS::constant::iPhone4Height = 640;
+
+$iOS::constant::iPadWidth = 1024;
+$iOS::constant::iPadHeight = 768;
+
+$iOS::constant::NewiPadWidth = 2048;
+$iOS::constant::NewiPadHeight = 1536;
+
+$iOS::constant::iPhone5Width = 1136;
+$iOS::constant::iPhone5Height = 640;
+
+$iOS::constant::OrientationUnknown = 0;
+$iOS::constant::OrientationLandscapeLeft = 1;
+$iOS::constant::OrientationLandscapeRight = 2;
+$iOS::constant::OrientationPortrait = 3;
+$iOS::constant::OrientationPortraitUpsideDown = 4;

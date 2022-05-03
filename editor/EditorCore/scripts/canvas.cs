@@ -24,10 +24,10 @@
 // initializeCanvas
 // Constructs and initializes the default canvas window.
 //------------------------------------------------------------------------------
-function initializeCanvas(%windowName)
+function EditorCore::initializeCanvas(%this, %windowName)
 {
     // Don't duplicate the canvas.
-	if(!isObject(Canvas))
+    if(!isObject(Canvas))
     {
 	    videoSetGammaCorrection($pref::OpenGL::gammaCorrection);
 
@@ -67,13 +67,15 @@ function initializeCanvas(%windowName)
 		setCanvasTitle(%windowName);
 		Canvas.repaint();
 	}
+    Canvas.UseBackgroundColor = true;
+    Canvas.BackgroundColor = "Black";
 }
 
 //------------------------------------------------------------------------------
 // iOSResolutionFromSetting
 // Helper function that grabs resolution strings based on device type
 //------------------------------------------------------------------------------
-function iOSResolutionFromSetting( %deviceType, %deviceScreenOrientation )
+function EditorCore::iOSResolutionFromSetting( %this, %deviceType, %deviceScreenOrientation )
 {
     // A helper function to get a string based resolution from the settings given.
     %x = 0;

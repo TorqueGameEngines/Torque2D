@@ -4,4 +4,7 @@
 	Description="Barebones startup module"
 	ScriptFile="main.cs"
 	CreateFunction="create"
-	DestroyFunction="destroy" />
+	DestroyFunction="destroy"
+	Project="Toy Box"
+	ProjectDescription="A collection of simple programs to demonstrate different features of Torque2D."
+	Icon="projectIcon.png" />

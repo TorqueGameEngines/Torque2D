@@ -90,6 +90,11 @@ function EditorConsole::eval(%this)
 {
 	%text = trim(%this.consoleEntry.getValue());
 
+	if(%text $= "")
+	{
+		return;
+	}
+
     if(strpos(%text, "(") == -1 && strpos(%text, "=") == -1 && strpos(%text, " ") == -1 && strpos(%text, "{") == -1 && strpos(%text, "}") == -1)
     {
         %text = %text @ "()";

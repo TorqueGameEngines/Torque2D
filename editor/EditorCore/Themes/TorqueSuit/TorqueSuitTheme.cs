@@ -16,6 +16,10 @@ function TorqueSuitTheme::init(%this)
 	%this.color5 = "33 191 132 255";
 
 	%this.borderSize = 4;
+
+	%this.editorBG = "EditorCore:editorBG_BaseTheme";
+	%this.fixedHeader200x20 = "EditorCore:fixedHeader200x20_BaseTheme";
+	%this.displayBox = "EditorCore:displayBox_BaseTheme";
 }
 
 function TorqueSuitTheme::makeButtonProfile(%this)
@@ -448,6 +452,47 @@ function TorqueSuitTheme::makeScrollProfile(%this)
 		fillColor = %this.setAlpha(%this.color1, 240);
 
 		borderDefault = %mainBorder;
+	};
+
+	//Tiny scroll profile - for uses when you have little space
+	%this.tinyTrackProfile = new GuiControlProfile()
+	{
+			fillColor = %this.setAlpha(%this.color2, 150);
+			fillColorHL = %this.setAlpha(%this.color2, 150);
+			fillColorSL = %this.setAlpha(%this.adjustValue(%this.color2, 10), 150);
+			fillColorNA = %this.setAlpha(%this.color2, 50);
+			borderDefault = %this.emptyBorder;
+	};
+
+	%this.tinyThumbProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color3;
+		fillColorHL = %this.adjustValue(%this.color3, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.setAlpha(%this.color3, 80);
+		borderDefault = %this.emptyBorder;
+	};
+
+	//probably best to avoid the arrow buttons for very small scroll bars
+	%this.tinyScrollArrowProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color3;
+		fillColorHL = %this.adjustValue(%this.color3, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.setAlpha(%this.color3, 80);
+
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontColor = %this.color2;
+		fontColorHL = %this.color2;
+		fontColorSL = %this.color4;
+		fontColorNA = %this.setAlpha(%this.color2, 80);
+		borderDefault = %this.emptyBorder;
+	};
+	%this.scrollProfile = new GuiControlProfile()
+	{
+	    fillColor = %this.setAlpha(%this.color2, 180);
+		borderDefault = %this.emptyBorder;
 	};
 }
 

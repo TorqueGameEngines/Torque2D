@@ -36,6 +36,8 @@ function NewImageAssetDialog::init(%this, %width, %height)
 		Position = "12 170";
 		Extent = (%width - 24) SPC 80;
 		text = "Select an Image File to get started!";
+		textWrap = true;
+		textExtend = true;
 	};
 	ThemeManager.setProfile(%this.feedback, "infoProfile");
 
@@ -140,6 +142,7 @@ function NewImageAssetDialog::Validate(%this)
 function NewImageAssetDialog::onClose(%this)
 {
 	Canvas.popDialog(%this);
+	%this.postEvent("DialogClosed", %this);
 }
 
 function NewImageAssetDialog::onCreate(%this)

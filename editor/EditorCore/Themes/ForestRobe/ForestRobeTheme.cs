@@ -16,4 +16,8 @@ function ForestRobeTheme::init(%this)
 	%this.color5 = "216 114 107 255";
 
 	%this.borderSize = 3;
+
+	%this.editorBG = "EditorCore:editorBG_BaseTheme";
+	%this.fixedHeader200x20 = "EditorCore:fixedHeader200x20_BaseTheme";
+	%this.displayBox = "EditorCore:displayBox_BaseTheme";
 }

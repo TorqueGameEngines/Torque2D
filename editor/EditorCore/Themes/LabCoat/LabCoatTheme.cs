@@ -16,6 +16,10 @@ function LabCoatTheme::init(%this)
 	%this.color5 = "16 162 235 255";
 
 	%this.borderSize = 2;
+
+	%this.editorBG = "EditorCore:editorBG_BaseTheme";
+	%this.fixedHeader200x20 = "EditorCore:fixedHeader200x20_BaseTheme";
+	%this.displayBox = "EditorCore:displayBox_BaseTheme";
 }
 
 function LabCoatTheme::makePanelProfile(%this)

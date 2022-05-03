@@ -22,6 +22,26 @@
 
 function EditorCore::create( %this )
 {
+	%this.editorKeyMap = new ActionMap();
+	if(!isObject(AppCore))
+	{
+		exec("./scripts/constants.cs");
+		exec("./scripts/defaultPreferences.cs");
+		exec("./gui/guiProfiles.cs");
+		%this.createGuiProfiles();
+
+		exec("./scripts/canvas.cs");
+		exec("./scripts/EditorCoreSplash.cs");
+		exec("./scripts/EditorProjectSelector.cs");
+		exec("./scripts/EditorProjectCard.cs");
+		exec("./scripts/NewProjectDialog.cs");
+
+		%this.initializeCanvas("Torque2D: Rocket Edition");
+	}
+	else
+	{
+		%this.editorKeyMap.bindCmd( "keyboard", "ctrl tilde", "EditorCore.toggleEditor();", "");
+	}
 	exec("./Themes/ThemeManager.cs");
 	exec("./EditorDialog.cs");
 	exec("./EditorForm.cs");
@@ -31,9 +51,6 @@ function EditorCore::create( %this )
 	new ScriptObject(ThemeManager);
 
 	%this.initGui();
-
-	%this.editorKeyMap = new ActionMap();
-    %this.editorKeyMap.bindCmd( "keyboard", "ctrl tilde", "EditorCore.toggleEditor();", "");
 	%this.editorKeyMap.push();
 }
 
@@ -57,11 +74,21 @@ function EditorCore::initGui(%this)
 	%this.menuBar = new GuiMenuBarCtrl()
 	{
 		new GuiMenuItemCtrl() {
-			Text = "Tools";
+			Text = "Torque2D";
 
 			new GuiMenuItemCtrl() {
 				Text = "Close Tools";
 				Command = "EditorCore.close();";
+			};
+
+			new GuiMenuItemCtrl() {
+				Text = "Close Project";
+				Command = "restartInstance();";
+			};
+
+			new GuiMenuItemCtrl() {
+				Text = "Exit";
+				Command = "quit();";
 			};
 		};
 		new GuiMenuItemCtrl() {
@@ -121,6 +148,54 @@ function EditorCore::initGui(%this)
 	ThemeManager.setProfile(%this.tabBook, "tabProfileTop", "TabProfile");
 
 	%this.baseGui.add(%this.tabBook);
+
+	%this.torqueBackground = new GuiSpriteCtrl()
+	{
+		HorizSizing = width;
+		VertSizing = height;
+		Position = "0 0";
+		Extent = "1024 768";
+		SingleFrameBitmap = "1";
+		ConstrainProportions = "0";
+		FullSize = "1";
+		ImageColor = "255 255 255 255";
+		PositionOffset = "0 0";
+		Visible = false;
+	};
+	ThemeManager.setProfile(%this.torqueBackground, "spriteProfile");
+	ThemeManager.setImage(%this.torqueBackground, "editorBG");
+	%this.baseGui.add(%this.torqueBackground);
+
+	%this.projectSelector = new GuiControl()
+	{
+		Class = EditorProjectSelector;
+		HorizSizing = width;
+		VertSizing = height;
+		Position = "0 0";
+		Extent = "1024 768";
+		Visible = false;
+	};
+	ThemeManager.setProfile(%this.projectSelector, "emptyProfile");
+	%this.baseGui.add(%this.projectSelector);
+
+	%this.splash = new GuiSpriteCtrl()
+	{
+		Class = EditorCoreSplash;
+		HorizSizing = width;
+		VertSizing = height;
+		Position = "0 0";
+		Extent = "1024 768";
+		Bitmap = "./images/t2d_rocket_splash.png";
+		SingleFrameBitmap = "1";
+		constrainProportions = "1";
+		FullSize = "0";
+		ImageSize = "672 480";
+		ImageColor = "255 255 255 0";
+		PositionOffset = "0 20";
+		Visible = false;
+	};
+	ThemeManager.setProfile(%this.splash, "spriteProfile");
+	%this.baseGui.add(%this.splash);
 }
 
 function EditorCore::toggleEditor(%this)
@@ -145,6 +220,7 @@ function EditorCore::open(%this)
     Canvas.pushDialog(%this.baseGui);
 
 	%this.tabBook.selectPage(0);
+	Canvas.setCursor(ThemeManager.activeTheme.defaultCursor);
 }
 
 function EditorCore::close(%this)
@@ -152,6 +228,11 @@ function EditorCore::close(%this)
 	if ( $enableDirectInput )
 		activateKeyboard();
 	Canvas.popDialog(%this.baseGui);
+
+	if(isObject(defaultCursor))
+	{
+		Canvas.setCursor(defaultCursor);
+	}
 }
 
 function EditorCore::RegisterEditor(%this, %name, %editor)
@@ -232,4 +313,32 @@ function EditorCore::flattenPath(%this, %path)
 	}
 
 	return %result;
+}
+
+function EditorCore::showProjectSelector(%this)
+{
+	%this.menuBar.setVisible(false);
+	%this.tabBook.setVisible(false);
+	%this.projectSelector.setVisible(true);
+	%this.splash.show();
+	%this.torqueBackground.setVisible(true);
+	%this.projectSelector.schedule(2800, "show");
+	%this.startListening(%this.projectSelector);
+}
+
+function EditorCore::onProjectSelected(%this)
+{
+	%this.close();
+	%this.menuBar.setVisible(true);
+	%this.tabBook.setVisible(true);
+	%this.projectSelector.setVisible(false);
+	%this.torqueBackground.setVisible(false);
+	%this.stopListening(%this.projectSelector);
+	%this.schedule(500, "finishProjectSelection");
+}
+
+function EditorCore::finishProjectSelection(%this)
+{
+	ModuleDatabase.LoadExplicit("AppCore", 1);
+	%this.editorKeyMap.bindCmd( "keyboard", "ctrl tilde", "EditorCore.toggleEditor();", "");
 }
