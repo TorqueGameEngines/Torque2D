@@ -1322,11 +1322,11 @@ bool GuiMenuListCtrl::onRenderItem(RectI &itemRect, GuiMenuItemCtrl *item)
 		RectI textRect = RectI(itemRect.point.x + itemRect.extent.y, itemRect.point.y, itemRect.extent.x - (2 * itemRect.extent.y), itemRect.extent.y);
 
 		//Command Description
-		profile->mAlignment = GuiControlProfile::AlignmentType::LeftAlign;
+		profile->mAlignment = AlignmentType::LeftAlign;
 		renderText(textRect.point, textRect.extent, item->getText(), profile);
 
 		//Hot Keys!!
-		profile->mAlignment = GuiControlProfile::AlignmentType::RightAlign;
+		profile->mAlignment = AlignmentType::RightAlign;
 		renderText(textRect.point, textRect.extent, item->getHotKeyText(), profile);
 	}
 

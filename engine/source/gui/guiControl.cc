@@ -51,6 +51,24 @@
 
 IMPLEMENT_CONOBJECT_CHILDREN(GuiControl);
 
+static EnumTable::Enums alignCtrlEnums[] =
+{
+   { AlignmentType::LeftAlign,          "left"      },
+   { AlignmentType::CenterAlign,        "center"    },
+   { AlignmentType::RightAlign,         "right"     },
+   { AlignmentType::DefaultAlign,       "default"   }
+};
+static EnumTable gAlignCtrlTable(3, &alignCtrlEnums[0]);
+
+static EnumTable::Enums vAlignCtrlEnums[] =
+{
+   { VertAlignmentType::TopVAlign,          "top"      },
+   { VertAlignmentType::MiddleVAlign,        "middle"    },
+   { VertAlignmentType::BottomVAlign,         "bottom"     },
+   { VertAlignmentType::DefaultVAlign,       "default"   }
+};
+static EnumTable gVAlignCtrlTable(3, &vAlignCtrlEnums[0]);
+
 //used to locate the next/prev responder when tab is pressed
 S32 GuiControl::smCursorChanged           = -1;
 GuiControl *GuiControl::smPrevResponder = NULL;
@@ -78,6 +96,9 @@ GuiControl::GuiControl()
    mLangTableName       = StringTable->EmptyString;
    mText                = StringTable->EmptyString;
    mTextID              = StringTable->EmptyString;
+
+   mAlignment = AlignmentType::DefaultAlign;
+   mVAlignment = VertAlignmentType::DefaultVAlign;
 
    mLangTable           = NULL;
    mFirstResponder      = NULL;
@@ -206,6 +227,8 @@ void GuiControl::initPersistFields()
    addField("textID", TypeString, Offset(mTextID, GuiControl));
    addField("textWrap", TypeBool, Offset(mTextWrap, GuiControl), &writeTextWrapFn, "If true, text will wrap to additional lines.");
    addField("textExtend", TypeBool, Offset(mTextExtend, GuiControl), &writeTextExtendFn, "If true, extent will change based on the size of the control's text when possible.");
+   addField("align", TypeEnum, Offset(mAlignment, GuiControl), 1, &gAlignCtrlTable);
+   addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControl), 1, &gVAlignCtrlTable);
    endGroup("Text");
 }
 
@@ -1793,15 +1816,15 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
 
         if (blockHeight < totalHeight)
         {
-            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, profile->mVAlignment);
+            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, getVertAlignmentType(profile));
         }
         else if (!mTextWrap)
         {
-            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, GuiControlProfile::VertAlignmentType::MiddleVAlign);
+            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, VertAlignmentType::MiddleVAlign);
         }
         else
         {
-            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, GuiControlProfile::VertAlignmentType::TopVAlign);
+            startOffsetY = getTextVerticalOffset(blockHeight, totalHeight, VertAlignmentType::TopVAlign);
         }
 
         renderLineList(offset, extent, startOffsetY, lineList, profile, rot);
@@ -1826,7 +1849,7 @@ void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, co
 		U32 textWidth = profile->mFont->getStrWidth(trimmedLine.c_str());
 		if(textWidth < totalWidth)
 		{
-            offsetX = getTextHorizontalOffset(textWidth, totalWidth, profile->mAlignment);
+            offsetX = getTextHorizontalOffset(textWidth, totalWidth, getAlignmentType(profile));
 		}
 
 		Point2I start = Point2I(0, 0);
@@ -1928,26 +1951,26 @@ void GuiControl::renderTextLine(const Point2I& startPoint, const string line, Gu
     dglDrawText(profile->mFont, startPoint, line.c_str(), profile->mFontColors, 9, rotationInDegrees);
 }
 
-S32 GuiControl::getTextHorizontalOffset(S32 textWidth, S32 totalWidth, GuiControlProfile::AlignmentType align)
+S32 GuiControl::getTextHorizontalOffset(S32 textWidth, S32 totalWidth, AlignmentType align)
 {
-	if (align == GuiControlProfile::RightAlign)
+	if (align == RightAlign)
 	{
 		return totalWidth - textWidth;
 	}
-	else if (align == GuiControlProfile::CenterAlign)
+	else if (align == CenterAlign)
 	{
 		return (totalWidth - textWidth) / 2;
 	}
 	return 0;//left aligned
 }
 
-S32 GuiControl::getTextVerticalOffset(S32 textHeight, S32 totalHeight, GuiControlProfile::VertAlignmentType align)
+S32 GuiControl::getTextVerticalOffset(S32 textHeight, S32 totalHeight, VertAlignmentType align)
 {
-	if (align == GuiControlProfile::MiddleVAlign)
+	if (align == MiddleVAlign)
 	{
 		return (totalHeight - textHeight) / 2;
 	}
-	else if (align == GuiControlProfile::BottomVAlign)
+	else if (align == BottomVAlign)
 	{
 		return totalHeight - textHeight;
 	}
@@ -2012,4 +2035,24 @@ void GuiControl::setTextID(S32 id)
 const char *GuiControl::getText()
 {
 	return mText;
+}
+
+AlignmentType GuiControl::getAlignmentType()
+{
+    return getAlignmentType(mProfile);
+}
+
+AlignmentType GuiControl::getAlignmentType(GuiControlProfile* profile)
+{
+    return mAlignment == AlignmentType::DefaultAlign ? profile->mAlignment : mAlignment;
+}
+
+VertAlignmentType GuiControl::getVertAlignmentType()
+{
+    return getVertAlignmentType(mProfile);
+}
+
+VertAlignmentType GuiControl::getVertAlignmentType(GuiControlProfile* profile)
+{
+    return mVAlignment == VertAlignmentType::DefaultVAlign ? profile->mVAlignment : mVAlignment;
 }

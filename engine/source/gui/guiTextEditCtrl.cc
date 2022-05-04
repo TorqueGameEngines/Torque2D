@@ -46,7 +46,7 @@ GuiTextEditTextBlock::GuiTextEditTextBlock()
     mLineStartIbeamValue = 0;
 }
 
-void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector)
+void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector, AlignmentType align)
 {
     mGlobalBounds.set(bounds.point, bounds.extent);
     mText.assign(line);
@@ -62,7 +62,7 @@ void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamSta
         U32 lengthOfPostBlockText = mClamp(line.length() - (selEnd - mLineStartIbeamValue), 0, line.length());
         U32 lengthOfHighlightBlockText = mClamp(line.length() - (lengthOfPreBlockText + lengthOfPostBlockText), 0, line.length());
 
-        processTextAlignment(line, profile);
+        processTextAlignment(line, profile, align);
         Point2I movingStartPoint = getGlobalTextStart();
         movingStartPoint.x += renderTextSection(movingStartPoint, 0, lengthOfPreBlockText, profile, currentState);
         movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText, lengthOfHighlightBlockText, profile, currentState, true);
@@ -152,18 +152,18 @@ void GuiTextEditTextBlock::processScrollVelocity(const S32 delta, const S32 exte
     mTextScrollX = mClamp(mTextScrollX + delta, 0, max);
 }
 
-void GuiTextEditTextBlock::processTextAlignment(const string line, GuiControlProfile* profile)
+void GuiTextEditTextBlock::processTextAlignment(const string line, GuiControlProfile* profile, AlignmentType align)
 {
-    if (profile->mAlignment == GuiControlProfile::AlignmentType::LeftAlign || 
+    if (align == AlignmentType::LeftAlign ||
         mGlobalBounds.extent.x < profile->mFont->getStrWidth(line.c_str()))
     {
         mTextOffsetX = 0;
     }
-    else if (profile->mAlignment == GuiControlProfile::AlignmentType::RightAlign)
+    else if (align == AlignmentType::RightAlign)
     {
         mTextOffsetX = mGlobalBounds.extent.x - profile->mFont->getStrWidth(line.c_str());
     }
-    else if (profile->mAlignment == GuiControlProfile::AlignmentType::CenterAlign)
+    else if (align == AlignmentType::CenterAlign)
     {
         mTextOffsetX = (S32)mRound((mGlobalBounds.extent.x - profile->mFont->getStrWidth(line.c_str())) / 2);
     }
@@ -1061,7 +1061,7 @@ void GuiTextEditCtrl::renderLineList(const Point2I& offset, const Point2I& exten
         Point2I start = Point2I(0, offsetY);
         Point2I blockExtent = Point2I(extent.x, textHeight);
         RectI blockBounds = RectI(start + offset + profile->mTextOffset, blockExtent);
-        mTextBlockList[i].render(blockBounds, lineList[i], ibeamPos, mProfile, getCurrentState(), mSelector);
+        mTextBlockList[i].render(blockBounds, lineList[i], ibeamPos, mProfile, getCurrentState(), mSelector, getAlignmentType());
 
         offsetY += textHeight;
         ibeamPos += lineList[i].length();

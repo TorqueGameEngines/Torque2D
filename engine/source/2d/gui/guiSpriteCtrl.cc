@@ -324,22 +324,24 @@ F32 GuiSpriteCtrl::getAspectRatio()
 Point2I GuiSpriteCtrl::applyAlignment(RectI &bounds, Point2I &size)
 {
 	Point2I offset = Point2I(0, 0);
+	AlignmentType align = getAlignmentType();
+	VertAlignmentType vAlign = getVertAlignmentType();
 
-	if (mProfile->mAlignment == GuiControlProfile::AlignmentType::RightAlign)
+	if (align == AlignmentType::RightAlign)
 	{
 		offset.x = bounds.extent.x - size.x;
 	}
-	else if (mProfile->mAlignment == GuiControlProfile::AlignmentType::CenterAlign)
+	else if (align == AlignmentType::CenterAlign)
 	{
 		S32 halfW = mRound(size.x / 2);
 		offset.x = mRound(bounds.extent.x / 2) - halfW;
 	}
 
-	if (mProfile->mVAlignment == GuiControlProfile::VertAlignmentType::BottomVAlign)
+	if (vAlign == VertAlignmentType::BottomVAlign)
 	{
 		offset.y = bounds.extent.y - size.y;
 	}
-	else if (mProfile->mVAlignment == GuiControlProfile::VertAlignmentType::MiddleVAlign)
+	else if (vAlign == VertAlignmentType::MiddleVAlign)
 	{
 		S32 halfH = mRound(size.y / 2);
 		offset.y = mRound(bounds.extent.y / 2) - halfH;

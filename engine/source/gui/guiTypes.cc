@@ -252,17 +252,17 @@ IMPLEMENT_CONOBJECT(GuiControlProfile);
 
 static EnumTable::Enums alignEnums[] =
 {
-   { GuiControlProfile::LeftAlign,          "left"      },
-   { GuiControlProfile::CenterAlign,        "center"    },
-   { GuiControlProfile::RightAlign,         "right"     }
+   { AlignmentType::LeftAlign,          "left"      },
+   { AlignmentType::CenterAlign,        "center"    },
+   { AlignmentType::RightAlign,         "right"     }
 };
 static EnumTable gAlignTable(3, &alignEnums[0]);
 
 static EnumTable::Enums vAlignEnums[] =
 {
-   { GuiControlProfile::TopVAlign,          "top"      },
-   { GuiControlProfile::MiddleVAlign,        "middle"    },
-   { GuiControlProfile::BottomVAlign,         "bottom"     }
+   { VertAlignmentType::TopVAlign,          "top"      },
+   { VertAlignmentType::MiddleVAlign,        "middle"    },
+   { VertAlignmentType::BottomVAlign,         "bottom"     }
 };
 static EnumTable gVAlignTable(3, &vAlignEnums[0]);
 
@@ -335,8 +335,8 @@ GuiControlProfile::GuiControlProfile(void) :
 	// default image asset
 	mImageAsset = NULL;
 	
-	mAlignment     = LeftAlign;
-	mVAlignment    = MiddleVAlign;
+	mAlignment     = AlignmentType::LeftAlign;
+	mVAlignment    = VertAlignmentType::MiddleVAlign;
    mProfileForChildrenName = NULL;
 	mProfileForChildren = NULL;
 
@@ -379,8 +379,8 @@ GuiControlProfile::GuiControlProfile(void) :
       mBitmapName = def->mBitmapName;
       mTextOffset = def->mTextOffset;
 
-      //used by GuiTextCtrl
       mAlignment = def->mAlignment;
+	  mVAlignment = def->mVAlignment;
       mCursorColor = def->mCursorColor;
 
       // Child profile
@@ -422,6 +422,8 @@ void GuiControlProfile::initPersistFields()
    addGroup("Font");
 	   addField("fontType",      TypeString,     Offset(mFontType, GuiControlProfile));
 	   addField("fontSize",      TypeS32,        Offset(mFontSize, GuiControlProfile));
+	   addField("align", TypeEnum, Offset(mAlignment, GuiControlProfile), 1, &gAlignTable);
+	   addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControlProfile), 1, &gVAlignTable);
 	   addField("fontDirectory", TypeString,	 Offset(mFontDirectory, GuiControlProfile));
 	   addField("fontCharset",   TypeEnum,       Offset(mFontCharset, GuiControlProfile), 1, &gCharsetTable);
 	   addField("fontColors",    TypeColorI,     Offset(mFontColors, GuiControlProfile), 10);
@@ -434,8 +436,6 @@ void GuiControlProfile::initPersistFields()
 	   addField("fontColorTextSL", TypeColorI, Offset(mFontColors[ColorTextSL], GuiControlProfile));
    endGroup("Font");
 
-   addField("align", TypeEnum, Offset(mAlignment, GuiControlProfile), 1, &gAlignTable);
-   addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControlProfile), 1, &gVAlignTable);
    addField("textOffset",    TypePoint2I,    Offset(mTextOffset, GuiControlProfile));
    addField("cursorColor",   TypeColorI,     Offset(mCursorColor, GuiControlProfile));
 

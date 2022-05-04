@@ -210,6 +210,9 @@ protected:
 	bool				mTextWrap;
     bool                mTextExtend;
 
+    AlignmentType       mAlignment;
+    VertAlignmentType   mVAlignment;
+
     /// @}
 
     /// @name Console
@@ -766,8 +769,12 @@ protected:
 	virtual void processTick() {};
 	virtual void advanceTime(F32 timeDelta) {};
 
-	S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, GuiControlProfile::AlignmentType align);
-	S32 getTextVerticalOffset(S32 textHeight, S32 totalHeight, GuiControlProfile::VertAlignmentType align);
+	S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, AlignmentType align);
+	S32 getTextVerticalOffset(S32 textHeight, S32 totalHeight, VertAlignmentType align);
+    AlignmentType getAlignmentType();
+    VertAlignmentType getVertAlignmentType();
+    AlignmentType getAlignmentType(GuiControlProfile* profile);
+    VertAlignmentType getVertAlignmentType(GuiControlProfile* profile);
 };
 /// @}
 

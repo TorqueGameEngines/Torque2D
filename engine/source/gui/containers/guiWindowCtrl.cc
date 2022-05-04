@@ -740,7 +740,7 @@ RectI GuiWindowCtrl::renderButtons(const Point2I &offset, const RectI &contentRe
 		distanceFromEdge += rightSize;
 	}
 
-	if (mProfile->mAlignment != GuiControlProfile::AlignmentType::RightAlign)
+	if (getAlignmentType() != AlignmentType::RightAlign)
 	{
 		return RectI(contentRect.point.x, contentRect.point.y, contentRect.extent.x - distanceFromEdge, contentRect.extent.y);
 	}
@@ -757,7 +757,7 @@ RectI GuiWindowCtrl::renderButton(const RectI &contentRect, S32 distanceFromEdge
 	RectI buttonContent = applyMargins(offset, extent, buttonState, profile);
 	S32 horizMarginSize = contentRect.extent.x - buttonContent.extent.x;
 	RectI finalButtonRect = RectI(contentRect.point, Point2I(buttonContent.extent.y + horizMarginSize, contentRect.extent.y));
-	if (mProfile->mAlignment != GuiControlProfile::AlignmentType::RightAlign)
+	if (getAlignmentType() != AlignmentType::RightAlign)
 	{
 		//get the right margin and add it to the distance from the edge
 		GuiBorderProfile *rightProfile = profile->getRightBorder();

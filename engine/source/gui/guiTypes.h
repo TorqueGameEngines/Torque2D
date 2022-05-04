@@ -97,6 +97,22 @@ enum class GuiDirection
 	Right			
 };
 
+enum AlignmentType
+{
+	LeftAlign,
+	RightAlign,
+	CenterAlign,
+	DefaultAlign
+};
+
+enum VertAlignmentType
+{
+	TopVAlign,
+	BottomVAlign,
+	MiddleVAlign,
+	DefaultVAlign
+};
+
 class GuiCursor : public SimObject
 {
 private:
@@ -216,20 +232,8 @@ public:
 
    Resource<GFont>   mFont;                        ///< Font resource
 
-   enum AlignmentType
-   {
-      LeftAlign,
-      RightAlign,
-      CenterAlign
-   };
+   
    AlignmentType mAlignment;                       ///< Horizontal text alignment
-
-   enum VertAlignmentType
-   {
-	   TopVAlign,
-	   BottomVAlign,
-	   MiddleVAlign
-   };
    VertAlignmentType mVAlignment;				   ///< Vertical text alignment
                              
    bool mMouseOverSelected;                        ///< True if this object should be "selected" while the mouse is over it
