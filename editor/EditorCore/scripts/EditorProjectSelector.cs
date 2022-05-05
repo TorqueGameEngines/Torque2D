@@ -52,10 +52,12 @@ function EditorProjectSelector::onAdd(%this)
 	{
 		HorizSizing="left";
 		VertSizing="bottom";
-		Position = "924 64";
-		Extent = "100 20";
+		Position = "824 62";
+		Extent = "200 20";
 		Text = getEngineVersion();
 		Visible = false;
+		FontSizeAdjust = 1.2;
+		Align = "right";
 	};
 	ThemeManager.setProfile(%this.versionText, "codeProfile");
 	%this.add(%this.versionText);

@@ -212,6 +212,7 @@ protected:
 
     AlignmentType       mAlignment;
     VertAlignmentType   mVAlignment;
+    F32                 mFontSizeAdjust;
 
     /// @}
 

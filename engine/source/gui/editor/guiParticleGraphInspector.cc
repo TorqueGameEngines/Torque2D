@@ -261,7 +261,7 @@ void GuiParticleGraphInspector::onRender(Point2I offset, const RectI &updateRect
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, NormalState, mProfile);
 
 	//Make room for the graph labels
-	GFont *font = mProfile->mFont;
+	GFont *font = mProfile->getFont(mFontSizeAdjust);
 	U32 fontHeight = font->getHeight();
 	contentRect.extent.y -= fontHeight;
 	U8 xReduction = getMax(getMax(fontHeight, font->getStrWidth(mMaxYLabel)), font->getStrWidth(mMinYLabel));
@@ -293,7 +293,7 @@ void GuiParticleGraphInspector::onRender(Point2I offset, const RectI &updateRect
 
 void GuiParticleGraphInspector::renderLabels(const RectI &contentRect, const ColorI &labelColor)
 {
-	GFont *font = mProfile->mFont;
+	GFont *font = mProfile->getFont(mFontSizeAdjust);
 	U32 fontHeight = font->getHeight();
 	U32 textWidth;
 	Point2I textPoint;

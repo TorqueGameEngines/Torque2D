@@ -46,7 +46,7 @@ GuiTextEditTextBlock::GuiTextEditTextBlock()
     mLineStartIbeamValue = 0;
 }
 
-void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector, AlignmentType align)
+void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector, AlignmentType align, GFont* font)
 {
     mGlobalBounds.set(bounds.point, bounds.extent);
     mText.assign(line);
@@ -62,27 +62,27 @@ void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamSta
         U32 lengthOfPostBlockText = mClamp(line.length() - (selEnd - mLineStartIbeamValue), 0, line.length());
         U32 lengthOfHighlightBlockText = mClamp(line.length() - (lengthOfPreBlockText + lengthOfPostBlockText), 0, line.length());
 
-        processTextAlignment(line, profile, align);
+        processTextAlignment(line, font, align);
         Point2I movingStartPoint = getGlobalTextStart();
-        movingStartPoint.x += renderTextSection(movingStartPoint, 0, lengthOfPreBlockText, profile, currentState);
-        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText, lengthOfHighlightBlockText, profile, currentState, true);
-        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText + lengthOfHighlightBlockText, lengthOfPostBlockText, profile, currentState);
+        movingStartPoint.x += renderTextSection(movingStartPoint, 0, lengthOfPreBlockText, profile, currentState, font);
+        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText, lengthOfHighlightBlockText, profile, currentState, font, true);
+        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText + lengthOfHighlightBlockText, lengthOfPostBlockText, profile, currentState, font);
     }
 
     Point2I textStartPoint = getGlobalTextStart();
-    if (selector.renderIbeam(textStartPoint, mGlobalBounds.extent, line, mLineStartIbeamValue, mLineStartIbeamValue + line.length(), profile))
+    if (selector.renderIbeam(textStartPoint, mGlobalBounds.extent, line, mLineStartIbeamValue, mLineStartIbeamValue + line.length(), profile, font))
     {
         Point2I cursorCenter = selector.getCursorCenter();
         performScrollJumpX(cursorCenter.x, clipRect.point.x, clipRect.point.x + clipRect.extent.x);
     }
 }
 
-U32 GuiTextEditTextBlock::renderTextSection(const Point2I& startPoint, const U32 subStrStart, const U32 subStrLen, GuiControlProfile* profile, const GuiControlState currentState, bool isSelectedText)
+U32 GuiTextEditTextBlock::renderTextSection(const Point2I& startPoint, const U32 subStrStart, const U32 subStrLen, GuiControlProfile* profile, const GuiControlState currentState, GFont* font, bool isSelectedText)
 {
     if (subStrLen != 0)
     {
         string sectionText = mText.substr(subStrStart, subStrLen);
-        U32 blockStrWidth = profile->mFont->getStrWidth(sectionText.c_str());
+        U32 blockStrWidth = font->getStrWidth(sectionText.c_str());
         Point2I pointToDraw = Point2I(startPoint.x, startPoint.y);
         if (isSelectedText)
         {
@@ -95,7 +95,7 @@ U32 GuiTextEditTextBlock::renderTextSection(const Point2I& startPoint, const U32
             const ColorI& fontColor = profile->getFontColor(currentState);
             dglSetBitmapModulation(fontColor);
         }
-        dglDrawText(profile->mFont, pointToDraw, sectionText.c_str(), profile->mFontColors);
+        dglDrawText(font, pointToDraw, sectionText.c_str(), profile->mFontColors);
         return blockStrWidth;
     }
     return 0;
@@ -115,7 +115,7 @@ void GuiTextEditTextBlock::performScrollJumpX(const S32 targetX, const S32 areaS
     mTextScrollX += diff;
 }
 
-U32 GuiTextEditTextBlock::calculateIbeamPositionInLine(const S32 targetX, GuiControlProfile* profile)
+U32 GuiTextEditTextBlock::calculateIbeamPositionInLine(const S32 targetX, GFont* font)
 {
     if (mText.length() == 0)
         return mLineStartIbeamValue;
@@ -126,11 +126,11 @@ U32 GuiTextEditTextBlock::calculateIbeamPositionInLine(const S32 targetX, GuiCon
     for (U32 count = 0; count < mText.length(); count++)
     {
         char c = mText[count];
-        if (!profile->mFont->isValidChar(c))
+        if (!font->isValidChar(c))
             continue;
 
         S32 backDiff = mAbs(curX - targetX);
-        curX += profile->mFont->getCharXIncrement(c);
+        curX += font->getCharXIncrement(c);
 
         if (curX > targetX)
         {
@@ -146,26 +146,26 @@ U32 GuiTextEditTextBlock::calculateIbeamPositionInLine(const S32 targetX, GuiCon
     return result;
 }
 
-void GuiTextEditTextBlock::processScrollVelocity(const S32 delta, const S32 extentX, GuiControlProfile* profile)
+void GuiTextEditTextBlock::processScrollVelocity(const S32 delta, const S32 extentX, GFont* font)
 {
-    U32 max = profile->mFont->getStrWidth(mText.c_str()) - extentX;
+    U32 max = font->getStrWidth(mText.c_str()) - extentX;
     mTextScrollX = mClamp(mTextScrollX + delta, 0, max);
 }
 
-void GuiTextEditTextBlock::processTextAlignment(const string line, GuiControlProfile* profile, AlignmentType align)
+void GuiTextEditTextBlock::processTextAlignment(const string line, GFont* font, AlignmentType align)
 {
     if (align == AlignmentType::LeftAlign ||
-        mGlobalBounds.extent.x < profile->mFont->getStrWidth(line.c_str()))
+        mGlobalBounds.extent.x < font->getStrWidth(line.c_str()))
     {
         mTextOffsetX = 0;
     }
     else if (align == AlignmentType::RightAlign)
     {
-        mTextOffsetX = mGlobalBounds.extent.x - profile->mFont->getStrWidth(line.c_str());
+        mTextOffsetX = mGlobalBounds.extent.x - font->getStrWidth(line.c_str());
     }
     else if (align == AlignmentType::CenterAlign)
     {
-        mTextOffsetX = (S32)mRound((mGlobalBounds.extent.x - profile->mFont->getStrWidth(line.c_str())) / 2);
+        mTextOffsetX = (S32)mRound((mGlobalBounds.extent.x - font->getStrWidth(line.c_str())) / 2);
     }
 }
 #pragma endregion
@@ -188,7 +188,7 @@ GuiTextEditSelection::GuiTextEditSelection()
     mCursorOn = false;
 }
 
-bool GuiTextEditSelection::renderIbeam(const Point2I& startPoint, const Point2I& extent, const string line, const U32 start, const U32 end, GuiControlProfile* profile)
+bool GuiTextEditSelection::renderIbeam(const Point2I& startPoint, const Point2I& extent, const string line, const U32 start, const U32 end, GuiControlProfile* profile, GFont* font)
 {
     if (!mIsFirstResponder || !mCursorOn ||
         (mCursorAtEOL && mCursorPos == start && mCursorPos != 0) ||
@@ -199,7 +199,7 @@ bool GuiTextEditSelection::renderIbeam(const Point2I& startPoint, const Point2I&
     }
 
     string blockText = line.substr(0, mCursorPos - start);
-    U32 blockStrWidth = profile->mFont->getStrWidth(blockText.c_str());
+    U32 blockStrWidth = font->getStrWidth(blockText.c_str());
     RectI ibeamRect = RectI(startPoint.x + blockStrWidth - 1, startPoint.y, 2, extent.y);
     setCursorRect(ibeamRect);
 
@@ -600,10 +600,11 @@ S32 GuiTextEditCtrl::calculateIbeamPosition(const Point2I& globalMousePoint, con
         return 0;
 
     string textBuffer = applyPasswordMasking();
+    GFont* font = mProfile->getFont(mFontSizeAdjust);
 
     if (!mTextWrap)
     {
-        return mTextBlockList.front().calculateIbeamPositionInLine(globalMousePoint.x, mProfile);
+        return mTextBlockList.front().calculateIbeamPositionInLine(globalMousePoint.x, font);
     }
     else
     {
@@ -624,13 +625,13 @@ S32 GuiTextEditCtrl::calculateIbeamPosition(const Point2I& globalMousePoint, con
             curY += height;
             if (curY > globalMousePoint.y)
             {
-                U32 pos = block.calculateIbeamPositionInLine(globalMousePoint.x, mProfile);
+                U32 pos = block.calculateIbeamPositionInLine(globalMousePoint.x, font);
                 mSelector.setCursorAtEOL(block.calculateCursorAtEOL(pos));
                 return pos + block.getStartValue();
             }
         }
         mSelector.setCursorAtEOL(true);
-        return mTextBlockList.back().calculateIbeamPositionInLine(globalMousePoint.x, mProfile);
+        return mTextBlockList.back().calculateIbeamPositionInLine(globalMousePoint.x, font);
     }
 }
 
@@ -741,7 +742,7 @@ bool GuiTextEditCtrl::onMouseWheelUp(const GuiEvent& event)
     {
         mScrollVelocity = 0;
         mSuspendVerticalScrollJump = true;
-        mTextOffsetY = getMax(mTextOffsetY - static_cast<S32>(mProfile->mFont->getHeight()), 0);
+        mTextOffsetY = getMax(mTextOffsetY - static_cast<S32>(mProfile->getFont(mFontSizeAdjust)->getHeight()), 0);
         return true;
     }
 
@@ -757,14 +758,14 @@ bool GuiTextEditCtrl::onMouseWheelDown(const GuiEvent& event)
     if (!mVisible || !mAwake)
         return true;
 
-    U32 blockHeight = mTextBlockList.size() * mProfile->mFont->getHeight();
+    U32 blockHeight = mTextBlockList.size() * mProfile->getFont(mFontSizeAdjust)->getHeight();
     RectI innerRect = getGlobalInnerRect();
     S32 max = blockHeight - innerRect.extent.y;
     if (mTextWrap && innerRect.extent.y < blockHeight && mTextOffsetY < max)
     {
         mScrollVelocity = 0;
         mSuspendVerticalScrollJump = true;
-        mTextOffsetY = getMin(mTextOffsetY + static_cast<S32>(mProfile->mFont->getHeight()), max);
+        mTextOffsetY = getMin(mTextOffsetY + static_cast<S32>(mProfile->getFont(mFontSizeAdjust)->getHeight()), max);
         return true;
     }
 
@@ -1040,7 +1041,8 @@ void GuiTextEditCtrl::onRender(Point2I offset, const RectI & updateRect)
 
 void GuiTextEditCtrl::renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot)
 {
-    const S32 textHeight = profile->mFont->getHeight();
+    GFont* font = profile->getFont(mFontSizeAdjust);
+    const S32 textHeight = font->getHeight();
     S32 totalWidth = extent.x;
 
     if (mTextBlockList.size() > lineList.size())
@@ -1061,7 +1063,7 @@ void GuiTextEditCtrl::renderLineList(const Point2I& offset, const Point2I& exten
         Point2I start = Point2I(0, offsetY);
         Point2I blockExtent = Point2I(extent.x, textHeight);
         RectI blockBounds = RectI(start + offset + profile->mTextOffset, blockExtent);
-        mTextBlockList[i].render(blockBounds, lineList[i], ibeamPos, mProfile, getCurrentState(), mSelector, getAlignmentType());
+        mTextBlockList[i].render(blockBounds, lineList[i], ibeamPos, mProfile, getCurrentState(), mSelector, getAlignmentType(), font);
 
         offsetY += textHeight;
         ibeamPos += lineList[i].length();
@@ -1083,12 +1085,12 @@ void GuiTextEditCtrl::processScrollVelocity()
         RectI innerRect = getGlobalInnerRect();
         if (mTextWrap)
         {
-            U32 max = (mTextBlockList.size() * mProfile->mFont->getHeight()) - innerRect.extent.y;
+            U32 max = (mTextBlockList.size() * mProfile->getFont(mFontSizeAdjust)->getHeight()) - innerRect.extent.y;
             mTextOffsetY = mClamp(mTextOffsetY + delta, 0, max);
         }
         else if(mTextBlockList.size() > 0)
         {
-            mTextBlockList.front().processScrollVelocity(delta, innerRect.extent.x, mProfile);
+            mTextBlockList.front().processScrollVelocity(delta, innerRect.extent.x, mProfile->getFont(mFontSizeAdjust));
         }
         mTimeLastScrollProcess = Platform::getVirtualMilliseconds();
 
@@ -1473,10 +1475,10 @@ bool GuiTextEditCtrl::handleKeyDownWithNoModifier(const GuiEvent& event)
 
 bool GuiTextEditCtrl::handleCharacterInput(const GuiEvent& event)
 {
-    if (mProfile->mFont.isNull())
+    if (!mProfile->getFont(mFontSizeAdjust))
         return false;
 
-    if (mProfile->mFont->isValidChar(event.ascii))
+    if (mProfile->getFont(mFontSizeAdjust)->isValidChar(event.ascii))
     {
         // Get the character ready to add to a UTF8 string.
         string characterToInsert = string(1, event.ascii);
@@ -1589,7 +1591,7 @@ bool GuiTextEditCtrl::handleArrowKey(GuiDirection direction)
     }
     else if (direction == GuiDirection::Up)
     {
-        S32 newCursorPos = getLineAdjustedIbeamPosition(-mProfile->mFont->getHeight());
+        S32 newCursorPos = getLineAdjustedIbeamPosition(-mProfile->getFont(mFontSizeAdjust)->getHeight());
         if (newCursorPos == mSelector.getCursorPos())
         {
             newCursorPos = 0;
@@ -1598,7 +1600,7 @@ bool GuiTextEditCtrl::handleArrowKey(GuiDirection direction)
     }
     else if (direction == GuiDirection::Down)
     {
-        S32 newCursorPos = getLineAdjustedIbeamPosition(mProfile->mFont->getHeight());
+        S32 newCursorPos = getLineAdjustedIbeamPosition(mProfile->getFont(mFontSizeAdjust)->getHeight());
         if (newCursorPos == mSelector.getCursorPos())
         {
             newCursorPos = mTextBuffer.length();
@@ -1624,12 +1626,12 @@ bool GuiTextEditCtrl::handleShiftArrowKey(GuiDirection direction)
     }
     else if (direction == GuiDirection::Up)
     {
-        S32 newCursorPos = getLineAdjustedIbeamPosition(-mProfile->mFont->getHeight());
+        S32 newCursorPos = getLineAdjustedIbeamPosition(-mProfile->getFont(mFontSizeAdjust)->getHeight());
         modifySelectBlock(newCursorPos);
     }
     else if (direction == GuiDirection::Down)
     {
-        S32 newCursorPos = getLineAdjustedIbeamPosition(mProfile->mFont->getHeight());
+        S32 newCursorPos = getLineAdjustedIbeamPosition(mProfile->getFont(mFontSizeAdjust)->getHeight());
         modifySelectBlock(newCursorPos);
     }
     setUpdate();

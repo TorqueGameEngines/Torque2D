@@ -467,7 +467,7 @@ GuiControl * GuiInspectorTypeS32::constructEditControl(S32 width)
 
 	  retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 30));
 
-	  U32 labelWidth = mGroup->mInspector->mLabelProfile->mFont->getStrWidth("00");
+	  U32 labelWidth = mGroup->mInspector->mLabelProfile->getFont(mFontSizeAdjust)->getStrWidth("00");
 	  U32 x = 0, y = 0;
       for (U32 i = 0; i < mCount; i++)
       {
@@ -479,7 +479,7 @@ GuiControl * GuiInspectorTypeS32::constructEditControl(S32 width)
          registerEditControl(checkBox);
 		 checkBox->setControlProfile(mGroup->mInspector->mCheckboxProfile);
 		 checkBox->setTextOffset(Point2I(2,0));
-		 checkBox->setTextExtent(Point2I(labelWidth + 2, checkBox->mProfile->mFont->getHeight() + 2));
+		 checkBox->setTextExtent(Point2I(labelWidth + 2, checkBox->mProfile->getFont(mFontSizeAdjust)->getHeight() + 2));
 		 checkBox->setBoxOffset(Point2I(checkBox->getTextExtent().x + 2, 0));
 		 checkBox->setText(szName);
 
@@ -520,7 +520,7 @@ GuiControl * GuiInspectorTypeS32::constructEditControl(S32 width)
 
       allButton->setText("All");
       noneButton->setText("None");
-      Point2I innerExt = Point2I(noneButton->mProfile->mFont->getStrWidth("None"), noneButton->mProfile->mFont->getHeight());
+      Point2I innerExt = Point2I(noneButton->mProfile->getFont(mFontSizeAdjust)->getStrWidth("None"), noneButton->mProfile->getFont(mFontSizeAdjust)->getHeight());
 	   Point2I buttonExt = noneButton->getOuterExtent(innerExt, NormalState, noneButton->mProfile);
 
       retCtrl->mCellSizeX = getMax(x, (U32)buttonExt.x);

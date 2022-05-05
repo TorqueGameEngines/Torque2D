@@ -587,10 +587,10 @@ void GuiListBoxCtrl::setItemText( S32 index, StringTableEntry text )
 #pragma region Sizing
 void GuiListBoxCtrl::updateSize()
 {
-   if( !mProfile || !mProfile->mFont )
+   if( !mProfile || !mProfile->getFont(mFontSizeAdjust))
       return;
 
-   GFont *font = mProfile->mFont;
+   GFont *font = mProfile->getFont(mFontSizeAdjust);
    Point2I contentSize = Point2I(10, font->getHeight() + 2);
 
    if (!mFitParentWidth)

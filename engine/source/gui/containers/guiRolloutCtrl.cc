@@ -331,7 +331,7 @@ void GuiRolloutCtrl::processTick()
 //////////////////////////////////////////////////////////////////////////
 void GuiRolloutCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-   if( !mProfile || mProfile->mFont.isNull() )
+   if( !mProfile || !mProfile->getFont(mFontSizeAdjust) )
       return;
   
    // Calculate actual world bounds for rendering

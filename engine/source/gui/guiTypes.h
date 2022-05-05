@@ -60,6 +60,7 @@
 #endif
 
 #include "graphics/gFont.h"
+#include <unordered_map>
 
 class GBitmap;
 
@@ -230,8 +231,7 @@ public:
    ColorI& mFontColorTextSL;
    FontCharset mFontCharset;                       ///< Font character set
 
-   Resource<GFont>   mFont;                        ///< Font resource
-
+   GFont* getFont(F32 fontAdjust = 1.0);
    
    AlignmentType mAlignment;                       ///< Horizontal text alignment
    VertAlignmentType mVAlignment;				   ///< Vertical text alignment
@@ -247,6 +247,12 @@ public:
    AssetPtr<ImageAsset> mImageAsset;
    void setImageAsset( const char* pImageAssetID );
    inline StringTableEntry getImageAsset( void ) const { return mImageAssetID; }
+
+private:
+	std::unordered_map<S32, GFont*> mFontMap;
+	S32 getFontSize(F32 fontAdjust);
+	void addFont(S32 fontSize);
+
 protected:
 	static bool setImageAsset(void* obj, const char* data) { static_cast<GuiControlProfile*>(obj)->setImageAsset(data); return false; }
 	static const char* getImageAsset(void* obj, const char* data) { return static_cast<GuiControlProfile*>(obj)->getImageAsset(); }
@@ -293,7 +299,7 @@ public:
    /// It also stores the sizes in the mBitmapArrayRects vector.
    S32 constructBitmapArray();
 
-   void incRefCount();
+   void incRefCount(F32 fontAdjust = 1.0);
    void decRefCount();
 
    const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.

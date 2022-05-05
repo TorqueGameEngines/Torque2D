@@ -735,17 +735,16 @@ S32 GuiControlProfile::constructBitmapArray()
    return mBitmapArrayRects.size();
 }
 
-void GuiControlProfile::incRefCount()
+void GuiControlProfile::incRefCount(F32 fontAdjust)
 {
 	if(!mRefCount)
 	{
 		if(mFontDirectory == StringTable->EmptyString)
 			mFontDirectory = Con::getVariable("$GUI::fontCacheDirectory");
 
-		//verify the font
-		mFont = GFont::create(mFontType, mFontSize, mFontDirectory);
-		if (mFont.isNull())
-			Con::errorf("Failed to load/create profile font (%s/%d)", mFontType, mFontSize);
+		//load the font
+		S32 size = getFontSize(fontAdjust);
+		addFont(size);
 
 		//Set the bitmap
 		if ( mBitmapName != NULL && mBitmapName != StringTable->EmptyString )
@@ -782,7 +781,7 @@ void GuiControlProfile::decRefCount()
 
 	if(!mRefCount)
 	{
-		mFont = NULL;
+		mFontMap.clear();
 		mTextureHandle = NULL;
 		if(mImageAsset != NULL)
 		{
@@ -802,6 +801,45 @@ void GuiControlProfile::setImageAsset(const char* pImageAssetID)
 	// Assign asset if this profile is being used.
 	if (mRefCount != 0)
 		mImageAsset = pImageAssetID;
+}
+
+S32 GuiControlProfile::getFontSize(F32 fontAdjust)
+{
+	S32 size = mRound(mFontSize * fontAdjust);
+	if (size < 1)
+	{
+		size = 8;//This is an arbitrary value. Feel free to change it to something you like better.
+	}
+	return size;
+}
+
+GFont* GuiControlProfile::getFont(F32 fontAdjust)
+{
+	S32 size = getFontSize(fontAdjust);
+	if (mFontMap.find(size) == mFontMap.end())
+	{
+		addFont(size);
+	}
+	GFont* font = mFontMap[size];
+	AssertFatal(font != nullptr, avar("GuiControlProfile: unable return requested font %s %d!", mFontType, size));
+
+	return font;
+}
+
+void GuiControlProfile::addFont(S32 fontSize)
+{
+	if (mFontMap.find(fontSize) == mFontMap.end())
+	{
+		GFont* font = GFont::create(mFontType, fontSize, mFontDirectory);
+		if (font == nullptr)
+		{
+			Con::errorf("Failed to load/create profile font (%s/%d)", mFontType, fontSize);
+		}
+		else
+		{
+			mFontMap[fontSize] = font;
+		}
+	}
 }
 
 const ColorI& GuiControlProfile::getFillColor(const GuiControlState state)

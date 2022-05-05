@@ -57,7 +57,7 @@ S32 GuiConsole::getMaxWidth(S32 startIndex, S32 endIndex)
 
    S32 result = 0;
    for(S32 i = startIndex; i <= endIndex; i++)
-      result = getMax(result, (S32)(mProfile->mFont->getStrWidth((const UTF8 *)log[i].mString)));
+      result = getMax(result, (S32)(mProfile->getFont(mFontSizeAdjust)->getStrWidth((const UTF8 *)log[i].mString)));
    
    Con::unlockLog();
    
@@ -89,7 +89,7 @@ void GuiConsole::onPreRender()
       //find the max cell width for the new entries
       S32 newMax = getMaxWidth(0, size - 1);
       if(newMax > mCellSize.x)
-         mCellSize.set(newMax, mProfile->mFont->getHeight());
+         mCellSize.set(newMax, mProfile->getFont(mFontSizeAdjust)->getHeight());
 
       //set the array size
       mSize.set(1, size);
@@ -118,7 +118,7 @@ void GuiConsole::onRenderCell(Point2I offset, Point2I cell, bool selected, bool 
       case ConsoleLogEntry::Error:    dglSetBitmapModulation(mProfile->mFontColorNA); break;
       case ConsoleLogEntry::NUM_CLASS: Con::errorf("Unhandled case in GuiConsole::onRenderCell, NUM_CLASS");
    }
-   dglDrawText(mProfile->mFont, Point2I(offset.x + 3, offset.y), entry.mString, mProfile->mFontColors);
+   dglDrawText(mProfile->getFont(mFontSizeAdjust), Point2I(offset.x + 3, offset.y), entry.mString, mProfile->mFontColors);
    
    Con::unlockLog();
 }

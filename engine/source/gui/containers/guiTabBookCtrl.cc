@@ -423,16 +423,17 @@ void GuiTabBookCtrl::setUpdate()
 void GuiTabBookCtrl::solveDirty()
 {
    bool dirty = false;
+   GFont* font = mTabProfile->getFont(mFontSizeAdjust);
    if( mTabPosition != mLastTabPosition )
    {
       mLastTabPosition = mTabPosition;
       dirty = true;
    }
-   else if( mTabProfile != NULL && mTabProfile->mFont != NULL && mTabProfile->mFont->getHeight() != mFontHeight )
+   else if( mTabProfile != NULL && font != NULL && font->getHeight() != mFontHeight )
    {
       dirty = true;
    }
-   else if(mPages.size() > 0 && mTabProfile != NULL && mTabProfile->mFont != NULL)
+   else if(mPages.size() > 0 && mTabProfile != NULL && font != NULL)
    {
 	   S32 tabWidth = calculatePageTabWidth(mPages[0].Page);
 	   tabWidth = getMax(tabWidth, mMinTabWidth);
@@ -456,10 +457,10 @@ S32 GuiTabBookCtrl::calculatePageTabWidth( GuiTabPageCtrl *page )
 
    StringTableEntry text = page->getText();
 
-   if( !text || dStrlen(text) == 0 || !mTabProfile || !mTabProfile->mFont || mTabProfile->mFont == '\0' )
+   if( !text || dStrlen(text) == 0 || !mTabProfile )
       return mTabWidth;
 
-	S32 textLength = mTabProfile->mFont->getStrNWidth(text, dStrlen(text));
+	S32 textLength = mTabProfile->getFont(mFontSizeAdjust)->getStrNWidth(text, dStrlen(text));
 
    Point2I innerExtent = Point2I(textLength, textLength);
 	Point2I outerExtent = getOuterExtent(innerExtent, NormalState, mTabProfile);
@@ -489,9 +490,9 @@ void GuiTabBookCtrl::calculatePageTabs()
    S32 currY      = 0;
    S32 tabHeight  = 0;
    RectI innerRect = getInnerRect(mBounds.point, mBounds.extent, NormalState, mProfile);
-   Point2I innerExtent = Point2I(mTabProfile->mFont->getHeight(), mTabProfile->mFont->getHeight());
+   mFontHeight = mTabProfile->getFont(mFontSizeAdjust)->getHeight();
+   Point2I innerExtent = Point2I(mFontHeight, mFontHeight);
    Point2I fontBasedBounds = getOuterExtent(innerExtent, NormalState, mTabProfile);
-   mFontHeight = mTabProfile->mFont->getHeight();
 
    if (mTabPosition == AlignTop || mTabPosition == AlignBottom)
    {

@@ -42,7 +42,7 @@ protected:
    Point2I mSelectedCell;
    Point2I mMouseOverCell;
 
-   Resource<GFont> mFont;
+   GFont* mFont;
 
    bool cellSelected(Point2I cell);
    virtual void onCellSelected(Point2I cell);

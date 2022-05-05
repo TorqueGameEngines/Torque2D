@@ -2047,11 +2047,11 @@ void SceneWindow::renderMetricsOverlay( Point2I offset, const RectI& updateRect 
     // Finish if should not or cannot render.
     if (    ( !fullMetrics && !fpsMetrics ) ||
             mProfile == NULL ||
-            mProfile->mFont.isNull() )            
+            !mProfile->getFont(mFontSizeAdjust) )
             return;
 
     // Fetch the font.
-    Resource<GFont>& font = mProfile->mFont;    
+    GFont* font = mProfile->getFont(mFontSizeAdjust);
 
     // Blending for banner background.
     glEnable        ( GL_BLEND );

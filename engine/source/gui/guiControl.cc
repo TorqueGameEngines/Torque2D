@@ -97,8 +97,9 @@ GuiControl::GuiControl()
    mText                = StringTable->EmptyString;
    mTextID              = StringTable->EmptyString;
 
-   mAlignment = AlignmentType::DefaultAlign;
-   mVAlignment = VertAlignmentType::DefaultVAlign;
+   mAlignment           = AlignmentType::DefaultAlign;
+   mVAlignment          = VertAlignmentType::DefaultVAlign;
+   mFontSizeAdjust      = 1;
 
    mLangTable           = NULL;
    mFirstResponder      = NULL;
@@ -229,6 +230,7 @@ void GuiControl::initPersistFields()
    addField("textExtend", TypeBool, Offset(mTextExtend, GuiControl), &writeTextExtendFn, "If true, extent will change based on the size of the control's text when possible.");
    addField("align", TypeEnum, Offset(mAlignment, GuiControl), 1, &gAlignCtrlTable);
    addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControl), 1, &gVAlignCtrlTable);
+   addField("fontSizeAdjust", TypeF32, Offset(mFontSizeAdjust, GuiControl), "A decimal value that is multiplied with the profile's fontSize to determine the control's actual font size.");
    endGroup("Text");
 }
 
@@ -685,7 +687,7 @@ bool GuiControl::renderTooltip(Point2I &cursorPos, const char* tipText )
     if (!mTooltipProfile)
 		setField("TooltipProfile", "GuiTooltipProfile");
 
-    GFont *font = mTooltipProfile->mFont;
+    GFont *font = mTooltipProfile->getFont();
    
     // Set text bounds.
     Point2I textBounds( 0, 0 );
@@ -1789,7 +1791,7 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
     {
         dglSetClipRect(clipRect);
 
-        const S32 textHeight = profile->mFont->getHeight();
+        const S32 textHeight = profile->getFont(mFontSizeAdjust)->getHeight();
         S32 totalWidth = (rot == tRotateNone) ? extent.x : extent.y;
         S32 totalHeight = (rot == tRotateNone) ? extent.y : extent.x;
 
@@ -1809,7 +1811,7 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
             }
             else
             {
-                extent.x = getOuterWidth(profile->mFont->getStrWidth(text), NormalState, profile);
+                extent.x = getOuterWidth(profile->getFont(mFontSizeAdjust)->getStrWidth(text), NormalState, profile);
             }
             setExtent(extent);
         }
@@ -1834,7 +1836,7 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
 
 void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot)
 {
-    const S32 textHeight = profile->mFont->getHeight();
+    const S32 textHeight = profile->getFont(mFontSizeAdjust)->getHeight();
     S32 totalWidth = (rot == tRotateNone) ? extent.x : extent.y;
 
 	//Now print each line
@@ -1846,7 +1848,7 @@ void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, co
 	{
 		// align the horizontal
         string trimmedLine = Utility::trim_copy(line);
-		U32 textWidth = profile->mFont->getStrWidth(trimmedLine.c_str());
+		U32 textWidth = profile->getFont(mFontSizeAdjust)->getStrWidth(trimmedLine.c_str());
 		if(textWidth < totalWidth)
 		{
             offsetX = getTextHorizontalOffset(textWidth, totalWidth, getAlignmentType(profile));
@@ -1883,7 +1885,7 @@ void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, co
 
 vector<string> GuiControl::getLineList(const char* text, GuiControlProfile* profile, S32 totalWidth)
 {
-    GFont* font = profile->mFont;
+    GFont* font = profile->getFont(mFontSizeAdjust);
     vector<string> lineList = vector<string>();
 
     if (!mTextWrap)
@@ -1948,7 +1950,7 @@ vector<string> GuiControl::getLineList(const char* text, GuiControlProfile* prof
 
 void GuiControl::renderTextLine(const Point2I& startPoint, const string line, GuiControlProfile* profile, F32 rotationInDegrees, U32, U32)
 {
-    dglDrawText(profile->mFont, startPoint, line.c_str(), profile->mFontColors, 9, rotationInDegrees);
+    dglDrawText(profile->getFont(mFontSizeAdjust), startPoint, line.c_str(), profile->mFontColors, 9, rotationInDegrees);
 }
 
 S32 GuiControl::getTextHorizontalOffset(S32 textWidth, S32 totalWidth, AlignmentType align)
