@@ -460,7 +460,7 @@ void GuiSliderCtrl::onRender(Point2I offset, const RectI &updateRect)
         else if (textStart.x + txt_w > offset.x + mBounds.extent.x)
             textStart.x -= ((textStart.x + txt_w) - (offset.x + mBounds.extent.x));
 
-        dglSetBitmapModulation(mProfile->mFontColor);
+        dglSetBitmapModulation(getFontColor(mProfile));
         dglDrawText(mProfile->getFont(mFontSizeAdjust), textStart, buf, mProfile->mFontColors);
     }
     renderChildControls(offset, mBounds, updateRect);

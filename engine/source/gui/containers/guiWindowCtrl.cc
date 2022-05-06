@@ -656,7 +656,7 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 	renderUniversalRect(ctrlRectTitle, mProfile, currentState);
 
 	//Render Text and buttons
-	dglSetBitmapModulation(mProfile->mFontColor);
+	dglSetBitmapModulation(getFontColor(mProfile, currentState));
 	RectI fillRectTitle = applyBorders(ctrlRectTitle.point, ctrlRectTitle.extent, currentState, mProfile);
 	RectI contentRectTitle = applyPadding(fillRectTitle.point, fillRectTitle.extent, currentState, mProfile);
 

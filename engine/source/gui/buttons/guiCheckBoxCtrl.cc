@@ -109,7 +109,7 @@ void GuiCheckBoxCtrl::onRender(Point2I offset, const RectI &updateRect)
 	}
 
 	//Render Text
-	dglSetBitmapModulation(mProfile->getFontColor(currentState));
+	dglSetBitmapModulation(getFontColor(mProfile, currentState));
 	renderText(textRect.point, textRect.extent, mText, mProfile);
 
 	//Render the childen

@@ -100,6 +100,8 @@ GuiControl::GuiControl()
    mAlignment           = AlignmentType::DefaultAlign;
    mVAlignment          = VertAlignmentType::DefaultVAlign;
    mFontSizeAdjust      = 1;
+   mFontColor.set(0, 0, 0, 255);
+   mOverrideFontColor   = false;
 
    mLangTable           = NULL;
    mFirstResponder      = NULL;
@@ -231,6 +233,8 @@ void GuiControl::initPersistFields()
    addField("align", TypeEnum, Offset(mAlignment, GuiControl), 1, &gAlignCtrlTable);
    addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControl), 1, &gVAlignCtrlTable);
    addField("fontSizeAdjust", TypeF32, Offset(mFontSizeAdjust, GuiControl), "A decimal value that is multiplied with the profile's fontSize to determine the control's actual font size.");
+   addField("fontColor", TypeColorI, Offset(mFontColor, GuiControl), "A color to override the font color of the control's profile. OverrideFontColor must be set to true for this to work.");
+   addField("overrideFontColor", TypeBool, Offset(mOverrideFontColor, GuiControl), "If true, the control's fontColor will override the profile's font color.");
    endGroup("Text");
 }
 
@@ -559,7 +563,7 @@ void GuiControl::onRender(Point2I offset, const RectI &updateRect)
 	renderUniversalRect(ctrlRect, mProfile, NormalState);
 
 	//Render Text
-	dglSetBitmapModulation(mProfile->mFontColor);
+	dglSetBitmapModulation(getFontColor(mProfile));
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, NormalState, mProfile);
 
@@ -2057,4 +2061,9 @@ VertAlignmentType GuiControl::getVertAlignmentType()
 VertAlignmentType GuiControl::getVertAlignmentType(GuiControlProfile* profile)
 {
     return mVAlignment == VertAlignmentType::DefaultVAlign ? profile->mVAlignment : mVAlignment;
+}
+
+const ColorI& GuiControl::getFontColor(GuiControlProfile* profile, const GuiControlState state)
+{
+    return mOverrideFontColor ? mFontColor : profile->getFontColor(state);
 }

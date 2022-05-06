@@ -679,7 +679,7 @@ void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
    renderUniversalRect(ctrlRect, mProfile, currentState);
 
    //Render Text
-   dglSetBitmapModulation(mProfile->getFontColor(currentState));
+   dglSetBitmapModulation(getFontColor(mProfile, currentState));
    RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
    RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 

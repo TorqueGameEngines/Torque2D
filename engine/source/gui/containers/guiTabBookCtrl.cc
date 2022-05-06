@@ -391,7 +391,7 @@ void GuiTabBookCtrl::renderTab( RectI tabRect, GuiTabPageCtrl *tab )
    renderUniversalRect(ctrlRect, mTabProfile, currentState);
 
    //Render Text
-   dglSetBitmapModulation(mTabProfile->getFontColor(currentState));
+   dglSetBitmapModulation(getFontColor(mTabProfile, currentState));
    RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mTabProfile);
    RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mTabProfile);
 

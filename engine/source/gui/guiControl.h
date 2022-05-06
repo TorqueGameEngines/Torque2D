@@ -213,6 +213,8 @@ protected:
     AlignmentType       mAlignment;
     VertAlignmentType   mVAlignment;
     F32                 mFontSizeAdjust;
+    ColorI              mFontColor;
+    bool                mOverrideFontColor;
 
     /// @}
 
@@ -776,6 +778,7 @@ protected:
     VertAlignmentType getVertAlignmentType();
     AlignmentType getAlignmentType(GuiControlProfile* profile);
     VertAlignmentType getVertAlignmentType(GuiControlProfile* profile);
+    const ColorI& getFontColor(GuiControlProfile* profile, const GuiControlState state = GuiControlState::NormalState);
 };
 /// @}
 

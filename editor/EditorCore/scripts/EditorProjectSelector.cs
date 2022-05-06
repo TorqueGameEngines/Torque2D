@@ -58,6 +58,8 @@ function EditorProjectSelector::onAdd(%this)
 		Visible = false;
 		FontSizeAdjust = 1.2;
 		Align = "right";
+		OverrideFontColor = true;
+		FontColor = ThemeManager.activeTheme.color5;
 	};
 	ThemeManager.setProfile(%this.versionText, "codeProfile");
 	%this.add(%this.versionText);
