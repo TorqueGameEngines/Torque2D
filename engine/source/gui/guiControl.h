@@ -197,6 +197,10 @@ protected:
     S32 mVertSizing;       ///< Set from vertSizingOptions.
 
 	Point2I mStoredExtent; //Used in conjunction with the min extent.
+    Point2F mStoredRelativePosH; //Used to prevent rounding drift when using relative positioning.
+    Point2F mStoredRelativePosV; //Used to prevent rounding drift when using relative positioning.
+    bool mUseRelPosH;
+    bool mUseRelPosV;
 
     StringTableEntry	mConsoleVariable;
     StringTableEntry	mConsoleCommand;
@@ -329,9 +333,11 @@ public:
 	static bool writeTextWrapFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextWrap(); }
     static bool writeTextExtendFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextExtend(); }
 
-	static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); return false; }
-	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); return false; }
+    static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); ctrl->resetStoredRelPos(); return false; }
+	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); ctrl->resetStoredRelPos(); return false; }
 	static bool writeMinExtentFn(void* obj,  const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mMinExtent.x != 0 || ctrl->mMinExtent.y != 0; }
+
+    static bool setPositionFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setPosition(Point2I(v.x, v.y)); ctrl->resetStoredRelPos(); return false; }
 
     /// @}
 
@@ -766,6 +772,12 @@ public:
 
 	//Expells all stored extent
 	inline void resetStoredExtent() { mStoredExtent.set(0,0); }
+
+    //Stores the position when using relative positioning
+    Point2F relPosBatteryH(S32 pos, S32 ext, S32 parentExt);
+    Point2F relPosBatteryV(S32 pos, S32 ext, S32 parentExt);
+    void relPosBattery(Point2F& battery, S32 pos, S32 ext, S32 parentExt);
+    void resetStoredRelPos() { mUseRelPosH = false; mUseRelPosV = false; }
 
 protected:
 	virtual void interpolateTick(F32 delta) {};

@@ -86,6 +86,10 @@ GuiControl::GuiControl()
    mRenderInsetLT.set(0, 0);
    mRenderInsetRB.set(0, 0);
    mMinExtent.set(0, 0);
+   mStoredRelativePosH.set(0, 0);
+   mStoredRelativePosV.set(0, 0);
+   mUseRelPosH = false;
+   mUseRelPosV = false;
 
    mProfile = NULL;
 
@@ -197,7 +201,7 @@ void GuiControl::initPersistFields()
    addField("HorizSizing",       TypeEnum,			Offset(mHorizSizing, GuiControl), 1, &gHorizSizingTable);
    addField("VertSizing",        TypeEnum,			Offset(mVertSizing, GuiControl), 1, &gVertSizingTable);
 
-   addField("Position",          TypePoint2I,		Offset(mBounds.point, GuiControl));
+   addProtectedField("Position",          TypePoint2I,		Offset(mBounds.point, GuiControl), &setPositionFn, &defaultProtectedGetFn, "The location of the control in relation to its parent's content area.");
    addProtectedField("Extent",            TypePoint2I,		Offset(mBounds.extent, GuiControl), &setExtentFn, &defaultProtectedGetFn, "The size of the control writen as width and height.");
    addProtectedField("MinExtent",         TypePoint2I,		Offset(mMinExtent, GuiControl), &setMinExtentFn, &defaultProtectedGetFn, &writeMinExtentFn, "The extent will not shrink below this size.");
    addField("canSave",           TypeBool,			Offset(mCanSave, GuiControl));
@@ -486,14 +490,15 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
         newExtent.x += deltaX;
     else if (mHorizSizing == horizResizeLeft)
       newPosition.x += deltaX;
-   else if (mHorizSizing == horizResizeRelative && oldParentExtent.x != 0)
-   {
-      S32 newLeft = (newPosition.x * newParentExtent.x) / oldParentExtent.x;
-      S32 newRight = ((newPosition.x + newExtent.x) * newParentExtent.x) / oldParentExtent.x;
+    else if (mHorizSizing == horizResizeRelative && oldParentExtent.x != 0)
+    {
+        Point2F percent = relPosBatteryH(newPosition.x, newExtent.x, oldParentExtent.x);
+        S32 newLeft = mRound(percent.x * newParentExtent.x);
+        S32 newRight = mRound(percent.y * newParentExtent.x);
 
-      newPosition.x = newLeft;
-      newExtent.x = newRight - newLeft;
-   }
+        newPosition.x = newLeft;
+        newExtent.x = newRight - newLeft;
+    }
 
     if (mVertSizing == vertResizeCenter)
        newPosition.y = (parentInnerExt.y - mBounds.extent.y) >> 1;
@@ -501,14 +506,15 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
         newExtent.y += deltaY;
     else if (mVertSizing == vertResizeTop)
       newPosition.y += deltaY;
-   else if(mVertSizing == vertResizeRelative && oldParentExtent.y != 0)
-   {
-      S32 newTop = (newPosition.y * newParentExtent.y) / oldParentExtent.y;
-      S32 newBottom = ((newPosition.y + newExtent.y) * newParentExtent.y) / oldParentExtent.y;
+    else if(mVertSizing == vertResizeRelative && oldParentExtent.y != 0)
+    {
+        Point2F percent = relPosBatteryV(newPosition.y, newExtent.y, oldParentExtent.y);
+        S32 newTop = mRound(percent.x * newParentExtent.y);
+        S32 newBottom = mRound(percent.y * newParentExtent.y);
 
-      newPosition.y = newTop;
-      newExtent.y = newBottom - newTop;
-   }
+        newPosition.y = newTop;
+        newExtent.y = newBottom - newTop;
+    }
 
    newExtent = extentBattery(newExtent);
 
@@ -547,6 +553,32 @@ Point2I GuiControl::extentBattery(Point2I &newExtent)
 		result.y = newExtent.y - charge;
 	}
 	return result;
+}
+
+Point2F GuiControl::relPosBatteryH(S32 pos, S32 ext, S32 parentExt)
+{
+    if (!mUseRelPosH)
+    {
+        relPosBattery(mStoredRelativePosH, pos, ext, parentExt);
+        mUseRelPosH = true;
+    }
+    return mStoredRelativePosH;
+}
+
+Point2F GuiControl::relPosBatteryV(S32 pos, S32 ext, S32 parentExt)
+{
+    if (!mUseRelPosV)
+    {
+        relPosBattery(mStoredRelativePosV, pos, ext, parentExt);
+        mUseRelPosV = true;
+    }
+    return mStoredRelativePosV;
+}
+
+void GuiControl::relPosBattery(Point2F& battery, S32 pos, S32 ext, S32 parentExt)
+{
+    battery.x = static_cast<F32>(pos) / parentExt;
+    battery.y = static_cast<F32>(pos + ext) / parentExt;
 }
 
 //----------------------------------------------------------------

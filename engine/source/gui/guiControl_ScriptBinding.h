@@ -258,6 +258,7 @@ ConsoleMethodWithDocs( GuiControl, setPosition, ConsoleVoid, 4, 4, (int x, int y
    //see if we can turn the x/y into ints directly, 
    Point2I lPos(dAtoi(argv[2]), dAtoi(argv[3]));
    object->mBounds.set(lPos,object->mBounds.extent);
+   object->resetStoredRelPos();
 }
 
 /*! Get the width and height of the control.
@@ -279,6 +280,7 @@ ConsoleMethodWithDocs( GuiControl, setExtent, ConsoleVoid, 4, 4, (int width, int
    Point2I kExt(dAtoi(argv[2]), dAtoi(argv[3]));
    object->setExtent(kExt);
    object->resetStoredExtent();
+   object->resetStoredRelPos();
 }
 
 /*! Get the minimum allowed size of the control.
