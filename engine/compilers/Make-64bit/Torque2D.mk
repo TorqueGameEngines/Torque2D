@@ -63,7 +63,7 @@ SOURCES := $(2D_SOURCES) + \
 LDFLAGS := -g -m64
 LDLIBS := -lstdc++ -lm -ldl -lpthread -lrt -lX11 -lXft -lSDL -lopenal
 
-CFLAGS := -std=gnu++11 -MMD -I. -Wfatal-errors -Wunused -m64 -msse -march=x86-64 -pipe
+CFLAGS := -std=c++14 -MMD -I. -Wfatal-errors -Wunused -m64 -msse -march=x86-64 -pipe
 
 CFLAGS += -I/usr/include
 CFLAGS += -I/usr/include/freetype2
@@ -87,7 +87,7 @@ CFLAGS_DEBUG += -DTORQUE_DEBUG
 CFLAGS_DEBUG += -DTORQUE_DEBUG_GUARD
 CFLAGS_DEBUG += -DTORQUE_NET_STATS
 
-CFLAGS += -O0
+CFLAGS += -Og
 
 NASMFLAGS := -f elf64 -D LINUX
 

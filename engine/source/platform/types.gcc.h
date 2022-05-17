@@ -74,7 +74,7 @@ typedef unsigned long long  U64;
 #  define TORQUE_OS_STRING "Emscripten"
 #  define TORQUE_OS_EMSCRIPTEN
 #  include "platform/types.posix.h"
-#elif defined(linux)
+#elif defined(LINUX)
 #  define TORQUE_OS_STRING "Linux"
 #  define TORQUE_OS_LINUX
 // Don't use assembly when building linux.
