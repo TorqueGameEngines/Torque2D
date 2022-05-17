@@ -60,7 +60,10 @@
 #endif
 
 #include "graphics/gFont.h"
-#include <unordered_map>
+
+#ifndef _HASHTABLE_H
+#include "collection/hashTable.h"
+#endif
 
 class GBitmap;
 
@@ -249,7 +252,7 @@ public:
    inline StringTableEntry getImageAsset( void ) const { return mImageAssetID; }
 
 private:
-	std::unordered_map<S32, GFont*> mFontMap;
+	HashMap<S32, GFont*> mFontMap;
 	S32 getFontSize(F32 fontAdjust);
 	void addFont(S32 fontSize);
 
