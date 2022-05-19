@@ -1215,7 +1215,6 @@ function BaseTheme::makeScrollProfile(%this)
 	%this.scrollProfile = new GuiControlProfile()
 	{
 	    fillColor = %this.setAlpha(%this.color2, 180);
-
 		borderDefault = %mainBorder;
 	};
 
@@ -1254,7 +1253,7 @@ function BaseTheme::makeScrollProfile(%this)
 		fontColorNA = %this.setAlpha(%this.color2, 80);
 		borderDefault = %this.emptyBorder;
 	};
-	%this.scrollProfile = new GuiControlProfile()
+	%this.tinyScrollProfile = new GuiControlProfile()
 	{
 	    fillColor = %this.setAlpha(%this.color2, 180);
 		borderDefault = %this.emptyBorder;
@@ -1847,6 +1846,27 @@ function BaseTheme::makeTextDisplayProfile(%this)
 		borderDefault = %border;
 		borderTop = %this.emptyBorder;
 		borderBottom = %this.emptyBorder;
+	};
+
+	%spacerBorder = new GuiBorderProfile()
+	{
+		margin = 3;
+	};
+
+	%this.spacerProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color5;
+		fontType = %this.font[1];
+		fontDirectory = %this.fontDirectory;
+		fontSize = 14;
+		fontColor = %this.color1;
+		align = "center";
+		vAlign = "middle";
+
+		borderDefault = %this.emptyBorder;
+		borderLeft = %spacerBorder;
+		borderRight = %spacerBorder;
+		borderBottom = %spacerBorder;
 	};
 }
 

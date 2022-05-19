@@ -240,7 +240,7 @@ ConsoleFunctionWithDocs(strchr, ConsoleString,3,3, ( sourceString , char ))
    return ret ? ret : "";
 }
 
-/*! strrchr searches the sourceString for the last occurance of the giuven char
+/*! strrchr searches the sourceString for the last occurance of the given char
     @param sourceString The string to search
     @return Either a string consisting of the given string from the last occurance of the given char on or an empty string if not found
 */

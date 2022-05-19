@@ -22,31 +22,70 @@
 
 function ProjectManager::create(%this)
 {
+	exec("./scripts/ProjectModulePanel.cs");
+	exec("./scripts/ProjectGamePanel.cs");
+	exec("./scripts/ProjectLibraryPanel.cs");
+	exec("./scripts/ProjectModuleCard.cs");
+
 	%this.guiPage = EditorCore.RegisterEditor("Project Manager", %this);
 
-	%this.comingSoon = new GuiWindowCtrl()
+	%this.scroller = new GuiScrollCtrl()
 	{
-		class = "comingSoonTest";
-		HorizSizing="center";
-		VertSizing="center";
-		Position="412 324";
-		Extent="200 120";
-		Visible="1";
-		Text = "Coming Soon!";
-		canClose = true;
-		canMove = true;
-		Profile = "GuiWindowProfile";
-		CloseButtonProfile = "GuiWindowCloseButtonProfile";
+		HorizSizing="width";
+		VertSizing="height";
+		Position="0 0";
+		Extent="1024 768";
+		hScrollBar="dynamic";
+		vScrollBar="dynamic";
+		constantThumbHeight="0";
+		showArrowButtons="1";
+		scrollBarThickness="14";
 	};
-	//ThemeManager.setProfile(%this.comingSoon, "simpleProfile");
-	%this.guiPage.add(%this.comingSoon);
+	ThemeManager.setProfile(%this.scroller, "emptyProfile");
+	ThemeManager.setProfile(%this.scroller, "thumbProfile", "ThumbProfile");
+	ThemeManager.setProfile(%this.scroller, "trackProfile", "TrackProfile");
+	ThemeManager.setProfile(%this.scroller, "scrollArrowProfile", "ArrowProfile");
+	%this.guiPage.add(%this.scroller);
+
+	%this.container = new GuiControl()
+	{
+		HorizSizing="width";
+		VertSizing="height";
+		Position="0 0";
+		Extent="1024 768";
+		MinExtent="1024 500";
+	};
+	ThemeManager.setProfile(%this.container, "emptyProfile");
+	%this.scroller.add(%this.container);
+
+	%this.libraryPanel = new GuiControl()
+	{
+		Class = "ProjectLibraryPanel";
+		superclass = "ProjectModulePanel";
+		HorizSizing="relative";
+		VertSizing="height";
+		Position="0 0";
+		Extent="512 768";
+	};
+	ThemeManager.setProfile(%this.libraryPanel, "emptyProfile");
+	%this.container.add(%this.libraryPanel);
+	%this.libraryPanel.load();
+	%this.startListening(%this.libraryPanel);
+
+	%this.gamePanel = new GuiControl()
+	{
+		Class = "ProjectGamePanel";
+		superclass = "ProjectModulePanel";
+		HorizSizing="relative";
+		VertSizing="height";
+		Position="512 0";
+		Extent="512 768";
+	};
+	ThemeManager.setProfile(%this.gamePanel, "emptyProfile");
+	%this.container.add(%this.gamePanel);
+	%this.startListening(%this.gamePanel);
 
 	EditorCore.FinishRegistration(%this.guiPage);
-}
-
-function comingSoonTest::onClose(%this)
-{
-	echo("comingSoonTest::onClose fired successfully!");
 }
 
 function ProjectManager::destroy(%this)
@@ -56,10 +95,59 @@ function ProjectManager::destroy(%this)
 
 function ProjectManager::open(%this)
 {
-
+	%allModules = ModuleDatabase.findModules(false);
+	%this.gamePanel.onOpen(%allModules);
+	%this.libraryPanel.onOpen(%allModules);
 }
 
 function ProjectManager::close(%this)
 {
+	%this.libraryPanel.onClose();
+	%this.gamePanel.onClose();
+}
 
+function ProjectManager::setProjectFolder(%this, %folder)
+{
+	%this.projectFolder = %folder;
+}
+
+function ProjectManager::getProjectFolder(%this)
+{
+	if(%this.projectFolder $= "")
+	{
+		%appCore = ModuleDatabase.findModule("AppCore", 1);
+		%appCorePath = %appCore.getModulePath();
+		%mainCsPath = getMainDotCsDir();
+		%mainLen = strLen(%mainCsPath);
+		%lastChar = getSubStr(%mainCsPath, %mainLen-1, 1);
+		if(%lastChar $= "\\" || %lastChar $= "\/")
+		{
+			%relativePath = getSubStr(%appCorePath, strlen(%mainCsPath), strlen(%appCorePath) - %mainLen);
+		}
+		else
+		{
+			%relativePath = getSubStr(%appCorePath, strlen(%mainCsPath) + 1, strlen(%appCorePath) - (%mainLen + 1));
+		}
+		%unwantedPortion1 = strchr(%relativePath, "\\");
+		%unwantedPortion2 = strchr(%relativePath, "\/");
+		if(%unwantedPortion1 !$= "")
+		{
+			%this.projectFolder = getSubStr(%relativePath, 0, strlen(%relativePath) - strlen(%unwantedPortion1));
+		}
+		else if(%unwantedPortion2 !$= "")
+		{
+			%this.projectFolder = getSubStr(%relativePath, 0, strlen(%relativePath) - strlen(%unwantedPortion2));
+		}
+		else
+		{
+			%this.projectFolder = %relativePath;
+		}
+	}
+	return pathConcat(getMainDotCsDir(), %this.projectFolder);
+}
+
+function ProjectManager::onModuleInstalled(%this, %module)
+{
+	%this.gamePanel.addModule(%module, %module);
+	%this.gamePanel.sortModules();
 }
