@@ -138,6 +138,19 @@ ConsoleMethodWithDocs(ModuleManager, unloadExplicit, ConsoleBool, 3, 3, (moduleI
 
 //-----------------------------------------------------------------------------
 
+/*! Checks to see if a module is loaded or not.
+    @param moduleId The module Id to check.
+    @return True if the module is loaded. False otherwise.
+*/
+ConsoleMethodWithDocs(ModuleManager, isModuleLoaded, ConsoleBool, 3, 3, (moduleId))
+{
+    ModuleDefinition* pLoadedModule = object->findLoadedModule(argv[2]);
+
+    return pLoadedModule != NULL;
+}
+
+//-----------------------------------------------------------------------------
+
 /*! Find the specific module Id optionally at the specified version Id.
     @param moduleId The module Id to find.
     @param versionId The version Id to find.

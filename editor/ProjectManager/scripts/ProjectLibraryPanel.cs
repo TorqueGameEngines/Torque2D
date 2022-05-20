@@ -38,6 +38,11 @@ function ProjectLibraryPanel::onOpen(%this, %allModules)
 		%module = %this.list.getItemID(%i);
 		%this.refreshColor(%module, %i, %allModules);
 	}
+
+	if(%this.card.visible)
+	{
+		%this.refreshCard();
+	}
 }
 
 function ProjectLibraryPanel::refreshColor(%this, %module, %index, %projectModules)
@@ -81,9 +86,51 @@ function ProjectLibraryPanel::onInstallClick(%this)
 		%installedModule = ModuleDatabase.findModule(%module.moduleID, %module.versionID);
 		%this.postEvent("ModuleInstalled", %installedModule);
 	}
+	else
+	{
+		warn("Project Manager - Could not install module.");
+	}
 }
 
 function ProjectLibraryPanel::onUpdateClick(%this)
 {
+	%index = %this.list.getSelectedItem();
+	%module = %this.list.getItemID(%index);
+	%installedModule = ModuleDatabase.findModule(%module.moduleID, %module.versionID);
 
+	if(isObject(%module) && isObject(%installedModule))
+	{
+		%path = %installedModule.getModulePath();
+		%wasLoaded = false;
+		if(ModuleDatabase.isModuleLoaded(%installedModule.moduleID))
+		{
+			%wasLoaded = true;
+			ModuleDatabase.UnloadExplicit(%installedModule.moduleID);
+		}
+		ModuleDatabase.unregisterModule(%installedModule.moduleID, %installedModule.versionID);
+
+		directoryDelete(%path);
+		%this.manager.CopyModule(%module.moduleID, %module.versionID, %module.moduleID, ProjectManager.getProjectFolder(), true);
+		%this.manager.synchronizeDependencies(%module, ProjectManager.getProjectFolder());
+
+		ModuleDatabase.ScanModules(ProjectManager.getProjectFolder());
+		%installedModule = ModuleDatabase.findModule(%module.moduleID, %module.versionID);
+
+		if(%wasLoaded)
+		{
+			ModuleDatabase.LoadExplicit(%installedModule.moduleID, %installedModule.versionID);
+		}
+
+		%this.postEvent("ModuleInstalled", %installedModule);
+	}
+	else
+	{
+		warn("Project Manager - Could not update module.");
+	}
+}
+
+function ProjectLibraryPanel::refreshCard(%this)
+{
+	%module = %this.manager.findModule(%this.card.moduleID, %this.card.versionID);
+	%this.card.show(%module);
 }

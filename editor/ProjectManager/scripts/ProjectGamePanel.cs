@@ -21,6 +21,11 @@ function ProjectGamePanel::onOpen(%this, %allModules)
 		%this.addModule(%mod, %loadedModules);
 	}
 	%this.list.sortByText();
+
+	if(%this.card.visible)
+	{
+		%this.refreshCard();
+	}
 }
 
 function ProjectGamePanel::addModule(%this, %module, %loadedModules)
@@ -46,4 +51,16 @@ function ProjectGamePanel::addModule(%this, %module, %loadedModules)
 	%this.list.addItemWithID(%this.getModuleName(%module), %module);
 	%index = %this.list.findItemID(%module);
 	%this.list.setItemColor(%index, %color);
+}
+
+function ProjectGamePanel::refreshCard(%this)
+{
+	%module = ModuleDatabase.findModule(%this.card.moduleID, %this.card.versionID);
+	%indexList = %this.list.findItemText(%this.getModuleName(%module));
+	%index = getWord(%indexList, 0);
+	if(%index != -1)
+	{
+		%this.list.setCurSel(%index);
+	}
+	%this.card.show(%module);
 }

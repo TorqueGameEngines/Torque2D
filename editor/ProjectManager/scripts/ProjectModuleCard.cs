@@ -99,36 +99,44 @@ function ProjectModuleCard::onThemeChange(%this, %theme)
 
 function ProjectModuleCard::show(%this, %module)
 {
-	%this.titleText.setText(%module.moduleID);
-	%this.setAuthor(%module);
-	%this.setVersion(%module);
-	%this.descriptionText.setText(%module.description);
-
-	%this.button.visible = false;
-	%projectModule = %this.getInstalledModule(%module.moduleID, %module.versionID);
-	if(%projectModule != %module)
+	if(isObject(%module))
 	{
-		if(!isObject(%projectModule))
-		{
-			%this.button.setText("Install");
-			%this.button.visible = true;
-		}
-		else if(%projectmodule.buildID < %module.buildID)
-		{
-			%this.button.setText("Update");
-			%this.button.visible = true;
-		}
-	}
-	else
-	{
+		%this.moduleID = %module.moduleID;
+		%this.versionID = %module.versionID;
 
-	}
+		%this.titleText.setText(%module.moduleID);
+		%this.setAuthor(%module);
+		%this.setVersion(%module);
+		%this.descriptionText.setText(%module.description);
 
-	%this.visible = true;
+		%this.button.visible = false;
+		%projectModule = %this.getInstalledModule(%module.moduleID, %module.versionID);
+		if(%projectModule != %module)
+		{
+			if(!isObject(%projectModule))
+			{
+				%this.button.setText("Install");
+				%this.button.visible = true;
+			}
+			else if(%projectmodule.buildID < %module.buildID)
+			{
+				%this.button.setText("Update");
+				%this.button.visible = true;
+			}
+		}
+		else
+		{
+
+		}
+
+		%this.visible = true;
+	}
 }
 
 function ProjectModuleCard::hide(%this)
 {
+	%this.moduleID = "";
+	%this.versionID = 0;
 	%this.visible = false;
 }
 
