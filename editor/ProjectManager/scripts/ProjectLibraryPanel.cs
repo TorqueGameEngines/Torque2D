@@ -24,7 +24,10 @@ function ProjectLibraryPanel::load(%this)
 
 function ProjectLibraryPanel::addModule(%this, %module)
 {
-	%this.list.addItemWithID(%this.getModuleName(%module), %module);
+	if(%module.type !$= "Template")
+	{
+		%this.list.addItemWithID(%this.getModuleName(%module), %module);
+	}
 }
 
 function ProjectLibraryPanel::onOpen(%this, %allModules)
@@ -71,24 +74,11 @@ function ProjectLibraryPanel::onInstallClick(%this)
 
 	if(isObject(%module))
 	{
-		%newModulePath = pathConcat(ProjectManager.getProjectFolder(), %module.moduleID);
-		%this.manager.CopyModule(%module.moduleID, %module.versionID, %module.moduleID, %newModulePath, false);
-		//%this.manager.synchronizeDependencies(%module, pathConcat(ProjectManager.getProjectFolder()));
+		%this.manager.CopyModule(%module.moduleID, %module.versionID, %module.moduleID, ProjectManager.getProjectFolder(), true);
+		%this.manager.synchronizeDependencies(%module, ProjectManager.getProjectFolder());
 
-		%file = TamlRead(pathConcat(%newModulePath, "module.taml"));
-		%file.Group = "";
-		TamlWrite(%file, pathConcat(%newModulePath, "module.taml"));
-
-		ModuleDatabase.ScanModules(%newModulePath);
-		ModuleDatabase.LoadExplicit(%module.moduleID, %module.versionID);
+		ModuleDatabase.ScanModules(ProjectManager.getProjectFolder());
 		%installedModule = ModuleDatabase.findModule(%module.moduleID, %module.versionID);
-
-		%this.list.setItemColor(%index, "255 255 100 255");
-
-		%file = TamlRead(pathConcat(%newModulePath, "module.taml"));
-		%file.Group = "gameBase";
-		TamlWrite(%file, pathConcat(%newModulePath, "module.taml"));
-
 		%this.postEvent("ModuleInstalled", %installedModule);
 	}
 }

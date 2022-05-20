@@ -1389,30 +1389,8 @@ bool ModuleManager::synchronizeDependencies( ModuleDefinition* pRootModuleDefini
             // Is the specific module definition present in the target?
             if ( definitionItr != NULL )
             {
-                // Yes, so fetch the module definition.
-                ModuleDefinition* pTargetModuleDefinition = *definitionItr;
-
-                // Fetch the target module build Id.
-                const U32 targetBuildId = pTargetModuleDefinition->getBuildId();
-
-                // Fetch the target module path.
-                StringTableEntry targetModulePath = pTargetModuleDefinition->getModulePath();
-
-                // Remove the target module definition from the database.
-                targetModuleManager.removeModuleDefinition( pTargetModuleDefinition );
-
-                // Skip if the target definition is the same build Id.
-                if ( targetBuildId == sourceBuildId )
-                    continue;
-
-                // Delete the target module definition folder.
-                if ( !Platform::deleteDirectory( targetModulePath ) )
-                {
-                    // Warn.
-                    Con::warnf("Cannot synchronize dependencies for module Id '%s' at version Id '%d' as the old module at '%s' could not be deleted.",
-                        sourceModuleId, sourceVersionId, targetModulePath );
-                    return false;
-                }
+                // Yes, so move along.
+                continue;
             }
         }
 
@@ -1430,25 +1408,6 @@ bool ModuleManager::synchronizeDependencies( ModuleDefinition* pRootModuleDefini
             Con::warnf("Cannot synchronize dependencies for module Id '%s' at version Id '%d' as the module could not be copied to '%s'.",
                 sourceModuleId, sourceVersionId, targetFolderGenerateBuffer );
             return false;
-        }
-    }
-
-    // Find any target modules left, These are orphaned modules not depended upon by any other module.
-    typeConstModuleDefinitionVector orphanedTargetModules;
-    targetModuleManager.findModules( false, orphanedTargetModules );
-
-    // Iterate module definitions.
-    for ( typeConstModuleDefinitionVector::const_iterator moduleDefinitionItr = orphanedTargetModules.begin(); moduleDefinitionItr != orphanedTargetModules.end(); ++moduleDefinitionItr )
-    {
-        // Fetch orphaned module definition.
-        const ModuleDefinition* pOrphanedModuleDefinition = *moduleDefinitionItr;
-       
-        // Delete the target module definition folder.
-        if ( !Platform::deleteDirectory( pOrphanedModuleDefinition->getModulePath() ) )
-        {
-            // Warn.
-            Con::warnf("Cannot delete orphaned module Id '%s' at version Id '%d' from '%s'.",
-                pOrphanedModuleDefinition->getModuleId(), pOrphanedModuleDefinition->getVersionId(), pOrphanedModuleDefinition->getModulePath() );
         }
     }
 
@@ -1973,11 +1932,6 @@ bool ModuleManager::registerModule( const char* pModulePath, const char* pModule
     // Is the module group already loaded?
     if ( findGroupLoaded( moduleGroup ) != NULL )
     {
-        // Yes, so warn.
-        Con::warnf( "Module Manager: Found module: '%s' but it is in a module group '%s' which has already been loaded.",
-            pModuleDefinition->getModuleFilePath(),
-            moduleGroup );
-
         // Destroy module definition and finish.
         pModuleDefinition->deleteObject();
         return false;
@@ -2010,10 +1964,6 @@ bool ModuleManager::registerModule( const char* pModulePath, const char* pModule
         // Does this version Id already exist?
         if ( definitionItr != NULL )
         {
-            // Yes, so warn.
-            Con::warnf( "Module Manager: Found module: '%s' but it is already registered as module Id '%s' at version Id '%d'.",
-                pModuleDefinition->getModuleFilePath(), moduleId, versionId );
-
             // Destroy module definition and finish.
             pModuleDefinition->deleteObject();
             return false;

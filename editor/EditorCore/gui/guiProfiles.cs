@@ -32,15 +32,15 @@ function EditorCore::SetProfileColors(%this)
 
 function EditorCore::SetProfileFont(%this)
 {
-	if (%this.platform $= "windows")
+	if ($platform $= "windows")
 		%this.platformFontType = "share tech mono";
-	else if (%this.platform $= "Android")
+	else if ($platform $= "Android")
 		%this.platformFontType = "Droid";
 	else
 		%this.platformFontType = "monaco";
-	if (%this.platform $= "ios")
+	if ($platform $= "ios")
 		%this.platformFontSize = 18;
-	else if (%this.platform $= "Android")
+	else if ($platform $= "Android")
 		%this.platformFontSize = 14;
 	else
 		%this.platformFontSize = 12;

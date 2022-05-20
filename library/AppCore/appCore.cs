@@ -22,9 +22,6 @@
 
 function AppCore::create( %this )
 {
-	// Init variables
-	%this.canvasCreated = false;
-
     // Load system scripts
     exec("./scripts/constants.cs");
     exec("./scripts/defaultPreferences.cs");
@@ -32,19 +29,10 @@ function AppCore::create( %this )
     exec("./scripts/canvas.cs");
 
     // Initialize the canvas
-    %this.initializeCanvas("Torque2D: Rocket Edition");
+    %this.initializeCanvas(%this.Project);
 
 	// Load other modules
-    ModuleDatabase.loadGroup("gameBase");
-
-	// Put a gui in the Canvas
-	Canvas.setContent(TamlRead("./gui/defaultGui.gui.taml"));
-
-	// Play Music - If you are using the standard Audio module
-	if(isObject(Audio))
-	{
-		Audio.PlayMusic("planetfall");
-	}
+    ModuleDatabase.loadGroup("launch");
 }
 
 //-----------------------------------------------------------------------------

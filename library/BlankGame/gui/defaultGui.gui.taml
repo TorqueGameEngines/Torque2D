@@ -5,7 +5,7 @@
 	VertSizing = "relative"
 	Position = "0 0"
 	Extent = "1024 768"
-	Image = "AppCore:torqueBG"
+	Image = "BlankGame:torqueBG"
 	SingleFrameBitmap = "1"
 	TileImage = "0"
 	FullSize = "1"

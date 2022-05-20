@@ -148,6 +148,7 @@ function ProjectManager::getProjectFolder(%this)
 
 function ProjectManager::onModuleInstalled(%this, %module)
 {
-	%this.gamePanel.addModule(%module, %module);
-	%this.gamePanel.sortModules();
+	%allModules = ModuleDatabase.findModules(false);
+	%this.gamePanel.onOpen(%allModules);
+	%this.libraryPanel.onOpen(%allModules);
 }

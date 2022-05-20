@@ -130,21 +130,29 @@ function NewProjectDialog::onCreate(%this)
 		%description = %this.descBox.getText();
 
 		%path = makeFullPath(%directory, getMainDotCsDir());
-		if(getSubStr(%path, strlen(%path) - 1, 1) !$= "\\")
+		%lastChar = getSubStr(%path, strlen(%path) - 1, 1);
+		if(%lastChar !$= "\\" && %lastChar !$= "\/")
 		{
 			%path = %path @ "\\";
 		}
 		createPath(%path);
 
 		ModuleDatabase.scanModules(pathConcat(getMainDotCsDir(), "library"));
-		ModuleDatabase.CopyModule("AppCore", 1, "AppCore", pathConcat(%path, "AppCore"), false);
-		ModuleDatabase.CopyModule("Audio", 1, "Audio", pathConcat(%path, "Audio"), false);
+		ModuleDatabase.CopyModule("AppCore", 1, "AppCore", %path, true);
+		ModuleDatabase.CopyModule("Audio", 1, "Audio", %path, true);
+		ModuleDatabase.CopyModule("BlankGame", 1, "BlankGame", pathConcat(%path, "BlankGame"), false);
 		ModuleDatabase.clearDatabase();
 
-		%file = TamlRead(pathConcat(%path, "AppCore\\module.taml"));
+		%file = TamlRead(pathConcat(%path, "AppCore", "1", "module.taml"));
 		%file.Project = %title;
 		%file.ProjectDescription = %description;
-		TamlWrite(%file, pathConcat(%path, "AppCore\\module.taml"));
+		TamlWrite(%file, pathConcat(%path, "AppCore", "1", "module.taml"));
+
+		%file = TamlRead(pathConcat(%path, "BlankGame", "module.taml"));
+		%file.Group = "launch";
+		%file.Type = "Game Module";
+		%file.Author = "";
+		TamlWrite(%file, pathConcat(%path, "BlankGame", "module.taml"));
 
 		%data = new ScriptObject()
 		{

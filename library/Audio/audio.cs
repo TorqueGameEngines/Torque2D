@@ -48,7 +48,7 @@ function Audio::StopAllAndPlayMusic(%this, %song)
         if(%this.MusicOn)
         {
             cancel(%this.fadeMusicSchedule);
-            %this.Music = alxPlay("Audio:" @ %song);
+            %this.Music = alxPlay(%song);
         }
     }
 }
@@ -62,7 +62,7 @@ function Audio::PlayMusic(%this, %song)
       {
          cancel(%this.fadeMusicSchedule);
          alxStop(%this.Music);
-         %this.Music = alxPlay("Audio:" @ %song);
+         %this.Music = alxPlay(%song);
       }
    }
 }
@@ -71,7 +71,7 @@ function Audio::RestartMusic(%this)
 {
 	cancel(%this.fadeMusicSchedule);
 	alxStop(%this.Music);
-	%this.Music = alxPlay("Audio:" @ %this.CurrentSong);
+	%this.Music = alxPlay(%this.CurrentSong);
 }
 
 function Audio::StopMusic(%this)
@@ -83,7 +83,7 @@ function Audio::PlaySound(%this, %name)
 {
     if(%this.SoundOn)
     {
-        %sound = alxPlay("Audio:" @ %name);
+        %sound = alxPlay(%name);
     }
 
     return %sound;

@@ -1,19 +1,10 @@
 <ModuleDefinition
 	ModuleId="Audio"
 	VersionId="1"
-	Dependencies="AppCore=1"
+	BuildID="1"
 	Synchronized="1"
-    Group="gameBase"
 	Description="Provides basic audio functionality for music and sound effects."
 	ScriptFile="audio.cs"
 	CreateFunction="create"
 	DestroyFunction="destroy">
-		<DeclaredAssets
-			Path="music"
-			Extension="audio.taml"
-			Recurse="true"/>
-		<DeclaredAssets
-			Path="sound"
-			Extension="audio.taml"
-			Recurse="true"/>
 </ModuleDefinition>

@@ -1,0 +1,36 @@
+<ModuleDefinition
+	ModuleId="BlankGame"
+	VersionId="1"
+	BuildID="1"
+	Type="Template"
+	Description="A blank game, ready for you to craft into something amazing!"
+	Author="Torque2D"
+	ScriptFile="game.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy"
+	Dependencies="Audio=1">
+		<DeclaredAssets
+			Path="sprites"
+			Extension="asset.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="gui"
+			Extension="asset.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="fonts"
+			Extension="font.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="particles"
+			Extension="asset.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="music"
+			Extension="audio.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="sound"
+			Extension="audio.taml"
+			Recurse="true"/>
+</ModuleDefinition>
