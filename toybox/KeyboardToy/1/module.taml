@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="KeyboardToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Display virtual keyboard."
 	Dependencies="VirtualKeyboard=1"
 	Type="toy"

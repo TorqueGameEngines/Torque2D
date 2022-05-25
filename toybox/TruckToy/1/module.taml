@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="TruckToy"
     VersionId="1"
+	BuildId="1"
     Description="A monster truck toy."
     Dependencies="ToyAssets=1"
     Type="toy"
@@ -11,6 +12,5 @@
         <DeclaredAssets
             Path="assets"
             Extension="asset.taml"
-            Recurse="true"/>		
+            Recurse="true"/>
 </ModuleDefinition>
-

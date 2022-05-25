@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="Sandbox"
 	VersionId="1"
+	BuildId="1"
 	Dependencies="AppCore=1,ToyAssets=1"
     Group="gameBase"
 	Description="A sandbox for testing and prototyping."

@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="TropicalAssets"
 	VersionId="1"
+	BuildId="1"
 	Description="Tropical Fish Assets.  Particularly useful for the AquariumToy"
 >
 		<DeclaredAssets

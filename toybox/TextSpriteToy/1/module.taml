@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="TextSpriteToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates the amazing TextSprite!"
 	Dependencies="ToyAssets=1"
 	Type="toy"

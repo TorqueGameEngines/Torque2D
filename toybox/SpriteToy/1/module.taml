@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="SpriteToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates creating a Sprite."
 	Dependencies="ToyAssets=1"
 	Type="toy"

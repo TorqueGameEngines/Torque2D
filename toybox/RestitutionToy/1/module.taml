@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="RestitutionToy"
     VersionId="1"
+	BuildId="1"
 	Enabled="1"
     Description="Demonstrates the restitution setting with bouncing balls."
     Dependencies="ToyAssets=1"

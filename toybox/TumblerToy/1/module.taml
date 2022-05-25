@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="TumblerToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates lots of collisions in a complex, dynamic environment."
 	Dependencies="ToyAssets=1"
 	Type="toy"

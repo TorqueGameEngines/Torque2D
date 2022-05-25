@@ -1,8 +1,9 @@
 <ModuleDefinition
     ModuleId="DeathBallToy"
     VersionId="1"
+	BuildId="1"
     Enabled="1"
-    Description="A ball game demonstration."    
+    Description="A ball game demonstration."
     Type="toy"
     ToyCategoryIndex="5"
     ScriptFile="main.cs"
@@ -11,5 +12,5 @@
         <DeclaredAssets
             Path="assets"
             Extension="asset.taml"
-            Recurse="true"/>		
+            Recurse="true"/>
 </ModuleDefinition>

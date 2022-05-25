@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="CollisionToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates collision callbacks."
 	Dependencies="ToyAssets=1"
 	Type="toy"

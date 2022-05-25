@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="BridgeToy"
     VersionId="1"
+	BuildId="1"
 	Enabled="1"
     Description="Demonstrates the ability to create supporting structures using joints."
     Dependencies="ToyAssets=1"
@@ -9,4 +10,3 @@
     ScriptFile="main.cs"
     CreateFunction="create"
     DestroyFunction="destroy"/>
-	

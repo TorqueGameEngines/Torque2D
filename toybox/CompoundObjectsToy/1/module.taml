@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="CompoundObjectsToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates creating compound objects using the CompositeSprite."
 	Dependencies="ToyAssets=1"
 	Type="toy"

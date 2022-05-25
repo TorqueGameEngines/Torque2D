@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="ChainToy"
     VersionId="1"
+	BuildId="1"
 	Enabled="1"
     Description="Demonstrates the ability to create rope and chains using joints."
     Dependencies="ToyAssets=1"

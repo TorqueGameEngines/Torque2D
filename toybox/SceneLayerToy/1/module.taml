@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="SceneLayerToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates the use of individual scene layers to control draw order."
 	Dependencies="ToyAssets=1"
 	Type="toy"

@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="PickingToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates picking."
 	Dependencies="ToyAssets=1"
 	Type="toy"

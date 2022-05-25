@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="EditorToy"
     VersionId="1"
+	BuildId="1"
 	Enabled="1"
     Description="Editor for T2D MIT."
     Type="toy"

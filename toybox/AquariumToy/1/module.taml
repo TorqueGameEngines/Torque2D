@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="AquariumToy"
 	VersionId="1"
+	BuildId="1"
 	Description="A fun demonstration of an aquarium."
 	Dependencies="ToyAssets=1,TropicalAssets=1"
 	Type="toy"
@@ -8,5 +9,3 @@
 	ScriptFile="main.cs"
 	CreateFunction="create"
 	DestroyFunction="destroy"/>
-
-

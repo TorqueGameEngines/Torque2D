@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="WaveCompositeToy"
 	VersionId="1"
+	BuildId="1"
 	Description="A composite-sprite based experiment."
 	Dependencies="ToyAssets=1"
 	Type="toy"

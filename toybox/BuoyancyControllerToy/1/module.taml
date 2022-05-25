@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="BuoyancyControllerToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates using a buoyancy controller."
 	Dependencies="ToyAssets=1"
 	Type="toy"
@@ -12,4 +13,4 @@
 		Path="assets"
 		Extension="asset.taml"
 		Recurse="true"/>
-</ModuleDefinition>		
+</ModuleDefinition>

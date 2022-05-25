@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="ToyAssets"
 	VersionId="1"
+	BuildId="1"
 	Description="A nice mix of assets used by all the toys."
 	ToyCategoryIndex="0">
 		<DeclaredAssets
@@ -10,5 +11,5 @@
 		<DeclaredAssets
 			Path="assets"
 			Extension="asset.json"
-			Recurse="true"/>			
+			Recurse="true"/>
 </ModuleDefinition>

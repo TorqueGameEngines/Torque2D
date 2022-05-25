@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="SoftbodyToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Show a complex pseudo soft-body structure consisting of distance joints."
 	Dependencies="ToyAssets=1"
 	Type="toy"
