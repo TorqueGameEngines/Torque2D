@@ -65,6 +65,7 @@ function BaseTheme::onAdd(%this)
 	%this.makeListBoxProfile();
 	%this.makeGraphProfile();
 	%this.makeTextDisplayProfile();
+	%this.makeSubListProfile();
 }
 
 function BaseTheme::init(%this)
@@ -420,6 +421,71 @@ function BaseTheme::makeItemSelectProfile(%this)
 		align = Center;
 
 		borderDefault = %buttonBorder;
+	};
+}
+
+function BaseTheme::makeSubListProfile(%this)
+{
+	%vBorder = new GuiBorderProfile()
+	{
+		padding = 1;
+		paddingHL = 1;
+		paddingSL = 1;
+		paddingNA = 1;
+
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.setAlpha(%this.color1, 150);
+		borderColorHL = %this.setAlpha(%this.color1, 240);
+		borderColorSL = %this.setAlpha(%this.color5, 200);
+		borderColorNA = %this.setAlpha(%this.color1, 100);
+
+		underfill = false;
+	};
+
+	%hBorder = new GuiBorderProfile()
+	{
+		padding = 5;
+		paddingHL = 5;
+		paddingSL = 5;
+		paddingNA = 5;
+
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.setAlpha(%this.color1, 150);
+		borderColorHL = %this.setAlpha(%this.color1, 240);
+		borderColorSL = %this.setAlpha(%this.color5, 200);
+		borderColorNA = %this.setAlpha(%this.color1, 100);
+
+		underfill = false;
+	};
+
+	%this.subListProfile = new GuiControlProfile()
+	{
+		fillColor = %this.setAlpha(%this.color1, 100);
+		fillColorHL = %this.setAlpha(%this.color1, 200);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.setAlpha(%this.color1, 10);
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
+		fontColor = %this.setAlpha(%this.color4, 150);
+		fontColorHL = %this.adjustValue(%this.color4, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.setAlpha(%this.color4, 50);
+		align = Center;
+		vAlgin = Middle;
+
+		borderDefault = %vBorder;
+		borderLeft = %hBorder;
+		borderRight = %hBorder;
 	};
 }
 

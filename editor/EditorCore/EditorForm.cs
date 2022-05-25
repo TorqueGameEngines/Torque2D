@@ -182,3 +182,8 @@ function EditorFormDropDown::onClose(%this)
 {
 	%this.form.postEvent("DropDownClosed", %this);
 }
+
+function EditorFormDropDown::onSelect(%this)
+{
+	%this.form.postEvent("DropDownSelect", %this);
+}

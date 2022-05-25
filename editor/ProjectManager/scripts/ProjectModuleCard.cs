@@ -18,7 +18,7 @@
 		HorizSizing="width";
 		Position = "0 13";
 		Extent = "286 38";
-		Text = "ModuleName";
+		Text = "";
 		FontSizeAdjust = "1.4";
 	};
 	ThemeManager.setProfile(%this.titleText, "titleProfile");
@@ -52,14 +52,7 @@
 	ThemeManager.setProfile(%this.versionText, "codeProfile");
 	%this.chain.add(%this.versionText);
 
-	%this.spacer = new GuiControl()
-	{
-		HorizSizing="width";
-		Position = "0 0";
-		Extent = "286 6";
-	};
-	ThemeManager.setProfile(%this.spacer, "spacerProfile");
-	%this.chain.add(%this.spacer);
+	%this.addSpacer();
 
 	%this.descriptionText = new GuiControl()
 	{
@@ -67,12 +60,27 @@
 		Position = "0 10";
 		Extent = "286 150";
 		MinExtent = "250 150";
-		Text = "Demonstrates the ability to create rope and chains using joints.";
+		Text = "";
 		TextWrap = 1;
 		TextExtend = 1;
 	};
 	ThemeManager.setProfile(%this.descriptionText, "normalTextProfile");
 	%this.chain.add(%this.descriptionText);
+
+	%this.addSubSection("Dependencies");
+
+	%this.dependList = new GuiChainCtrl()
+	{
+		Class = ProjectModuleDependList;
+		HorizSizing="width";
+		VertSizing="height";
+		Position = "0 0";
+		Extent = "286 100";
+		IsVertical = "1";
+		ChildSpacing = 2;
+	};
+   ThemeManager.setProfile(%this.dependList, "emptyProfile");
+   %this.chain.add(%this.dependList);
 
 	%this.button = new GuiButtonCtrl()
 	{
@@ -90,6 +98,42 @@
 
 	%this.startListening(ThemeManager);
  }
+
+function ProjectModuleCard::addSpacer(%this)
+{
+	%spacer = new GuiControl()
+	{
+		HorizSizing="width";
+		Position = "0 0";
+		Extent = "286 6";
+	};
+	ThemeManager.setProfile(%spacer, "spacerProfile");
+	%this.chain.add(%spacer);
+}
+
+function ProjectModuleCard::addSubSection(%this, %name)
+{
+	%subSection = new GuiControl()
+	{
+		HorizSizing="width";
+		Extent = "286 24";
+		Text = %name;
+		FontSizeAdjust = "0.8";
+	};
+	ThemeManager.setProfile(%subSection, "titleProfile");
+	%this.chain.add(%subSection);
+
+	%this.addSpacer();
+
+	%empty = new GuiControl()
+	{
+		HorizSizing="width";
+		Position = "0 0";
+		Extent = "286 8";
+	};
+	ThemeManager.setProfile(%empty, "emptyProfile");
+	%this.chain.add(%empty);
+}
 
 function ProjectModuleCard::onThemeChange(%this, %theme)
 {
@@ -130,6 +174,7 @@ function ProjectModuleCard::show(%this, %module)
 		}
 
 		%this.visible = true;
+		%this.dependList.show(%module);
 	}
 }
 

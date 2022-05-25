@@ -29,7 +29,7 @@ EditorManager.scanModules( "./" );
 
 // Load various editors
 EditorManager.LoadExplicit("EditorConsole");
-//Editormanager.LoadExplicit("ProjectManager");//Someday soon...
+Editormanager.LoadExplicit("ProjectManager");
 EditorManager.LoadExplicit("AssetAdmin");
 
 if(!isObject(AppCore))
