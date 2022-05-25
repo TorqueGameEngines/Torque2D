@@ -1,7 +1,7 @@
 <ModuleDefinition
 	ModuleId="Audio"
 	VersionId="1"
-	BuildID="1"
+	BuildID="2"
 	Synchronized="1"
 	Description="Provides basic audio functionality for music and sound effects."
 	ScriptFile="audio.cs"

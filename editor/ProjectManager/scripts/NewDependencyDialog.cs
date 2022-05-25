@@ -59,11 +59,9 @@ function NewDependencyDialog::populateModuleDropDown(%this)
 {
 	%this.moduleDropDown.clearItems();
 
-	%allModules = ModuleDatabase.findModules(false);
-
-	for(%i = 0; %i < getWordCount(%allModules); %i++)
+	for(%i = 0; %i < getWordCount(%this.dependList); %i++)
 	{
-		%mod = getWord(%allModules, %i);
+		%mod = getWord(%this.dependList, %i);
 		if(%mod.ModuleID !$= "AppCore")
 		{
 			if(%this.versionList[%mod.ModuleID] $= "")

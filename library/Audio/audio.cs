@@ -13,6 +13,7 @@ function Audio::create(%this)
 
 function Audio::destroy( %this )
 {
+	alxStopAll();
 	OpenALShutdownDriver();
 }
 

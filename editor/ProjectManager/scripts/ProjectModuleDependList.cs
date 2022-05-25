@@ -91,6 +91,7 @@ function ProjectModuleDependList::addDependItem(%this, %name, %version, %isSynce
 
 function ProjectModuleDependList::addAddButton(%this)
 {
+	%this.dependList = %this.buildPossibleDependList();
 	%width = 140;
 	%addButton = new GuiButtonCtrl()
 	{
@@ -105,6 +106,7 @@ function ProjectModuleDependList::addAddButton(%this)
 		Align = "Center";
 		VAlign = "Middle";
 		TextExtend = 1;
+		Active = (getWordCount(%this.dependList) > 0);
 	};
 	ThemeManager.setProfile(%addButton, "subListProfile");
 	%this.add(%addButton);
@@ -127,6 +129,7 @@ function ProjectModuleDependList::onAddDepend(%this)
 		dialogSize = (%width + 8) SPC (%height + 8);
 		dialogCanClose = true;
 		dialogText = "New Dependency";
+		dependList = %this.dependList;
 	};
 	%dialog.init(%width, %height);
 	%this.startListening(%dialog);
@@ -157,4 +160,32 @@ function ProjectModuleDependList::onDialogClosed(%this, %dialog)
 function ProjectModuleDependList::deleteDialog(%this)
 {
 	%this.dialog.delete();
+}
+
+function ProjectModuleDependList::buildPossibleDependList(%this)
+{
+	%allModules = ModuleDatabase.findModules(false);
+	%list = "";
+	for(%i = 0; %i < getWordCount(%allModules); %i++)
+	{
+		%mod = getWord(%allModules, %i);
+		if(%mod.ModuleID !$= "AppCore" && %mod.ModuleID !$= %this.activeModule.ModuleID)
+		{
+			%hasDep = false;
+			for(%j = 0; %j < %this.activeModule.getdependencyCount(); %j++)
+			{
+				%dep = %this.activeModule.getDependency(%j);
+				if(getWord(%dep, 0) $= %mod.ModuleID)
+				{
+					%hasDep = true;
+				}
+			}
+
+			if(!%hasDep)
+			{
+				%list = %list SPC %mod;
+			}
+		}
+	}
+	return trim(%list);
 }
