@@ -448,10 +448,10 @@ function BaseTheme::makeSubListProfile(%this)
 
 	%hBorder = new GuiBorderProfile()
 	{
-		padding = 5;
-		paddingHL = 5;
-		paddingSL = 5;
-		paddingNA = 5;
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
 
 		border = 1;
 		borderHL = 1;

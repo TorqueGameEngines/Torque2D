@@ -152,6 +152,7 @@ function NewDependencyDialog::onCreate(%this)
 		};
 
 		%this.postEvent("DependencyAdded", %data);
+		%data.delete();
 		%this.onClose();
 	}
 }

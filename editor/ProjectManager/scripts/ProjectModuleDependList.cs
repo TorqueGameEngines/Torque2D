@@ -16,6 +16,7 @@ function ProjectModuleDependList::show(%this, %module)
 {
 	%this.activeModule = %module;
 	%this.clearItems();
+	%isSynced = %module.Synchronized;
 
 	for(%i = 0; %i < %module.getdependencyCount(); %i++)
 	{
@@ -26,7 +27,7 @@ function ProjectModuleDependList::show(%this, %module)
 		{
 			%version = "Latest";
 		}
-		%this.addDependItem(%name, %version);
+		%this.addDependItem(%name, %version, %isSynced);
 	}
 
 	if(!%module.Synchronized)
@@ -50,7 +51,7 @@ function ProjectModuleDependList::clearItems(%this)
 	}
 }
 
-function ProjectModuleDependList::addDependItem(%this, %name, %version)
+function ProjectModuleDependList::addDependItem(%this, %name, %version, %isSynced)
 {
 	%width = getWord(%this.extent, 0) - 6;
 	%text = new GuiControl()
@@ -64,6 +65,28 @@ function ProjectModuleDependList::addDependItem(%this, %name, %version)
 	};
 	ThemeManager.setProfile(%text, "subListProfile");
 	%this.add(%text);
+
+	if(!%isSynced)
+	{
+		%deleteButton = new GuiButtonCtrl()
+		{
+			Class="ProjectModuleDependButton";
+			ButtonEvent = "RemoveDepend";
+			ButtonData = %name;
+			HorizSizing="left";
+			Position = (%width - 40) SPC "0";
+			Extent = "22 22";
+			MinExtent = "22 22";
+			Text = "X";
+			Align = "Center";
+			VAlign = "Middle";
+			TextExtend = 1;
+		};
+		%deleteButton.position = (%width - (getWord(%deleteButton.extent, 0) + 10)) SPC "0";
+		ThemeManager.setProfile(%deleteButton, "subListProfile");
+		%text.add(%deleteButton);
+		%this.startListening(%deleteButton);
+	}
 }
 
 function ProjectModuleDependList::addAddButton(%this)
@@ -120,7 +143,9 @@ function ProjectModuleDependList::onDependencyAdded(%this, %data)
 
 function ProjectModuleDependList::onRemoveDepend(%this, %data)
 {
-
+	%this.activeModule.removeDependency(%data);
+	%this.activeModule.save();
+	%this.schedule(50, "show", %this.activeModule);
 }
 
 function ProjectModuleDependList::onDialogClosed(%this, %dialog)
