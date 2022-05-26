@@ -115,7 +115,7 @@ ConsoleMethodWithDocs(ModuleDefinition, removeDependency, ConsoleBool, 3, 3, (mo
 //-----------------------------------------------------------------------------
 
 /*! Returns the path to the module directory.
-    @return (bool success) Whether the module dependency was removed or not.
+    @return A path to the module definition.
 */
 ConsoleMethodWithDocs(ModuleDefinition, getModulePath, ConsoleString, 2, 2, ())
 {

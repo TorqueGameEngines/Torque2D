@@ -92,7 +92,7 @@ function ProjectManager::create(%this)
 
 function ProjectManager::destroy(%this)
 {
-
+	%this.postEvent("ShutDown");
 }
 
 function ProjectManager::open(%this)

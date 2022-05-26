@@ -120,11 +120,11 @@ function BaseTheme::makeTipProfile(%this)
 
 	%this.tipProfile = new GuiControlProfile()
 	{
-		fillColor = %this.setAlpha(%this.color3, 220);
+		fillColor = %this.setAlpha(%this.color3, 240);
 
 		fontType = %this.font[1];
 		fontDirectory = %this.fontDirectory;
-		fontSize = %this.fontSize - 2;
+		fontSize = %this.fontSize - 4;
 		fontColor = %this.color1;
 
 		borderDefault = %tipBorder;
