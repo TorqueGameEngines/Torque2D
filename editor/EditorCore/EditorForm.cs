@@ -49,6 +49,8 @@ function EditorForm::createTextEditItem(%this, %label)
 		Position = "10 16";
 		Extent = (getWord(%label.extent, 0) - 24) SPC 30;
 	};
+	%textEdit.Command = %this.getID() @ ".postEvent(\"KeyPressed\", " @ %textEdit.getID() @ ");";
+	%textEdit.AltCommand = %this.getID() @ ".postEvent(\"ReturnPressed\", " @ %textEdit.getID() @ ");";
 	ThemeManager.setProfile(%textEdit, "textEditProfile");
 	%label.add(%textEdit);
 	return %textEdit;

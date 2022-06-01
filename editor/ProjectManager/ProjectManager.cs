@@ -28,6 +28,7 @@ function ProjectManager::create(%this)
 	exec("./scripts/ProjectModuleCard.cs");
 	exec("./scripts/ProjectModuleDependList.cs");
 	exec("./scripts/NewDependencyDialog.cs");
+	exec("./scripts/NewModuleDialog.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Project Manager", %this);
 

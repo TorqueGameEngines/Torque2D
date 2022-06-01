@@ -14,18 +14,38 @@ function ProjectModulePanel::init(%this, %title)
 	%this.title = new GuiControl()
 	{
 		Position = "0 4";
-		Extent = "200 40";
+		Extent = "200 34";
 		Text = %title;
 	};
 	ThemeManager.setProfile(%this.title, "titleProfile");
 	%this.leftPanel.add(%this.title);
 
+	%this.buttonBarContainer = new GuiControl()
+	{
+		Position = "0 38";
+		Extent = "200 34";
+	};
+	ThemeManager.setProfile(%this.buttonBarContainer, "panelProfile");
+	%this.leftPanel.add(%this.buttonBarContainer);
+
+	%this.buttonBar = new GuiChainCtrl()
+	{
+		Class = "EditorButtonBar";
+		Position = "0 4";
+		Extent = "0 30";
+		ChildSpacing = 4;
+		IsVertical = false;
+		Tool = %this;
+	};
+	ThemeManager.setProfile(%this.buttonBar, "emptyProfile");
+	%this.buttonBarContainer.add(%this.buttonBar);
+
 	%this.scroller = new GuiScrollCtrl()
 	{
 		HorizSizing="width";
 		VertSizing="height";
-		Position="0 40";
-		Extent="200 728";
+		Position="0 72";
+		Extent="200 696";
 		hScrollBar="alwaysOff";
 		vScrollBar="dynamic";
 		constantThumbHeight="0";
