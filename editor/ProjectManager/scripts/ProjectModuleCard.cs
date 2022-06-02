@@ -105,19 +105,36 @@
    ThemeManager.setProfile(%this.dependList, "emptyProfile");
    %this.chain.add(%this.dependList);
 
-	%this.button = new GuiButtonCtrl()
+   %this.addEmptySpace(30, %this.chain);
+
+	%this.addSubSection("Declared Assets");
+
+	%this.assetList = new GuiChainCtrl()
 	{
-		Class="ProjectModuleCardButton";
-		HorizSizing="left";
-		VertSizing="bottom";
-		Position = "184 40";
-		Extent = "100 30";
-		MinExtent = "100 30";
-		Text = "";
+		Class = ProjectModuleAssetList;
+		HorizSizing="width";
+		VertSizing="height";
+		Position = "0 0";
+		Extent = "286 100";
+		IsVertical = "1";
+		ChildSpacing = 2;
 	};
-	ThemeManager.setProfile(%this.button, "primaryButtonProfile");
-	%this.add(%this.button);
-	%this.startListening(%this.button);
+   ThemeManager.setProfile(%this.assetList, "emptyProfile");
+   %this.chain.add(%this.assetList);
+
+   %this.button = new GuiButtonCtrl()
+   {
+	   Class="ProjectModuleCardButton";
+	   HorizSizing="left";
+	   VertSizing="bottom";
+	   Position = "184 40";
+	   Extent = "100 30";
+	   MinExtent = "100 30";
+	   Text = "";
+   };
+   ThemeManager.setProfile(%this.button, "primaryButtonProfile");
+   %this.add(%this.button);
+   %this.startListening(%this.button);
 
 	%this.startListening(ThemeManager);
  }
@@ -236,6 +253,7 @@ function ProjectModuleCard::show(%this, %module)
 
 		%this.visible = true;
 		%this.dependList.show(%module);
+		%this.assetList.show(%module);
 	}
 }
 

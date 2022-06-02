@@ -50,7 +50,7 @@ function EditorForm::createTextEditItem(%this, %label)
 		Extent = (getWord(%label.extent, 0) - 24) SPC 30;
 	};
 	%textEdit.Command = %this.getID() @ ".postEvent(\"KeyPressed\", " @ %textEdit.getID() @ ");";
-	%textEdit.AltCommand = %this.getID() @ ".postEvent(\"ReturnPressed\", " @ %textEdit.getID() @ ");";
+	%textEdit.ReturnCommand = %this.getID() @ ".postEvent(\"ReturnPressed\", " @ %textEdit.getID() @ ");";
 	ThemeManager.setProfile(%textEdit, "textEditProfile");
 	%label.add(%textEdit);
 	return %textEdit;
@@ -174,6 +174,7 @@ function EditorForm::createCheckboxItem(%this, %label)
 		Extent = (getWord(%label.extent, 0) - 24) SPC 30;
 		Text = %label.text;
 	};
+	%box.textExtent = getWord(%box.Extent, 0) - getWord(%box.textOffset, 0);
 	ThemeManager.setProfile(%box, "checkboxProfile");
 	%label.add(%box);
 	%label.text = "";

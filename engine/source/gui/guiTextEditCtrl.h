@@ -109,6 +109,7 @@ protected:
    string mTextBuffer;
    TextBlockList mTextBlockList;
 
+   StringTableEntry mReturnCommand;
    StringTableEntry mEscapeCommand;
 
 public:

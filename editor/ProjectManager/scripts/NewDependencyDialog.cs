@@ -48,7 +48,6 @@ function NewDependencyDialog::init(%this, %width, %height)
 	};
 	ThemeManager.setProfile(%this.createButton, "primaryButtonProfile");
 
-	%content.add(%this.feedback);
 	%content.add(%this.cancelButton);
 	%content.add(%this.createButton);
 

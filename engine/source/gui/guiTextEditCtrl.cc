@@ -382,6 +382,7 @@ GuiTextEditCtrl::GuiTextEditCtrl()
 
    mTextOffsetY = 0;
 
+   mReturnCommand = StringTable->EmptyString;
    mEscapeCommand = StringTable->EmptyString;
    mPasswordMask = StringTable->insert( "*" );
 
@@ -415,7 +416,8 @@ void GuiTextEditCtrl::initPersistFields()
    addDepricatedField("tabComplete");
 
    addGroup("Text Edit");
-   addField("escapeCommand",     TypeString,    Offset(mEscapeCommand,     GuiTextEditCtrl));
+   addField("returnCommand", TypeString, Offset(mReturnCommand, GuiTextEditCtrl));
+   addField("escapeCommand", TypeString, Offset(mEscapeCommand, GuiTextEditCtrl));
    addField("sinkAllKeyEvents",  TypeBool,      Offset(mSinkAllKeyEvents,  GuiTextEditCtrl));
    addField("password", TypeBool, Offset(mPasswordText, GuiTextEditCtrl));
    addField("returnCausesTab", TypeBool, Offset(mReturnCausesTab, GuiTextEditCtrl));
@@ -1565,14 +1567,17 @@ bool GuiTextEditCtrl::handleDelete()
 
 bool GuiTextEditCtrl::handleEnterKey()
 {
-    execAltConsoleCallback();
-
     if (isMethod("onReturn"))
         Con::executef(this, 1, "onReturn");
 
     if (mReturnCausesTab)
     {
         tabNext();
+    }
+
+    if (isMethod(mReturnCommand))
+    {
+        Con::evaluate(mReturnCommand);
     }
     return true;
 }
