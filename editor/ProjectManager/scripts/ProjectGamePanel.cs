@@ -4,6 +4,7 @@ function ProjectGamePanel::onAdd(%this)
 	%this.init("Project");
 
 	%this.buttonBar.addButton("createNewModule", 11, "Create Module", "");
+	%this.buttonBar.addButton("editModule", 49, "Edit Module", "editModuleAvailable");
 }
 
 function ProjectGamePanel::onOpen(%this, %allModules)
@@ -27,6 +28,10 @@ function ProjectGamePanel::onOpen(%this, %allModules)
 	if(%this.card.visible)
 	{
 		%this.refreshCard();
+	}
+	else
+	{
+		%this.buttonBar.refreshEnabled();
 	}
 }
 
@@ -126,4 +131,77 @@ function ProjectGamePanel::onModuleCreated(%this, %data)
 	}
 	ModuleDatabase.scanModules(%data.path);
 	%this.onOpen(ModuleDatabase.findModules(false));
+}
+
+function ProjectGamePanel::editModule(%this)
+{
+	%width = 500;
+	%height = 520;
+	%dialog = new GuiControl()
+	{
+		class = "EditModuleDialog";
+		superclass = "EditorDialog";
+		dialogSize = (%width + 8) SPC (%height + 8);
+		dialogCanClose = true;
+		dialogText = "Edit Module";
+		module = %this.card.activeModule;
+	};
+	%dialog.init(%width, %height);
+	%this.startListening(%dialog);
+
+	Canvas.pushDialog(%dialog);
+}
+
+function ProjectGamePanel::editModuleAvailable(%this)
+{
+	if(isObject(%this.card.activeModule) && !%this.card.activeModule.Synchronized)
+	{
+		return true;
+	}
+	return false;
+}
+
+function ProjectGamePanel::onModuleEdited(%this, %data)
+{
+	if(%this.moduleHasChanged(%data))
+	{
+		%module = %this.card.activeModule;
+		%moduleID = %this.card.activeModule.moduleID;
+		%projectPath = ProjectManager.getProjectFolder();
+		%modulePath = pathConcat(%projectPath, %module.moduleID);
+		ModuleDatabase.unregisterModule(%module.moduleID, %module.versionID);
+		%newModulePath = pathConcat(%projectPath, %data.moduleID);
+		if(%moduleID !$= %data.moduleID && !isDirectory(%newModulePath))
+		{
+			if(pathCopy(%modulePath, %newModulePath))
+			{
+				directoryDelete(%modulePath);
+				%modulePath = %newModulePath;
+			}
+		}
+		%file = TamlRead(pathConcat(%modulePath, "module.taml"));
+		%file.moduleID = %data.moduleID;
+		%file.versionID = %data.versionID;
+		%file.buildID = %data.buildID;
+		%file.description = %data.description;
+		%file.type = %data.type;
+		%file.author = %data.author;
+		TamlWrite(%file, pathConcat(%modulePath, "module.taml"));
+		ModuleDatabase.scanModules(%modulePath, true);
+		%this.card.moduleID = %data.moduleID;
+		%this.card.versionID = %data.versionID;
+		%allModules = ModuleDatabase.findModules(false);
+		%this.onOpen(%allModules);
+	}
+}
+
+function ProjectGamePanel::moduleHasChanged(%this, %data)
+{
+	%module = %this.card.activeModule;
+	return %module.moduleID !$= %data.moduleID ||
+		%module.versionID !$= %data.versionID ||
+		%module.buildID !$= %data.buildID ||
+		%module.description !$= %data.description ||
+		%module.type !$= %data.type ||
+		%module.author !$= %data.author;
 }

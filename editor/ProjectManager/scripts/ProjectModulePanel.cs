@@ -146,3 +146,8 @@ function ProjectModulePanel::sortModules(%this)
 {
 	%this.list.sortByText();
 }
+
+function ProjectModulePanel::onModuleShown(%this, %module)
+{
+	%this.buttonBar.refreshEnabled();
+}
