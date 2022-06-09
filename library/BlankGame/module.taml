@@ -11,11 +11,19 @@
 	Dependencies="Audio=1">
 		<DeclaredAssets
 			Path="sprites"
-			Extension="asset.taml"
+			Extension="image.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="sprites"
+			Extension="animation.taml"
 			Recurse="true"/>
 		<DeclaredAssets
 			Path="gui"
-			Extension="asset.taml"
+			Extension="image.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path="gui"
+			Extension="animation.taml"
 			Recurse="true"/>
 		<DeclaredAssets
 			Path="fonts"
@@ -23,7 +31,7 @@
 			Recurse="true"/>
 		<DeclaredAssets
 			Path="particles"
-			Extension="asset.taml"
+			Extension="particle.taml"
 			Recurse="true"/>
 		<DeclaredAssets
 			Path="music"

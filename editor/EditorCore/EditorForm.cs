@@ -77,13 +77,14 @@ function EditorForm::createFileOpenItem(%this, %label, %filters, %dialogTitle)
 
 function EditorForm::getFilePath(%this, %filter, %title, %textEdit)
 {
+	%path = pathConcat(getMainDotCsDir(), ProjectManager.getProjectFolder());
 	%dialog = new OpenFileDialog()
 	{
 		Filters = %filter;
 		ChangePath = false;
 		MultipleFiles = false;
 		DefaultFile = "";
-		defaultPath = "./";
+		defaultPath = %path;
 		title = %title;
 	};
 	%result = %dialog.execute();
@@ -121,12 +122,13 @@ function EditorForm::createFolderOpenItem(%this, %label, %dialogTitle)
 
 function EditorForm::getFolderPath(%this, %title, %textEdit)
 {
+	%path = pathConcat(getMainDotCsDir(), ProjectManager.getProjectFolder());
 	%dialog = new OpenFolderDialog()
 	{
 		Filters = "All Files|*.*";
 		ChangePath = false;
 		DefaultFile = "";
-		defaultPath = "./";
+		defaultPath = %path;
 		title = %title;
 	};
 	%result = %dialog.execute();
