@@ -169,6 +169,17 @@ function ProjectGamePanel::onModuleEdited(%this, %data)
 		%moduleID = %this.card.activeModule.moduleID;
 		%projectPath = ProjectManager.getProjectFolder();
 		%modulePath = pathConcat(%projectPath, %module.moduleID);
+		if(ModuleDatabase.isModuleLoaded(%module.moduleID))
+		{
+			if(%module.group !$= "")
+			{
+				ModuleDatabase.unloadGroup(%module.group);
+			}
+			else
+			{
+				ModuleDatabase.unloadExplicit(%module.moduleID);
+			}
+		}
 		ModuleDatabase.unregisterModule(%module.moduleID, %module.versionID);
 		%newModulePath = pathConcat(%projectPath, %data.moduleID);
 		if(%moduleID !$= %data.moduleID && !isDirectory(%newModulePath))
@@ -179,6 +190,7 @@ function ProjectGamePanel::onModuleEdited(%this, %data)
 				%modulePath = %newModulePath;
 			}
 		}
+		echo("Editing Module at " @ %modulePath);
 		%file = TamlRead(pathConcat(%modulePath, "module.taml"));
 		%file.moduleID = %data.moduleID;
 		%file.versionID = %data.versionID;

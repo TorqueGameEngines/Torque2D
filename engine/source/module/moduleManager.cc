@@ -1795,6 +1795,12 @@ bool ModuleManager::removeModuleDefinition( ModuleDefinition* pModuleDefinition 
         // Delete module definition.
         pModuleDefinition->deleteObject();
 
+        // Is that the last one?
+        if (pDefinitions->size() <= 1)
+        {
+            mModuleIdDatabase.erase(moduleId);
+        }
+
         // Are there any modules left for this module Id?
         if ( findModuleId( moduleId ) == NULL )
         {
@@ -1827,7 +1833,6 @@ bool ModuleManager::removeModuleDefinition( ModuleDefinition* pModuleDefinition 
                     break;
             }
         }
-
         return true;
     }
 
@@ -1986,7 +1991,7 @@ bool ModuleManager::registerModule( const char* pModulePath, const char* pModule
         {
             // No, so warn.
             Con::warnf( "Module Manager: Found module: '%s' but its module type '%s' is not the same as other module definitions of the same module Id.",
-                pModuleDefinition->getModuleFilePath(), moduleGroup );
+                pModuleDefinition->getModuleFilePath(), moduleType );
 
             // Destroy module definition and finish.
             pModuleDefinition->deleteObject();

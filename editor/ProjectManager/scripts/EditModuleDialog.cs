@@ -48,7 +48,7 @@ function EditModuleDialog::init(%this, %width, %height)
 		VertSizing = "bottom";
 		Position = "12 320";
 		Extent = (%width - 24) SPC 80;
-		text = "Saving changes to a module will require the module to be unloaded. Changes will not apply until after a restart. Also, changing the name or version of a module may break dependencies. You will need to find and fix these.";
+		text = "Saving changes to a module will require the module to be unloaded and will likely require the game to be restarted. Also, changing the name or version of a module may break dependencies. You will need to find and fix these.";
 		textWrap = true;
 		textExtend = true;
 	};
