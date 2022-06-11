@@ -1427,7 +1427,7 @@ bool GuiTextEditCtrl::handleKeyDownWithNoModifier(const GuiEvent& event)
         return tabNext();
 
     case KEY_ESCAPE:
-        if (isMethod(mEscapeCommand))
+        if (mEscapeCommand && mEscapeCommand[0])
         {
             Con::evaluate(mEscapeCommand);
             return true;
@@ -1575,7 +1575,8 @@ bool GuiTextEditCtrl::handleEnterKey()
         tabNext();
     }
 
-    if (isMethod(mReturnCommand))
+    
+    if (mReturnCommand && mReturnCommand[0])
     {
         Con::evaluate(mReturnCommand);
     }
