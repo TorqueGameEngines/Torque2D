@@ -551,7 +551,8 @@ public:
     /// @}
 
     //Sends a script event with modifier and mouse position if the script method exists. Returns true if the event is consumed.
-    bool sendScriptEvent(const char* name, const GuiEvent& event);
+    bool sendScriptMouseEvent(const char* name, const GuiEvent& event);
+    bool sendScriptKeyEvent(const char* name, const InputEvent& event);
 
     /// General input handler.
     virtual bool onInputEvent(const InputEvent &event);
