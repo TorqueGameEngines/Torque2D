@@ -480,9 +480,6 @@
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
@@ -1627,9 +1624,6 @@
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h">

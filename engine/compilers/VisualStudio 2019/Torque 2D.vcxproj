@@ -836,7 +836,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiDebugger.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc" />
@@ -1416,7 +1415,6 @@
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiDebugger.h" />
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h" />
