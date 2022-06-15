@@ -465,9 +465,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
@@ -1618,9 +1615,6 @@
       <Filter>gui\buttons</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h">

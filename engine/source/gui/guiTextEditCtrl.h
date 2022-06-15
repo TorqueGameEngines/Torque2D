@@ -207,8 +207,8 @@ public:
    void onTouchUp(const GuiEvent& event);
    void onTouchEnter(const GuiEvent& event);
    void onTouchLeave(const GuiEvent& event);
-   bool onMouseWheelUp(const GuiEvent& event);
-   bool onMouseWheelDown(const GuiEvent& event);
+   void onMouseWheelUp(const GuiEvent& event);
+   void onMouseWheelDown(const GuiEvent& event);
    
    void onCopy(bool andCut);
    void onPaste();

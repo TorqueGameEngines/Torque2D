@@ -155,8 +155,8 @@ public:
    virtual void onTouchUp(const GuiEvent &event);
    virtual void onTouchDragged(const GuiEvent &event);
    virtual void onTouchLeave(const GuiEvent &event);
-   virtual bool onMouseWheelUp(const GuiEvent &event);
-   virtual bool onMouseWheelDown(const GuiEvent &event);
+   virtual void onMouseWheelUp(const GuiEvent &event);
+   virtual void onMouseWheelDown(const GuiEvent &event);
 
    virtual bool onWake();
    virtual void onSleep();

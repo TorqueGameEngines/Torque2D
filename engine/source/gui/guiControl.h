@@ -550,6 +550,8 @@ public:
     virtual bool isMouseLocked();
     /// @}
 
+    //Sends a script event with modifier and mouse position if the script method exists. Returns true if the event is consumed.
+    bool sendScriptEvent(const char* name, const GuiEvent& event);
 
     /// General input handler.
     virtual bool onInputEvent(const InputEvent &event);
@@ -565,8 +567,8 @@ public:
     virtual void onTouchEnter(const GuiEvent &event);
     virtual void onTouchLeave(const GuiEvent &event);
 
-    virtual bool onMouseWheelUp(const GuiEvent &event);
-    virtual bool onMouseWheelDown(const GuiEvent &event);
+    virtual void onMouseWheelUp(const GuiEvent &event);
+    virtual void onMouseWheelDown(const GuiEvent &event);
 
     virtual void onRightMouseDown(const GuiEvent &event);
     virtual void onRightMouseUp(const GuiEvent &event);

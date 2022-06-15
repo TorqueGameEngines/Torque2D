@@ -1342,6 +1342,20 @@ void GuiControl::mouseUnlock()
       root->mouseUnlock(this);
 }
 
+bool GuiControl::sendScriptEvent(const char* name, const GuiEvent& event)
+{
+    bool consumed = false;
+    if (isMethod(name))
+    {
+        char buf[3][32];
+        dSprintf(buf[0], 32, "%d", event.modifier);
+        dSprintf(buf[1], 32, "%d %d", event.mousePoint.x, event.mousePoint.y);
+        dSprintf(buf[2], 32, "%d", event.mouseClickCount);
+        consumed = dAtob(Con::executef(this, 4, name, buf[0], buf[1], buf[2]));
+    }
+    return consumed;
+}
+
 bool GuiControl::onInputEvent(const InputEvent &event)
 {
     // Do nothing by default...
@@ -1353,8 +1367,11 @@ void GuiControl::onTouchUp(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed1 = sendScriptEvent("onTouchUp", event);
+    bool consumed2 = sendScriptEvent("onMouseUp", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed1 && !consumed2)
         parent->onTouchUp(event);
 }
 
@@ -1363,8 +1380,11 @@ void GuiControl::onTouchDown(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed1 = sendScriptEvent("onTouchDown", event);
+    bool consumed2 = sendScriptEvent("onMouseDown", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed1 && !consumed2)
         parent->onTouchDown(event);
 }
 
@@ -1373,8 +1393,11 @@ void GuiControl::onTouchMove(const GuiEvent &event)
    if ( !mVisible || !mAwake )
       return;
 
+   bool consumed1 = sendScriptEvent("onTouchMove", event);
+   bool consumed2 = sendScriptEvent("onMouseMove", event);
+
    GuiControl *parent = getParent();
-   if ( parent )
+   if (parent && !consumed1 && !consumed2)
       parent->onTouchMove( event );
 }
 
@@ -1383,43 +1406,58 @@ void GuiControl::onTouchDragged(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed1 = sendScriptEvent("onTouchDragged", event);
+    bool consumed2 = sendScriptEvent("onMouseDragged", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed1 && !consumed2)
         parent->onTouchDragged(event);
 }
 
 void GuiControl::onTouchEnter(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    sendScriptEvent("onTouchEnter", event);
+    sendScriptEvent("onMouseEnter", event);
+
     //Entering a child means nothing to a parent
 }
 
 void GuiControl::onTouchLeave(const GuiEvent &event)
 {
+    if (!mVisible || !mAwake)
+        return;
+
+    sendScriptEvent("onTouchLeave", event);
+    sendScriptEvent("onMouseLeave", event);
+
     //Leaving a child means nothing to a parent
 }
 
-bool GuiControl::onMouseWheelUp( const GuiEvent &event )
+void GuiControl::onMouseWheelUp( const GuiEvent &event )
 {
    if ( !mVisible || !mAwake )
-      return true;
+      return;
+
+   bool consumed = sendScriptEvent("onMouseWheelUp", event);
 
    GuiControl *parent = getParent();
-   if ( parent )
-      return parent->onMouseWheelUp( event );
-   else
-      return false;
+   if (parent && !consumed)
+      return parent->onMouseWheelUp(event);
 }
 
-bool GuiControl::onMouseWheelDown( const GuiEvent &event )
+void GuiControl::onMouseWheelDown( const GuiEvent &event )
 {
    if ( !mVisible || !mAwake )
-      return true;
+      return;
+
+   bool consumed = sendScriptEvent("onMouseWheelDown", event);
 
    GuiControl *parent = getParent();
-   if ( parent )
-      return parent->onMouseWheelDown( event );
-   else
-      return false;
+   if (parent && !consumed)
+      return parent->onMouseWheelDown(event);
 }
 
 void GuiControl::onRightMouseDown(const GuiEvent &event)
@@ -1427,8 +1465,10 @@ void GuiControl::onRightMouseDown(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed = sendScriptEvent("onRightMouseDown", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed)
         parent->onRightMouseDown(event);
 }
 
@@ -1437,8 +1477,10 @@ void GuiControl::onRightMouseUp(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed = sendScriptEvent("onRightMouseUp", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed)
         parent->onRightMouseUp(event);
 }
 
@@ -1447,8 +1489,10 @@ void GuiControl::onRightMouseDragged(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed = sendScriptEvent("onRightMouseDragged", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed)
         parent->onRightMouseDragged(event);
 }
 
@@ -1457,8 +1501,10 @@ void GuiControl::onMiddleMouseDown(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed = sendScriptEvent("onMiddleMouseDown", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed)
         parent->onMiddleMouseDown(event);
 }
 
@@ -1467,8 +1513,10 @@ void GuiControl::onMiddleMouseUp(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed = sendScriptEvent("onMiddleMouseUp", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed)
         parent->onMiddleMouseUp(event);
 }
 
@@ -1477,8 +1525,10 @@ void GuiControl::onMiddleMouseDragged(const GuiEvent &event)
     if (!mVisible || !mAwake)
         return;
 
+    bool consumed = sendScriptEvent("onMiddleMouseDragged", event);
+
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && !consumed)
         parent->onMiddleMouseDragged(event);
 }
 

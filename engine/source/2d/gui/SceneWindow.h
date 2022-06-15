@@ -339,8 +339,8 @@ public:
     virtual void onRightMouseUp( const GuiEvent& event );
     virtual void onRightMouseDragged( const GuiEvent& event );
 
-    virtual bool onMouseWheelDown( const GuiEvent &event );
-    virtual bool onMouseWheelUp( const GuiEvent &event );
+    virtual void onMouseWheelDown( const GuiEvent &event );
+    virtual void onMouseWheelUp( const GuiEvent &event );
 
 	void setUseConstantThumbHeight(const bool setting);
 	void setScrollBarThickness(const S32 thickness);

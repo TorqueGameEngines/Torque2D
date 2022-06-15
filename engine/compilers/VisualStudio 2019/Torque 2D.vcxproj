@@ -832,7 +832,6 @@
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabBookCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc" />
@@ -1414,7 +1413,6 @@
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl.h" />
