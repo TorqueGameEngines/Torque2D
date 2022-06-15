@@ -81,7 +81,7 @@ public:
    virtual void onTouchDragged(const GuiEvent &event);
 
    void onRender(Point2I offset, const RectI &updateRect);
-   Vector<GraphPoint>* getRenderPoints() { if (mDirty) { RectI rect = RectI(0, 0, 1, 1); calculatePoints(rect); mDirty = true; } return &mPointList; }
+   Vector<GraphPoint>* getRenderPoints();
 
 protected:
 	U32 findHitGraphPoint(const Point2I &point);

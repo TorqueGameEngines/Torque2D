@@ -473,9 +473,28 @@ void GuiParticleGraphInspector::renderPoints(const RectI &contentRect, const Col
 	}
 }
 
+Vector<GuiParticleGraphInspector::GraphPoint>* GuiParticleGraphInspector::getRenderPoints()
+{
+	if (!mAwake)
+	{
+		return NULL;
+	}
+
+	if (mDirty) 
+	{ 
+		RectI rect = RectI(0, 0, 1, 1); 
+		calculatePoints(rect); mDirty = true; 
+	} 
+	return &mPointList;
+}
+
 void GuiParticleGraphInspector::renderVariation(const RectI& contentRect, const ColorI& color)
 {
 	Vector<GraphPoint>* variPointList = mVariationInspector->getRenderPoints();
+	if (!variPointList)
+	{
+		return;
+	}
 
 	S32 vPen = 0;
 	S32 bPen = 0;
@@ -584,6 +603,12 @@ void GuiParticleGraphInspector::renderLine(const RectI &contentRect, const Point
 //Points are leftTop, rightTop, leftBottom, rightBottom
 void GuiParticleGraphInspector::renderQuad(const RectI& contentRect, const Point2I& point1, const Point2I& point2, const Point2I& point3, const Point2I& point4, const ColorI& quadColor)
 {
+	//if the heights of the left and right sides are both zero then we can exit now
+	if ((point1.y - point3.y) == 0 && (point2.y - point4.y) == 0)
+	{
+		return;
+	}
+
 	RectI area = RectI(point1.x, getMin(point1.y, point2.y), point2.x - point1.x, point1.y < point2.y ? getMax(point3.y, point4.y) - point1.y : getMax(point3.y, point4.y) - point2.y);
 	if (!contentRect.overlaps(area))
 	{
@@ -591,7 +616,7 @@ void GuiParticleGraphInspector::renderQuad(const RectI& contentRect, const Point
 		return;
 	}
 
-	if (point1.y > point4.y || point2.y > point3.y)
+	if ((point1.y > point4.y || point2.y > point3.y) && area.extent.y > 1)
 	{
 		Point2I point5 = Point2I(mRound((point1.x + point2.x) / 2), mRound((point1.y + point2.y) / 2));
 		Point2I point6 = Point2I(mRound((point3.x + point4.x) / 2), mRound((point3.y + point4.y) / 2));
