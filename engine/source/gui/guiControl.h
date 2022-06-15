@@ -351,7 +351,7 @@ public:
 
     /// Sets the status of this control as active and responding or inactive
     /// @param   value   True if this is active
-    void setActive(bool value);
+    virtual void setActive(bool value);
     bool isActive() { return mActive; } ///< Returns true if this control is active
 
     bool isAwake() { return mAwake; } ///< Returns true if this control is awake

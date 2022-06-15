@@ -44,6 +44,7 @@ GuiParticleGraphInspector::GuiParticleGraphInspector()
 	mTargetAsset = NULL;
 	mTargetField = StringTable->insert("QuantityScale");
 	mEmitterIndex = 0;
+	mVariationInspector = NULL;
 	mMinX = 0;
 	mMinXLabel = StringTable->insert("0");
 	mMaxX = 1;
@@ -114,7 +115,7 @@ void GuiParticleGraphInspector::setDisplayLabels(const char* labelX, const char*
 
 ParticleAssetField* GuiParticleGraphInspector::getTargetField()
 {
-	ParticleAssetFieldCollection &collection = mTargetAsset->getParticleFields();
+	ParticleAssetFieldCollection& collection = mTargetAsset->getParticleFields();
 	ParticleAssetField* field = collection.findField(mTargetField);
 
 	if (field == NULL)
@@ -125,12 +126,12 @@ ParticleAssetField* GuiParticleGraphInspector::getTargetField()
 		}
 
 		ParticleAssetEmitter* emitter = mTargetAsset->getEmitter(mEmitterIndex);
-		ParticleAssetFieldCollection &emitterCollection = emitter->getParticleFields();
+		ParticleAssetFieldCollection& emitterCollection = emitter->getParticleFields();
 		field = emitterCollection.findField(mTargetField);
 	}
 
 	AssertFatal(field != NULL, "GuiParticleGraphInspector::getTargetField() - Unable to find the requested field.");
-	
+
 	return field;
 }
 
@@ -405,21 +406,25 @@ void GuiParticleGraphInspector::calculatePoints(const RectI &contentRect)
 		time = key.mTime;
 	}
 
-	F32 width = mMaxX - mMinX;
-	F32 height = mMaxY - mMinY;
 	Point2I p;
 	for (U32 i = 0; i < count; i++)
 	{
 		ParticleAssetField::DataKey key = field->getDataKey(i);
-
-		F32 ratioX = (key.mTime - mMinX) / width;
-		F32 ratioY = (key.mValue - mMinY) / height;
-
-		p = Point2I(contentRect.point.x + (contentRect.extent.x * ratioX), contentRect.point.y + (contentRect.extent.y * (1 - ratioY)));
-
+		p = convertToRenderPoint(contentRect, key.mTime, key.mValue);
 		mPointList.push_back(GraphPoint(p, key.mTime, key.mValue, i));
 	}
 	mDirty = false;
+}
+
+Point2I GuiParticleGraphInspector::convertToRenderPoint(const RectI& contentRect, F32 time, F32 value)
+{
+	F32 width = mMaxX - mMinX;
+	F32 height = mMaxY - mMinY;
+
+	F32 ratioX = (time - mMinX) / width;
+	F32 ratioY = (value - mMinY) / height;
+
+	return Point2I(contentRect.point.x + (contentRect.extent.x * ratioX), contentRect.point.y + (contentRect.extent.y * (1 - ratioY)));
 }
 
 void GuiParticleGraphInspector::renderPoints(const RectI &contentRect, const ColorI &lineColor)
@@ -439,7 +444,15 @@ void GuiParticleGraphInspector::renderPoints(const RectI &contentRect, const Col
 			cursorPt = root->getCursorPos();
 		}
 
-		//Render the lines first
+		//Render variation
+		if (mVariationInspector != NULL)
+		{
+			ColorI variColor = ColorI(lineColor);
+			variColor.alpha /= 2;
+			renderVariation(contentRect, variColor);
+		}
+
+		//Render the lines
 		Point2I p1, p2;
 		U32 count = mPointList.size();
 		for(U32 i = 1; i < count; i++)
@@ -457,6 +470,76 @@ void GuiParticleGraphInspector::renderPoints(const RectI &contentRect, const Col
 			renderLine(contentRect, p1, p2, lineColor);
 		}
 		renderDot(contentRect, p1, cursorPt, mSelectedIndex == (count - 1));
+	}
+}
+
+void GuiParticleGraphInspector::renderVariation(const RectI& contentRect, const ColorI& color)
+{
+	Vector<GraphPoint>* variPointList = mVariationInspector->getRenderPoints();
+
+	S32 vPen = 0;
+	S32 bPen = 0;
+	Point2I up1, down1, up2, down2;
+	while (vPen < variPointList->size() || bPen < mPointList.size())
+	{
+		GraphPoint& vari = variPointList->at(getMin(vPen, variPointList->size() - 1));
+		GraphPoint& base = mPointList.at(getMin(bPen, mPointList.size() - 1));
+
+		if (vPen == 0 && bPen == 0)
+		{
+			up1 = convertToRenderPoint(contentRect, 0, base.mValue + vari.mValue);
+			down1 = convertToRenderPoint(contentRect, 0, base.mValue - vari.mValue);
+			vPen = 1;
+			bPen = 1;
+			continue;
+		}
+
+		if (vPen >= variPointList->size() || bPen >= mPointList.size())
+		{
+			F32 time = vPen >= variPointList->size() ? base.mTime : vari.mTime;
+			up2 = convertToRenderPoint(contentRect, time, base.mValue + vari.mValue);
+			down2 = convertToRenderPoint(contentRect, time, base.mValue - vari.mValue);
+			vPen++;
+			bPen++;
+		}
+		else if (vari.mTime == base.mTime)
+		{
+			up2 = convertToRenderPoint(contentRect, base.mTime, base.mValue + vari.mValue);
+			down2 = convertToRenderPoint(contentRect, base.mTime, base.mValue - vari.mValue);
+			vPen++;
+			bPen++;
+		}
+		else if (vari.mTime < base.mTime)
+		{
+			GraphPoint& oldBase = mPointList.at(bPen - 1);
+			F32 timeDeltaB = base.mTime - oldBase.mTime;
+			F32 timeDeltaV = vari.mTime - oldBase.mTime;
+			F32 ratio = timeDeltaV / timeDeltaB;
+			F32 baseValue = oldBase.mValue + ((base.mValue - oldBase.mValue) * ratio);
+			up2 = convertToRenderPoint(contentRect, vari.mTime, baseValue + vari.mValue);
+			down2 = convertToRenderPoint(contentRect, vari.mTime, baseValue - vari.mValue);
+			vPen++;
+		}
+		else if (vari.mTime > base.mTime)
+		{
+			GraphPoint& oldVari = variPointList->at(vPen - 1);
+			F32 timeDeltaB = base.mTime - oldVari.mTime;
+			F32 timeDeltaV = vari.mTime - oldVari.mTime;
+			F32 ratio = timeDeltaB / timeDeltaV;
+			F32 variValue = oldVari.mValue + ((vari.mValue - oldVari.mValue) * ratio);
+			up2 = convertToRenderPoint(contentRect, base.mTime, base.mValue + variValue);
+			down2 = convertToRenderPoint(contentRect, base.mTime, base.mValue - variValue);
+			bPen++;
+		}
+		renderQuad(contentRect, up1, up2, down1, down2, color);
+		up1 = up2;
+		down1 = down2;
+	}
+	up2 = Point2I(contentRect.point.x + contentRect.extent.x, up1.y);
+	down2 = Point2I(contentRect.point.x + contentRect.extent.x, down1.y);
+	if (up1.x < up2.x)
+	{
+		renderQuad(contentRect, up1, up2, down1, down2, color);
 	}
 }
 
@@ -495,5 +578,128 @@ void GuiParticleGraphInspector::renderLine(const RectI &contentRect, const Point
 	if(clipper.clipLine(point1, point2, p1, p2))
 	{
 		dglDrawLine(p1, p2, ColorI(lineColor));
+	}
+}
+
+//Points are leftTop, rightTop, leftBottom, rightBottom
+void GuiParticleGraphInspector::renderQuad(const RectI& contentRect, const Point2I& point1, const Point2I& point2, const Point2I& point3, const Point2I& point4, const ColorI& quadColor)
+{
+	RectI area = RectI(point1.x, getMin(point1.y, point2.y), point2.x - point1.x, point1.y < point2.y ? getMax(point3.y, point4.y) - point1.y : getMax(point3.y, point4.y) - point2.y);
+	if (!contentRect.overlaps(area))
+	{
+		//Nothing to draw here...
+		return;
+	}
+
+	if (point1.y > point4.y || point2.y > point3.y)
+	{
+		Point2I point5 = Point2I(mRound((point1.x + point2.x) / 2), mRound((point1.y + point2.y) / 2));
+		Point2I point6 = Point2I(mRound((point3.x + point4.x) / 2), mRound((point3.y + point4.y) / 2));
+		renderQuad(contentRect, point1, point5, point3, point6, quadColor);
+		renderQuad(contentRect, point5, point2, point6, point4, quadColor);
+		return;
+	}
+
+	RectClipper clipper = RectClipper(contentRect);
+
+	Point2I topStart;
+	Point2I topEnd;
+	bool hasTop = clipper.clipLine(point1, point2, topStart, topEnd);
+
+	Point2I bottomStart;
+	Point2I bottomEnd;
+	bool hasBottom = clipper.clipLine(point3, point4, bottomStart, bottomEnd);
+
+	Point2I leftStart;
+	Point2I leftEnd;
+	bool hasLeft = clipper.clipLine(point1, point3, leftStart, leftEnd);
+
+	Point2I rightStart;
+	Point2I rightEnd;
+	bool hasRight = clipper.clipLine(point2, point4, rightStart, rightEnd);
+
+	//Replace left and right if they're missing
+	if (!hasLeft)
+	{
+		leftStart.x = leftEnd.x = contentRect.point.x;
+		leftStart.y = hasTop ? topStart.y : contentRect.point.y;
+		leftEnd.y = hasBottom ? bottomStart.y : contentRect.point.y + contentRect.extent.y;
+	}
+	if (!hasRight)
+	{
+		rightStart.x = rightEnd.x = contentRect.point.x + contentRect.extent.x - 1;
+		rightStart.y = hasTop ? topEnd.y : contentRect.point.y;
+		rightEnd.y = hasBottom ? bottomEnd.y : contentRect.point.y + contentRect.extent.y;
+	}
+
+	S32 leftEdge = leftStart.x;
+	S32 rightEdge = rightStart.x;
+
+	//Middle Section
+	S32 y = getMax(leftStart.y, rightStart.y);
+	S32 h = getMin(leftEnd.y - y, rightEnd.y - y);
+	RectI fillRect = RectI(leftStart.x, y, rightStart.x - leftStart.x, h);
+	dglDrawRectFill(fillRect, quadColor);
+
+	//Top Section
+	if (hasTop && topStart.y != topEnd.y)
+	{
+		if (leftEdge != topStart.x && topStart.y < topEnd.y)
+		{
+			RectI rect = RectI(leftEdge, topStart.y, topStart.x - leftEdge, topEnd.y - topStart.y);
+			dglDrawRectFill(rect, quadColor);
+
+			Point2I p = Point2I(topStart.x, topEnd.y);
+			dglDrawTriangleFill(topStart, p, topEnd, quadColor);
+		}
+		else if (rightEdge != topEnd.x && topStart.y > topEnd.y)
+		{
+			RectI rect = RectI(topEnd.x, topEnd.y, rightEdge - topEnd.x, topStart.y - topEnd.y);
+			dglDrawRectFill(rect, quadColor);
+
+			Point2I p = Point2I(topEnd.x, topStart.y);
+			dglDrawTriangleFill(topStart, p, topEnd, quadColor);
+		}
+		else if (topStart.y > topEnd.y)
+		{
+			Point2I p = Point2I(topEnd.x, topStart.y);
+			dglDrawTriangleFill(topStart, p, topEnd, quadColor);
+		}
+		else if (topStart.y < topEnd.y)
+		{
+			Point2I p = Point2I(topStart.x, topEnd.y);
+			dglDrawTriangleFill(topStart, p, topEnd, quadColor);
+		}
+	}
+
+	//Bottom Section
+	if (hasBottom && bottomStart.y != bottomEnd.y)
+	{
+		if (leftEdge != bottomStart.x && bottomStart.y > bottomEnd.y)
+		{
+			RectI rect = RectI(leftEdge, bottomEnd.y, bottomStart.x - leftEdge, bottomStart.y - bottomEnd.y);
+			dglDrawRectFill(rect, quadColor);
+
+			Point2I p = Point2I(bottomStart.x, bottomEnd.y);
+			dglDrawTriangleFill(bottomEnd, p, bottomStart, quadColor);
+		}
+		else if (rightEdge != bottomEnd.x && bottomStart.y < bottomEnd.y)
+		{
+			RectI rect = RectI(bottomEnd.x, bottomStart.y, rightEdge - bottomEnd.x, bottomEnd.y - bottomStart.y);
+			dglDrawRectFill(rect, quadColor);
+
+			Point2I p = Point2I(bottomEnd.x, bottomStart.y);
+			dglDrawTriangleFill(bottomStart, bottomEnd, p, quadColor);
+		}
+		else if (bottomStart.y < bottomEnd.y)
+		{
+			Point2I p = Point2I(bottomEnd.x, bottomStart.y);
+			dglDrawTriangleFill(bottomStart, bottomEnd, p, quadColor);
+		}
+		else if (bottomStart.y > bottomEnd.y)
+		{
+			Point2I p = Point2I(bottomStart.x, bottomEnd.y);
+			dglDrawTriangleFill(bottomStart, bottomEnd, p, quadColor);
+		}
 	}
 }
