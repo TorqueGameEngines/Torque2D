@@ -506,7 +506,7 @@ public:
     virtual void onChildAdded( GuiControl *child );
 
 	/// Called when a child is removed.
-	virtual inline void onChildRemoved(GuiControl* child) {};
+	virtual void onChildRemoved(GuiControl* child);
 
     /// @}
 

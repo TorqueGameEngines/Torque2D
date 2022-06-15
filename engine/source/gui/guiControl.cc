@@ -162,6 +162,19 @@ void GuiControl::onChildAdded( GuiControl *child )
 		//This will cause the child control to be centered if it needs to be.
 		RectI innerRect = this->getInnerRect(mBounds.point, mBounds.extent, GuiControlState::NormalState, mProfile);
 		child->parentResized(innerRect.extent, innerRect.extent);
+
+		if (isMethod("onChildAdded"))
+		{
+			Con::executef(this, 3, "onChildAdded", child->getIdString());
+		}
+	}
+}
+
+void GuiControl::onChildRemoved(GuiControl* child)
+{
+	if (mProfile && isMethod("onChildRemoved"))
+	{
+		Con::executef(this, 3, "onChildRemoved", child->getIdString());
 	}
 }
 
@@ -421,6 +434,11 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
       if (parent)
          parent->childResized(this);
       setUpdate();
+
+	  if (isMethod("onResize"))
+	  {
+		  Con::executef(this, 2, "onResize");
+	  }
    }
    else {
       mBounds.point = newPosition;
@@ -464,6 +482,11 @@ void GuiControl::setHeight( S32 newHeight )
 void GuiControl::childResized(GuiControl *child)
 {
    // Default to do nothing. Do not call resize from here as it will create an infinite loop.
+
+	if (isMethod("onChildResized"))
+	{
+		Con::executef(this, 3, "onChildResized", child->getIdString());
+	}
 }
 
 void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent)
@@ -1660,6 +1683,15 @@ void GuiControl::onLoseFirstResponder()
 {
     // Since many controls have visual cues when they are the firstResponder...
     setUpdate();
+
+	if (isMethod("onLoseFirstResponder"))
+	{
+		Con::executef(this, 2, "onLoseFirstResponder");
+	}
+	else if (isMethod("onBlur"))
+	{
+		Con::executef(this, 2, "onBlur");
+	}
 }
 
 bool GuiControl::ControlIsChild(GuiControl *child)
@@ -1708,14 +1740,23 @@ void GuiControl::setFirstResponder()
 {
     if ( mAwake && mVisible )
     {
-       GuiControl *parent = getParent();
-       if (mProfile->mCanKeyFocus == true && parent != NULL )
-      {
-         parent->setFirstResponder(this);
+		GuiControl *parent = getParent();
+		if (mProfile->mCanKeyFocus == true && parent != NULL )
+		{
+			parent->setFirstResponder(this);
 
-         // Since many controls have visual cues when they are the firstResponder...
-         this->setUpdate();	
-      }
+			// Since many controls have visual cues when they are the firstResponder...
+			this->setUpdate();	
+
+			if (isMethod("onGainFirstResponder"))
+			{
+				Con::executef(this, 2, "onGainFirstResponder");
+			}
+			else if (isMethod("onFocus"))
+			{
+				Con::executef(this, 2, "onFocus");
+			}
+		}
     }
 }
 
