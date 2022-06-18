@@ -319,13 +319,11 @@
 		86D77004165687060046D71F /* guiRadioCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FE416518D4600D96ADF /* guiRadioCtrl.cc */; };
 		86D77008165687060046D71F /* guiDragAndDropCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FED16518D4600D96ADF /* guiDragAndDropCtrl.cc */; };
 		86D7700B165687060046D71F /* guiFrameCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FF316518D4600D96ADF /* guiFrameCtrl.cc */; };
-		86D7700D165687060046D71F /* guiRolloutCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FF716518D4600D96ADF /* guiRolloutCtrl.cc */; };
 		86D7700E165687060046D71F /* guiScrollCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FF916518D4600D96ADF /* guiScrollCtrl.cc */; };
 		86D77010165687060046D71F /* guiTabBookCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FFD16518D4600D96ADF /* guiTabBookCtrl.cc */; };
 		86D77011165687060046D71F /* guiWindowCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FFF16518D4600D96ADF /* guiWindowCtrl.cc */; };
 		86D77013165687060046D71F /* guiDebugger.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC800316518D4600D96ADF /* guiDebugger.cc */; };
 		86D77014165687060046D71F /* guiEditCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC800516518D4600D96ADF /* guiEditCtrl.cc */; };
-		86D77015165687060046D71F /* guiFilterCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC800716518D4600D96ADF /* guiFilterCtrl.cc */; };
 		86D77016165687060046D71F /* guiGraphCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC800916518D4600D96ADF /* guiGraphCtrl.cc */; };
 		86D77018165687060046D71F /* guiInspector.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC800D16518D4600D96ADF /* guiInspector.cc */; };
 		86D77019165687060046D71F /* guiInspectorTypes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC800F16518D4600D96ADF /* guiInspectorTypes.cc */; };
@@ -339,11 +337,7 @@
 		86D77029165687060046D71F /* guiInputCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC802D16518D4600D96ADF /* guiInputCtrl.cc */; };
 		86D7702A165687060046D71F /* guiListBoxCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC802F16518D4600D96ADF /* guiListBoxCtrl.cc */; };
 		86D7702B165687060046D71F /* guiMessageVectorCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC803116518D4600D96ADF /* guiMessageVectorCtrl.cc */; };
-		86D7702C165687060046D71F /* guiMLTextCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC803316518D4600D96ADF /* guiMLTextCtrl.cc */; };
-		86D7702D165687060046D71F /* guiMLTextEditCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC803516518D4600D96ADF /* guiMLTextEditCtrl.cc */; };
-		86D7702E165687060046D71F /* guiMouseEventCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC803716518D4600D96ADF /* guiMouseEventCtrl.cc */; };
 		86D77031165687060046D71F /* guiProgressCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC803D16518D4600D96ADF /* guiProgressCtrl.cc */; };
-		86D77032165687060046D71F /* guiScriptNotifyControl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC803F16518D4600D96ADF /* guiScriptNotifyControl.cc */; };
 		86D77033165687060046D71F /* guiSliderCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC804116518D4600D96ADF /* guiSliderCtrl.cc */; };
 		86D77036165687060046D71F /* guiTextEditCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC804716518D4600D96ADF /* guiTextEditCtrl.cc */; };
 		86D77037165687060046D71F /* guiTextEditSliderCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC804916518D4600D96ADF /* guiTextEditSliderCtrl.cc */; };
@@ -1106,8 +1100,6 @@
 		86BC7FEE16518D4600D96ADF /* guiDragAndDropCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiDragAndDropCtrl.h; sourceTree = "<group>"; };
 		86BC7FF316518D4600D96ADF /* guiFrameCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiFrameCtrl.cc; sourceTree = "<group>"; };
 		86BC7FF416518D4600D96ADF /* guiFrameCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiFrameCtrl.h; sourceTree = "<group>"; };
-		86BC7FF716518D4600D96ADF /* guiRolloutCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiRolloutCtrl.cc; sourceTree = "<group>"; };
-		86BC7FF816518D4600D96ADF /* guiRolloutCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiRolloutCtrl.h; sourceTree = "<group>"; };
 		86BC7FF916518D4600D96ADF /* guiScrollCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiScrollCtrl.cc; sourceTree = "<group>"; };
 		86BC7FFA16518D4600D96ADF /* guiScrollCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiScrollCtrl.h; sourceTree = "<group>"; };
 		86BC7FFD16518D4600D96ADF /* guiTabBookCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiTabBookCtrl.cc; sourceTree = "<group>"; };
@@ -1118,8 +1110,6 @@
 		86BC800416518D4600D96ADF /* guiDebugger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiDebugger.h; sourceTree = "<group>"; };
 		86BC800516518D4600D96ADF /* guiEditCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiEditCtrl.cc; sourceTree = "<group>"; };
 		86BC800616518D4600D96ADF /* guiEditCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiEditCtrl.h; sourceTree = "<group>"; };
-		86BC800716518D4600D96ADF /* guiFilterCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiFilterCtrl.cc; sourceTree = "<group>"; };
-		86BC800816518D4600D96ADF /* guiFilterCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiFilterCtrl.h; sourceTree = "<group>"; };
 		86BC800916518D4600D96ADF /* guiGraphCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiGraphCtrl.cc; sourceTree = "<group>"; };
 		86BC800A16518D4600D96ADF /* guiGraphCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiGraphCtrl.h; sourceTree = "<group>"; };
 		86BC800D16518D4600D96ADF /* guiInspector.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiInspector.cc; sourceTree = "<group>"; };
@@ -1146,16 +1136,8 @@
 		86BC803016518D4600D96ADF /* guiListBoxCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiListBoxCtrl.h; sourceTree = "<group>"; };
 		86BC803116518D4600D96ADF /* guiMessageVectorCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiMessageVectorCtrl.cc; sourceTree = "<group>"; };
 		86BC803216518D4600D96ADF /* guiMessageVectorCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiMessageVectorCtrl.h; sourceTree = "<group>"; };
-		86BC803316518D4600D96ADF /* guiMLTextCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiMLTextCtrl.cc; sourceTree = "<group>"; };
-		86BC803416518D4600D96ADF /* guiMLTextCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiMLTextCtrl.h; sourceTree = "<group>"; };
-		86BC803516518D4600D96ADF /* guiMLTextEditCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiMLTextEditCtrl.cc; sourceTree = "<group>"; };
-		86BC803616518D4600D96ADF /* guiMLTextEditCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiMLTextEditCtrl.h; sourceTree = "<group>"; };
-		86BC803716518D4600D96ADF /* guiMouseEventCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiMouseEventCtrl.cc; sourceTree = "<group>"; };
-		86BC803816518D4600D96ADF /* guiMouseEventCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiMouseEventCtrl.h; sourceTree = "<group>"; };
 		86BC803D16518D4600D96ADF /* guiProgressCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiProgressCtrl.cc; sourceTree = "<group>"; };
 		86BC803E16518D4600D96ADF /* guiProgressCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiProgressCtrl.h; sourceTree = "<group>"; };
-		86BC803F16518D4600D96ADF /* guiScriptNotifyControl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiScriptNotifyControl.cc; sourceTree = "<group>"; };
-		86BC804016518D4600D96ADF /* guiScriptNotifyControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiScriptNotifyControl.h; sourceTree = "<group>"; };
 		86BC804116518D4600D96ADF /* guiSliderCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiSliderCtrl.cc; sourceTree = "<group>"; };
 		86BC804216518D4600D96ADF /* guiSliderCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiSliderCtrl.h; sourceTree = "<group>"; };
 		86BC804716518D4600D96ADF /* guiTextEditCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiTextEditCtrl.cc; sourceTree = "<group>"; };
@@ -2707,17 +2689,9 @@
 				86BC803016518D4600D96ADF /* guiListBoxCtrl.h */,
 				86BC803116518D4600D96ADF /* guiMessageVectorCtrl.cc */,
 				86BC803216518D4600D96ADF /* guiMessageVectorCtrl.h */,
-				86BC803316518D4600D96ADF /* guiMLTextCtrl.cc */,
-				86BC803416518D4600D96ADF /* guiMLTextCtrl.h */,
-				86BC803516518D4600D96ADF /* guiMLTextEditCtrl.cc */,
-				86BC803616518D4600D96ADF /* guiMLTextEditCtrl.h */,
-				86BC803716518D4600D96ADF /* guiMouseEventCtrl.cc */,
-				86BC803816518D4600D96ADF /* guiMouseEventCtrl.h */,
 				07F98849274F1D07009ECC0D /* guiProgressCtrl_ScriptBinding.h */,
 				86BC803D16518D4600D96ADF /* guiProgressCtrl.cc */,
 				86BC803E16518D4600D96ADF /* guiProgressCtrl.h */,
-				86BC803F16518D4600D96ADF /* guiScriptNotifyControl.cc */,
-				86BC804016518D4600D96ADF /* guiScriptNotifyControl.h */,
 				86BC804116518D4600D96ADF /* guiSliderCtrl.cc */,
 				86BC804216518D4600D96ADF /* guiSliderCtrl.h */,
 				07F9884A274F1D21009ECC0D /* guiTextEditCtrl_ScriptBinding.h */,
@@ -2775,8 +2749,6 @@
 				07F9882E274F1C20009ECC0D /* guiPanelCtrl_ScriptBinding.h */,
 				07F9882C274F1C20009ECC0D /* guiPanelCtrl.cc */,
 				07F98830274F1C20009ECC0D /* guiPanelCtrl.h */,
-				86BC7FF716518D4600D96ADF /* guiRolloutCtrl.cc */,
-				86BC7FF816518D4600D96ADF /* guiRolloutCtrl.h */,
 				07F98837274F1C21009ECC0D /* guiSceneScrollCtrl.cc */,
 				07F9882B274F1C20009ECC0D /* guiSceneScrollCtrl.h */,
 				07F9883A274F1C21009ECC0D /* guiScrollCtrl_ScriptBinding.h */,
@@ -2801,8 +2773,6 @@
 				86BC800416518D4600D96ADF /* guiDebugger.h */,
 				86BC800516518D4600D96ADF /* guiEditCtrl.cc */,
 				86BC800616518D4600D96ADF /* guiEditCtrl.h */,
-				86BC800716518D4600D96ADF /* guiFilterCtrl.cc */,
-				86BC800816518D4600D96ADF /* guiFilterCtrl.h */,
 				86BC800916518D4600D96ADF /* guiGraphCtrl.cc */,
 				86BC800A16518D4600D96ADF /* guiGraphCtrl.h */,
 				86BC800D16518D4600D96ADF /* guiInspector.cc */,
@@ -3732,7 +3702,6 @@
 				32F6F55624A5E111008E28D2 /* b2RopeJoint.cpp in Sources */,
 				86D77008165687060046D71F /* guiDragAndDropCtrl.cc in Sources */,
 				86D7700B165687060046D71F /* guiFrameCtrl.cc in Sources */,
-				86D7700D165687060046D71F /* guiRolloutCtrl.cc in Sources */,
 				86D7700E165687060046D71F /* guiScrollCtrl.cc in Sources */,
 				86D77010165687060046D71F /* guiTabBookCtrl.cc in Sources */,
 				86D77011165687060046D71F /* guiWindowCtrl.cc in Sources */,
@@ -3740,7 +3709,6 @@
 				32F6F56024A5E111008E28D2 /* b2TimeOfImpact.cpp in Sources */,
 				32F6F54324A5E110008E28D2 /* b2WorldCallbacks.cpp in Sources */,
 				86D77014165687060046D71F /* guiEditCtrl.cc in Sources */,
-				86D77015165687060046D71F /* guiFilterCtrl.cc in Sources */,
 				86D77016165687060046D71F /* guiGraphCtrl.cc in Sources */,
 				86D77018165687060046D71F /* guiInspector.cc in Sources */,
 				86D77019165687060046D71F /* guiInspectorTypes.cc in Sources */,
@@ -3762,14 +3730,10 @@
 				86D7702A165687060046D71F /* guiListBoxCtrl.cc in Sources */,
 				86D7702B165687060046D71F /* guiMessageVectorCtrl.cc in Sources */,
 				07F9884E274F2596009ECC0D /* gColor.cc in Sources */,
-				86D7702C165687060046D71F /* guiMLTextCtrl.cc in Sources */,
-				86D7702D165687060046D71F /* guiMLTextEditCtrl.cc in Sources */,
 				32F6F55024A5E111008E28D2 /* b2Joint.cpp in Sources */,
-				86D7702E165687060046D71F /* guiMouseEventCtrl.cc in Sources */,
 				32F6F55224A5E111008E28D2 /* b2MouseJoint.cpp in Sources */,
 				32F6F53224A5E110008E28D2 /* b2ParticleGroup.cpp in Sources */,
 				86D77031165687060046D71F /* guiProgressCtrl.cc in Sources */,
-				86D77032165687060046D71F /* guiScriptNotifyControl.cc in Sources */,
 				86D77033165687060046D71F /* guiSliderCtrl.cc in Sources */,
 				86D77036165687060046D71F /* guiTextEditCtrl.cc in Sources */,
 				86D77037165687060046D71F /* guiTextEditSliderCtrl.cc in Sources */,
