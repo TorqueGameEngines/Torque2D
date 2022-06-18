@@ -416,7 +416,7 @@ bool osxOpenGLDevice::getVerticalSync()
 
     //Note that this returns the number of frames between Swaps.
     //The function returns 0 / false if SwapInterval has not been specified.
-    return getVerticalSync();
+    return false;//getVerticalSync();
 }
 
 //-----------------------------------------------------------------------------
