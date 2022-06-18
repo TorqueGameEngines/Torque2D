@@ -57,6 +57,23 @@ ConsoleMethodWithDocs(GuiParticleGraphInspector, setDisplayField, ConsoleVoid, 3
 	}
 }
 
+/*! Sets the graph inspector to use to show variance.
+	@param Inspector The GuiParticleGraphInspector that is tracking the variation.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiParticleGraphInspector, setVariationGraphInspector, ConsoleVoid, 3, 3, "(inspector)")
+{
+	GuiParticleGraphInspector* inspector = dynamic_cast<GuiParticleGraphInspector*>(Sim::findObject(argv[2]));
+	if (!inspector)
+	{
+		if (dAtoi(argv[2]) > 0)
+			Con::warnf("%s::setVariationGraphInspector(): Object is not a GuiParticleGraphInspector: %s", argv[0], argv[2]);
+
+		return;
+	}
+	object->setVariationGraphInspector(inspector);
+}
+
 /*! Sets the area that will be displayed on the graph.
 	@param Area Four space-deliminated values representing left, bottom, right, top.
 	@return No return value.

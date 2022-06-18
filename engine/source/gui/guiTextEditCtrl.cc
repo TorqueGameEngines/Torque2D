@@ -25,7 +25,6 @@
 #include "graphics/gColor.h"
 #include "graphics/dgl.h"
 #include "gui/guiCanvas.h"
-#include "gui/guiMLTextCtrl.h"
 #include "gui/guiTextEditCtrl.h"
 #include "gui/guiDefaultControlRender.h"
 #include "memory/frameAllocator.h"
@@ -735,30 +734,28 @@ void GuiTextEditCtrl::onTouchUp(const GuiEvent &event)
     }
 }
 
-bool GuiTextEditCtrl::onMouseWheelUp(const GuiEvent& event)
+void GuiTextEditCtrl::onMouseWheelUp(const GuiEvent& event)
 {
     if (!mVisible || !mAwake)
-        return true;
+        return;
 
     if(mTextWrap && mTextOffsetY > 0)
     {
         mScrollVelocity = 0;
         mSuspendVerticalScrollJump = true;
         mTextOffsetY = getMax(mTextOffsetY - static_cast<S32>(mProfile->getFont(mFontSizeAdjust)->getHeight()), 0);
-        return true;
+        return;
     }
 
     GuiControl* parent = getParent();
     if (parent)
-        return parent->onMouseWheelUp(event);
-    else
-        return false;
+        parent->onMouseWheelUp(event);
 }
 
-bool GuiTextEditCtrl::onMouseWheelDown(const GuiEvent& event)
+void GuiTextEditCtrl::onMouseWheelDown(const GuiEvent& event)
 {
     if (!mVisible || !mAwake)
-        return true;
+        return;
 
     U32 blockHeight = mTextBlockList.size() * mProfile->getFont(mFontSizeAdjust)->getHeight();
     RectI innerRect = getGlobalInnerRect();
@@ -768,14 +765,12 @@ bool GuiTextEditCtrl::onMouseWheelDown(const GuiEvent& event)
         mScrollVelocity = 0;
         mSuspendVerticalScrollJump = true;
         mTextOffsetY = getMin(mTextOffsetY + static_cast<S32>(mProfile->getFont(mFontSizeAdjust)->getHeight()), max);
-        return true;
+        return;
     }
 
     GuiControl* parent = getParent();
     if (parent)
-        return parent->onMouseWheelDown(event);
-    else
-        return false;
+        parent->onMouseWheelDown(event);
 }
 
 void GuiTextEditCtrl::onTouchEnter(const GuiEvent& event)
@@ -1427,7 +1422,7 @@ bool GuiTextEditCtrl::handleKeyDownWithNoModifier(const GuiEvent& event)
         return tabNext();
 
     case KEY_ESCAPE:
-        if (isMethod(mEscapeCommand))
+        if (mEscapeCommand && mEscapeCommand[0])
         {
             Con::evaluate(mEscapeCommand);
             return true;
@@ -1575,7 +1570,8 @@ bool GuiTextEditCtrl::handleEnterKey()
         tabNext();
     }
 
-    if (isMethod(mReturnCommand))
+    
+    if (mReturnCommand && mReturnCommand[0])
     {
         Con::evaluate(mReturnCommand);
     }

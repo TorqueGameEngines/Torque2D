@@ -735,10 +735,10 @@ void GuiScrollCtrl::onTouchDragged(const GuiEvent &event)
    }
 }
 
-bool GuiScrollCtrl::onMouseWheelUp(const GuiEvent &event)
+void GuiScrollCtrl::onMouseWheelUp(const GuiEvent &event)
 {
    if ( !mAwake || !mVisible )
-      return( false );
+      return;
 
    Point2I previousPos = mScrollOffset;
    scrollByRegion((event.modifier & SI_CTRL) ? UpPage : UpArrow);
@@ -754,15 +754,13 @@ bool GuiScrollCtrl::onMouseWheelUp(const GuiEvent &event)
    // If no scrolling happened (already at the top), pass it on to the parent.
    GuiControl* parent = getParent();
    if (parent && (previousPos == mScrollOffset))
-      return parent->onMouseWheelUp(event);
-
-   return true;
+      parent->onMouseWheelUp(event);
 }
 
-bool GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
+void GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
 {
    if ( !mAwake || !mVisible )
-      return( false );
+      return;
 
    Point2I previousPos = mScrollOffset;
    scrollByRegion((event.modifier & SI_CTRL) ? DownPage : DownArrow);
@@ -778,9 +776,7 @@ bool GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
    // If no scrolling happened (already at the bottom), pass it on to the parent.
    GuiControl* parent = getParent();
    if (parent && (previousPos == mScrollOffset))
-      return parent->onMouseWheelDown(event);
-
-   return true;
+      parent->onMouseWheelDown(event);
 }
 #pragma endregion
 

@@ -152,6 +152,7 @@ function AssetParticleGraphEmitterTool::initEmitter(%this)
 	};
 	ThemeManager.setProfile(%this.variGraph, "labelProfile");
 	%this.toolGrid.add(%this.variGraph);
+	%this.baseGraph.setVarianceGraph(%this.variGraph);
 
 	%this.lifeGraph = new GuiControl()
 	{

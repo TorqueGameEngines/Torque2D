@@ -102,6 +102,8 @@ function NewModuleDialog::Validate(%this)
 		return false;
 	}
 
+	%this.moduleNameBox.text = stripChars(%name, " ");
+
 	%this.createButton.active = true;
 	return true;
 }

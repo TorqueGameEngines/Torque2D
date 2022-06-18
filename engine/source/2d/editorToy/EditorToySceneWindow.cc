@@ -1142,7 +1142,7 @@ void EditorToySceneWindow::onRightMouseDragged(const GuiEvent& gEvt)
 
 }
 
-bool EditorToySceneWindow::onMouseWheelDown(const GuiEvent & gEvt)
+void EditorToySceneWindow::onMouseWheelDown(const GuiEvent & gEvt)
 {
    // Call Parent.
    Parent::onMouseWheelDown(gEvt);
@@ -1150,16 +1150,16 @@ bool EditorToySceneWindow::onMouseWheelDown(const GuiEvent & gEvt)
    F32 zoom = getCameraZoom();
 
    if (zoom < 0.1f)
-      return false;
+      return;
 
    F32 amt = -10 * 0.005f * zoom;
 
    setCameraZoom(zoom + amt);
 
-   return true;
+   return;
 }
 
-bool EditorToySceneWindow::onMouseWheelUp(const GuiEvent & gEvt)
+void EditorToySceneWindow::onMouseWheelUp(const GuiEvent & gEvt)
 {
    // Call Parent.
    Parent::onMouseWheelUp(gEvt);
@@ -1170,7 +1170,7 @@ bool EditorToySceneWindow::onMouseWheelUp(const GuiEvent & gEvt)
 
    setCameraZoom(zoom + amt);
 
-   return true;
+   return;
 }
 
 //-----------------------------------------------------------------------

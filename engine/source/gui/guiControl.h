@@ -351,7 +351,7 @@ public:
 
     /// Sets the status of this control as active and responding or inactive
     /// @param   value   True if this is active
-    void setActive(bool value);
+    virtual void setActive(bool value);
     bool isActive() { return mActive; } ///< Returns true if this control is active
 
     bool isAwake() { return mAwake; } ///< Returns true if this control is awake
@@ -506,7 +506,7 @@ public:
     virtual void onChildAdded( GuiControl *child );
 
 	/// Called when a child is removed.
-	virtual inline void onChildRemoved(GuiControl* child) {};
+	virtual void onChildRemoved(GuiControl* child);
 
     /// @}
 
@@ -550,6 +550,9 @@ public:
     virtual bool isMouseLocked();
     /// @}
 
+    //Sends a script event with modifier and mouse position if the script method exists. Returns true if the event is consumed.
+    bool sendScriptMouseEvent(const char* name, const GuiEvent& event);
+    bool sendScriptKeyEvent(const char* name, const InputEvent& event);
 
     /// General input handler.
     virtual bool onInputEvent(const InputEvent &event);
@@ -565,8 +568,8 @@ public:
     virtual void onTouchEnter(const GuiEvent &event);
     virtual void onTouchLeave(const GuiEvent &event);
 
-    virtual bool onMouseWheelUp(const GuiEvent &event);
-    virtual bool onMouseWheelDown(const GuiEvent &event);
+    virtual void onMouseWheelUp(const GuiEvent &event);
+    virtual void onMouseWheelDown(const GuiEvent &event);
 
     virtual void onRightMouseDown(const GuiEvent &event);
     virtual void onRightMouseUp(const GuiEvent &event);

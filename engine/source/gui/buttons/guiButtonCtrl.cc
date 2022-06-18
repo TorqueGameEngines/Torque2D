@@ -62,6 +62,17 @@ void GuiButtonCtrl::initPersistFields()
 	addField("easeTimeFillColorSL", TypeS32, Offset(mEaseTimeFillColorSL, GuiButtonCtrl));
 }
 
+void GuiButtonCtrl::setActive(bool value)
+{
+	Parent::setActive(value);
+
+	if (!value)
+	{
+		mDepressed = false;
+		mMouseOver = false;
+	}
+}
+
 void GuiButtonCtrl::acceleratorKeyPress(U32)
 {
 	if (!mActive)

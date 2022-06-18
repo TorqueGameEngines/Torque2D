@@ -1532,12 +1532,12 @@ void SceneWindow::onRightMouseDragged( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-bool SceneWindow::onMouseWheelUp( const GuiEvent& event )
+void SceneWindow::onMouseWheelUp( const GuiEvent& event )
 {
 	if (mShowScrollBar && ((mMouseWheelScrolls && !(event.modifier & SI_SHIFT)) || (!mMouseWheelScrolls && (event.modifier & SI_SHIFT))))
 	{
 		mScrollBar->onMouseWheelUp(event);
-		return true;
+		return;
 	}
 
    // Call Parent.
@@ -1545,19 +1545,16 @@ bool SceneWindow::onMouseWheelUp( const GuiEvent& event )
 
    // Dispatch input event.
    dispatchInputEvent(mouseEventWheelUpName, event);
-
-   // Return Success.
-   return true;
 }
 
 //-----------------------------------------------------------------------------
 
-bool SceneWindow::onMouseWheelDown( const GuiEvent& event )
+void SceneWindow::onMouseWheelDown( const GuiEvent& event )
 {
 	if (mShowScrollBar && ((mMouseWheelScrolls && !(event.modifier & SI_SHIFT)) || (!mMouseWheelScrolls && (event.modifier & SI_SHIFT))))
 	{
 		mScrollBar->onMouseWheelDown(event);
-		return true;
+		return;
 	}
 
    // Call Parent.
@@ -1565,9 +1562,6 @@ bool SceneWindow::onMouseWheelDown( const GuiEvent& event )
 
    // Dispatch input event.
    dispatchInputEvent(mouseEventWheelDownName, event);
-
-   // Return Success.
-   return true;
 }
 
 //-----------------------------------------------------------------------------

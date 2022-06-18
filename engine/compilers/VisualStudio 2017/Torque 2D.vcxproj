@@ -634,7 +634,6 @@
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiListBoxCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc" />
@@ -828,13 +827,11 @@
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabBookCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiDebugger.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc" />
@@ -1132,7 +1129,6 @@
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h" />
@@ -1410,13 +1406,11 @@
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiDebugger.h" />
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h" />

@@ -59,8 +59,8 @@
 	{
 		HorizSizing="width";
 		Position = "0 10";
-		Extent = "286 150";
-		MinExtent = "250 150";
+		Extent = "286 80";
+		MinExtent = "250 80";
 		Text = "";
 		TextWrap = 1;
 		TextExtend = 1;
@@ -254,6 +254,7 @@ function ProjectModuleCard::show(%this, %module)
 		%this.visible = true;
 		%this.dependList.show(%module);
 		%this.assetList.show(%module);
+		%this.postEvent("ModuleShown", %module);
 	}
 }
 

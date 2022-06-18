@@ -31,7 +31,7 @@ function EditorConsole::create(%this)
 		Position="0 738";
 		Extent="1024 30";
 		minExtent="120 20";
-		AltCommand="EditorConsole.eval();";
+		ReturnCommand="EditorConsole.eval();";
 		MaxLength="255";
 		active = "1";
 	};

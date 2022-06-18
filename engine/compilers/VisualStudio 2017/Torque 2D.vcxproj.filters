@@ -465,9 +465,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
@@ -481,9 +478,6 @@
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc">
@@ -754,9 +748,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc">
@@ -1620,9 +1611,6 @@
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
@@ -1636,9 +1624,6 @@
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h">
@@ -1954,9 +1939,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h">

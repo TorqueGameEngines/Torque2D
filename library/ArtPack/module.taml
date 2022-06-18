@@ -1,0 +1,24 @@
+<ModuleDefinition
+	ModuleId="ArtPack"
+	VersionId="1"
+	BuildID="1"
+	Type="Template"
+	Description="A module to pack your art. How refined."
+	Author="Torque2D">
+		<DeclaredAssets
+			Path=""
+			Extension="image.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path=""
+			Extension="animation.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path=""
+			Extension="font.taml"
+			Recurse="true"/>
+		<DeclaredAssets
+			Path=""
+			Extension="particle.taml"
+			Recurse="true"/>
+</ModuleDefinition>
