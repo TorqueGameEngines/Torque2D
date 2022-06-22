@@ -202,6 +202,9 @@
     <Filter Include="2d\editorToy">
       <UniqueIdentifier>{598766e4-7dc1-45b8-8acf-f133f4fced82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="math\noise">
+      <UniqueIdentifier>{1ca99a8e-9e94-4ab8-996e-b4835a603512}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\audio\audio.cc">
@@ -1326,6 +1329,12 @@
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiParticleGraphInspector.cc">
       <Filter>gui\editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\algorithm\Perlin.cc">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\math\noise\NoiseGenerator.cc">
+      <Filter>math\noise</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -3039,6 +3048,15 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector_ScriptBinding.h">
       <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\algorithm\Perlin.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\noise\NoiseGenerator.h">
+      <Filter>math\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\noise\NoiseGenerator_ScriptBinding.h">
+      <Filter>math\noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
