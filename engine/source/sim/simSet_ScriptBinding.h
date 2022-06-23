@@ -301,6 +301,19 @@ ConsoleMethodWithDocs(SimSet, callOnChildren, void, 3, 0, ( string method, [stri
    object->callOnChildren( argv[2], argc - 3, argv + 3 );
 }
 
+//-----------------------------------------------------------------------------
+
+/*! Call a method on all objects contained in the set.
+	@param method The name of the method to call.
+	@param args The arguments to the method.
+	@note This method does not recursively call into all SimSets that are children to the set.
+	@see callOnChildren" )
+*/
+ConsoleMethodWithDocs(SimSet, callOnChildrenNoRecurse, void, 3, 0, (string method, [string args] *))
+{
+	object->callOnChildren(argv[2], argc - 3, argv + 3, false);
+}
+
 //////////////////////////////////////////////////////////////////////////-
 //	Make Sure Child 1 is Ordered Just Under Child 2.
 //////////////////////////////////////////////////////////////////////////-
