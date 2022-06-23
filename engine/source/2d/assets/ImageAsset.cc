@@ -625,7 +625,7 @@ S32 ImageAsset::getExplicitCellIndex(const char* regionName)
     {
         // No, so warn.
         Con::warnf( "ImageAsset() - Cannot perform explicit cell operation when not in explicit mode." );
-        return NULL;
+        return -1;
     }
     
     // Set up a frame counter
@@ -649,9 +649,8 @@ S32 ImageAsset::getExplicitCellIndex(const char* regionName)
         }
     }
     
-    // Didn't find it, so warn
-    Con::warnf( "ImageAsset::getExplicitCellIndex() - Cannot find %s cell.", regionName );
-    return NULL;
+    // Didn't find it, so return -1
+    return -1;
     
 }
 

@@ -578,7 +578,7 @@ ConsoleMethodWithDocs(ImageAsset, getExplicitCellName, ConsoleString, 3, 3, (cel
 
 /*! Gets the CELL index number in Explicit Mode.
     @param cellName The cell name to use to find the specific index.
-    @return The specified CELL index number.
+    @return The specified CELL index number or -1 if no such cell exists.
 */
 ConsoleMethodWithDocs(ImageAsset, getExplicitCellIndex, ConsoleInt, 3, 3, (cellName))
 {
