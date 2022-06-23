@@ -45,7 +45,7 @@ GuiTextEditTextBlock::GuiTextEditTextBlock()
     mLineStartIbeamValue = 0;
 }
 
-void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector, AlignmentType align, GFont* font)
+void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector, AlignmentType align, GFont* font, bool overrideFontColor)
 {
     mGlobalBounds.set(bounds.point, bounds.extent);
     mText.assign(line);
@@ -63,9 +63,9 @@ void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamSta
 
         processTextAlignment(line, font, align);
         Point2I movingStartPoint = getGlobalTextStart();
-        movingStartPoint.x += renderTextSection(movingStartPoint, 0, lengthOfPreBlockText, profile, currentState, font);
-        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText, lengthOfHighlightBlockText, profile, currentState, font, true);
-        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText + lengthOfHighlightBlockText, lengthOfPostBlockText, profile, currentState, font);
+        movingStartPoint.x += renderTextSection(movingStartPoint, 0, lengthOfPreBlockText, profile, currentState, font, false, overrideFontColor);
+        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText, lengthOfHighlightBlockText, profile, currentState, font, true, overrideFontColor);
+        movingStartPoint.x += renderTextSection(movingStartPoint, lengthOfPreBlockText + lengthOfHighlightBlockText, lengthOfPostBlockText, profile, currentState, font, false, overrideFontColor);
     }
 
     Point2I textStartPoint = getGlobalTextStart();
@@ -76,7 +76,7 @@ void GuiTextEditTextBlock::render(const RectI& bounds, string line, U32 ibeamSta
     }
 }
 
-U32 GuiTextEditTextBlock::renderTextSection(const Point2I& startPoint, const U32 subStrStart, const U32 subStrLen, GuiControlProfile* profile, const GuiControlState currentState, GFont* font, bool isSelectedText)
+U32 GuiTextEditTextBlock::renderTextSection(const Point2I& startPoint, const U32 subStrStart, const U32 subStrLen, GuiControlProfile* profile, const GuiControlState currentState, GFont* font, bool isSelectedText, bool overrideFontColor)
 {
     if (subStrLen != 0)
     {
@@ -85,11 +85,14 @@ U32 GuiTextEditTextBlock::renderTextSection(const Point2I& startPoint, const U32
         Point2I pointToDraw = Point2I(startPoint.x, startPoint.y);
         if (isSelectedText)
         {
-            dglSetBitmapModulation(profile->mFontColorTextSL);
+            if (!overrideFontColor)
+            {
+                dglSetBitmapModulation(profile->mFontColorTextSL);
+            }
             RectI highlightRect = RectI(pointToDraw.x, pointToDraw.y, blockStrWidth, mGlobalBounds.extent.y);
             dglDrawRectFill(highlightRect, profile->mFillColorTextSL);
         }
-        else
+        else if(!overrideFontColor)
         {
             const ColorI& fontColor = profile->getFontColor(currentState);
             dglSetBitmapModulation(fontColor);
@@ -1060,7 +1063,11 @@ void GuiTextEditCtrl::renderLineList(const Point2I& offset, const Point2I& exten
         Point2I start = Point2I(0, offsetY);
         Point2I blockExtent = Point2I(extent.x, textHeight);
         RectI blockBounds = RectI(start + offset + profile->mTextOffset, blockExtent);
-        mTextBlockList[i].render(blockBounds, lineList[i], ibeamPos, mProfile, getCurrentState(), mSelector, getAlignmentType(), font);
+        if (mOverrideFontColor)
+        {
+            dglSetBitmapModulation(getFontColor(profile, NormalState));
+        }
+        mTextBlockList[i].render(blockBounds, lineList[i], ibeamPos, mProfile, getCurrentState(), mSelector, getAlignmentType(), font, mOverrideFontColor);
 
         offsetY += textHeight;
         ibeamPos += lineList[i].length();

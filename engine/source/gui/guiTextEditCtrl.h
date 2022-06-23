@@ -85,8 +85,8 @@ public:
 	inline const U32 getStartValue() const { return mLineStartIbeamValue; }
 	inline RectI getGlobalBounds() const { return mGlobalBounds; }
 	inline Point2I getGlobalTextStart() { return Point2I(mGlobalBounds.point.x + mTextOffsetX - mTextScrollX, mGlobalBounds.point.y); }
-	void render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector, AlignmentType align, GFont* font);
-	U32 renderTextSection(const Point2I& startPoint, const U32 subStrStart, const U32 subStrLen, GuiControlProfile* profile, const GuiControlState currentState, GFont* font, bool isSelectedText = false);
+	void render(const RectI& bounds, string line, U32 ibeamStartValue, GuiControlProfile* profile, GuiControlState currentState, GuiTextEditSelection& selector, AlignmentType align, GFont* font, bool overrideFontColor = false);
+	U32 renderTextSection(const Point2I& startPoint, const U32 subStrStart, const U32 subStrLen, GuiControlProfile* profile, const GuiControlState currentState, GFont* font, bool isSelectedText = false, bool overrideFontColor = false);
 	void performScrollJumpX(const S32 targetX, const S32 areaStart, const S32 areaEnd);
 	U32 calculateIbeamPositionInLine(const S32 targetX, GFont* font);
 	inline bool calculateCursorAtEOL(const U32 cursorPos) { return cursorPos == mText.length(); }
