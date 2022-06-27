@@ -72,3 +72,11 @@ function EditorIconButton::onThemeChange(%this, %theme)
 		%this.icon.setImageColor(ThemeManager.activeTheme.iconButtonProfile.fontColorNA);
 	}
 }
+
+function EditorIconButton::onRemove(%this)
+{
+	if(isObject(%this.icon))
+	{
+		%this.icon.delete();
+	}
+}

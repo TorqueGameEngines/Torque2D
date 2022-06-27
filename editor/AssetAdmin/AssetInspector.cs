@@ -213,7 +213,7 @@ function AssetInspector::resetInspector(%this)
 function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 {
 	%this.resetInspector();
-	//%this.tabBook.add(%this.imageFrameEditPage);
+	%this.tabBook.add(%this.imageFrameEditPage);
 	%this.tabBook.selectPage(0);
 	%this.titlebar.setText("Image Asset:" SPC %imageAsset.AssetName);
 
@@ -225,6 +225,8 @@ function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 	%this.inspector.addHiddenField("ExplicitMode");
 	%this.inspector.inspect(%imageAsset);
 	%this.inspector.openGroupByIndex(0);
+
+	%this.imageFrameEditPage.inspect(%imageAsset);
 }
 
 function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)
