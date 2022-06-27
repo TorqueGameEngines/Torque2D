@@ -1,5 +1,5 @@
 ![Torque Logo](images/banner1.png)
-## Torque2D 4.0 Early Access 1
+## Torque2D 4.0 Early Access 2
 
 MIT Licensed Open Source version of Torque2D from GarageGames. Maintained by the Torque Game Engines team and contributions from the community.
 
@@ -7,15 +7,15 @@ Dedicated to 2D game development, Torque 2D is an extremely powerful, flexible, 
 
 ### What's New?
 
-Torque2D 4.0: Rocket Edition is currently in progress. The major change with 4.0 is the addition of editors! At this time there is a working Asset Manager that allows a user to create, edit, and remove images, animations, particle effects, bitmap fonts, and audio assets. This represents a major step forward from editing xml files by hand. This is especially useful in the case of particle effects which are nearly impossible to create without an interactive tool. Expect additional refinement of this tool over the coming releases.
+Torque2D 4.0: Rocket Edition is currently in progress. The major change with 4.0 is the addition of editors! At this time there is a working Asset Manager and Project Manager. The Asset Manager allows a user to create, edit, and remove images, animations, particle effects, bitmap fonts, and audio assets. This represents a major step forward from editing xml files by hand. This is especially useful in the case of particle effects which are nearly impossible to create without an interactive tool. The Project Manager allows users to manager the modules in their game directly in a user interface. This is paired with a library of re-usable modules that can be imported into a game.
 
-The Asset Manager can be reached by opening the console using the console button in the Toybox or by pressing Tilde(~) + Ctrl. You will then notice tabs along that top that include the Asset Manager.
+The managers can be reached by opening the console using the console button in the Toybox or by pressing Tilde(~) + Ctrl. You will then notice tabs along that top for the various tools currently available.
 
 You may also notice that we have several toys such as the Gui Editor Toy and Scene Editor Toy that are in-progress versions of future editors. These toys are not very useful yet, but we plan to develop them into full editors in coming releases.
 
 The Rocket Edition also features a revamped Gui System! Until now it has been a common practice among those seriously using T2D to avoid the Gui System as much as possible. We aim to fix that with the Rocket Edition. Explanation of how to use the updated Gui System can be found in the wiki in the [Gui Guide](https://github.com/TorqueGameEngines/Torque2D/wiki/GUI-Guide).
 
-More features and editors are coming before 4.0 is official done, but new projects should make use of the Early Access version to avoid future conflicts.
+More features and editors are coming before 4.0 is officially done, but new projects should make use of the Early Access version to avoid future conflicts.
 
 ### Branches
 
@@ -38,17 +38,14 @@ After downloading a copy of the source code, the following project files for eac
 * **Linux:** Make
 * **iOS:** Xcode_iOS
 * **Android:** Android Studio
-* **Web:** Emscripten/Cmake
 
 See the [wiki](https://github.com/TorqueGameEngines/Torque2D/wiki) for available guides on platform setup and development.
 
 ### Batteries Included
 
-Running Torque2D for the first time out of the box will start you off in the Toybox. The Toybox is a collection of over 30 simple "toys" (or modules) which demonstrate various features in T2D. The default toy is a side scrolling level with a monster truck. To see a list of the available modules/toys to choose from, click on the `Show Tools` button in the lower right corner of the screen.
+When you first run Torque2D, you'll have the option to create a project or open the Toybox. The Toybox is a collection of over 30 simple "toys" (or modules) which demonstrate various features in T2D. The default toy is a side scrolling level with a monster truck. To see a list of the available modules/toys to choose from, click on the `Show Tools` button in the lower right corner of the screen.
 
-Naturally all of the script code and assets for each toy are available to you in the modules folder to use as practical examples while learning T2D.
-
-The Toybox is also an excellent framework for rapidly prototyping your own game ideas - it allows for easy integration of additional modules and provides numerous debugging features, like console access and real-time metrics.
+Naturally all of the script code and assets for each toy are available to you in the toybox folder to use as practical examples while learning T2D.
 
 ### Documentation
 
@@ -61,11 +58,7 @@ Don't go it alone! Join the active Torque community. Ask questions, talk about T
 * [Torque 2D Forums on the Torque Game Engines Website](https://torque3d.org/forums/forum/26-general/)
 * [Torque Game Engines on Discord](https://discord.com/invite/qdAZxT4)
 
-GarageGames is mostly gone, but their website still contains valuable information for those willing to search.
-
-* [Torque 2D Beginner Forum](http://www.garagegames.com/community/forums/84)
-* [Torque 2D Professional Forum](http://www.garagegames.com/community/forums/85)
-* [GarageGames Community Blogs](http://www.garagegames.com/community/blogs)
+Please note that the GarageGames website is gone. The options above both represent great ways to get help if you need it.
 
 # License
 
