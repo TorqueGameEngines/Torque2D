@@ -1,0 +1,89 @@
+# I release this sample under the MIT license: free for any use, provided
+# you hold me harmless from any such use you make, and you retain my
+# copyright on the actual sources.
+# Copyright 2005 Jon Watte.
+
+LIBNAME := vorbis
+SOURCES := \
+../../lib/libvorbis/analysis.c \
+../../lib/libvorbis/barkmel.c \
+../../lib/libvorbis/bitrate.c \
+../../lib/libvorbis/block.c \
+../../lib/libvorbis/codebook.c \
+../../lib/libvorbis/envelope.c \
+../../lib/libvorbis/floor0.c \
+../../lib/libvorbis/floor1.c \
+../../lib/libvorbis/info.c \
+../../lib/libvorbis/lookup.c \
+../../lib/libvorbis/lpc.c \
+../../lib/libvorbis/lsp.c \
+../../lib/libvorbis/mapping0.c \
+../../lib/libvorbis/mdct.c \
+../../lib/libvorbis/psy.c \
+../../lib/libvorbis/registry.c \
+../../lib/libvorbis/res0.c \
+../../lib/libvorbis/sharedbook.c \
+../../lib/libvorbis/smallft.c \
+../../lib/libvorbis/synthesis.c \
+../../lib/libvorbis/tone.c \
+../../lib/libvorbis/vorbisenc.c \
+../../lib/libvorbis/vorbisfile.c \
+../../lib/libvorbis/window.c \
+
+LDFLAGS_vorbis := -g -m64
+
+CFLAGS_vorbis := -MMD -I. -m64 -msse -mmmx -march=x86-64
+
+CFLAGS_vorbis += -I../../lib/libvorbis
+CFLAGS_vorbis += -I../../lib/libvorbis/lib
+CFLAGS_vorbis += -I../../lib/libvorbis/include
+CFLAGS_vorbis += -I../../lib/libogg/include
+
+CFLAGS_vorbis += -DUNICODE
+CFLAGS_vorbis += -DLINUX
+
+CFLAGS_DEBUG_vorbis := $(CFLAGS_vorbis) -ggdb
+CFLAGS_DEBUG_vorbis += -DTORQUE_DEBUG
+CFLAGS_DEBUG_vorbis += -DTORQUE_DEBUG_GUARD
+CFLAGS_DEBUG_vorbis += -DTORQUE_NET_STATS
+
+CFLAGS_vorbis += -O3
+
+CC := gcc
+LD := gcc
+
+TARGET_vorbis := lib/libvorbis.a
+TARGET_vorbis_DEBUG := lib/libvorbis_DEBUG.a
+
+LIB_TARGETS += $(TARGET_vorbis)
+LIB_TARGETS_DEBUG += $(TARGET_vorbis_DEBUG)
+
+OBJS_vorbis := $(patsubst ../../lib/libvorbis/%,Release/vorbis/%.o,$(SOURCES))
+OBJS_vorbis_DEBUG := $(patsubst ../../lib/libvorbis/%,Debug/vorbis/%.o,$(SOURCES))
+
+# Deriving the variable name from the target name is the secret sauce
+# of the build system.
+#
+$(TARGET_vorbis):	$(OBJS_vorbis)
+	@mkdir -p $(dir $@)
+	ar cr $@ $(OBJS_vorbis)
+
+$(TARGET_vorbis_DEBUG):	$(OBJS_vorbis_DEBUG)
+	@mkdir -p $(dir $@)
+	ar cr $@ $(OBJS_vorbis_DEBUG)
+
+Release/vorbis/%.o:	../../lib/libvorbis/%
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS_vorbis) $< -o $@
+
+Debug/vorbis/%.o:	../../lib/libvorbis/%
+	@mkdir -p $(dir $@)
+	$(CC) -c $(CFLAGS_DEBUG_vorbis) $< -o $@
+
+release_vorbis: $(TARGET_vorbis)
+debug_vorbis: $(TARGET_vorbis_DEBUG)
+
+.PHONY: debug_vorbis release_vorbis
+
+DEPS += $(patsubst %.o,%.d,$(OBJS_vorbis))
+DEPS += $(patsubst %.o,%.d,$(OBJS_vorbis_DEBUG))

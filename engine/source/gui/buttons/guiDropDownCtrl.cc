@@ -20,10 +20,10 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#include "gui/buttons/GuiDropDownCtrl.h"
+#include "gui/buttons/guiDropDownCtrl.h"
 #include "gui/guiCanvas.h"
 
-#include "GuiDropDownCtrl_ScriptBinding.h"
+#include "guiDropDownCtrl_ScriptBinding.h"
 
 #pragma region GuiDropDownBGCtrl
 GuiDropDownBGCtrl::GuiDropDownBGCtrl(GuiDropDownCtrl *ctrl)
@@ -175,7 +175,7 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 	renderUniversalRect(ctrlRect, mProfile, currentState, getFillColor(currentState), true);
 
 	//Get the content area
-	dglSetBitmapModulation(mProfile->getFontColor(currentState));
+	dglSetBitmapModulation(getFontColor(mProfile, currentState));
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 
@@ -183,7 +183,8 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 	if(mProfile->usesDefaultRendering(currentState))
 	{
 		RectI drawArea = RectI(contentRect.point.x + contentRect.extent.x - contentRect.extent.y, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
-		renderTriangleIcon(drawArea, ColorI(mProfile->getFontColor(currentState)), GuiDirection::Down, 8);
+		ColorI color = ColorI(getFontColor(mProfile, currentState));
+		renderTriangleIcon(drawArea, color, GuiDirection::Down, 8);
 		contentRect.extent.x -= contentRect.extent.y;
 	}
 
@@ -199,7 +200,8 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 		{
 			//Draw the bullet
 			RectI drawArea = RectI(contentRect.point.x, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
-			renderColorBullet(drawArea, ColorI(mListBox->getItemColor(index)), 5);
+			ColorI color = ColorI(mListBox->getItemColor(index));
+			renderColorBullet(drawArea, color, 5);
 
 			contentRect.point.x += contentRect.extent.y;
 			contentRect.extent.x -= contentRect.extent.y;

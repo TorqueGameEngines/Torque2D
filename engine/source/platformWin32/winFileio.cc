@@ -164,7 +164,7 @@ bool Platform::pathCopy(const char *fromName, const char *toName, bool nooverwri
       char *f = (char*)fromName;
       char *t = (char*)toName;
 #endif
-      if(::CopyFile( f, t, nooverwrite))
+      if(::CopyFile((LPCWSTR)f, (LPCWSTR)t, nooverwrite))
       {
          return true;
       }
@@ -229,7 +229,7 @@ bool Platform::pathCopy(const char *fromName, const char *toName, bool nooverwri
          char *t = (char*)to;
 #endif
 
-         if (!::CopyFile(f, t, nooverwrite))
+         if (!::CopyFile((LPCWSTR)f, (LPCWSTR)t, nooverwrite))
          {
             // New directory should be deleted here.
             return false;
@@ -305,7 +305,7 @@ File::Status File::open(const char *filename, const AccessMode openMode)
     switch (openMode)
     {
     case Read:
-        handle = (void *)CreateFile(fname,
+        handle = (void *)CreateFile((LPCWSTR)fname,
                                     GENERIC_READ,
                                     FILE_SHARE_READ,
                                     NULL,
@@ -314,7 +314,7 @@ File::Status File::open(const char *filename, const AccessMode openMode)
                                     NULL);
         break;
     case Write:
-        handle = (void *)CreateFile(fname,
+        handle = (void *)CreateFile((LPCWSTR)fname,
                                     GENERIC_WRITE,
                                     0,
                                     NULL,
@@ -323,7 +323,7 @@ File::Status File::open(const char *filename, const AccessMode openMode)
                                     NULL);
         break;
     case ReadWrite:
-        handle = (void *)CreateFile(fname,
+        handle = (void *)CreateFile((LPCWSTR)fname,
                                     GENERIC_WRITE | GENERIC_READ,
                                     0,
                                     NULL,
@@ -332,7 +332,7 @@ File::Status File::open(const char *filename, const AccessMode openMode)
                                     NULL);
         break;
     case WriteAppend:
-        handle = (void *)CreateFile(fname,
+        handle = (void *)CreateFile((LPCWSTR)fname,
                                     GENERIC_WRITE,
                                     0,
                                     NULL,

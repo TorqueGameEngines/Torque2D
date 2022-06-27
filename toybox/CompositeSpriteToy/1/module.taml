@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="CompositeSpriteToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates the basics of the powerful composite sprite."
 	Dependencies="ToyAssets=1"
 	Type="toy"

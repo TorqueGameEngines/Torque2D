@@ -140,6 +140,7 @@ public:
     bool    mSetFirstResponder;
     bool    mCanSave;
     bool    mIsContainer; ///< if true, then the GuiEditor can drag other controls into this one.
+    bool    mUseInput; ///< True if input events like a click can be passed to this gui. False will pass events to the parent and this object and its children will not process input (touch and keyboard).
 
     S32     mLayer;
     static S32     smCursorChanged; ///< Has this control modified the cursor? -1 or type
@@ -196,6 +197,10 @@ protected:
     S32 mVertSizing;       ///< Set from vertSizingOptions.
 
 	Point2I mStoredExtent; //Used in conjunction with the min extent.
+    Point2F mStoredRelativePosH; //Used to prevent rounding drift when using relative positioning.
+    Point2F mStoredRelativePosV; //Used to prevent rounding drift when using relative positioning.
+    bool mUseRelPosH;
+    bool mUseRelPosV;
 
     StringTableEntry	mConsoleVariable;
     StringTableEntry	mConsoleCommand;
@@ -207,6 +212,13 @@ protected:
 	StringTableEntry    mText;
 	StringTableEntry    mTextID;
 	bool				mTextWrap;
+    bool                mTextExtend;
+
+    AlignmentType       mAlignment;
+    VertAlignmentType   mVAlignment;
+    F32                 mFontSizeAdjust;
+    ColorI              mFontColor;
+    bool                mOverrideFontColor;
 
     /// @}
 
@@ -310,17 +322,22 @@ public:
 	virtual void             setTextID(S32 id);
 	virtual void             setTextID(const char *id);
 	virtual const char*      getText();
-	inline void				 setTextWrap(const bool wrap) { mTextWrap = wrap; }
-	inline bool				 getTextWrap() { return mTextWrap; }
+    inline void				 setTextWrap(const bool wrap) { mTextWrap = wrap; }
+    inline bool				 getTextWrap() { return mTextWrap; }
+    inline void				 setTextExtend(const bool extend) { mTextExtend = extend; }
+    inline bool				 getTextExtend() { return mTextExtend; }
 
 	// Text Property Accessors
 	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return false; }
 	static const char* getTextProperty(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getText(); }
 	static bool writeTextWrapFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextWrap(); }
+    static bool writeTextExtendFn(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getTextExtend(); }
 
-	static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); return false; }
-	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); return false; }
+    static bool setExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setExtent(Point2I(v.x, v.y)); ctrl->resetStoredExtent(); ctrl->resetStoredRelPos(); return false; }
+	static bool setMinExtentFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->mMinExtent.set(v.x, v.y); ctrl->resetStoredExtent(); ctrl->resetStoredRelPos(); return false; }
 	static bool writeMinExtentFn(void* obj,  const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mMinExtent.x != 0 || ctrl->mMinExtent.y != 0; }
+
+    static bool setPositionFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); Vector2 v = Vector2(data); ctrl->setPosition(Point2I(v.x, v.y)); ctrl->resetStoredRelPos(); return false; }
 
     /// @}
 
@@ -334,7 +351,7 @@ public:
 
     /// Sets the status of this control as active and responding or inactive
     /// @param   value   True if this is active
-    void setActive(bool value);
+    virtual void setActive(bool value);
     bool isActive() { return mActive; } ///< Returns true if this control is active
 
     bool isAwake() { return mAwake; } ///< Returns true if this control is awake
@@ -489,7 +506,7 @@ public:
     virtual void onChildAdded( GuiControl *child );
 
 	/// Called when a child is removed.
-	virtual inline void onChildRemoved(GuiControl* child) {};
+	virtual void onChildRemoved(GuiControl* child);
 
     /// @}
 
@@ -533,6 +550,9 @@ public:
     virtual bool isMouseLocked();
     /// @}
 
+    //Sends a script event with modifier and mouse position if the script method exists. Returns true if the event is consumed.
+    bool sendScriptMouseEvent(const char* name, const GuiEvent& event);
+    bool sendScriptKeyEvent(const char* name, const InputEvent& event);
 
     /// General input handler.
     virtual bool onInputEvent(const InputEvent &event);
@@ -548,8 +568,8 @@ public:
     virtual void onTouchEnter(const GuiEvent &event);
     virtual void onTouchLeave(const GuiEvent &event);
 
-    virtual bool onMouseWheelUp(const GuiEvent &event);
-    virtual bool onMouseWheelDown(const GuiEvent &event);
+    virtual void onMouseWheelUp(const GuiEvent &event);
+    virtual void onMouseWheelDown(const GuiEvent &event);
 
     virtual void onRightMouseDown(const GuiEvent &event);
     virtual void onRightMouseUp(const GuiEvent &event);
@@ -725,7 +745,10 @@ public:
     /// Renders justified text using the profile.
     ///
     /// @note This should move into the graphics library at some point
-    void renderText(Point2I &offset, Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
+    void renderText(const Point2I &offset, const Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
+    virtual void renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot = tRotateNone);
+    virtual vector<string> getLineList(const char* text, GuiControlProfile* profile, S32 totalWidth);
+    virtual void renderTextLine(const Point2I& startPoint, const string line, GuiControlProfile* profile, F32 rotationInDegrees, U32 ibeamPosAtLineStart, U32 lineNumber);
 
 	/// Returns a new rect based on the margins.
 	RectI applyMargins(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
@@ -741,6 +764,8 @@ public:
 
 	/// Returns the extent of the outer rect given the extent of the inner rect.
 	Point2I getOuterExtent(Point2I &innerExtent, GuiControlState currentState, GuiControlProfile *profile);
+    S32 getOuterWidth(S32 innerExtent, GuiControlState currentState, GuiControlProfile* profile);
+    S32 getOuterHeight(S32 innerExtent, GuiControlState currentState, GuiControlProfile* profile);
 
     virtual void inspectPostApply();
     virtual void inspectPreApply();
@@ -751,13 +776,24 @@ public:
 	//Expells all stored extent
 	inline void resetStoredExtent() { mStoredExtent.set(0,0); }
 
+    //Stores the position when using relative positioning
+    Point2F relPosBatteryH(S32 pos, S32 ext, S32 parentExt);
+    Point2F relPosBatteryV(S32 pos, S32 ext, S32 parentExt);
+    void relPosBattery(Point2F& battery, S32 pos, S32 ext, S32 parentExt);
+    void resetStoredRelPos() { mUseRelPosH = false; mUseRelPosV = false; }
+
 protected:
 	virtual void interpolateTick(F32 delta) {};
 	virtual void processTick() {};
 	virtual void advanceTime(F32 timeDelta) {};
 
-	S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, GuiControlProfile::AlignmentType align);
-	S32 getTextVerticalOffset(S32 textHeight, S32 totalHeight, GuiControlProfile::VertAlignmentType align);
+	S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, AlignmentType align);
+	S32 getTextVerticalOffset(S32 textHeight, S32 totalHeight, VertAlignmentType align);
+    AlignmentType getAlignmentType();
+    VertAlignmentType getVertAlignmentType();
+    AlignmentType getAlignmentType(GuiControlProfile* profile);
+    VertAlignmentType getVertAlignmentType(GuiControlProfile* profile);
+    const ColorI& getFontColor(GuiControlProfile* profile, const GuiControlState state = GuiControlState::NormalState);
 };
 /// @}
 

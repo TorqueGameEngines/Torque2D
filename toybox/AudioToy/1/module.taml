@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="AudioToy"
     VersionId="1"
+	BuildId="1"
     Description="Plays background music and sound effects"
     Dependencies="ToyAssets=1"
     Type="toy"

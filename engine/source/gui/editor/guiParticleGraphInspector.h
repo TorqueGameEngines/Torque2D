@@ -44,6 +44,8 @@ private:
    RectI mGridRect;
    Point2I mCalculationOffset;
 
+   GuiParticleGraphInspector* mVariationInspector;
+
 public:
 	struct GraphPoint
 	{
@@ -69,6 +71,7 @@ public:
    virtual void setDisplayField(const char* fieldName, U16 index);
    virtual void setDisplayArea(StringTableEntry minX, StringTableEntry minY, StringTableEntry maxX, StringTableEntry maxY);
    virtual void setDisplayLabels(const char* labelX, const char* labelY);
+   virtual void setVariationGraphInspector(GuiParticleGraphInspector* object) { mVariationInspector = object; }
 
    virtual void resize(const Point2I &newPosition, const Point2I &newExtent);
    virtual void setControlProfile(GuiControlProfile *prof);
@@ -78,6 +81,7 @@ public:
    virtual void onTouchDragged(const GuiEvent &event);
 
    void onRender(Point2I offset, const RectI &updateRect);
+   Vector<GraphPoint>* getRenderPoints();
 
 protected:
 	U32 findHitGraphPoint(const Point2I &point);
@@ -85,11 +89,14 @@ protected:
 	F32 getGraphTime(const F32 x);
 
 	void calculatePoints(const RectI &contentRect);
+	Point2I convertToRenderPoint(const RectI& contentRect, F32 time, F32 value);
 	void renderLabels(const RectI &contentRect, const ColorI &labelColor);
 	void renderGrid(const RectI &contentRect, const ColorI &gridColor);
 	void renderPoints(const RectI &contentRect, const ColorI &lineColor);
+	void renderVariation(const RectI &contentRect, const ColorI& color);
 	void renderDot(const RectI &contentRect, const Point2I &point, const Point2I &cursorPt, bool isSelected);
 	void renderLine(const RectI &contentRect, const Point2I &point1, const Point2I &point2, const ColorI &lineColor);
+	void renderQuad(const RectI& contentRect, const Point2I& point1, const Point2I& point2, const Point2I& point3, const Point2I& point4, const ColorI& quadColor);
 
 	ParticleAssetField* getTargetField();
 };

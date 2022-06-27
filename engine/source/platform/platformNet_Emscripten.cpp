@@ -19,7 +19,7 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
-
+#if defined(TORQUE_OS_EMSCRIPTEN)
 #include "platform/platformNet.h"
 #include "platform/event.h"
 #include "console/console.h"
@@ -215,3 +215,4 @@ bool Net::isAddressTypeAvailable(NetAddress::Type addressType)
 {
    return false;
 }
+#endif

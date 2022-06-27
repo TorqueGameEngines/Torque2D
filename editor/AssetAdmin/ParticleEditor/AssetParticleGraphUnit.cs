@@ -270,3 +270,8 @@ function AssetParticleGraphUnit::timeMoveForward(%this)
 	%this.timeController.moveUp();
 	%this.refreshCamera();
 }
+
+function AssetParticleGraphUnit::setVarianceGraph(%this, %variGraph)
+{
+	%this.graph.setVariationGraphInspector(%variGraph.graph);
+}

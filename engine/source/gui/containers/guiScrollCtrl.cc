@@ -52,7 +52,7 @@ GuiScrollCtrl::GuiScrollCtrl()
    mScrollBarThickness = 16;
    mScrollBarDragTolerance = 130;
    mDepressed = false;
-   curHitRegion = None;
+   curHitRegion = Content;
    mActive = true;
    mShowArrowButtons = true;
    mBaseThumbSize = (mScrollBarThickness * 2);
@@ -74,6 +74,8 @@ GuiScrollCtrl::GuiScrollCtrl()
    setField("arrowProfile", "GuiScrollArrowProfile");
    setField("trackProfile", "GuiScrollTrackProfile");
    setField("profile", "GuiScrollProfile");
+
+   mEventBubbled = false;
 }
 
 void GuiScrollCtrl::initPersistFields()
@@ -190,12 +192,12 @@ GuiControl* GuiScrollCtrl::findHitControl(const Point2I& pt, S32 initialLayer)
 			{
 				continue;
 			}
-			else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT))
+			else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mUseInput)
 			{
 				Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
 				GuiControl* hitCtrl = ctrl->findHitControl(ptemp);
 
-				if (hitCtrl->mProfile->mUseInput)
+				if (hitCtrl->mUseInput)
 					return hitCtrl;
 			}
 		}
@@ -239,7 +241,7 @@ GuiScrollCtrl::Region GuiScrollCtrl::findHitRegion(const Point2I& pt)
 				return RightPage;
 		}
 	}
-	return None;
+	return Content;
 }
 
 #pragma region CalculationFunctions
@@ -286,7 +288,8 @@ void GuiScrollCtrl::computeSizes()
 		calcScrollOffset();
 	}
 	// build all the rectangles and such...
-	RectI ctrlRect = applyMargins(Point2I(mBounds.point.Zero), mBounds.extent, NormalState, mProfile);
+	Point2I zero = mBounds.point.Zero;
+	RectI ctrlRect = applyMargins(zero, mBounds.extent, NormalState, mProfile);
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
 	calcScrollRects(fillRect);
 	calcThumbs();
@@ -482,7 +485,7 @@ void GuiScrollCtrl::scrollByRegion(Region reg)
 		case RightPage:
 		case VertThumb:
 		case HorizThumb:
-		case None:
+		case Content:
 			//Con::errorf("Unhandled case in GuiScrollCtrl::scrollByRegion");
 			break;
 		}
@@ -510,7 +513,7 @@ void GuiScrollCtrl::scrollByRegion(Region reg)
 		case DownPage:
 		case VertThumb:
 		case HorizThumb:
-		case None:
+		case Content:
 			//Con::errorf("Unhandled case in GuiScrollCtrl::scrollByRegion");
 			break;
 		}
@@ -560,13 +563,17 @@ void GuiScrollCtrl::scrollRectVisible(RectI rect)
 void GuiScrollCtrl::onTouchMove(const GuiEvent& event)
 {
 	curHitRegion = findHitRegion(globalToLocalCoord(event.mousePoint));
+
+	GuiControl* parent = getParent();
+	if (parent)
+		parent->onTouchMove(event);
 }
 
 void GuiScrollCtrl::onTouchLeave(const GuiEvent &event)
 {
 	if (!mDepressed)
 	{
-		curHitRegion = None;
+		curHitRegion = Content;
 	}
 }
 
@@ -610,6 +617,7 @@ void GuiScrollCtrl::onTouchDown(const GuiEvent &event)
    Point2I curMousePos = globalToLocalCoord(event.mousePoint);
    curHitRegion = findHitRegion(curMousePos);
    mDepressed = true;
+   mEventBubbled = false;
 
    // Set a 0.5 second delay before we start scrolling
    mLastUpdated = Platform::getVirtualMilliseconds() + 500;
@@ -626,15 +634,34 @@ void GuiScrollCtrl::onTouchDown(const GuiEvent &event)
 	   mScrollOffsetAnchor = mScrollOffset;
       mThumbMouseDelta = curMousePos.x - mHThumbPos;
    }
+   else if (curHitRegion == Content)
+   {
+	   GuiControl* parent = getParent();
+	   if (parent)
+	   {
+		   parent->onTouchDown(event);
+		   mEventBubbled = true;
+	   }
+   }
 }
 
-void GuiScrollCtrl::onTouchUp(const GuiEvent &)
+void GuiScrollCtrl::onTouchUp(const GuiEvent &event)
 {
    mouseUnlock();
 
    setUpdate();
 
-   curHitRegion = None;
+   if (mEventBubbled)
+   {
+	   GuiControl* parent = getParent();
+	   if (parent)
+	   {
+		   parent->onTouchUp(event);
+	   }
+		mEventBubbled = false;
+   }
+
+   curHitRegion = Content;
    mDepressed = false;
 }
 
@@ -642,6 +669,16 @@ void GuiScrollCtrl::onTouchDragged(const GuiEvent &event)
 {
    Point2I curMousePos = globalToLocalCoord(event.mousePoint);
    setUpdate();
+
+   if (mEventBubbled)
+   {
+	   GuiControl* parent = getParent();
+	   if (parent)
+	   {
+		   parent->onTouchDragged(event);
+		   return;
+	   }
+   }
 
    if ( (curHitRegion != VertThumb) && (curHitRegion != HorizThumb) )
    {
@@ -698,10 +735,10 @@ void GuiScrollCtrl::onTouchDragged(const GuiEvent &event)
    }
 }
 
-bool GuiScrollCtrl::onMouseWheelUp(const GuiEvent &event)
+void GuiScrollCtrl::onMouseWheelUp(const GuiEvent &event)
 {
    if ( !mAwake || !mVisible )
-      return( false );
+      return;
 
    Point2I previousPos = mScrollOffset;
    scrollByRegion((event.modifier & SI_CTRL) ? UpPage : UpArrow);
@@ -717,15 +754,13 @@ bool GuiScrollCtrl::onMouseWheelUp(const GuiEvent &event)
    // If no scrolling happened (already at the top), pass it on to the parent.
    GuiControl* parent = getParent();
    if (parent && (previousPos == mScrollOffset))
-      return parent->onMouseWheelUp(event);
-
-   return true;
+      parent->onMouseWheelUp(event);
 }
 
-bool GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
+void GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
 {
    if ( !mAwake || !mVisible )
-      return( false );
+      return;
 
    Point2I previousPos = mScrollOffset;
    scrollByRegion((event.modifier & SI_CTRL) ? DownPage : DownArrow);
@@ -741,9 +776,7 @@ bool GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
    // If no scrolling happened (already at the bottom), pass it on to the parent.
    GuiControl* parent = getParent();
    if (parent && (previousPos == mScrollOffset))
-      return parent->onMouseWheelDown(event);
-
-   return true;
+      parent->onMouseWheelDown(event);
 }
 #pragma endregion
 
@@ -907,10 +940,14 @@ void GuiScrollCtrl::renderVScrollBar(const Point2I& offset)
 		{
 			if (mShowArrowButtons && mArrowProfile)
 			{
-				renderBorderedRectWithArrow(RectI(mUpArrowRect.point + offset, mUpArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::UpArrow), GuiDirection::Up);
-				renderBorderedRectWithArrow(RectI(mDownArrowRect.point + offset, mDownArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::DownArrow), GuiDirection::Down);
+				RectI upArrowExtent = RectI(mUpArrowRect.point + offset, mUpArrowRect.extent);
+				renderBorderedRectWithArrow(upArrowExtent, mArrowProfile, getRegionCurrentState(Region::UpArrow), GuiDirection::Up);
+
+				RectI downArrowExtent = RectI(mDownArrowRect.point + offset, mDownArrowRect.extent);
+				renderBorderedRectWithArrow(downArrowExtent, mArrowProfile, getRegionCurrentState(Region::DownArrow), GuiDirection::Down);
 			}
-			renderUniversalRect(RectI(mVTrackRect.point + offset, mVTrackRect.extent), mTrackProfile, GuiControlState::NormalState);
+			RectI mVTrackExtent = RectI(mVTrackRect.point + offset, mVTrackRect.extent);
+			renderUniversalRect(mVTrackExtent, mTrackProfile, GuiControlState::NormalState);
 
 			//The Thumb
 			GuiControlState thumbState = getRegionCurrentState(Region::VertThumb);
@@ -922,10 +959,13 @@ void GuiScrollCtrl::renderVScrollBar(const Point2I& offset)
 		{
 			if (mShowArrowButtons && mArrowProfile)
 			{
-				renderBorderedRectWithArrow(RectI(mUpArrowRect.point + offset, mUpArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Up);
-				renderBorderedRectWithArrow(RectI(mDownArrowRect.point + offset, mDownArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Down);
+				RectI upArrowExtent = RectI(mUpArrowRect.point + offset, mUpArrowRect.extent);
+				renderBorderedRectWithArrow(upArrowExtent, mArrowProfile, GuiControlState::DisabledState, GuiDirection::Up);
+				RectI downArrowExtent = RectI(mDownArrowRect.point + offset, mDownArrowRect.extent);
+				renderBorderedRectWithArrow(downArrowExtent, mArrowProfile, GuiControlState::DisabledState, GuiDirection::Down);
 			}
-			renderUniversalRect(RectI(mVTrackRect.point + offset, mVTrackRect.extent), mTrackProfile, GuiControlState::DisabledState);
+			RectI mVTrackExtent = RectI(mVTrackRect.point + offset, mVTrackRect.extent);
+			renderUniversalRect(mVTrackExtent, mTrackProfile, GuiControlState::DisabledState);
 		}
 	}
 }
@@ -938,10 +978,13 @@ void GuiScrollCtrl::renderHScrollBar(const Point2I& offset)
 		{
 			if (mShowArrowButtons && mArrowProfile)
 			{
-				renderBorderedRectWithArrow(RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::LeftArrow), GuiDirection::Left);
-				renderBorderedRectWithArrow(RectI(mRightArrowRect.point + offset, mRightArrowRect.extent), mArrowProfile, getRegionCurrentState(Region::RightArrow), GuiDirection::Right);
+				RectI leftArrowBounds = RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent);
+				renderBorderedRectWithArrow(leftArrowBounds, mArrowProfile, getRegionCurrentState(Region::LeftArrow), GuiDirection::Left);
+				RectI rightArrowBounds = RectI(mRightArrowRect.point + offset, mRightArrowRect.extent);
+				renderBorderedRectWithArrow(rightArrowBounds, mArrowProfile, getRegionCurrentState(Region::RightArrow), GuiDirection::Right);
 			}
-			renderUniversalRect(RectI(mHTrackRect.point + offset, mHTrackRect.extent), mTrackProfile, GuiControlState::NormalState);
+			RectI hTrackBounds = RectI(mHTrackRect.point + offset, mHTrackRect.extent);
+			renderUniversalRect(hTrackBounds, mTrackProfile, GuiControlState::NormalState);
 
 			//The Thumb
 			GuiControlState thumbState = getRegionCurrentState(Region::HorizThumb);
@@ -953,10 +996,13 @@ void GuiScrollCtrl::renderHScrollBar(const Point2I& offset)
 		{
 			if (mShowArrowButtons && mArrowProfile)
 			{
-				renderBorderedRectWithArrow(RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Left);
-				renderBorderedRectWithArrow(RectI(mRightArrowRect.point + offset, mRightArrowRect.extent), mArrowProfile, GuiControlState::DisabledState, GuiDirection::Right);
+				RectI leftArrowBounds = RectI(mLeftArrowRect.point + offset, mLeftArrowRect.extent);
+				renderBorderedRectWithArrow(leftArrowBounds, mArrowProfile, GuiControlState::DisabledState, GuiDirection::Left);
+				RectI rightArrowBounds = RectI(mRightArrowRect.point + offset, mRightArrowRect.extent);
+				renderBorderedRectWithArrow(rightArrowBounds, mArrowProfile, GuiControlState::DisabledState, GuiDirection::Right);
 			}
-			renderUniversalRect(RectI(mHTrackRect.point + offset, mHTrackRect.extent), mTrackProfile, GuiControlState::DisabledState);
+			RectI hTrackBounds = RectI(mHTrackRect.point + offset, mHTrackRect.extent);
+			renderUniversalRect(hTrackBounds, mTrackProfile, GuiControlState::DisabledState);
 		}
 	}
 }

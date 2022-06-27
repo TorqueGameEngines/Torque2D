@@ -62,6 +62,17 @@ void GuiButtonCtrl::initPersistFields()
 	addField("easeTimeFillColorSL", TypeS32, Offset(mEaseTimeFillColorSL, GuiButtonCtrl));
 }
 
+void GuiButtonCtrl::setActive(bool value)
+{
+	Parent::setActive(value);
+
+	if (!value)
+	{
+		mDepressed = false;
+		mMouseOver = false;
+	}
+}
+
 void GuiButtonCtrl::acceleratorKeyPress(U32)
 {
 	if (!mActive)
@@ -281,7 +292,7 @@ void GuiButtonCtrl::onRender(Point2I offset, const RectI& updateRect)
 	renderUniversalRect(ctrlRect, mProfile, currentState, getFillColor(currentState), true);
 
 	//Render Text
-	dglSetBitmapModulation(mProfile->getFontColor(currentState));
+	dglSetBitmapModulation(getFontColor(mProfile, currentState));
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 	renderText(contentRect.point, contentRect.extent, mText, mProfile);

@@ -195,20 +195,27 @@ void ImageAsset::initPersistFields()
     Parent::initPersistFields();
 
     // Fields.
+    addGroup("Image Fields");
     addProtectedField("ImageFile", TypeAssetLooseFilePath, Offset(mImageFile, ImageAsset), &setImageFile, &getImageFile, &defaultProtectedWriteFn, "");
     addProtectedField("Force16bit", TypeBool, Offset(mForce16Bit, ImageAsset), &setForce16Bit, &defaultProtectedGetFn, &writeForce16Bit, "Forces the image into 16 bit mode.");
     addProtectedField("FilterMode", TypeEnum, Offset(mLocalFilterMode, ImageAsset), &setFilterMode, &defaultProtectedGetFn, &writeFilterMode, 1, &textureFilterTable);   
     addProtectedField("ExplicitMode", TypeBool, Offset(mExplicitMode, ImageAsset), &setExplicitMode, &defaultProtectedGetFn, &writeExplicitMode, "");
+    addProtectedField("CellRowOrder", TypeBool, Offset(mCellRowOrder, ImageAsset), &setCellRowOrder, &defaultProtectedGetFn, &writeCellRowOrder, "If true, cell number are applied left-to-right, top-to-bottom.");
+    endGroup("Image Fields");
 
-    addProtectedField("CellRowOrder", TypeBool, Offset(mCellRowOrder, ImageAsset), &setCellRowOrder, &defaultProtectedGetFn, &writeCellRowOrder, "");
-    addProtectedField("CellOffsetX", TypeS32, Offset(mCellOffsetX, ImageAsset), &setCellOffsetX, &defaultProtectedGetFn, &writeCellOffsetX, "");
-    addProtectedField("CellOffsetY", TypeS32, Offset(mCellOffsetY, ImageAsset), &setCellOffsetY, &defaultProtectedGetFn, &writeCellOffsetY, "");
-    addProtectedField("CellStrideX", TypeS32, Offset(mCellStrideX, ImageAsset), &setCellStrideX, &defaultProtectedGetFn, &writeCellStrideX, "");
-    addProtectedField("CellStrideY", TypeS32, Offset(mCellStrideY, ImageAsset), &setCellStrideY, &defaultProtectedGetFn, &writeCellStrideY, "");
-    addProtectedField("CellCountX", TypeS32, Offset(mCellCountX, ImageAsset), &setCellCountX, &defaultProtectedGetFn, &writeCellCountX, "");
-    addProtectedField("CellCountY", TypeS32, Offset(mCellCountY, ImageAsset), &setCellCountY, &defaultProtectedGetFn, &writeCellCountY, "");
-    addProtectedField("CellWidth", TypeS32, Offset(mCellWidth, ImageAsset), &setCellWidth, &defaultProtectedGetFn, &writeCellWidth, "");
-    addProtectedField("CellHeight", TypeS32, Offset(mCellHeight, ImageAsset), &setCellHeight, &defaultProtectedGetFn, &writeCellHeight, "");
+    addGroup("X Values");
+    addProtectedField("CellWidth", TypeS32, Offset(mCellWidth, ImageAsset), &setCellWidth, &defaultProtectedGetFn, &writeCellWidth, "The width of each cell.");
+    addProtectedField("CellCountX", TypeS32, Offset(mCellCountX, ImageAsset), &setCellCountX, &defaultProtectedGetFn, &writeCellCountX, "The number of cells in the X direction.");
+    addProtectedField("CellOffsetX", TypeS32, Offset(mCellOffsetX, ImageAsset), &setCellOffsetX, &defaultProtectedGetFn, &writeCellOffsetX, "The distance from the left edge of the image to the left edge of the first cell.");
+    addProtectedField("CellStrideX", TypeS32, Offset(mCellStrideX, ImageAsset), &setCellStrideX, &defaultProtectedGetFn, &writeCellStrideX, "The distance from the left edge of a cell to the left edge of the next adjacent cell. Set to 0 to match the cell width.");
+    endGroup("X Values");
+
+    addGroup("Y Values");
+    addProtectedField("CellHeight", TypeS32, Offset(mCellHeight, ImageAsset), &setCellHeight, &defaultProtectedGetFn, &writeCellHeight, "The height of each cell.");
+    addProtectedField("CellCountY", TypeS32, Offset(mCellCountY, ImageAsset), &setCellCountY, &defaultProtectedGetFn, &writeCellCountY, "The number of cells in the Y direction.");
+    addProtectedField("CellOffsetY", TypeS32, Offset(mCellOffsetY, ImageAsset), &setCellOffsetY, &defaultProtectedGetFn, &writeCellOffsetY, "The distance from the top edge of the image to the top edge of the first cell.");
+    addProtectedField("CellStrideY", TypeS32, Offset(mCellStrideY, ImageAsset), &setCellStrideY, &defaultProtectedGetFn, &writeCellStrideY, "The distance from the top edge of a cell to the top edge of the next cell below. Set to 0 to match the cell height.");
+    endGroup("Y Values");
 }
 
 //------------------------------------------------------------------------------
@@ -618,7 +625,7 @@ S32 ImageAsset::getExplicitCellIndex(const char* regionName)
     {
         // No, so warn.
         Con::warnf( "ImageAsset() - Cannot perform explicit cell operation when not in explicit mode." );
-        return NULL;
+        return -1;
     }
     
     // Set up a frame counter
@@ -642,9 +649,8 @@ S32 ImageAsset::getExplicitCellIndex(const char* regionName)
         }
     }
     
-    // Didn't find it, so warn
-    Con::warnf( "ImageAsset::getExplicitCellIndex() - Cannot find %s cell.", regionName );
-    return NULL;
+    // Didn't find it, so return -1
+    return -1;
     
 }
 

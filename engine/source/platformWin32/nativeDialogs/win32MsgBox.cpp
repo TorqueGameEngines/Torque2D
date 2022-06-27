@@ -90,7 +90,7 @@ S32 Platform::messageBox(const UTF8 *title, const UTF8 *message, MBButtons butto
    const UTF8 *msg = message;
    const UTF8 *t = title;
 #endif
-   S32 ret = ::MessageBox(winState.appWindow, msg, t, getMaskFromID(sgButtonMap, buttons) | getMaskFromID(sgIconMap, icon));
+   S32 ret = ::MessageBox(winState.appWindow, (LPCWSTR)msg, (LPCWSTR)t, getMaskFromID(sgButtonMap, buttons) | getMaskFromID(sgIconMap, icon));
 
 #ifdef UNICODE
    delete [] msg;

@@ -18,6 +18,7 @@ function NewAssetButton::onNewImageAsset(%this)
 		dialogText = "New Image Asset";
 	};
 	%dialog.init(%width, %height);
+	%this.startListening(%dialog);
 
 	Canvas.pushDialog(%dialog);
 }
@@ -35,6 +36,7 @@ function NewAssetButton::onNewAnimationAsset(%this)
 		dialogText = "New Animation Asset";
 	};
 	%dialog.init(%width, %height);
+	%this.startListening(%dialog);
 
 	Canvas.pushDialog(%dialog);
 }
@@ -52,6 +54,7 @@ function NewAssetButton::onNewParticleAsset(%this)
 		dialogText = "New Particle Asset";
 	};
 	%dialog.init(%width, %height);
+	%this.startListening(%dialog);
 
 	Canvas.pushDialog(%dialog);
 }
@@ -69,6 +72,7 @@ function NewAssetButton::onNewFontAsset(%this)
 		dialogText = "New Bitmap Font Asset";
 	};
 	%dialog.init(%width, %height);
+	%this.startListening(%dialog);
 
 	Canvas.pushDialog(%dialog);
 }
@@ -86,6 +90,18 @@ function NewAssetButton::onNewAudioAsset(%this)
 		dialogText = "New Audio Asset";
 	};
 	%dialog.init(%width, %height);
+	%this.startListening(%dialog);
 
 	Canvas.pushDialog(%dialog);
+}
+
+function NewAssetButton::onDialogClosed(%this, %dialog)
+{
+	%this.dialog = %dialog;
+	%this.schedule(100, "deleteDialog");
+}
+
+function NewAssetButton::deleteDialog(%this)
+{
+	%this.dialog.delete();
 }

@@ -80,7 +80,7 @@ void AssetBase::initPersistFields()
     Parent::initPersistFields();
 
     // Asset configuration.
-    addProtectedField( assetNameField, TypeString, 0, &setAssetName, &getAssetName, &writeAssetName, "The name of the asset.  The is not a unique identification like an asset Id." );
+    addProtectedField( assetNameField, TypeString, 0, &setAssetName, &getAssetName, &writeAssetName, "The name of the asset.  This is not a unique identification like an asset Id." );
     addProtectedField( assetDescriptionField, TypeString, 0, &setAssetDescription, &getAssetDescription, &writeAssetDescription, "The simple description of the asset contents." );
     addProtectedField( assetCategoryField, TypeString, 0, &setAssetCategory, &getAssetCategory, &writeAssetCategory, "An arbitrary category that can be used to categorized assets." );
     addProtectedField( assetAutoUnloadField, TypeBool, 0, &setAssetAutoUnload, &getAssetAutoUnload, &writeAssetAutoUnload, "Whether the asset is automatically unloaded when an asset is released and has no other acquisitions or not." );

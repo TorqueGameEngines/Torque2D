@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="ScrollerToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates creating a scrolling sprite."
 	Dependencies="ToyAssets=1"
 	Type="toy"

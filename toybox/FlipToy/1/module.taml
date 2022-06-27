@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="FlipToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates flipping the rendering of sprites horizontally and vertically."
 	Dependencies="ToyAssets=1"
 	Type="toy"

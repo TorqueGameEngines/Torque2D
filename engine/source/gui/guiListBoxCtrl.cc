@@ -587,10 +587,10 @@ void GuiListBoxCtrl::setItemText( S32 index, StringTableEntry text )
 #pragma region Sizing
 void GuiListBoxCtrl::updateSize()
 {
-   if( !mProfile || !mProfile->mFont )
+   if( !mProfile || !mProfile->getFont(mFontSizeAdjust))
       return;
 
-   GFont *font = mProfile->mFont;
+   GFont *font = mProfile->getFont(mFontSizeAdjust);
    Point2I contentSize = Point2I(10, font->getHeight() + 2);
 
    if (!mFitParentWidth)
@@ -679,7 +679,7 @@ void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
    renderUniversalRect(ctrlRect, mProfile, currentState);
 
    //Render Text
-   dglSetBitmapModulation(mProfile->getFontColor(currentState));
+   dglSetBitmapModulation(getFontColor(mProfile, currentState));
    RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
    RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 
@@ -687,7 +687,8 @@ void GuiListBoxCtrl::onRenderItem( RectI &itemRect, LBItem *item )
    if (item->hasColor)
    {
 	   RectI drawArea = RectI(contentRect.point.x, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
-	   renderColorBullet(drawArea, ColorI(item->color), 5);
+      ColorI color = item->color;
+	   renderColorBullet(drawArea, color, 5);
 
 	   contentRect.point.x += contentRect.extent.y;
 	   contentRect.extent.x -= contentRect.extent.y;

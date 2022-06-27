@@ -472,7 +472,7 @@ void GuiColorPickerCtrl::renderColorBox(RectI &bounds)
    pickerBounds.extent.x = bounds.extent.x-1;
    pickerBounds.extent.y = bounds.extent.y-1;
    
-   if (mProfile->mBorderDefault && mProfile->mBorderDefault->mBorder > 0)
+   if (mProfile->mBorderDefault && mProfile->mBorderDefault->mBorder[0] > 0)
       dglDrawRect(bounds, mProfile->mBorderDefault->mBorderColor[0]);
       
    Point2I selectorPos = Point2I(bounds.point.x+mSelectorPos.x+1, bounds.point.y+mSelectorPos.y+1);

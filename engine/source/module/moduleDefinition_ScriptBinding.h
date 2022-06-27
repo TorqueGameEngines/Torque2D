@@ -112,4 +112,14 @@ ConsoleMethodWithDocs(ModuleDefinition, removeDependency, ConsoleBool, 3, 3, (mo
     return object->removeDependency( pModuleId );
 }
 
+//-----------------------------------------------------------------------------
+
+/*! Returns the path to the module directory.
+    @return A path to the module definition.
+*/
+ConsoleMethodWithDocs(ModuleDefinition, getModulePath, ConsoleString, 2, 2, ())
+{
+    return object->getModulePath();
+}
+
 ConsoleMethodGroupEndWithDocs(ModuleDefinition)

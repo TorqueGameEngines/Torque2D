@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="GuiEditorToy"
     VersionId="1"
+	BuildId="1"
 	Enabled="1"
     Description="Gui Editor for T2D MIT."
     Type="toy"

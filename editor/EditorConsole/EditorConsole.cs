@@ -31,7 +31,7 @@ function EditorConsole::create(%this)
 		Position="0 738";
 		Extent="1024 30";
 		minExtent="120 20";
-		AltCommand="EditorConsole.eval();";
+		ReturnCommand="EditorConsole.eval();";
 		MaxLength="255";
 		active = "1";
 	};
@@ -89,6 +89,11 @@ function EditorConsole::close(%this)
 function EditorConsole::eval(%this)
 {
 	%text = trim(%this.consoleEntry.getValue());
+
+	if(%text $= "")
+	{
+		return;
+	}
 
     if(strpos(%text, "(") == -1 && strpos(%text, "=") == -1 && strpos(%text, " ") == -1 && strpos(%text, "{") == -1 && strpos(%text, "}") == -1)
     {

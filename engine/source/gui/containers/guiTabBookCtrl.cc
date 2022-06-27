@@ -259,6 +259,10 @@ void GuiTabBookCtrl::onTouchDown(const GuiEvent &event)
         if( tab != NULL && tab->isActive() )
             selectPage( tab );
     }
+    else
+    {
+        Parent::onTouchDown(event);
+    }
 }
 
 void GuiTabBookCtrl::onTouchMove(const GuiEvent &event)
@@ -324,7 +328,8 @@ void GuiTabBookCtrl::onPreRender()
 
 void GuiTabBookCtrl::onRender(Point2I offset, const RectI &updateRect)
 {
-	RectI ctrlRect = applyMargins(offset + mTabRect.point, mTabRect.extent, NormalState, mProfile);
+   Point2I totalOffset = offset + mTabRect.point;
+	RectI ctrlRect = applyMargins(totalOffset, mTabRect.extent, NormalState, mProfile);
 
 	if (!ctrlRect.isValidRect())
 	{
@@ -386,7 +391,7 @@ void GuiTabBookCtrl::renderTab( RectI tabRect, GuiTabPageCtrl *tab )
    renderUniversalRect(ctrlRect, mTabProfile, currentState);
 
    //Render Text
-   dglSetBitmapModulation(mTabProfile->getFontColor(currentState));
+   dglSetBitmapModulation(getFontColor(mTabProfile, currentState));
    RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mTabProfile);
    RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mTabProfile);
 
@@ -401,70 +406,6 @@ void GuiTabBookCtrl::renderTab( RectI tabRect, GuiTabPageCtrl *tab )
    }
 
    renderText(contentRect.point, contentRect.extent, text, mTabProfile, rot);
-
-   /*
-   // Is this a skinned control?
-   if( mHasTexture && mProfile->mBitmapArrayRects.size() >= 9 )
-   {
-      S32 indexMultiplier = 1;
-      switch( mTabPosition )
-      {
-      case AlignTop:
-      case AlignBottom:
-         
-         if ( mActivePage == tab )
-            indexMultiplier += TabSelected;
-         else if( mHoverTab == tab )
-            indexMultiplier += TabHover;
-         else
-            indexMultiplier += TabNormal;
-         
-         //dglDrawBitmapStretchSR(mProfile->mTextureHandle,tabRect,stretchRect, ( mTabPosition == AlignBottom ) ? GFlip_Y : 0 );
-         break;
-      case AlignLeft:
-      case AlignRight:
-         if ( mActivePage == tab )
-            indexMultiplier += TabSelectedVertical;
-         else if( mHoverTab == tab )
-            indexMultiplier += TabHoverVertical;
-         else
-            indexMultiplier += TabNormalVertical;
-
-         //dglDrawBitmapStretchSR(mProfile->mTextureHandle,tabRect,stretchRect, ( mTabPosition == AlignRight ) ? GFlip_X : 0 );
-         break;
-      } 
-
-      renderFixedBitmapBordersFilled( tabRect, indexMultiplier, mProfile );
-   }
-   else
-   {
-      // If this isn't a skinned control or the bitmap is simply missing, handle it WELL
-      if ( mActivePage == tab )
-         dglDrawRectFill(tabRect, mProfile->mFillColor);
-      else if( mHoverTab == tab )
-         dglDrawRectFill(tabRect, mProfile->mFillColorHL);
-      else
-         dglDrawRectFill(tabRect, mProfile->mFillColorNA);
-
-   }
-
-
-   dglSetBitmapModulation(mProfile->mFontColor);
-
-   switch( mTabPosition )
-   {
-   case AlignTop:
-   case AlignBottom:
-      renderJustifiedTextRot( tabRect.point, tabRect.extent, text, 0);
-   break;
-   case AlignLeft:
-      renderJustifiedTextRot( tabRect.point, tabRect.extent, text, -90 );
-      break;
-   case AlignRight:
-      renderJustifiedTextRot( tabRect.point, tabRect.extent, text, -90 );
-      break;
-   }
-   */
 }
 
 // This is nothing but a clever hack to allow the tab page children
@@ -482,16 +423,17 @@ void GuiTabBookCtrl::setUpdate()
 void GuiTabBookCtrl::solveDirty()
 {
    bool dirty = false;
+   GFont* font = mTabProfile->getFont(mFontSizeAdjust);
    if( mTabPosition != mLastTabPosition )
    {
       mLastTabPosition = mTabPosition;
       dirty = true;
    }
-   else if( mTabProfile != NULL && mTabProfile->mFont != NULL && mTabProfile->mFont->getHeight() != mFontHeight )
+   else if( mTabProfile != NULL && font != NULL && font->getHeight() != mFontHeight )
    {
       dirty = true;
    }
-   else if(mPages.size() > 0 && mTabProfile != NULL && mTabProfile->mFont != NULL)
+   else if(mPages.size() > 0 && mTabProfile != NULL && font != NULL)
    {
 	   S32 tabWidth = calculatePageTabWidth(mPages[0].Page);
 	   tabWidth = getMax(tabWidth, mMinTabWidth);
@@ -515,12 +457,13 @@ S32 GuiTabBookCtrl::calculatePageTabWidth( GuiTabPageCtrl *page )
 
    StringTableEntry text = page->getText();
 
-   if( !text || dStrlen(text) == 0 || !mTabProfile || !mTabProfile->mFont || mTabProfile->mFont == '\0' )
+   if( !text || dStrlen(text) == 0 || !mTabProfile )
       return mTabWidth;
 
-	S32 textLength = mTabProfile->mFont->getStrNWidth(text, dStrlen(text));
+	S32 textLength = mTabProfile->getFont(mFontSizeAdjust)->getStrNWidth(text, dStrlen(text));
 
-	Point2I outerExtent = getOuterExtent(Point2I(textLength, textLength), NormalState, mTabProfile);
+   Point2I innerExtent = Point2I(textLength, textLength);
+	Point2I outerExtent = getOuterExtent(innerExtent, NormalState, mTabProfile);
 
 	if (mTabPosition == AlignTop || mTabPosition == AlignBottom)
 	{
@@ -547,8 +490,9 @@ void GuiTabBookCtrl::calculatePageTabs()
    S32 currY      = 0;
    S32 tabHeight  = 0;
    RectI innerRect = getInnerRect(mBounds.point, mBounds.extent, NormalState, mProfile);
-   Point2I fontBasedBounds = getOuterExtent(Point2I(mTabProfile->mFont->getHeight(), mTabProfile->mFont->getHeight()), NormalState, mTabProfile);
-   mFontHeight = mTabProfile->mFont->getHeight();
+   mFontHeight = mTabProfile->getFont(mFontSizeAdjust)->getHeight();
+   Point2I innerExtent = Point2I(mFontHeight, mFontHeight);
+   Point2I fontBasedBounds = getOuterExtent(innerExtent, NormalState, mTabProfile);
 
    if (mTabPosition == AlignTop || mTabPosition == AlignBottom)
    {
@@ -632,7 +576,8 @@ void GuiTabBookCtrl::calculatePageTabs()
    currRow++;
    currColumn++;
 
-   Point2I outerExtent = getOuterExtent(Point2I(currColumn * tabHeight, currRow * tabHeight), NormalState, mProfile);
+   Point2I colExtent = Point2I(currColumn * tabHeight, currRow * tabHeight);
+   Point2I outerExtent = getOuterExtent(colExtent, NormalState, mProfile);
 
    // Calculate 
    switch( mTabPosition )

@@ -1,0 +1,21 @@
+<ModuleDefinition
+	ModuleId="AppCore"
+	VersionId="1"
+	BuildID="1"
+	Description="Provides critical initialization and functionality needed for every project."
+	ScriptFile="appCore.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy"
+	Project="New Project"
+	ProjectDescription="Set a course for adventure!"
+	Icon="projectIcon.png"
+	Synchronized="1" >
+	<DeclaredAssets
+		Path="gui"
+		Extension="asset.taml"
+		Recurse="true"/>
+	<DeclaredAssets
+		Path="fonts"
+		Extension="asset.taml"
+		Recurse="false"/>
+</ModuleDefinition>

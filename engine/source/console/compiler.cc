@@ -74,7 +74,7 @@ namespace Compiler
    
    void evalSTEtoCode(StringTableEntry ste, U32 ip, U32 *codeStream)
    {
-#ifdef TORQUE_64
+#ifdef TORQUE_CPU_X64
       *((U64*)(codeStream+ip)) = (U64)ste;
 #else
       codeStream[ip] = (U32)ste;

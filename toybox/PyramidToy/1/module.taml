@@ -1,6 +1,7 @@
 <ModuleDefinition
     ModuleId="PyramidToy"
     VersionId="1"
+	BuildId="1"
     Description="Demonstrates rigid-body stacking."
     Dependencies="ToyAssets=1"
     Type="toy"
@@ -8,4 +9,3 @@
     ScriptFile="main.cs"
     CreateFunction="create"
     DestroyFunction="destroy"/>
-	

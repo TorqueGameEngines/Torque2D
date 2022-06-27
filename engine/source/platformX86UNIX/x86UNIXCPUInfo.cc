@@ -62,9 +62,17 @@ void Processor::init()
    clockticks = properties = processor = Ttime[0] = 0;
    dStrcpy(vendor, "");
 
+   #ifndef TORQUE_64
    detectX86CPUInfo(vendor, &processor, &properties);
    SetProcessorInfo(PlatformSystemInfo.processor, 
       vendor, processor, properties);
+   # else
+   // 32 bit code to detect processor name and extensions is around, but feels kinda dinky in 2021.
+   // Porting it to 64 bit? Hardcode the bare minimum instead.
+   PlatformSystemInfo.processor.mhz = 1337;
+   PlatformSystemInfo.processor.name = StringTable->insert("AMD64 Compatible");
+   #endif
+
 
    U32 mhz = 0;
 
@@ -140,6 +148,8 @@ void Processor::init()
    } else {
       Con::printf("   %s, %d Mhz", PlatformSystemInfo.processor.name, PlatformSystemInfo.processor.mhz);
    }
+   
+   #ifndef TORQUE_64
    if (PlatformSystemInfo.processor.mhz != mhz) {
       if (mhz >= 1000) {
          Con::printf("     (timed at roughly %.2f Ghz)", ((float)mhz)/1000.0f);
@@ -156,6 +166,7 @@ void Processor::init()
    if (PlatformSystemInfo.processor.properties & CPU_PROP_SSE)
       Con::printf("   SSE detected");
    Con::printf(" ");
+   #endif
 
    PlatformBlitInit();
 }

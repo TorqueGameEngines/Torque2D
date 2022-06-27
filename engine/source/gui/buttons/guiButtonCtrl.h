@@ -56,6 +56,8 @@ public:
 	void acceleratorKeyPress(U32 index);
 	void acceleratorKeyRelease(U32 index);
 
+	virtual void setActive(bool value);
+
 	virtual void onTouchDown(const GuiEvent &);
 	virtual void onTouchUp(const GuiEvent &);
 	virtual void onRightMouseUp(const GuiEvent &);

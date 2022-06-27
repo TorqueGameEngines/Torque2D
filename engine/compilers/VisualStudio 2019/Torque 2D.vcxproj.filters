@@ -202,6 +202,9 @@
     <Filter Include="2d\editorToy">
       <UniqueIdentifier>{598766e4-7dc1-45b8-8acf-f133f4fced82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="math\noise">
+      <UniqueIdentifier>{1a2a7ebc-eda6-4a67-b9ab-bc9f437b5d5c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\audio\audio.cc">
@@ -465,9 +468,6 @@
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc">
       <Filter>gui\containers</Filter>
     </ClCompile>
@@ -481,9 +481,6 @@
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc">
-      <Filter>gui\editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc">
@@ -754,15 +751,6 @@
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiMLTextCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiMLTextEditCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc">
@@ -1342,6 +1330,12 @@
     <ClCompile Include="..\..\source\gui\editor\guiParticleGraphInspector.cc">
       <Filter>gui\editor</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\source\algorithm\Perlin.cc">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\math\noise\NoiseGenerator.cc">
+      <Filter>math\noise</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\source\audio\audio.h">
@@ -1626,9 +1620,6 @@
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h">
       <Filter>gui\containers</Filter>
     </ClInclude>
@@ -1642,9 +1633,6 @@
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h">
-      <Filter>gui\editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h">
       <Filter>gui\editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h">
@@ -1960,15 +1948,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiMLTextCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiMLTextEditCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h">
@@ -3069,6 +3048,15 @@
     </ClInclude>
     <ClInclude Include="..\..\source\gui\editor\guiParticleGraphInspector_ScriptBinding.h">
       <Filter>gui\editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\algorithm\Perlin.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\noise\NoiseGenerator.h">
+      <Filter>math\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\noise\NoiseGenerator_ScriptBinding.h">
+      <Filter>math\noise</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

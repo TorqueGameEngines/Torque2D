@@ -138,6 +138,19 @@ ConsoleMethodWithDocs(ModuleManager, unloadExplicit, ConsoleBool, 3, 3, (moduleI
 
 //-----------------------------------------------------------------------------
 
+/*! Checks to see if a module is loaded or not.
+    @param moduleId The module Id to check.
+    @return True if the module is loaded. False otherwise.
+*/
+ConsoleMethodWithDocs(ModuleManager, isModuleLoaded, ConsoleBool, 3, 3, (moduleId))
+{
+    ModuleDefinition* pLoadedModule = object->findLoadedModule(argv[2]);
+
+    return pLoadedModule != NULL;
+}
+
+//-----------------------------------------------------------------------------
+
 /*! Find the specific module Id optionally at the specified version Id.
     @param moduleId The module Id to find.
     @param versionId The version Id to find.
@@ -273,15 +286,16 @@ ConsoleMethodWithDocs(ModuleManager, findModuleTypes, ConsoleString, 4, 4, (modu
 
 /*! Copy the module to a new location with a new module Id.
     @param sourceModuleDefinition The module definition to copy.
+    @param sourceModuleVersion The module version to copy.
     @param targetModuleId The module Id to rename the copied module to including all references to the source module Id.  It is valid to specifiy the source module Id to produce an identical copy.
     @param targetPath The target path to copy the module to.  Addition folders will be created depending on whether 'useVersionPathing' is used or not.
     @param useVersionPathing Whether to add a '/targetModuleId/versionId' folder to the target path or not.  This allows copying multiple versions of the same module Id.
     @return The new module definition file if copy was successful or NULL if not.
 */
-ConsoleMethodWithDocs(ModuleManager, copyModule, ConsoleString, 6, 6, (sourceModuleDefinition, targetModuleId, targetPath, useVersionPathing?))
+ConsoleMethodWithDocs(ModuleManager, copyModule, ConsoleString, 7, 7, (sourceModuleDefinition, sourceModuleVersion, targetModuleId, targetPath, useVersionPathing?))
 {
     // Find the source module definition.
-    ModuleDefinition* pSourceModuleDefinition = dynamic_cast<ModuleDefinition*>( Sim::findObject( argv[2] ) );
+    ModuleDefinition* pSourceModuleDefinition = object->findModule(argv[2], dAtoi(argv[3]));
 
     // Was the module definition found?
     if ( pSourceModuleDefinition == NULL )
@@ -292,13 +306,13 @@ ConsoleMethodWithDocs(ModuleManager, copyModule, ConsoleString, 6, 6, (sourceMod
     }
 
     // Fetch the target module Id.
-    const char* pTargetModuleId = argv[3];
+    const char* pTargetModuleId = argv[4];
     
     // Fetch the target path.
-    const char* pTargetPath = argv[4];
+    const char* pTargetPath = argv[5];
 
     // Fetch the 'useVersionPathing' flag.
-    const bool useVersionPathing = dAtob(argv[5]);
+    const bool useVersionPathing = dAtob(argv[6]);
 
     // Copy module.
     return object->copyModule( pSourceModuleDefinition, pTargetModuleId, pTargetPath, useVersionPathing );
@@ -419,6 +433,17 @@ ConsoleMethodWithDocs(ModuleManager, removeListener, ConsoleVoid, 3, 3, (listene
     }
 
     object->removeListener( pListener );
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Removes everything from the module database
+    @return No return value
+*/
+ConsoleMethodWithDocs(ModuleManager, clearDatabase, ConsoleVoid, 2, 2, ())
+{
+    // Check if module merge is available or not.
+    return object->clearDatabase();
 }
 
 ConsoleMethodGroupEndWithDocs(ModuleManager)

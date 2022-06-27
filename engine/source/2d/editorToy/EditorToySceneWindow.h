@@ -134,8 +134,8 @@ public:
    void onRightMouseUp(const GuiEvent& gEvt);
    void onRightMouseDown(const GuiEvent& gEvt);
    void onRightMouseDragged(const GuiEvent& gEvt);
-   bool onMouseWheelUp(const GuiEvent &gEvt);
-   bool onMouseWheelDown(const GuiEvent &gEvt);
+   void onMouseWheelUp(const GuiEvent &gEvt);
+   void onMouseWheelDown(const GuiEvent &gEvt);
 
    // do something to objects
    void rotateObject(Vector2 mousePos, Vector2 origVec, F32 origAngle);

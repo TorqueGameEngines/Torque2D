@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="VirtualKeyboard"
 	VersionId="1"
+	BuildId="1"
 	ScriptFile="main.cs"
 	CreateFunction="create"
 	DestroyFunction="destroy">

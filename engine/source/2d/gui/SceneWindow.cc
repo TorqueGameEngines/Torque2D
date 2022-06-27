@@ -1417,7 +1417,7 @@ void SceneWindow::onTouchDown( const GuiEvent& event )
 	if (mShowScrollBar)
 	{
 		mScrollBar->curHitRegion = mScrollBar->findHitRegion(mScrollBar->globalToLocalCoord(event.mousePoint));
-		if (mScrollBar->curHitRegion != GuiScrollCtrl::None)
+		if (mScrollBar->curHitRegion != GuiScrollCtrl::Content)
 		{
 			setUpdate();
 			mScrollBar->onTouchDown(event);
@@ -1532,12 +1532,12 @@ void SceneWindow::onRightMouseDragged( const GuiEvent& event )
 
 //-----------------------------------------------------------------------------
 
-bool SceneWindow::onMouseWheelUp( const GuiEvent& event )
+void SceneWindow::onMouseWheelUp( const GuiEvent& event )
 {
 	if (mShowScrollBar && ((mMouseWheelScrolls && !(event.modifier & SI_SHIFT)) || (!mMouseWheelScrolls && (event.modifier & SI_SHIFT))))
 	{
 		mScrollBar->onMouseWheelUp(event);
-		return true;
+		return;
 	}
 
    // Call Parent.
@@ -1545,19 +1545,16 @@ bool SceneWindow::onMouseWheelUp( const GuiEvent& event )
 
    // Dispatch input event.
    dispatchInputEvent(mouseEventWheelUpName, event);
-
-   // Return Success.
-   return true;
 }
 
 //-----------------------------------------------------------------------------
 
-bool SceneWindow::onMouseWheelDown( const GuiEvent& event )
+void SceneWindow::onMouseWheelDown( const GuiEvent& event )
 {
 	if (mShowScrollBar && ((mMouseWheelScrolls && !(event.modifier & SI_SHIFT)) || (!mMouseWheelScrolls && (event.modifier & SI_SHIFT))))
 	{
 		mScrollBar->onMouseWheelDown(event);
-		return true;
+		return;
 	}
 
    // Call Parent.
@@ -1565,9 +1562,6 @@ bool SceneWindow::onMouseWheelDown( const GuiEvent& event )
 
    // Dispatch input event.
    dispatchInputEvent(mouseEventWheelDownName, event);
-
-   // Return Success.
-   return true;
 }
 
 //-----------------------------------------------------------------------------
@@ -2047,11 +2041,11 @@ void SceneWindow::renderMetricsOverlay( Point2I offset, const RectI& updateRect 
     // Finish if should not or cannot render.
     if (    ( !fullMetrics && !fpsMetrics ) ||
             mProfile == NULL ||
-            mProfile->mFont.isNull() )            
+            !mProfile->getFont(mFontSizeAdjust) )
             return;
 
     // Fetch the font.
-    Resource<GFont>& font = mProfile->mFont;    
+    GFont* font = mProfile->getFont(mFontSizeAdjust);
 
     // Blending for banner background.
     glEnable        ( GL_BLEND );

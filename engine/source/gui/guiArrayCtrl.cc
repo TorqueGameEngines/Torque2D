@@ -45,7 +45,7 @@ bool GuiArrayCtrl::onWake()
       return false;
 
    //get the font
-   mFont = mProfile->mFont;
+   mFont = mProfile->getFont(mFontSizeAdjust);
 
    return true;
 }

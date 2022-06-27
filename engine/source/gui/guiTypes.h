@@ -61,6 +61,10 @@
 
 #include "graphics/gFont.h"
 
+#ifndef _HASHTABLE_H
+#include "collection/hashTable.h"
+#endif
+
 class GBitmap;
 
 /// Represents a single GUI event.
@@ -95,6 +99,22 @@ enum class GuiDirection
 	Down,				
 	Left,				
 	Right			
+};
+
+enum AlignmentType
+{
+	LeftAlign,
+	RightAlign,
+	CenterAlign,
+	DefaultAlign
+};
+
+enum VertAlignmentType
+{
+	TopVAlign,
+	BottomVAlign,
+	MiddleVAlign,
+	DefaultVAlign
 };
 
 class GuiCursor : public SimObject
@@ -167,12 +187,12 @@ public:
    bool mTabable;                                  ///< True if this object is accessable from using the tab key
 
    bool mCanKeyFocus;                              ///< True if the object can be given keyboard focus (in other words, made a first responder @see GuiControl)
-   bool mUseInput;                                 ///< True if input events like a click can be passed to this object. False will pass events to the parent and this object and its children will not be evaluated.
 
    ColorI mFillColor; //Normal fill color used to fill the control area inside (and possibly under) the border.
    ColorI mFillColorHL; //The highlight fill color used when the cursor enters the control.
    ColorI mFillColorSL;	//Color used when the control is selected.
    ColorI mFillColorNA; //Used if the object is not active or disabled.
+   ColorI mFillColorTextSL; //Background color used when text is selected.
 
    GuiBorderProfile* mBorderDefault;					//The default border settings.
    // top profile
@@ -197,36 +217,26 @@ public:
       ColorHL,
       ColorNA,
       ColorSL,
+      ColorLink,
+      ColorLinkHL,
+      ColorTextSL,
       ColorUser0,
       ColorUser1,
       ColorUser2,
-      ColorUser3,
-      ColorUser4,
-      ColorUser5,
    };
    ColorI  mFontColors[10];                        ///< Array of font colors used for drawText with escape characters for changing color mid-string
    ColorI& mFontColor;                             ///< Main font color
    ColorI& mFontColorHL;                           ///< Highlited font color
    ColorI& mFontColorNA;                           ///< Font color when object is not active/disabled
    ColorI& mFontColorSL;                          ///< Font color when object/text is selected
+   ColorI& mFontColorLink;
+   ColorI& mFontColorLinkHL;
+   ColorI& mFontColorTextSL;
    FontCharset mFontCharset;                       ///< Font character set
 
-   Resource<GFont>   mFont;                        ///< Font resource
-
-   enum AlignmentType
-   {
-      LeftAlign,
-      RightAlign,
-      CenterAlign
-   };
+   GFont* getFont(F32 fontAdjust = 1.0);
+   
    AlignmentType mAlignment;                       ///< Horizontal text alignment
-
-   enum VertAlignmentType
-   {
-	   TopVAlign,
-	   BottomVAlign,
-	   MiddleVAlign
-   };
    VertAlignmentType mVAlignment;				   ///< Vertical text alignment
                              
    bool mMouseOverSelected;                        ///< True if this object should be "selected" while the mouse is over it
@@ -240,6 +250,12 @@ public:
    AssetPtr<ImageAsset> mImageAsset;
    void setImageAsset( const char* pImageAssetID );
    inline StringTableEntry getImageAsset( void ) const { return mImageAssetID; }
+
+private:
+	HashMap<S32, GFont*> mFontMap;
+	S32 getFontSize(F32 fontAdjust);
+	void addFont(S32 fontSize);
+
 protected:
 	static bool setImageAsset(void* obj, const char* data) { static_cast<GuiControlProfile*>(obj)->setImageAsset(data); return false; }
 	static const char* getImageAsset(void* obj, const char* data) { return static_cast<GuiControlProfile*>(obj)->getImageAsset(); }
@@ -286,7 +302,7 @@ public:
    /// It also stores the sizes in the mBitmapArrayRects vector.
    S32 constructBitmapArray();
 
-   void incRefCount();
+   void incRefCount(F32 fontAdjust = 1.0);
    void decRefCount();
 
    const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.

@@ -125,7 +125,7 @@ public:
 		BatchRender* pBatchRenderer) const;
 
 	// Render the given list of vertex information directly.
-	void ImageFrameProviderCore::render(
+	void render(
 		const U32 vertexCount,
 		const Vector2 *vertexArray,
 		const Vector2 *textureArray,

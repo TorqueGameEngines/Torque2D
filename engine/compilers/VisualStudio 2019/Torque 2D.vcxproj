@@ -30,7 +30,7 @@
     <ProjectGuid>{1564A07D-230E-4C90-AEE6-52AC9A58D6C9}</ProjectGuid>
     <RootNamespace>TorqueGame</RootNamespace>
     <ProjectName>Torque2D</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.18362.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
@@ -117,6 +117,10 @@
     <OutDir>../../../</OutDir>
     <IntDir>../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>../../../</OutDir>
+    <IntDir>../../Link/VC2012.$(Configuration).$(PlatformName)/$(ProjectName)/</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Midl>
       <TypeLibraryName>$(OutDir)Torque2D.tlb</TypeLibraryName>
@@ -143,6 +147,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
       <ShowIncludes>false</ShowIncludes>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -192,6 +197,7 @@
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
       <ShowIncludes>false</ShowIncludes>
       <FunctionLevelLinking>true</FunctionLevelLinking>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -241,6 +247,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -301,6 +308,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -360,6 +368,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -420,6 +429,7 @@
       <CompileAs>CompileAsCpp</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <DisableSpecificWarnings>4800;4100;4127;4512</DisableSpecificWarnings>
+      <ConformanceMode>true</ConformanceMode>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -506,6 +516,7 @@
     <ClCompile Include="..\..\source\2d\scene\WorldQuery.cc" />
     <ClCompile Include="..\..\source\algorithm\crc.cc" />
     <ClCompile Include="..\..\source\algorithm\hashFunction.cc" />
+    <ClCompile Include="..\..\source\algorithm\Perlin.cc" />
     <ClCompile Include="..\..\source\assets\assetBase.cc" />
     <ClCompile Include="..\..\source\assets\assetFieldTypes.cc" />
     <ClCompile Include="..\..\source\assets\assetManager.cc" />
@@ -628,9 +639,6 @@
     <ClCompile Include="..\..\source\gui\guiInputCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiListBoxCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiMessageVectorCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiMLTextCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiMLTextEditCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\guiMouseEventCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiProgressCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiSliderCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiTextEditCtrl.cc" />
@@ -668,6 +676,7 @@
     <ClCompile Include="..\..\source\math\math_ScriptBinding.cc" />
     <ClCompile Include="..\..\source\math\mFluid.cpp" />
     <ClCompile Include="..\..\source\math\mPoint.cpp" />
+    <ClCompile Include="..\..\source\math\noise\NoiseGenerator.cc" />
     <ClCompile Include="..\..\source\math\rectClipper.cpp" />
     <ClCompile Include="..\..\source\memory\dataChunker.cc" />
     <ClCompile Include="..\..\source\memory\frameAllocator_ScriptBinding.cc" />
@@ -824,13 +833,11 @@
     <ClCompile Include="..\..\source\gui\buttons\guiRadioCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiDragAndDropCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiPanelCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiRolloutCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabBookCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiWindowCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiDebugger.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiEditCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\editor\guiFilterCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiGraphCtrl.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspector.cc" />
     <ClCompile Include="..\..\source\gui\editor\guiInspectorTypes.cc" />
@@ -933,6 +940,7 @@
     <ClInclude Include="..\..\source\algorithm\crctab.h" />
     <ClInclude Include="..\..\source\algorithm\hashFunction.h" />
     <ClInclude Include="..\..\source\algorithm\md5.h" />
+    <ClInclude Include="..\..\source\algorithm\Perlin.h" />
     <ClInclude Include="..\..\source\assets\assetBase.h" />
     <ClInclude Include="..\..\source\assets\assetBase_ScriptBinding.h" />
     <ClInclude Include="..\..\source\assets\assetDefinition.h" />
@@ -1128,9 +1136,6 @@
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiMessageVectorCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiMLTextCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiMLTextEditCtrl.h" />
-    <ClInclude Include="..\..\source\gui\guiMouseEventCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiProgressCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiSliderCtrl.h" />
@@ -1175,6 +1180,8 @@
     <ClInclude Include="..\..\source\math\matrix_ScriptBinding.h" />
     <ClInclude Include="..\..\source\math\mFluid.h" />
     <ClInclude Include="..\..\source\math\mNormalDistribution.h" />
+    <ClInclude Include="..\..\source\math\noise\NoiseGenerator.h" />
+    <ClInclude Include="..\..\source\math\noise\NoiseGenerator_ScriptBinding.h" />
     <ClInclude Include="..\..\source\math\random_ScriptBinding.h" />
     <ClInclude Include="..\..\source\math\rectClipper.h" />
     <ClInclude Include="..\..\source\math\vector_ScriptBinding.h" />
@@ -1408,13 +1415,11 @@
     <ClInclude Include="..\..\source\gui\buttons\guiRadioCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiRolloutCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiScrollCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiTabBookCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiWindowCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiDebugger.h" />
     <ClInclude Include="..\..\source\gui\editor\guiEditCtrl.h" />
-    <ClInclude Include="..\..\source\gui\editor\guiFilterCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiGraphCtrl.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspector.h" />
     <ClInclude Include="..\..\source\gui\editor\guiInspectorTypes.h" />

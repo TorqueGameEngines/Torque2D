@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="AngleToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates how to use most angle functions."
 	Dependencies="ToyAssets=1"
 	Type="toy"

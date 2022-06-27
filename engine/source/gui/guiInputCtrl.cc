@@ -75,7 +75,6 @@ static bool isModifierKey( U16 keyCode )
 //------------------------------------------------------------------------------
 bool GuiInputCtrl::onInputEvent( const InputEvent &event )
 {
-   // TODO - add POV support...
    if ( event.action == SI_MAKE )
    {
       if ( event.objType == SI_BUTTON

@@ -22,27 +22,12 @@
 
 ConsoleMethodGroupBeginWithDocs(GuiTextEditCtrl, GuiControl)
 
-
-/*! Get the contents of the textedit control.
-	@return The current text in the textedit box.
-*/
-ConsoleMethodWithDocs(GuiTextEditCtrl, getText, ConsoleString, 2, 2, "()")
-{
-	if (!object->hasText())
-		return StringTable->EmptyString;
-
-	char *retBuffer = Con::getReturnBuffer(GuiTextEditCtrl::MAX_STRING_LENGTH);
-	object->getText(retBuffer);
-
-	return retBuffer;
-}
-
 /*! Gets the current position of the text cursor in the control.
 	@return The current position of the text cursor in the control, where 0 is at the beginning of the line, 1 is after the first letter, and so on.
 */
 ConsoleMethodWithDocs(GuiTextEditCtrl, getCursorPos, ConsoleInt, 2, 2, "()")
 {
-	return(object->getCursorPos());
+	return(object->getIbeamPosition());
 }
 
 /*! Sets the current position of the text cursor in the control.
@@ -51,7 +36,7 @@ ConsoleMethodWithDocs(GuiTextEditCtrl, getCursorPos, ConsoleInt, 2, 2, "()")
 */
 ConsoleMethodWithDocs(GuiTextEditCtrl, setCursorPos, ConsoleVoid, 3, 3, "( newPos )")
 {
-	object->reallySetCursorPos(dAtoi(argv[2]));
+	object->setIbeamPosition(dAtoi(argv[2]));
 }
 
 /*! Selects all the text in the control.

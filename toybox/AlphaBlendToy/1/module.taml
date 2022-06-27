@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="AlphaBlendToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Show the sprite alpha blending feature."
 	Dependencies="ToyAssets=1"
 	Type="toy"

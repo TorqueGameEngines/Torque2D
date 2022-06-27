@@ -1434,7 +1434,7 @@ breakContinue:
             }
             // Now, rewrite our code a bit (ie, avoid future lookups) and fall
             // through to OP_CALLFUNC
-#ifdef TORQUE_64
+#ifdef TORQUE_CPU_X64
             *((U64*)(code+ip+2)) = ((U64)nsEntry);
 #else
             code[ip+2] = ((U32)nsEntry);
@@ -1465,7 +1465,7 @@ breakContinue:
 
             if(callType == FuncCallExprNode::FunctionCall) 
             {
-#ifdef TORQUE_64
+#ifdef TORQUE_CPU_X64
                nsEntry = ((Namespace::Entry *) *((U64*)(code+ip-3)));
 #else
                nsEntry = ((Namespace::Entry *) *(code+ip-3));

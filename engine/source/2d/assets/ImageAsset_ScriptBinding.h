@@ -433,7 +433,7 @@ ConsoleMethodWithDocs(ImageAsset, insertExplicitCell, ConsoleBool, 8, 8, (int ce
     @param cellIndex The zero-based index to remove the cell from.
     @return Whether the operation was successful or not.
 */
-ConsoleMethodWithDocs(ImageAsset, removeExplicitCell, ConsoleBool, 7, 7, (int cellIndex))
+ConsoleMethodWithDocs(ImageAsset, removeExplicitCell, ConsoleBool, 3, 3, (int cellIndex))
 {
     // Fetch cell index.
     const S32 cellIndex = dAtoi( argv[2] );
@@ -578,7 +578,7 @@ ConsoleMethodWithDocs(ImageAsset, getExplicitCellName, ConsoleString, 3, 3, (cel
 
 /*! Gets the CELL index number in Explicit Mode.
     @param cellName The cell name to use to find the specific index.
-    @return The specified CELL index number.
+    @return The specified CELL index number or -1 if no such cell exists.
 */
 ConsoleMethodWithDocs(ImageAsset, getExplicitCellIndex, ConsoleInt, 3, 3, (cellName))
 {

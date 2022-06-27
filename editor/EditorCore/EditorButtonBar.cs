@@ -36,3 +36,8 @@ function EditorButtonBar::refreshEnabled(%this)
 		}
 	}
 }
+
+function EditorButtonBar::onRemove(%this)
+{
+	%this.deleteObjects();
+}

@@ -36,6 +36,8 @@ function NewImageAssetDialog::init(%this, %width, %height)
 		Position = "12 170";
 		Extent = (%width - 24) SPC 80;
 		text = "Select an Image File to get started!";
+		textWrap = true;
+		textExtend = true;
 	};
 	ThemeManager.setProfile(%this.feedback, "infoProfile");
 
@@ -88,7 +90,7 @@ function NewImageAssetDialog::Validate(%this)
 		%this.moduleNameBox.setText(%modSig);
 		%this.prevFile = %file;
 	}
-	%assetPath = filePath(%file) @ "/" @ %assetName @ ".asset.taml";
+	%assetPath = pathConcat(filePath(%file), %assetName @ ".image.taml");
 	%moduleName = getUnit(%this.moduleNameBox.getText(), 0, "_");
 	%moduleVersion = getUnit(%this.moduleNameBox.getText(), 1, "_");
 	%assetID = %moduleName @ ":" @ %assetName;
@@ -124,6 +126,20 @@ function NewImageAssetDialog::Validate(%this)
 		%this.feedback.setText("You can only create an image asset inside of a module.");
 		return false;
 	}
+	else
+	{
+		%module = ModuleDatabase.findModule(%moduleName, %moduleVersion);
+		if(!isObject(%module))
+		{
+			%this.feedback.setText("There was a problem finding the module for this asset.");
+			return false;
+		}
+		else if(%module.Synchronized)
+		{
+			%this.feedback.setText("You cannot add assets to a library module. Updates to the module would remove your assets. Instead, create your own module and add assets to it. Remember to have your module scan for assets.");
+			return false;
+		}
+	}
 
 	%button = AssetAdmin.Dictionary["ImageAsset"].getButton(%assetID);
 	if(isObject(%button))
@@ -133,13 +149,14 @@ function NewImageAssetDialog::Validate(%this)
 	}
 
 	%this.createButton.active = true;
-	%this.feedback.setText("Press the Create button to open the new asset for editing.");
+	%this.feedback.setText("Press the Create button to open the new asset for editing. Your new asset will have the extension image.taml. You must have your module scan the asset's folder for this extension.");
 	return true;
 }
 
 function NewImageAssetDialog::onClose(%this)
 {
 	Canvas.popDialog(%this);
+	%this.postEvent("DialogClosed", %this);
 }
 
 function NewImageAssetDialog::onCreate(%this)
@@ -148,7 +165,7 @@ function NewImageAssetDialog::onCreate(%this)
 	{
 		%file = makeFullPath(%this.imageFileBox.getText());
 		%assetName = %this.assetNameBox.getText();
-		%assetPath = filePath(%file) @ "/" @ %assetName @ ".asset.taml";
+		%assetPath = pathConcat(filePath(%file), %assetName @ ".image.taml");
 		%moduleName = getUnit(%this.moduleNameBox.getText(), 0, "_");
 		%moduleVersion = getUnit(%this.moduleNameBox.getText(), 1, "_");
 		%assetID = %moduleName @ ":" @ %assetName;

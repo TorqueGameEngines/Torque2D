@@ -49,6 +49,8 @@ function EditorForm::createTextEditItem(%this, %label)
 		Position = "10 16";
 		Extent = (getWord(%label.extent, 0) - 24) SPC 30;
 	};
+	%textEdit.Command = %this.getID() @ ".postEvent(\"KeyPressed\", " @ %textEdit.getID() @ ");";
+	%textEdit.ReturnCommand = %this.getID() @ ".postEvent(\"ReturnPressed\", " @ %textEdit.getID() @ ");";
 	ThemeManager.setProfile(%textEdit, "textEditProfile");
 	%label.add(%textEdit);
 	return %textEdit;
@@ -75,13 +77,14 @@ function EditorForm::createFileOpenItem(%this, %label, %filters, %dialogTitle)
 
 function EditorForm::getFilePath(%this, %filter, %title, %textEdit)
 {
+	%path = pathConcat(getMainDotCsDir(), ProjectManager.getProjectFolder());
 	%dialog = new OpenFileDialog()
 	{
 		Filters = %filter;
 		ChangePath = false;
 		MultipleFiles = false;
 		DefaultFile = "";
-		defaultPath = "./";
+		defaultPath = %path;
 		title = %title;
 	};
 	%result = %dialog.execute();
@@ -119,12 +122,13 @@ function EditorForm::createFolderOpenItem(%this, %label, %dialogTitle)
 
 function EditorForm::getFolderPath(%this, %title, %textEdit)
 {
+	%path = pathConcat(getMainDotCsDir(), ProjectManager.getProjectFolder());
 	%dialog = new OpenFolderDialog()
 	{
 		Filters = "All Files|*.*";
 		ChangePath = false;
 		DefaultFile = "";
-		defaultPath = "./";
+		defaultPath = %path;
 		title = %title;
 	};
 	%result = %dialog.execute();
@@ -172,6 +176,7 @@ function EditorForm::createCheckboxItem(%this, %label)
 		Extent = (getWord(%label.extent, 0) - 24) SPC 30;
 		Text = %label.text;
 	};
+	%box.textExtent = getWord(%box.Extent, 0) - getWord(%box.textOffset, 0);
 	ThemeManager.setProfile(%box, "checkboxProfile");
 	%label.add(%box);
 	%label.text = "";
@@ -181,4 +186,9 @@ function EditorForm::createCheckboxItem(%this, %label)
 function EditorFormDropDown::onClose(%this)
 {
 	%this.form.postEvent("DropDownClosed", %this);
+}
+
+function EditorFormDropDown::onSelect(%this)
+{
+	%this.form.postEvent("DropDownSelect", %this);
 }

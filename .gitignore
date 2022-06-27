@@ -26,8 +26,12 @@ Torque2D.exe
 Torque2D_DEBUG.exe
 Torque2DGame.app
 Torque2DGame_Debug.app
+Torque2D
+Torque2D_DEBUG
 linkmap.txt
 **/.vs/**
+.vscode/
+*.vcxproj.FileListAbsolute.txt
 
 # Compiled source #
 ###################
@@ -38,6 +42,8 @@ linkmap.txt
 *.so
 *.obj
 *.lib
+*.lib.recipe
+*.exe.recipe
 *.idb
 *.pdb
 *.ilk
@@ -77,3 +83,10 @@ engine/compilers/android-studio/app/src/main/obj/
 engine/compilers/android-studio/app/src/main/libs/
 engine/compilers/android-studio/app/src/main/game/
 engine/compilers/android-studio/app/.externalNativeBuild/
+
+# Linux build files #
+#####################
+engine/compilers/Make-32bit/Debug/
+engine/compilers/Make-32bit/Release/
+engine/compilers/Make-64bit/Debug/
+engine/compilers/Make-64bit/Release/

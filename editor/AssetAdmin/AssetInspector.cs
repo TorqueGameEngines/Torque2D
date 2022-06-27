@@ -99,10 +99,9 @@ function AssetInspector::onAdd(%this)
 
 	//Inspector Tab
 	%this.insPage = %this.createTabPage("Inspector", "");
-	%this.tabBook.add(%this.insPage);
-
 	%this.insScroller = %this.createScroller();
 	%this.insPage.add(%this.insScroller);
+	%this.tabBook.add(%this.insPage);
 
 	%this.inspector = %this.createInspector();
 	%this.insScroller.add(%this.inspector);
@@ -112,6 +111,9 @@ function AssetInspector::onAdd(%this)
 
 	//Emitter Graph Tool
 	%this.emitterGraphPage = %this.createTabPage("Emitter Graph", "AssetParticleGraphEmitterTool", "AssetParticleGraphTool");
+
+	//Image Frame Edit Tool
+	%this.imageFrameEditPage = %this.createTabPage("Frame Edit", "AssetImageFrameEditTool", "");
 }
 
 function AssetInspector::createTabPage(%this, %name, %class, %superClass)
@@ -201,14 +203,8 @@ function AssetInspector::resetInspector(%this)
 	%this.titleDropDown.visible = false;
 	%this.tabBook.Visible = true;
 	%this.tabBook.selectPage(0);
-	if(%this.tabBook.isMember(%this.scaleGraphPage))
-	{
-		%this.tabBook.remove(%this.scaleGraphPage);
-	}
-	if(%this.tabBook.isMember(%this.emitterGraphPage))
-	{
-		%this.tabBook.remove(%this.emitterGraphPage);
-	}
+	%this.tabBook.removeIfMember(%this.scaleGraphPage);
+	%this.tabBook.removeIfMember(%this.emitterGraphPage);
 
 	%this.emitterButtonBar.visible = false;
 	%this.deleteAssetButton.visible = true;
@@ -217,6 +213,8 @@ function AssetInspector::resetInspector(%this)
 function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 {
 	%this.resetInspector();
+	%this.tabBook.add(%this.imageFrameEditPage);
+	%this.tabBook.selectPage(0);
 	%this.titlebar.setText("Image Asset:" SPC %imageAsset.AssetName);
 
 	%this.inspector.clearHiddenFields();
@@ -227,6 +225,8 @@ function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 	%this.inspector.addHiddenField("ExplicitMode");
 	%this.inspector.inspect(%imageAsset);
 	%this.inspector.openGroupByIndex(0);
+
+	%this.imageFrameEditPage.inspect(%imageAsset);
 }
 
 function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)
@@ -280,10 +280,7 @@ function AssetInspector::onChooseParticleAsset(%this, %particleAsset)
 		%this.inspector.addHiddenField("AssetPrivate");
 		%this.inspector.inspect(%particleAsset);
 
-		if(%this.tabBook.isMember(%this.emitterGraphPage))
-		{
-			%this.tabBook.remove(%this.emitterGraphPage);
-		}
+		%this.tabBook.removeIfMember(%this.emitterGraphPage);
 		%this.tabBook.add(%this.scaleGraphPage);
 		%this.scaleGraphPage.inspect(%particleAsset);
 	}
@@ -293,10 +290,7 @@ function AssetInspector::onChooseParticleAsset(%this, %particleAsset)
 		%this.inspector.addHiddenField("locked");
 		%this.inspector.inspect(%particleAsset.getEmitter(%index - 1));
 
-		if(%this.tabBook.isMember(%this.scaleGraphPage))
-		{
-			%this.tabBook.remove(%this.scaleGraphPage);
-		}
+		%this.tabBook.removeIfMember(%this.scaleGraphPage);
 		%this.tabBook.add(%this.emitterGraphPage);
 		%this.emitterGraphPage.inspect(%particleAsset, %index - 1);
 	}

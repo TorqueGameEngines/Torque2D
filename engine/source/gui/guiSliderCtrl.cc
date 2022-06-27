@@ -76,7 +76,7 @@ bool GuiSliderCtrl::onWake()
     if (!Parent::onWake())
         return false;
 
-    if (mThumbSize.y + mProfile->mFont->getHeight() - 4 <= (U32) mBounds.extent.y)
+    if (mThumbSize.y + mProfile->getFont(mFontSizeAdjust)->getHeight() - 4 <= (U32) mBounds.extent.y)
         mDisplayValue = true;
     else
         mDisplayValue = false;
@@ -450,7 +450,7 @@ void GuiSliderCtrl::onRender(Point2I offset, const RectI &updateRect)
 
         Point2I textStart = thumb.point;
 
-        S32 txt_w = mProfile->mFont->getStrWidth((const UTF8 *) buf);
+        S32 txt_w = mProfile->getFont(mFontSizeAdjust)->getStrWidth((const UTF8 *) buf);
 
         textStart.x += (S32) ((thumb.extent.x / 2.0f));
         textStart.y += thumb.extent.y - 2; //19
@@ -460,8 +460,8 @@ void GuiSliderCtrl::onRender(Point2I offset, const RectI &updateRect)
         else if (textStart.x + txt_w > offset.x + mBounds.extent.x)
             textStart.x -= ((textStart.x + txt_w) - (offset.x + mBounds.extent.x));
 
-        dglSetBitmapModulation(mProfile->mFontColor);
-        dglDrawText(mProfile->mFont, textStart, buf, mProfile->mFontColors);
+        dglSetBitmapModulation(getFontColor(mProfile));
+        dglDrawText(mProfile->getFont(mFontSizeAdjust), textStart, buf, mProfile->mFontColors);
     }
     renderChildControls(offset, mBounds, updateRect);
 }

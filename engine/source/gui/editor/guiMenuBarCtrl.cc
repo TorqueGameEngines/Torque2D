@@ -137,7 +137,9 @@ void GuiMenuBarCtrl::onChildRemoved(SimObject *child)
 
 void GuiMenuBarCtrl::calculateMenus()
 {
-	RectI innerRect = getInnerRect(Point2I(mBounds.point.Zero), Point2I(getExtent()), NormalState, mProfile);
+	Point2I zero = mBounds.point.Zero;
+	Point2I extent = getExtent();
+	RectI innerRect = getInnerRect(zero, extent, NormalState, mProfile);
 	iterator i;
 	S32 length = 0;
 	for (i = begin(); i != end(); i++)
@@ -145,8 +147,9 @@ void GuiMenuBarCtrl::calculateMenus()
 		GuiControl *ctrl = static_cast<GuiControl *>(*i);
 		if (ctrl->isVisible())
 		{
-			S32 width = ctrl->mProfile->mFont->getStrWidth((const UTF8*)ctrl->getText());
-			Point2I outerExtent = getOuterExtent(Point2I(width, 0), NormalState, ctrl->mProfile);
+			S32 width = ctrl->mProfile->getFont(mFontSizeAdjust)->getStrWidth((const UTF8*)ctrl->getText());
+			Point2I innerExtent = Point2I(width, 0);
+			Point2I outerExtent = getOuterExtent(innerExtent, NormalState, ctrl->mProfile);
 			ctrl->mBounds.set(Point2I(length, 0), Point2I(outerExtent.x, innerRect.extent.y));
 			length += ctrl->getExtent().x;
 		}
@@ -812,7 +815,7 @@ void GuiMenuItemCtrl::onRender(Point2I offset, const RectI& updateRect)
 	renderUniversalRect(ctrlRect, mProfile, currentState);
 
 	//Render Text
-	dglSetBitmapModulation(mProfile->getFontColor(currentState));
+	dglSetBitmapModulation(getFontColor(mProfile, currentState));
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 	renderText(contentRect.point, contentRect.extent, mText, mProfile);
@@ -1295,13 +1298,13 @@ bool GuiMenuListCtrl::onRenderItem(RectI &itemRect, GuiMenuItemCtrl *item)
 		if(item->mDisplayType == GuiMenuItemCtrl::DisplayType::Toggle)
 		{
 			ColorI itemColor = item->mIsOn ? profile->getFillColor(HighlightState) : profile->getFillColor(NormalState);
-			S32 size = profile->mFont->getHeight();
+			S32 size = profile->getFont(mFontSizeAdjust)->getHeight();
 			renderColorBullet(leftIconRect, itemColor, getMin(size, 16));
 		}
 		else if (item->mDisplayType == GuiMenuItemCtrl::DisplayType::Radio)
 		{
 			ColorI itemColor = item->mIsOn ? profile->getFillColor(HighlightState) : profile->getFillColor(NormalState);
-			S32 size = profile->mFont->getHeight();
+			S32 size = profile->getFont(mFontSizeAdjust)->getHeight();
 			renderColorBullet(leftIconRect, itemColor, getMin(size, 16), true);
 		}
 
@@ -1309,20 +1312,21 @@ bool GuiMenuListCtrl::onRenderItem(RectI &itemRect, GuiMenuItemCtrl *item)
 		RectI rightIconRect = RectI(Point2I(itemRect.point.x + itemRect.extent.x - itemRect.extent.y, itemRect.point.y), leftIconRect.extent);
 		if (item->mDisplayType == GuiMenuItemCtrl::DisplayType::Menu)
 		{
-			S32 size = (profile->mFont->getHeight() / 2);
+			S32 size = (profile->getFont(mFontSizeAdjust)->getHeight() / 2);
 			rightIconRect.inset(2, 0);
-			renderTriangleIcon(rightIconRect, ColorI(profile->getFontColor(currentState)), GuiDirection::Right, size);
+			ColorI color = ColorI(profile->getFontColor(currentState));
+			renderTriangleIcon(rightIconRect, color, GuiDirection::Right, size);
 		}
 
 		//Text Space
 		RectI textRect = RectI(itemRect.point.x + itemRect.extent.y, itemRect.point.y, itemRect.extent.x - (2 * itemRect.extent.y), itemRect.extent.y);
 
 		//Command Description
-		profile->mAlignment = GuiControlProfile::AlignmentType::LeftAlign;
+		profile->mAlignment = AlignmentType::LeftAlign;
 		renderText(textRect.point, textRect.extent, item->getText(), profile);
 
 		//Hot Keys!!
-		profile->mAlignment = GuiControlProfile::AlignmentType::RightAlign;
+		profile->mAlignment = AlignmentType::RightAlign;
 		renderText(textRect.point, textRect.extent, item->getHotKeyText(), profile);
 	}
 
@@ -1345,7 +1349,7 @@ void GuiMenuListCtrl::updateSize()
 	if (!profile)
 		return;
 
-	GFont *font = profile->mFont;
+	GFont *font = profile->getFont(mFontSizeAdjust);
 	Point2I contentSize = Point2I(10, font->getHeight() + 2);
 	Point2I spacerSize = Point2I(10, 0);
 
@@ -1396,6 +1400,8 @@ void GuiMenuListCtrl::updateSize()
 
 	resize(mBounds.point, newExtent);
 }
+
+void GuiMenuListCtrl::onTouchDown(const GuiEvent &) { }
 
 void GuiMenuListCtrl::onTouchUp(const GuiEvent &event)
 {

@@ -2148,9 +2148,7 @@ void alxUpdateMaxDistance()
 //--------------------------------------------------------------------------
 void alxUpdate()
 {
-   //if(mForceMaxDistanceUpdate)
-      alxUpdateMaxDistance();
-
+   alxUpdateMaxDistance();
    alxCloseHandles();
    alxUpdateScores(false);
    alxLoopingUpdate();
@@ -2461,6 +2459,9 @@ void shutdownContext()
 //--------------------------------------------------------------------------
 bool OpenALInit()
 {
+   Con::printSeparator();
+   Con::printf("Audio initialization:");
+
    OpenALShutdown();
 
    if(!OpenALDLLInit())

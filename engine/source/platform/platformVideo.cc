@@ -46,9 +46,9 @@ bool        DisplayDevice::smIsFullScreen;
 void Video::init()
 {
     Con::printSeparator();
-    
+
     Con::printf("Video initialization:");
-    
+
     destroy();
 }
 
@@ -194,9 +194,7 @@ bool Video::setDevice( const char *renderName, U32 width, U32 height, U32 bpp, b
          Game->textureResurrect();
          smNeedResurrect = false;
       }
-      //if (sgOriginalGamma != -1.0 || Video::getGammaCorrection(sgOriginalGamma))
-         //Video::setGammaCorrection(sgOriginalGamma + sgGammaCorrection);
-      Con::evaluate("resetCanvas();");
+      resetCanvas();
    }
 
     // Show Maximum Texture Size reported by the graphics hardware.
@@ -209,6 +207,15 @@ bool Video::setDevice( const char *renderName, U32 width, U32 height, U32 bpp, b
 
    // The video mode activate may have failed above, return that status
    return( result );
+}
+
+void Video::resetCanvas()
+{
+    GuiCanvas* Canvas = Sim::findObject<GuiCanvas>("Canvas");
+    if (Canvas != NULL)
+    {
+        Canvas->paint();
+    }
 }
 
 extern bool retinaEnabled;
@@ -226,13 +233,13 @@ bool Video::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScreen )
          height = IOS_DEFAULT_RESOLUTION_Y;
       if(bpp == 0)
          bpp = IOS_DEFAULT_RESOLUTION_BIT_DEPTH;
-      
+
       //if(retinaEnabled)
       //{
       //    width *=2;
       //    height *=2;
       //}
-       
+
 #elif TORQUE_OS_ANDROID
       if(width == 0)
 	     width = _AndroidGetScreenWidth();
@@ -248,15 +255,15 @@ bool Video::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScreen )
       if(bpp == 0)
          bpp = MIN_RESOLUTION_BIT_DEPTH;
 #endif// TORQUE_OS_IOS
-      
+
       smCritical = true;
-      bool result = smCurrentDevice->setScreenMode( width, height, bpp, fullScreen );		
+      bool result = smCurrentDevice->setScreenMode( width, height, bpp, fullScreen );
     smCritical = false;
 
        return( result );
    }
 
-   return( false );	
+   return( false );
 }
 
 
@@ -264,7 +271,7 @@ bool Video::setScreenMode( U32 width, U32 height, U32 bpp, bool fullScreen )
 void Video::deactivate( bool force )
 {
    if ( smCritical ) return;
-   
+
    bool doDeactivate = force ? true : DisplayDevice::isFullScreen();
 
    Game->gameDeactivate( doDeactivate );
@@ -284,7 +291,7 @@ void Video::deactivate( bool force )
 void Video::reactivate( bool force )
 {
    if ( smCritical ) return;
-   
+
    bool doReactivate = force ? true : DisplayDevice::isFullScreen();
 
    if ( smCurrentDevice && doReactivate )
@@ -317,7 +324,7 @@ bool Video::setResolution( U32 width, U32 height, U32 bpp )
 
       return( result );
    }
-   return( false );	
+   return( false );
 }
 
 
@@ -332,7 +339,7 @@ bool Video::toggleFullScreen()
 
       return( result );
    }
-   return( false );	
+   return( false );
 }
 
 
@@ -345,7 +352,7 @@ DisplayDevice* Video::getDevice( const char* renderName )
             return( smDeviceList[i] );
    }
 
-    return( NULL );	
+    return( NULL );
 }
 
 
@@ -360,7 +367,7 @@ bool Video::prevRes()
 
       return( result );
    }
-   return( false );	
+   return( false );
 }
 
 
@@ -375,7 +382,7 @@ bool Video::nextRes()
 
       return( result );
    }
-   return( false );	
+   return( false );
 }
 
 
@@ -391,7 +398,7 @@ const char* Video::getDeviceList()
 {
     U32 deviceCount = smDeviceList.size();
     if ( deviceCount > 0 ) // It better be...
-    {		
+    {
         U32 strLen = 0, i;
         for ( i = 0; i < deviceCount; i++ )
             strLen += ( dStrlen( smDeviceList[i]->mDeviceName ) + 1 );
@@ -404,7 +411,7 @@ const char* Video::getDeviceList()
             dStrcat( returnString, smDeviceList[i]->mDeviceName );
         }
 
-        return( returnString );				
+        return( returnString );
     }
 
     return( NULL );
@@ -452,7 +459,7 @@ bool Video::getGammaCorrection(F32 &g)
    if (smCurrentDevice)
       return smCurrentDevice->getGammaCorrection(g);
 
-   return false;	
+   return false;
 }
 
 
@@ -462,7 +469,7 @@ bool Video::setGammaCorrection(F32 g)
    if (smCurrentDevice)
       return smCurrentDevice->setGammaCorrection(g);
 
-   return false;	
+   return false;
 }
 
 //------------------------------------------------------------------------------
@@ -470,7 +477,7 @@ bool Video::getVerticalSync()
 {
     if (smCurrentDevice)
         return smCurrentDevice->getVerticalSync();
-    
+
     return( false );
 }
 
@@ -513,7 +520,7 @@ bool DisplayDevice::prevRes()
    if ( mResolutionList[resIndex].bpp == smCurrentRes.bpp )
       return( Video::setResolution( mResolutionList[resIndex].w, mResolutionList[resIndex].h, mResolutionList[resIndex].bpp ) );
 
-    return( false );	
+    return( false );
 }
 
 
@@ -532,7 +539,7 @@ bool DisplayDevice::nextRes()
    if ( mResolutionList[resIndex].bpp == smCurrentRes.bpp )
       return( Video::setResolution( mResolutionList[resIndex].w, mResolutionList[resIndex].h, mResolutionList[resIndex].bpp ) );
 
-    return( false );	
+    return( false );
 }
 
 

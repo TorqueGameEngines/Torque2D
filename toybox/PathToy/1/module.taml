@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="PathToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Path object toy"
 	Dependencies="ToyAssets=1"
 	Type="toy"

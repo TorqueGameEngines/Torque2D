@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="PointForceControllerToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates the point-force controller."
 	Dependencies="ToyAssets=1"
 	Type="toy"

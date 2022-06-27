@@ -793,7 +793,7 @@ ConsoleMethodWithDocs(GuiSpriteCtrl, moveTo, ConsoleVoid, 4, 5, "(Vector2 x y, i
 	}
 
 	object->moveTo(dAtoi(Utility::mGetStringElement(argv[2], 0)),
-		dAtoi(Utility::mGetStringElement(argv[2], 0)),
+		dAtoi(Utility::mGetStringElement(argv[2], 1)),
 		dAtoi(argv[3]), ease);
 }
 
@@ -829,7 +829,7 @@ ConsoleMethodWithDocs(GuiSpriteCtrl, growTo, ConsoleVoid, 4, 5, "(Vector2 x y, i
 	}
 
 	object->growTo(dAtoi(Utility::mGetStringElement(argv[2], 0)),
-		dAtoi(Utility::mGetStringElement(argv[2], 0)),
+		dAtoi(Utility::mGetStringElement(argv[2], 1)),
 		dAtoi(argv[3]), ease);
 }
 

@@ -175,6 +175,9 @@ ConsoleFunctionWithDocs(OpenALInitDriver, ConsoleBool, 1, 1, ())
 {
    if (Audio::OpenALInit())
    {
+       Con::printf("   OpenAL driver initialized successfully. Let's make some noise!");
+       Con::printf("");
+
       static bool registered = false;
       if (!registered) {
          ResourceManager->registerExtension(".wav", AudioBuffer::construct);
@@ -183,6 +186,8 @@ ConsoleFunctionWithDocs(OpenALInitDriver, ConsoleBool, 1, 1, ())
       registered = true;
       return true;
    }
+   Con::printf("   OpenAL driver failed to initialize... so quiet...");
+   Con::printf("");
    return false;
 }
 

@@ -1,0 +1,11 @@
+<ModuleDefinition
+    ModuleId="NoiseToy"
+	VersionId="1"
+	BuildId="1"
+	Description="Generate terrain using the Perlin Noise function!"
+    Dependencies="ToyAssets=*"
+	Type="toy"
+	ToyCategoryIndex="3"
+	ScriptFile="main.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy" />

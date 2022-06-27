@@ -1,6 +1,7 @@
 <ModuleDefinition
 	ModuleId="ShapeVectorToy"
 	VersionId="1"
+	BuildId="1"
 	Description="Demonstrates creating a shape vector."
 	Dependencies="ToyAssets=1"
 	Type="toy"

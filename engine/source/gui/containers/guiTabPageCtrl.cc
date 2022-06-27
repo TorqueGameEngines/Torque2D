@@ -33,44 +33,8 @@ IMPLEMENT_CONOBJECT(GuiTabPageCtrl);
 GuiTabPageCtrl::GuiTabPageCtrl(void)
 {
    mBounds.extent.set(100, 200);
-   //dStrcpy(mText,(UTF8*)"TabPage");
    mActive = true;
    mIsContainer = true;
-}
-
-void GuiTabPageCtrl::initPersistFields()
-{
-   Parent::initPersistFields();
-}
-
-bool GuiTabPageCtrl::onWake()
-{
-   if (! Parent::onWake())
-      return false;
-
-   return true;
-}
-
-void GuiTabPageCtrl::onSleep()
-{
-   Parent::onSleep();
-}
-
-GuiControl* GuiTabPageCtrl::findHitControl(const Point2I &pt, S32 initialLayer)
-{
-   return Parent::findHitControl(pt, initialLayer);
-}
-
-void GuiTabPageCtrl::onTouchDown(const GuiEvent &event)
-{
-   setUpdate();
-   Point2I localPoint = globalToLocalCoord( event.mousePoint );
-
-   GuiControl *ctrl = findHitControl(localPoint);
-   if (ctrl && ctrl != this)
-   {
-      ctrl->onTouchDown(event);
-   }
 }
 
 bool GuiTabPageCtrl::onMouseDownEditor(const GuiEvent &event, Point2I offset )

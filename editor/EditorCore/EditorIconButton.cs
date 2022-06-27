@@ -17,6 +17,7 @@ function EditorIconButton::onAdd(%this)
 		ImageColor = ThemeManager.activeTheme.iconButtonProfile.FontColor;
 		Frame = %this.frame;
 		Tooltip = %this.Tooltip;
+		UseInput = false;
 	};
 	ThemeManager.setProfile(%this.icon, "spriteProfile");
 	%this.add(%this.icon);
@@ -69,5 +70,13 @@ function EditorIconButton::onThemeChange(%this, %theme)
 	else
 	{
 		%this.icon.setImageColor(ThemeManager.activeTheme.iconButtonProfile.fontColorNA);
+	}
+}
+
+function EditorIconButton::onRemove(%this)
+{
+	if(isObject(%this.icon))
+	{
+		%this.icon.delete();
 	}
 }
