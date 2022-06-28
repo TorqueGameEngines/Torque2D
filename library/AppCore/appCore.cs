@@ -26,6 +26,7 @@ function AppCore::create( %this )
     exec("./scripts/constants.cs");
     exec("./scripts/defaultPreferences.cs");
 	exec("./gui/guiProfiles.cs");
+	%this.createGuiProfiles();
     exec("./scripts/canvas.cs");
 
     // Initialize the canvas
