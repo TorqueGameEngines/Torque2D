@@ -81,7 +81,7 @@ function EditorCore::SafeCreateNamedObject(%this, %name, %object)
 	if(isObject(%name))
 	{
 		%originalObject = nameToID(%name);
-		if(%orginalObject.getClassName() !$= %object.getClassName())
+		if(%originalObject.getClassName() !$= %object.getClassName())
 		{
 			warn("Attempted to change the class of the named object " @ %name @ "!");
 			warn("Original Class: " @ %originalObject.getClassName());
