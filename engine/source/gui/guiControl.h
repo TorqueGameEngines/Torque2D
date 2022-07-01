@@ -327,6 +327,12 @@ public:
     inline void				 setTextExtend(const bool extend) { mTextExtend = extend; }
     inline bool				 getTextExtend() { return mTextExtend; }
 
+    const horizSizingOptions getHorizSizing() { return static_cast<horizSizingOptions>(mHorizSizing); }
+    const vertSizingOptions  getVertSizing() { return static_cast<vertSizingOptions>(mVertSizing); }
+
+    void                     setHorizSizing(const horizSizingOptions sizing) { mHorizSizing = sizing; }
+    void                     setVertSizing(const vertSizingOptions sizing) { mVertSizing = sizing; }
+
 	// Text Property Accessors
 	static bool setTextProperty(void* obj, const char* data) { static_cast<GuiControl*>(obj)->setText(data); return false; }
 	static const char* getTextProperty(void* obj, const char* data) { return static_cast<GuiControl*>(obj)->getText(); }

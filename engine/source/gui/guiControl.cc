@@ -416,13 +416,28 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 
 	Point2I oldExtent = mBounds.extent;
 
+    //force center if using center positioning
+    Point2I actualNewPosition = Point2I(newPosition);
+    GuiControl* parent = getParent();
+    if (parent)
+    {
+        if (mHorizSizing == horizResizeCenter)
+        {
+            actualNewPosition.x = (parent->mBounds.extent.x - actualNewExtent.x) / 2;
+        }
+        if (mVertSizing == vertResizeCenter)
+        {
+            actualNewPosition.y = (parent->mBounds.extent.y - actualNewExtent.y) / 2;
+        }
+    }
+
    // only do the child control resizing stuff if you really need to.
    bool extentChanged = (actualNewExtent != oldExtent);
 
    if (extentChanged) {
       //call set update both before and after
       setUpdate();
-      mBounds.set(newPosition, actualNewExtent);
+      mBounds.set(actualNewPosition, actualNewExtent);
       iterator i;
       for(i = begin(); i != end(); i++)
       {
@@ -430,7 +445,6 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
          ctrl->parentResized(oldExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), actualNewExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
       }
 
-      GuiControl *parent = getParent();
       if (parent)
          parent->childResized(this);
       setUpdate();
@@ -441,7 +455,7 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	  }
    }
    else {
-      mBounds.point = newPosition;
+      mBounds.point = actualNewPosition;
    }
 }
 void GuiControl::setPosition( const Point2I &newPosition )
