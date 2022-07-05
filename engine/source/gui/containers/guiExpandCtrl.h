@@ -60,6 +60,7 @@ public:
 	GuiExpandCtrl();
 
    virtual void parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
+   virtual void childResized(GuiControl* child);
 
    inline bool getExpanded() { return mExpanded; };
    void setExpanded(bool isExpanded);
