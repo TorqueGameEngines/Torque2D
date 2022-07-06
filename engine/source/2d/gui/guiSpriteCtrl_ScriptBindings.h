@@ -761,6 +761,29 @@ ConsoleMethodWithDocs(GuiSpriteCtrl, getConstrainProportions, ConsoleBool, 2, 2,
 	return object->getConstrainProportions();
 }
 
+/*! Sets if the image should be able to overflow the content area.
+	@param clamp If true, the image will be forced into the content area. False will allow the image to overflow the content area, although it will still be cut off.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiSpriteCtrl, setClampImage, ConsoleVoid, 3, 3, "(bool clamp)")
+{
+	if (argc != 3)
+	{
+		Con::warnf("GuiSpriteCtrl::setClampImage() - Invalid number of parameters!");
+		return;
+	}
+
+	object->setClampImage(dAtob(argv[2]));
+}
+
+/*! Gets if the image is able to overflow the content area.
+	@return True if overflow is possible and false otherwise.
+*/
+ConsoleMethodWithDocs(GuiSpriteCtrl, getClampImage, ConsoleBool, 2, 2, "()")
+{
+	return object->getClampImage();
+}
+
 /*! Animates the position offset from its current value to a target value over time.
 	@param x/y The space-delimited x and y values to change the image offset to.
 	@param time The time in miliseconds it should take to complete the transformation.

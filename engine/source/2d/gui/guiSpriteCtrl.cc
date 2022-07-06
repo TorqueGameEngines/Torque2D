@@ -67,6 +67,7 @@ GuiSpriteCtrl::GuiSpriteCtrl( void ) :
 	mImageSize.set(10, 10);
 	mFullSize = true;
 	mConstrainProportions = true;
+	mClampImage = true;
 	mSingleFrameBitmap = true;
 }
 
@@ -95,6 +96,7 @@ void GuiSpriteCtrl::initPersistFields()
 	addField("imageColor", TypeFluidColorI, Offset(mImageColor, GuiSpriteCtrl));
 	addField("imageSize", TypePoint2I, Offset(mImageSize, GuiSpriteCtrl));
 	addField("fullSize", TypeBool, Offset(mFullSize, GuiSpriteCtrl));
+	addField("clampImage", TypeBool, Offset(mClampImage, GuiSpriteCtrl));
 	addField("constrainProportions", TypeBool, Offset(mConstrainProportions, GuiSpriteCtrl));
 	endGroup("GuiSpriteCtrl");
 }
@@ -348,10 +350,18 @@ Point2I GuiSpriteCtrl::applyAlignment(RectI &bounds, Point2I &size)
 	}
 
 	//Apply the image offset
-	S32 maxX = bounds.extent.x - size.x;
-	S32 maxY = bounds.extent.y - size.y;
-	offset.x = mClamp(offset.x + mPositionOffset.x, 0, maxX);
-	offset.y = mClamp(offset.y + mPositionOffset.y, 0, maxY);
+	if (mClampImage)
+	{
+		S32 maxX = bounds.extent.x - size.x;
+		S32 maxY = bounds.extent.y - size.y;
+		offset.x = mClamp(offset.x + mPositionOffset.x, 0, maxX);
+		offset.y = mClamp(offset.y + mPositionOffset.y, 0, maxY);
+	}
+	else
+	{
+		offset.x = offset.x + mPositionOffset.x;
+		offset.y = offset.y + mPositionOffset.y;
+	}
 
 	return offset;
 }
@@ -546,50 +556,52 @@ void GuiSpriteCtrl::onRender(Point2I offset, const RectI &updateRect)
 			dglSetClipRect(clipRect);
 			dglSetBitmapModulation(ColorF(mImageColor));
 
-			Point2I offset = Point2I(0, 0);
+			Point2I imageOffset = Point2I(0, 0);
 			Point2I size = constrain(mImageSize);
 
 			if (mTileImage) //Tile the image
 			{
-				offset = mPositionOffset;
-				offset.x = (mPositionOffset.x % size.x);
-				if (offset.x > 0)
+				imageOffset = mPositionOffset;
+				imageOffset.x = (mPositionOffset.x % size.x);
+				if (imageOffset.x > 0)
 				{
-					offset.x -= size.x;
+					imageOffset.x -= size.x;
 				}
-				offset.y = (mPositionOffset.y % size.y);
-				if (offset.y > 0)
+				imageOffset.y = (mPositionOffset.y % size.y);
+				if (imageOffset.y > 0)
 				{
-					offset.y -= size.y;
+					imageOffset.y -= size.y;
 				}
 
-				RenderTiledImage(contentRect, offset, size);
+				RenderTiledImage(contentRect, imageOffset, size);
 			}
 			else if (mFullSize) //Fill with the image
 			{
 				size = constrain(contentRect.extent, false);
 				if (mConstrainProportions)
 				{
-					offset = applyAlignment(contentRect, size);
+					imageOffset = applyAlignment(contentRect, size);
 				}
-				RenderImage(contentRect, offset, size);
+				RenderImage(contentRect, imageOffset, size);
 			}
 			else //Position the image by profile alignment
 			{
-				size = constrain(mImageSize);
-				if (size.x > contentRect.extent.x)
+				if (mClampImage)
 				{
-					size.x = contentRect.extent.x;
-					size = constrainLockX(size);
+					if (size.x > contentRect.extent.x)
+					{
+						size.x = contentRect.extent.x;
+						size = constrainLockX(size);
+					}
+					if (size.y > contentRect.extent.y)
+					{
+						size.y = contentRect.extent.y;
+						size = constrainLockY(size);
+					}
 				}
-				if (size.y > contentRect.extent.y)
-				{
-					size.y = contentRect.extent.y;
-					size = constrainLockY(size);
-				}
-				offset = applyAlignment(contentRect, size);
+				imageOffset = applyAlignment(contentRect, size);
 
-				RenderImage(contentRect, offset, size);
+				RenderImage(contentRect, imageOffset, size);
 			}
 			dglClearBitmapModulation();
 			dglSetClipRect(oldClip);
