@@ -566,29 +566,35 @@ Point2I GuiControl::extentBattery(Point2I &newExtent)
 	}
 
 	Point2I result = Point2I(newExtent);
-	if (newExtent.x < mBounds.extent.x && newExtent.x < mMinExtent.x)
-	{
-		mStoredExtent.x += mBounds.extent.x > mMinExtent.x ? (mMinExtent.x - newExtent.x) : (mBounds.extent.x - newExtent.x);
-		result.x = mMinExtent.x;
-	}
-	else if (newExtent.x > mBounds.extent.x && mStoredExtent.x > 0)
-	{
-		S32 charge = getMin(newExtent.x - mBounds.extent.x, mStoredExtent.x);
-		mStoredExtent.x -= charge;
-		result.x = newExtent.x - charge;
-	}
+    if (mHorizSizing != horizResizeRelative)
+    {
+        if (newExtent.x < mBounds.extent.x && newExtent.x < mMinExtent.x)
+        {
+            mStoredExtent.x += mBounds.extent.x > mMinExtent.x ? (mMinExtent.x - newExtent.x) : (mBounds.extent.x - newExtent.x);
+            result.x = mMinExtent.x;
+        }
+        else if (newExtent.x > mBounds.extent.x && mStoredExtent.x > 0)
+        {
+            S32 charge = getMin(newExtent.x - mBounds.extent.x, mStoredExtent.x);
+            mStoredExtent.x -= charge;
+            result.x = newExtent.x - charge;
+        }
+    }
 
-	if (newExtent.y < mBounds.extent.y && newExtent.y < mMinExtent.y)
-	{
-		mStoredExtent.y += mBounds.extent.y > mMinExtent.y ? (mMinExtent.y - newExtent.y) : (mBounds.extent.y - newExtent.y);
-		result.y = mMinExtent.y;
-	}
-	else if (newExtent.y > mBounds.extent.y && mStoredExtent.y > 0)
-	{
-		S32 charge = getMin(newExtent.y - mBounds.extent.y, mStoredExtent.y);
-		mStoredExtent.y -= charge;
-		result.y = newExtent.y - charge;
-	}
+    if (mVertSizing != vertResizeRelative)
+    {
+        if (newExtent.y < mBounds.extent.y && newExtent.y < mMinExtent.y)
+        {
+            mStoredExtent.y += mBounds.extent.y > mMinExtent.y ? (mMinExtent.y - newExtent.y) : (mBounds.extent.y - newExtent.y);
+            result.y = mMinExtent.y;
+        }
+        else if (newExtent.y > mBounds.extent.y && mStoredExtent.y > 0)
+        {
+            S32 charge = getMin(newExtent.y - mBounds.extent.y, mStoredExtent.y);
+            mStoredExtent.y -= charge;
+            result.y = newExtent.y - charge;
+        }
+    }
 	return result;
 }
 
