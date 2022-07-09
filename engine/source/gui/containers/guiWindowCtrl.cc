@@ -865,6 +865,11 @@ void GuiWindowCtrl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEve
 {
 	Point2I mousePos  = lastGuiEvent.mousePoint;
 	RectI winRect   = mBounds;
+	GuiControl* parent = getParent();
+	if (!parent)
+	{
+		return;
+	}
 	Point2I offset = getParent()->localToGlobalCoord(Point2I(0,0));
 	RectI rightRect = RectI( ( ( winRect.extent.x + winRect.point.x ) - mResizeRightWidth + offset.x), winRect.point.y + mTitleHeight + offset.y, mResizeRightWidth, winRect.extent.y );
 	RectI bottomRect = RectI( winRect.point.x + offset.x, ( ( winRect.point.y + winRect.extent.y ) - mResizeBottomHeight) + offset.y, winRect.extent.x , mResizeBottomHeight );
