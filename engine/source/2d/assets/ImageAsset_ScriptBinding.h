@@ -602,4 +602,427 @@ ConsoleMethodWithDocs(ImageAsset, setExplicitMode, ConsoleVoid, 3, 3, (explicitM
     object->setExplicitMode(dAtob(argv[2]));
 }
 
+/*! Adds a layer to the ImageAsset
+@param imageFile The file for the image to layer over the texture.
+@param position The position for the layer to be at with (0, 0) in the top left corner.
+@param blendColor The blending color to be applied to this new layer.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, addLayer, ConsoleVoid, 5, 6, (imageFile, position, blendColor, [doRedraw]))
+{
+    if (argc < 5)
+    {
+        Con::warnf("ImageAsset::addLayer() - Invalid number of parameters!");
+        return;
+    }
+
+    F32 x, y;
+    x = 0.0f;
+    y = 0.0f;
+    if (Utility::mGetStringElementCount(argv[3]) >= 2)
+    {
+        x = dAtof(Utility::mGetStringElement(argv[3], 0));
+        y = dAtof(Utility::mGetStringElement(argv[3], 1));
+    }
+    Point2I pos(x, y);
+
+    const U32 colorCount = Utility::mGetStringElementCount(argv[4]);
+    if (colorCount != 4)
+    {
+        Con::warnf("Scene::addLayer() - Invalid color! Colors require four values (red / green / blue / alpha)!");
+        return;
+    }
+    ColorF blendColor = ColorF(dAtof(Utility::mGetStringElement(argv[4], 0)),
+        dAtof(Utility::mGetStringElement(argv[4], 1)),
+        dAtof(Utility::mGetStringElement(argv[4], 2)),
+        dAtof(Utility::mGetStringElement(argv[4], 3)));
+
+    bool redraw = true;
+    if (argc == 6)
+    {
+        redraw = dAtob(argv[5]);
+    }
+
+    object->addLayer(argv[2], pos, blendColor, redraw);
+}
+
+/*! Inserts a layer into the stack of layers on a texture at a given index.
+@param index The one-based index to insert the new layer at. Must be less or equal to the number of layers.
+@param imageFile The file for the image to layer over the texture.
+@param position The position for the layer to be at with (0, 0) in the top left corner.
+@param blendColor The blending color to be applied to this new layer.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, insertLayer, ConsoleVoid, 6, 7, (index, imageFile, position, blendColor, [doRedraw]))
+{
+    if (argc < 6)
+    {
+        Con::warnf("ImageAsset::insertLayer() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    F32 x, y;
+    x = 0.0f;
+    y = 0.0f;
+    if (Utility::mGetStringElementCount(argv[4]) >= 2)
+    {
+        x = dAtof(Utility::mGetStringElement(argv[4], 0));
+        y = dAtof(Utility::mGetStringElement(argv[4], 1));
+    }
+    Point2I pos(x, y);
+
+    const U32 colorCount = Utility::mGetStringElementCount(argv[5]);
+    if (colorCount != 4)
+    {
+        Con::warnf("Scene::insertLayer() - Invalid color! Colors require four values (red / green / blue / alpha)!");
+        return;
+    }
+    ColorF blendColor = ColorF(dAtof(Utility::mGetStringElement(argv[5], 0)),
+        dAtof(Utility::mGetStringElement(argv[5], 1)),
+        dAtof(Utility::mGetStringElement(argv[5], 2)),
+        dAtof(Utility::mGetStringElement(argv[5], 3)));
+
+    bool redraw = true;
+    if (argc == 7)
+    {
+        redraw = dAtob(argv[6]);
+    }
+
+    object->insertLayer(index, argv[3], pos, blendColor, redraw);
+}
+
+/*! Removes a layer from a texture at a given index.
+@param index The one-based index to remove the new layer from. Must be less or equal to the number of layers.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, removeLayer, ConsoleVoid, 3, 4, (index, [doRedraw]))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::removeLayer() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    bool redraw = true;
+    if (argc == 4)
+    {
+        redraw = dAtob(argv[3]);
+    }
+
+    object->removeLayer(index, redraw);
+}
+
+/*! Moves the layer at the index forward.
+@param index The one-based index to move forward. Must be less or equal to the number of layers.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, moveLayerForward, ConsoleVoid, 3, 4, (index, [doRedraw]))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::moveLayerForward() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    bool redraw = true;
+    if (argc == 4)
+    {
+        redraw = dAtob(argv[3]);
+    }
+
+    object->moveLayerForward(index, redraw);
+}
+
+/*! Moves the layer at the index backward.
+@param index The one-based index to move backward. Must be less or equal to the number of layers.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, moveLayerBackward, ConsoleVoid, 3, 4, (index, [doRedraw]))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::moveLayerBackward() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    bool redraw = true;
+    if (argc == 4)
+    {
+        redraw = dAtob(argv[3]);
+    }
+
+    object->moveLayerBackward(index, redraw);
+}
+
+/*! Moves the layer at the index to the front.
+@param index The one-based index to move to the front. Must be less or equal to the number of layers.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, moveLayerToFront, ConsoleVoid, 3, 4, (index, [doRedraw]))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::moveLayerToFront() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    bool redraw = true;
+    if (argc == 4)
+    {
+        redraw = dAtob(argv[3]);
+    }
+
+    object->moveLayerToFront(index, redraw);
+}
+
+/*! Moves the layer at the index to the back.
+@param index The one-based index to move to the back. Must be less or equal to the number of layers.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, moveLayerToBack, ConsoleVoid, 3, 4, (index, [doRedraw]))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::moveLayerToBack() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    bool redraw = true;
+    if (argc == 4)
+    {
+        redraw = dAtob(argv[3]);
+    }
+
+    object->moveLayerToBack(index, redraw);
+}
+
+/*! Sets the image for a layer at the given index.
+@param index The one-based index to move to the back. Must be less or equal to the number of layers.
+@param image The path to an image to be used by the layer.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, setLayerImage, ConsoleVoid, 4, 5, (index, image, [doRedraw]))
+{
+    if (argc < 4)
+    {
+        Con::warnf("ImageAsset::setLayerImage() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    bool redraw = true;
+    if (argc == 5)
+    {
+        redraw = dAtob(argv[4]);
+    }
+
+    object->setLayerImage(index, argv[3], redraw);
+}
+
+/*! Sets the position for a layer at the given index.
+@param index The one-based index to move to the back. Must be less or equal to the number of layers.
+@param position The space-deliminated (x, y) position to place the image with the top left corner as (0, 0). The layer can safely overflow the bounds of the original image.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, setLayerPosition, ConsoleVoid, 4, 5, (index, position, [doRedraw]))
+{
+    if (argc < 4)
+    {
+        Con::warnf("ImageAsset::setLayerPosition() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    F32 x, y;
+    x = 0.0f;
+    y = 0.0f;
+    if (Utility::mGetStringElementCount(argv[3]) >= 2)
+    {
+        x = dAtof(Utility::mGetStringElement(argv[3], 0));
+        y = dAtof(Utility::mGetStringElement(argv[3], 1));
+    }
+    Point2I pos(x, y);
+
+    bool redraw = true;
+    if (argc == 5)
+    {
+        redraw = dAtob(argv[4]);
+    }
+
+    object->setLayerPosition(index, pos, redraw);
+}
+
+/*! Sets the blend color for a layer at the given index.
+@param index The one-based index to move to the back. Must be less or equal to the number of layers.
+@param blendColor The space-deliminated color used to blend the layer. Requires four decimal values between 0 and 1 that represent red, green, blue, and alpha.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, setLayerBlendColor, ConsoleVoid, 4, 5, (index, blendColor, [doRedraw]))
+{
+    if (argc < 4)
+    {
+        Con::warnf("ImageAsset::setLayerBlendColor() - Invalid number of parameters!");
+        return;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    const U32 colorCount = Utility::mGetStringElementCount(argv[3]);
+    if (colorCount != 4)
+    {
+        Con::warnf("Scene::setLayerBlendColor() - Invalid color! Colors require four values (red / green / blue / alpha)!");
+        return;
+    }
+    ColorF blendColor = ColorF(dAtof(Utility::mGetStringElement(argv[3], 0)),
+        dAtof(Utility::mGetStringElement(argv[3], 1)),
+        dAtof(Utility::mGetStringElement(argv[3], 2)),
+        dAtof(Utility::mGetStringElement(argv[3], 3)));
+
+    bool redraw = true;
+    if (argc == 5)
+    {
+        redraw = dAtob(argv[4]);
+    }
+
+    object->setLayerBlendColor(index, blendColor, redraw);
+}
+
+/*! Returns the number of layers.
+@return The number of layers used by the texture. Zero if only the base texture is used.
+*/
+ConsoleMethodWithDocs(ImageAsset, getLayerCount, ConsoleInt, 2, 2, ())
+{
+    return object->getLayerCount();
+}
+
+/*! Returns image used for a given layer.
+@param index The one-based index to move to the back. Must be less or equal to the number of layers.
+@return The path to the image file.
+*/
+ConsoleMethodWithDocs(ImageAsset, getLayerImage, ConsoleString, 3, 3, (index))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::getLayerImage() - Invalid number of parameters!");
+        return StringTable->EmptyString;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    return object->getLayerImage(index);
+}
+
+/*! Returns position for a given layer.
+@param index The one-based index to move to the back. Must be less or equal to the number of layers.
+@return (int y, int x) The layer position.
+*/
+ConsoleMethodWithDocs(ImageAsset, getLayerPosition, ConsoleString, 3, 3, (index))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::getLayerPosition() - Invalid number of parameters!");
+        return StringTable->EmptyString;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    char* retBuffer = Con::getReturnBuffer(64);
+    const Point2I& pos = object->getLayerPosition(index);
+    dSprintf(retBuffer, 64, "%d %d", pos.x, pos.y);
+    return retBuffer;
+}
+
+/*! Returns the blend color for a given layer.
+@param index The one-based index to move to the back. Must be less or equal to the number of layers.
+@return (float red / float green / float blue / float alpha) The layer blend color.
+*/
+ConsoleMethodWithDocs(ImageAsset, getLayerBlendColor, ConsoleString, 3, 3, (index))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::getLayerBlendColor() - Invalid number of parameters!");
+        return StringTable->EmptyString;
+    }
+
+    U32 index = dAtoi(argv[2]);
+
+    return object->getLayerBlendColor(index).scriptThis();
+}
+
+/*! Forces the texture to redraw its layers. Redrawing can be expensive and is automatically done on every change to a layer unless prevented.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, forceRedraw, ConsoleVoid, 2, 2, ())
+{
+    if (object->getLayerCount() > 0)
+    {
+        object->forceRedrawImage();
+    }
+}
+
+/*! Sets the blend color for the base image when using layers.
+@param blendColor The space-deliminated color used to blend the layer. Requires four decimal values between 0 and 1 that represent red, green, blue, and alpha.
+@param doRedraw Optional value that prevents a redraw of the texture when false. Defaults to true.
+@return No return value.
+*/
+ConsoleMethodWithDocs(ImageAsset, setBlendColor, ConsoleVoid, 3, 4, (blendColor, [doRedraw]))
+{
+    if (argc < 3)
+    {
+        Con::warnf("ImageAsset::setBlendColor() - Invalid number of parameters!");
+        return;
+    }
+
+    const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
+    if (colorCount != 4)
+    {
+        Con::warnf("Scene::setBlendColor() - Invalid color! Colors require four values (red / green / blue / alpha)!");
+        return;
+    }
+    ColorF blendColor = ColorF(dAtof(Utility::mGetStringElement(argv[2], 0)),
+        dAtof(Utility::mGetStringElement(argv[2], 1)),
+        dAtof(Utility::mGetStringElement(argv[2], 2)),
+        dAtof(Utility::mGetStringElement(argv[2], 3)));
+
+    bool redraw = true;
+    if (argc == 4)
+    {
+        redraw = dAtob(argv[3]);
+    }
+
+    object->setBlendColor(blendColor, redraw);
+}
+
+/*! Returns the blend color for the base texture when using layers.
+@return (float red / float green / float blue / float alpha) The base blend color.
+*/
+ConsoleMethodWithDocs(ImageAsset, getBlendColor, ConsoleString, 2, 2, ())
+{
+    return object->getBlendColor().scriptThis();
+}
+
 ConsoleMethodGroupEndWithDocs(ImageAsset)

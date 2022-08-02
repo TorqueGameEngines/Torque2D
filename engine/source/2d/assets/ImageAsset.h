@@ -158,9 +158,32 @@ public:
         TexelArea mTexelArea;
     };
 
+    class ImageLayer
+    {
+    public:
+        ImageLayer() {}
+
+        ImageLayer(const char* imageFile, const Point2I position, const ColorF blendColor) :
+            mPosition(position), mBlendColor(blendColor), mBitmap(nullptr) 
+        {
+            mImageFile = StringTable->insert(imageFile);
+        }
+
+        void LoadImage(const char* path)
+        {
+            mBitmap = GBitmap::load(path);
+        }
+
+        StringTableEntry mImageFile;
+        Point2I mPosition;
+        ColorF mBlendColor;
+        GBitmap* mBitmap;
+    };
+
 private:
     typedef Vector<FrameArea> typeFrameAreaVector;
     typedef Vector<FrameArea::PixelArea> typeExplicitFrameAreaVector;
+    typedef Vector<ImageLayer> typeImageLayerVector;
 
     /// Configuration.
     StringTableEntry            mImageFile;
@@ -181,6 +204,8 @@ private:
     typeFrameAreaVector         mFrames;
     typeExplicitFrameAreaVector mExplicitFrames;
     TextureHandle               mImageTextureHandle;
+    typeImageLayerVector        mImageLayers;
+    ColorF                      mBlendColor;
 
 public:
     ImageAsset();
@@ -267,6 +292,26 @@ public:
     
     inline void forceCalculation( void ) { calculateImage(); }
 
+    /// Layers
+    void addLayer(const char* imagePath, const Point2I position, const ColorF blendColor, const bool doRedraw = true);
+    void insertLayer(const U32 index, const char* imagePath, const Point2I position, const ColorF blendColor, const bool doRedraw = true);
+    void removeLayer(const U32 index, const bool doRedraw = true);
+    void moveLayerForward(const U32 index, const bool doRedraw = true);
+    void moveLayerBackward(const U32 index, const bool doRedraw = true);
+    void moveLayerToFront(const U32 index, const bool doRedraw = true);
+    void moveLayerToBack(const U32 index, const bool doRedraw = true);
+    void setLayerImage(const U32 index, const char* imagePath, const bool doRedraw = true);
+    void setLayerPosition(const U32 index, const Point2I position, const bool doRedraw = true);
+    void setLayerBlendColor(const U32 index, const ColorF color, const bool doRedraw = true);
+    const U32 getLayerCount() { return mImageLayers.size() - 1; } //We pretend layer 0 doesn't exist as it is internally created
+    const char* getLayerImage(const U32 index);
+    const Point2I getLayerPosition(const U32 index);
+    const ColorF getLayerBlendColor(const U32 index);
+    void forceRedrawImage() { redrawImage(); }
+    void setBlendColor(const ColorF color, const bool doRedraw = true);
+    const ColorF getBlendColor();
+
+
     /// Declare Console Object.
     DECLARE_CONOBJECT(ImageAsset);
 
@@ -277,6 +322,9 @@ private:
     void calculateExplicitMode( void );
     void setTextureFilter( const TextureFilterMode filterMode );
 
+    void completeLayerChange(const bool doRedraw);
+    void redrawImage();
+
 protected:
     virtual void initializeAsset( void );
     virtual void onAssetRefresh( void );
@@ -286,6 +334,9 @@ protected:
     virtual void onTamlPostWrite( void );
     virtual void onTamlCustomWrite( TamlCustomNodes& customNodes );
     virtual void onTamlCustomRead( const TamlCustomNodes& customNodes );
+
+    virtual void loadTamlExplicitCells(const TamlCustomNodes& customNodes);
+    virtual void loadTamlImageLayers(const TamlCustomNodes& customNodes);
 
 
 protected:
@@ -330,6 +381,22 @@ protected:
 
     static bool setCellHeight( void* obj, const char* data )                { static_cast<ImageAsset*>(obj)->setCellHeight(dAtoi(data)); return false; }
     static bool writeCellHeight( void* obj, StringTableEntry pFieldName )   { ImageAsset* pImageAsset = static_cast<ImageAsset*>(obj); return !pImageAsset->getExplicitMode() && pImageAsset->getCellHeight() != 0; }
+
+    static bool setBlendColor(void* obj, const char* data) 
+    { 
+        if (Utility::mGetStringElementCount(data) < 4)
+        {
+            Con::warnf("ImageAsset::BlendColor - Blend colors require four values (red/green/blue/alpha).");
+            return false;
+        }
+        static_cast<ImageAsset*>(obj)->setBlendColor(
+            ColorF(dAtof(Utility::mGetStringElement(data, 0)),
+            dAtof(Utility::mGetStringElement(data, 1)),
+            dAtof(Utility::mGetStringElement(data, 2)),
+            dAtof(Utility::mGetStringElement(data, 3))), true); 
+        return false; 
+    }
+    static bool writeBlendColor(void* obj, StringTableEntry pFieldName) { return static_cast<ImageAsset*>(obj)->getBlendColor() != ColorF(1.0f, 1.0f, 1.0f, 1.0f); }
 };
 
 //-----------------------------------------------------------------------------

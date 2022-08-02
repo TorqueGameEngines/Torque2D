@@ -130,6 +130,7 @@ class GBitmap: public ResourceInstance
    static U32 sBitmapIdSource;
 
    void deleteImage();
+   void clearImage();
 
    BitmapFormat internalFormat;
   public:
@@ -148,6 +149,8 @@ class GBitmap: public ResourceInstance
                             ///  owned by the bitmap, and will be
                             ///  deleted on exit, or written out on a
                             ///  write.
+
+   bool mergeLayer(const Point2I pos, const GBitmap* layer, const ColorF blendColor);
 
    //-------------------------------------- Input/Output interface
   public:

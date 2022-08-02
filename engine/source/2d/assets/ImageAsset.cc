@@ -117,6 +117,12 @@ static StringTableEntry cellWidthName               = StringTable->insert( "Widt
 static StringTableEntry cellHeightName              = StringTable->insert( "Height" );
 static StringTableEntry cellNameEntryName           = StringTable->insert( "Name" );
 
+static StringTableEntry imageLayerCustomNodeName    = StringTable->insert("ImageLayers");
+static StringTableEntry layerNodeName               = StringTable->insert("ImageLayer");
+static StringTableEntry layerImageFile              = StringTable->insert("ImageFile");
+static StringTableEntry layerPositionName           = StringTable->insert("Position");
+static StringTableEntry layerBlendColorName         = StringTable->insert("BlendColor");
+
 //------------------------------------------------------------------------------
 
 static EnumTable::Enums textureFilterLookup[] =
@@ -174,11 +180,14 @@ ImageAsset::ImageAsset() :  mImageFile(StringTable->EmptyString),
                             mCellWidth(0),
                             mCellHeight(0),
 
+                            mBlendColor(1.0f, 1.0f, 1.0f),
+
                             mImageTextureHandle(NULL)
 {
     // Set Vector Associations.
     VECTOR_SET_ASSOCIATION( mFrames );
     VECTOR_SET_ASSOCIATION( mExplicitFrames );
+    VECTOR_SET_ASSOCIATION(mImageLayers);
 }
 
 //------------------------------------------------------------------------------
@@ -201,6 +210,7 @@ void ImageAsset::initPersistFields()
     addProtectedField("FilterMode", TypeEnum, Offset(mLocalFilterMode, ImageAsset), &setFilterMode, &defaultProtectedGetFn, &writeFilterMode, 1, &textureFilterTable);   
     addProtectedField("ExplicitMode", TypeBool, Offset(mExplicitMode, ImageAsset), &setExplicitMode, &defaultProtectedGetFn, &writeExplicitMode, "");
     addProtectedField("CellRowOrder", TypeBool, Offset(mCellRowOrder, ImageAsset), &setCellRowOrder, &defaultProtectedGetFn, &writeCellRowOrder, "If true, cell number are applied left-to-right, top-to-bottom.");
+    addProtectedField("BlendColor", TypeColorF, Offset(mBlendColor, ImageAsset), &setBlendColor, &defaultProtectedGetFn, &writeBlendColor, "Changes the base color of the texture. You should only use this if you are using layers.");
     endGroup("Image Fields");
 
     addGroup("X Values");
@@ -1069,8 +1079,18 @@ void ImageAsset::initializeAsset( void )
     // Ensure the image-file is expanded.
     mImageFile = expandAssetFilePath( mImageFile );
 
+    // Time to load the layer files too.
+    for (auto& layer : mImageLayers)
+    {
+        const char* path = expandAssetFilePath(layer.mImageFile);
+        layer.LoadImage(path);
+    }
+
     // Calculate the image.
     calculateImage();
+
+    // Redraw the image.
+    redrawImage();
 }
 
 //------------------------------------------------------------------------------
@@ -1086,6 +1106,9 @@ void ImageAsset::onAssetRefresh( void )
     
     // Compile image.
     calculateImage();
+
+    // Redraw the image.
+    redrawImage();
 }
 
 //-----------------------------------------------------------------------------
@@ -1126,7 +1149,7 @@ void ImageAsset::calculateImage( void )
         TextureManager::refresh( mImageFile );
 
     // Get image texture.
-    mImageTextureHandle.set( mImageFile, TextureHandle::BitmapTexture, true, getForce16Bit() );
+    mImageTextureHandle.set( mImageFile, mImageLayers.size() > 0 ? TextureHandle::BitmapKeepTexture : TextureHandle::BitmapTexture, true, getForce16Bit() );
 
     // Is the texture valid?
     if ( mImageTextureHandle.IsNull() )
@@ -1377,12 +1400,281 @@ void ImageAsset::calculateExplicitMode( void )
     }
 }
 
+void ImageAsset::completeLayerChange(const bool doRedraw)
+{
+    if (doRedraw)
+    {
+        redrawImage();
+
+        if (getOwned())
+        {
+            refreshAsset();
+        }
+    }
+}
+
+void ImageAsset::redrawImage()
+{
+    if (mImageLayers.size() > 0)
+    {
+        GBitmap* map = mImageTextureHandle.getBitmap();
+        if (map == nullptr)
+        {
+            // This should reload the texture and keep it in memory
+            mImageTextureHandle.set(mImageFile, TextureHandle::BitmapKeepTexture, true, getForce16Bit());
+            map = mImageTextureHandle.getBitmap();
+            if (map == nullptr)
+            {
+                // We still can't come up with a bitmap, so warn and return
+                Con::warnf("ImageAsset::redrawImage() - Unable to load bitmap for image '%s'.", mImageFile);
+            }
+        }
+        map->clearImage();
+        for (auto &layer : mImageLayers)
+        {
+            map->mergeLayer(layer.mPosition, layer.mBitmap, layer.mBlendColor);
+        }
+
+        mImageTextureHandle.refresh();
+    }
+}
+
 //------------------------------------------------------------------------------
 
 bool ImageAsset::setFilterMode( void* obj, const char* data )
 {
     static_cast<ImageAsset*>(obj)->setFilterMode(getFilterModeEnum(data));
     return false;
+}
+
+void ImageAsset::addLayer(const char* imagePath, const Point2I position, const ColorF blendColor, const bool doRedraw)
+{
+    insertLayer(mImageLayers.size(), imagePath, position, blendColor, doRedraw);
+}
+
+void ImageAsset::insertLayer(const U32 index, const char* imagePath, const Point2I position, const ColorF blendColor, const bool doRedraw)
+{
+    if (mImageLayers.size() == 0)
+    {
+        Point2I p(0, 0);
+        ImageLayer baseLayer(mImageFile, p, mBlendColor);
+        mImageLayers.push_back(baseLayer);
+
+        if (getOwned())
+        {
+            baseLayer.LoadImage(mImageFile);
+        }
+    }
+    ImageLayer layer(imagePath, position, blendColor);
+
+    if (getOwned())
+    {
+        const char* path = expandAssetFilePath(layer.mImageFile);
+        layer.LoadImage(path);
+    }
+
+    if (index == 0 || index >= mImageLayers.size())
+    {
+        mImageLayers.push_back(layer);
+    }
+    else
+    {
+        typeImageLayerVector::iterator iter = mImageLayers.begin() + index;
+        mImageLayers.insert(iter, layer);
+    }
+
+    completeLayerChange(doRedraw);
+}
+
+void ImageAsset::removeLayer(const U32 index, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::removeLayer() - Invalid Index of %d.", index);
+        return;
+    }
+
+    mImageLayers.erase(index);
+
+    if (mImageLayers.size() == 1)
+    {
+        mImageLayers.clear();
+    }
+
+    completeLayerChange(doRedraw);
+}
+
+void ImageAsset::moveLayerForward(const U32 index, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::moveLayerForward() - Invalid Index of %d.", index);
+        return;
+    }
+
+    if (index == mImageLayers.size() - 1)
+    {
+        return;
+    }
+
+    ImageLayer layer = mImageLayers[index];
+    mImageLayers.erase(index);
+    mImageLayers.insert(mImageLayers.begin() + index + 1, layer);
+
+    completeLayerChange(doRedraw);
+}
+
+void ImageAsset::moveLayerBackward(const U32 index, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::moveLayerBackward() - Invalid Index of %d.", index);
+        return;
+    }
+
+    if (index == 1)
+    {
+        return;
+    }
+
+    moveLayerForward(index - 1, doRedraw);
+}
+
+void ImageAsset::moveLayerToFront(const U32 index, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::moveLayerToFront() - Invalid Index of %d.", index);
+        return;
+    }
+
+    if (index == mImageLayers.size() - 1)
+    {
+        return;
+    }
+
+    ImageLayer layer = mImageLayers[index];
+    mImageLayers.erase(index);
+    mImageLayers.push_back(layer);//The back of the array is the front of the image
+
+    completeLayerChange(doRedraw);
+}
+
+void ImageAsset::moveLayerToBack(const U32 index, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::moveLayerToBack() - Invalid Index of %d.", index);
+        return;
+    }
+
+    if (index == 1)
+    {
+        return;
+    }
+
+    ImageLayer layer = mImageLayers[index];
+    mImageLayers.erase(index);
+    mImageLayers.insert(mImageLayers.begin() + 1, layer);//The front of the array is the back of the image
+
+    completeLayerChange(doRedraw);
+}
+
+void ImageAsset::setLayerImage(const U32 index, const char* imagePath, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::setLayerImage() - Invalid Index of %d.", index);
+        return;
+    }
+
+    if (getOwned())
+    {
+        const char* path = expandAssetFilePath(imagePath);
+        mImageLayers[index].mImageFile = StringTable->insert(path);
+        mImageLayers[index].LoadImage(path);
+    }
+    else
+    {
+        mImageLayers[index].mImageFile = StringTable->insert(imagePath);
+    }
+
+    completeLayerChange(doRedraw);
+}
+
+void ImageAsset::setLayerPosition(const U32 index, const Point2I position, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::setLayerPosition() - Invalid Index of %d.", index);
+        return;
+    }
+    mImageLayers[index].mPosition.set(position.x, position.y);
+    completeLayerChange(doRedraw);
+}
+
+void ImageAsset::setLayerBlendColor(const U32 index, const ColorF blendColor, const bool doRedraw)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::setLayerBlendColor() - Invalid Index of %d.", index);
+        return;
+    }
+    mImageLayers[index].mBlendColor.set(blendColor.red, blendColor.green, blendColor.blue, blendColor.alpha);
+    completeLayerChange(doRedraw);
+}
+
+const char* ImageAsset::getLayerImage(const U32 index)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::getLayerImage() - Invalid Index of %d.", index);
+        return StringTable->EmptyString;
+    }
+    return mImageLayers[index].mImageFile;
+}
+
+const Point2I ImageAsset::getLayerPosition(const U32 index)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::getLayerPosition() - Invalid Index of %d.", index);
+        return Point2I();
+    }
+    return mImageLayers[index].mPosition;
+}
+
+const ColorF ImageAsset::getLayerBlendColor(const U32 index)
+{
+    if (index < 1 || index >= mImageLayers.size())
+    {
+        Con::warnf("ImageAsset::getLayerBlendColor() - Invalid Index of %d.", index);
+        return ColorF();
+    }
+    return mImageLayers[index].mBlendColor;
+}
+
+void ImageAsset::setBlendColor(const ColorF color, const bool doRedraw)
+{
+    mBlendColor.set(color.red, color.green, color.blue, color.alpha);
+
+    if (mImageLayers.size() == 0)
+    {
+        Con::warnf("ImageAsset::setBlendColor() - The ImageAsset blend color will not be applied if layers are not being used.");
+        return;
+    }
+    
+    mImageLayers[0].mBlendColor.set(color.red, color.green, color.blue, color.alpha);
+
+    if (doRedraw)
+    {
+        redrawImage();
+    }
+}
+
+const ColorF ImageAsset::getBlendColor()
+{
+    return mBlendColor;
 }
 
 //------------------------------------------------------------------------------
@@ -1394,10 +1686,6 @@ void ImageAsset::onTamlCustomWrite( TamlCustomNodes& customNodes )
 
     // Call parent.
     Parent::onTamlCustomWrite( customNodes );
-
-    // Finish if not in explicit mode.
-    if ( !mExplicitMode )
-        return;
 
     if (mExplicitFrames.size() > 0)
     {
@@ -1420,18 +1708,42 @@ void ImageAsset::onTamlCustomWrite( TamlCustomNodes& customNodes )
             pCellNode->addField( cellHeightName, pixelArea.mPixelHeight );
         }
     }
+
+    if (mImageLayers.size() > 0)
+    {
+        TamlCustomNode* pCustomLayerNodes = customNodes.addNode(imageLayerCustomNodeName);
+
+        for (typeImageLayerVector::iterator frameItr = mImageLayers.begin() + 1; frameItr != mImageLayers.end(); ++frameItr)
+        {
+            const ImageLayer& layer = *frameItr;
+            TamlCustomNode* pLayerNode = pCustomLayerNodes->addNode(layerNodeName);
+
+            pLayerNode->addField(layerImageFile, layer.mImageFile);
+            pLayerNode->addField(layerPositionName, layer.mPosition);
+            pLayerNode->addField(layerBlendColorName, layer.mBlendColor);
+        }
+    }
 }
 
 //-----------------------------------------------------------------------------
 
-void ImageAsset::onTamlCustomRead( const TamlCustomNodes& customNodes )
+void ImageAsset::onTamlCustomRead(const TamlCustomNodes& customNodes)
 {
     // Debug Profiling.
     PROFILE_SCOPE(ImageAsset_OnTamlCustomRead);
-    
+
     // Call parent.
-    Parent::onTamlCustomRead( customNodes );
-    
+    Parent::onTamlCustomRead(customNodes);
+
+    // Load the explicit cells
+    loadTamlExplicitCells(customNodes);
+
+    // Load image layers
+    loadTamlImageLayers(customNodes);
+}
+
+void ImageAsset::loadTamlExplicitCells(const TamlCustomNodes& customNodes)
+{
     // Find cell custom node.
     const TamlCustomNode* pCustomCellNodes = customNodes.findNode( cellCustomNodeCellsName );
     
@@ -1554,6 +1866,84 @@ void ImageAsset::onTamlCustomRead( const TamlCustomNodes& customNodes )
     }
 }
 
+void ImageAsset::loadTamlImageLayers(const TamlCustomNodes& customNodes)
+{
+    // Find layer custom node.
+    const TamlCustomNode* pCustomLayerNodes = customNodes.findNode(imageLayerCustomNodeName);
+
+    // Continue if we have explicit layers.
+    if (pCustomLayerNodes != NULL)
+    {
+        // Fetch children layer nodes.
+        const TamlCustomNodeVector& layerNodes = pCustomLayerNodes->getChildren();
+
+        // Iterate layers.
+        for (TamlCustomNodeVector::const_iterator layerNodeItr = layerNodes.begin(); layerNodeItr != layerNodes.end(); ++layerNodeItr)
+        {
+            // Fetch layer node.
+            TamlCustomNode* pLayerNode = *layerNodeItr;
+
+            // Fetch node name.
+            StringTableEntry nodeName = pLayerNode->getNodeName();
+
+            // Is this a valid alias?
+            if (nodeName != layerNodeName)
+            {
+                // No, so warn.
+                Con::warnf("ImageAsset::onTamlCustomRead() - Encountered an unknown custom name of '%s'.  Only '%s' is valid.", nodeName, layerNodeName);
+                continue;
+            }
+
+            Point2I layerPosition(0, 0);
+            const char* imagePath = StringTable->EmptyString;
+            ColorF blendColor = ColorF(1, 1, 1, 1);
+
+            // Fetch fields.
+            const TamlCustomFieldVector& fields = pLayerNode->getFields();
+
+            // Iterate property fields.
+            for (TamlCustomFieldVector::const_iterator fieldItr = fields.begin(); fieldItr != fields.end(); ++fieldItr)
+            {
+                // Fetch field.
+                const TamlCustomField* pField = *fieldItr;
+
+                // Fetch field name.
+                StringTableEntry fieldName = pField->getFieldName();
+
+                // Check common fields.
+                if (fieldName == layerImageFile)
+                {
+                    imagePath = pField->getFieldValue();
+                }
+                else if (fieldName == layerPositionName)
+                {
+                    pField->getFieldValue(layerPosition);
+                }
+                else if (fieldName == layerBlendColorName)
+                {
+                    pField->getFieldValue(blendColor);
+                }
+                else
+                {
+                    // Unknown name so warn.
+                    Con::warnf("ImageAsset::onTamlCustomRead() - Encountered an unknown custom field name of '%s'.", fieldName);
+                    continue;
+                }
+            }
+
+            // Is the image name valid?
+            if (imagePath == StringTable->EmptyString)
+            {
+                // No, so warn
+                Con::warnf("ImageAsset::onTamlCustomRead() - Image File of '%s' is invalid or was not set.", imagePath);
+            }
+
+            // Add image layer.
+            addLayer(imagePath, layerPosition, blendColor, false);
+        }
+    }
+}
+
 //-----------------------------------------------------------------------------
 
 static void WriteCustomTamlSchema( const AbstractClassRep* pClassRep, TiXmlElement* pParentElement )
@@ -1563,6 +1953,8 @@ static void WriteCustomTamlSchema( const AbstractClassRep* pClassRep, TiXmlEleme
     AssertFatal( pParentElement != NULL,  "ImageAsset::WriteCustomTamlSchema() - Parent Element cannot be NULL." );
 
     char buffer[1024];
+
+    //---Cells---
 
     // Create ImageAsset node element.
     TiXmlElement* pImageAssetNodeElement = new TiXmlElement( "xs:element" );
@@ -1616,6 +2008,57 @@ static void WriteCustomTamlSchema( const AbstractClassRep* pClassRep, TiXmlEleme
     pImageAssetHeight->SetAttribute( "name", cellHeightName );
     pImageAssetHeight->SetAttribute( "type", "xs:unsignedInt" );
     pImageAssetComplexTypeElement->LinkEndChild( pImageAssetHeight );
+
+    //---Layers---
+
+    char buffer2[1024];
+
+    // Create ImageAsset node element.
+    TiXmlElement* pImageAssetNodeElementL = new TiXmlElement("xs:element");
+    dSprintf(buffer, sizeof(buffer2), "%s.%s", pClassRep->getClassName(), imageLayerCustomNodeName);
+    pImageAssetNodeElementL->SetAttribute("name", buffer2);
+    pImageAssetNodeElementL->SetAttribute("minOccurs", 0);
+    pImageAssetNodeElementL->SetAttribute("maxOccurs", 1);
+    pParentElement->LinkEndChild(pImageAssetNodeElementL);
+
+    // Create complex type.
+    TiXmlElement* pImageAssetNodeComplexTypeElementL = new TiXmlElement("xs:complexType");
+    pImageAssetNodeElementL->LinkEndChild(pImageAssetNodeComplexTypeElementL);
+
+    // Create choice element.
+    TiXmlElement* pImageAssetNodeChoiceElementL = new TiXmlElement("xs:choice");
+    pImageAssetNodeChoiceElementL->SetAttribute("minOccurs", 0);
+    pImageAssetNodeChoiceElementL->SetAttribute("maxOccurs", "unbounded");
+    pImageAssetNodeComplexTypeElementL->LinkEndChild(pImageAssetNodeChoiceElementL);
+
+    // Create ImageAsset element.
+    TiXmlElement* pImageAssetElementL = new TiXmlElement("xs:element");
+    pImageAssetElementL->SetAttribute("name", layerNodeName);
+    pImageAssetElementL->SetAttribute("minOccurs", 0);
+    pImageAssetElementL->SetAttribute("maxOccurs", 1);
+    pImageAssetNodeChoiceElementL->LinkEndChild(pImageAssetElementL);
+
+    // Create complex type Element.
+    TiXmlElement* pImageAssetComplexTypeElementL = new TiXmlElement("xs:complexType");
+    pImageAssetElementL->LinkEndChild(pImageAssetComplexTypeElementL);
+
+    // Create "ImageFile" attribute.
+    TiXmlElement* pLayerImageFile = new TiXmlElement("xs:attribute");
+    pLayerImageFile->SetAttribute("name", layerImageFile);
+    pLayerImageFile->SetAttribute("type", "xs:string");
+    pImageAssetComplexTypeElementL->LinkEndChild(pLayerImageFile);
+
+    // Create "Position" attribute.
+    TiXmlElement* pLayerPosition = new TiXmlElement("xs:attribute");
+    pLayerPosition->SetAttribute("name", layerPositionName);
+    pLayerPosition->SetAttribute("type", "Point2I_ConsoleType");
+    pImageAssetComplexTypeElementL->LinkEndChild(pLayerPosition);
+
+    // Create "BlendColor" attribute.
+    TiXmlElement* pLayerBlendColor = new TiXmlElement("xs:attribute");
+    pLayerBlendColor->SetAttribute("name", layerBlendColorName);
+    pLayerBlendColor->SetAttribute("type", "ColorF_ConsoleType");
+    pImageAssetComplexTypeElementL->LinkEndChild(pLayerBlendColor);
 }
 
 //------------------------------------------------------------------------------

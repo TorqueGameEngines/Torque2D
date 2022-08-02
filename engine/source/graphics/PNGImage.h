@@ -71,7 +71,7 @@ public:
     // Will "merge" the incoming image onto the current image on to an x, y position.
     bool MergeOn(U32 x, U32 y, const PNGImage* inc);
 
-    // Will clean up any allocated memory from the PNGImage. This must be called or their may be a memory leak.
+    // Will clean up any allocated memory from the PNGImage. This must be called or there may be a memory leak.
     bool CleanMemoryUsage();
 
     bool ClearImageData();
