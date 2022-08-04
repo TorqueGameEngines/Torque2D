@@ -1427,6 +1427,7 @@ void ImageAsset::redrawImage()
             {
                 // We still can't come up with a bitmap, so warn and return
                 Con::warnf("ImageAsset::redrawImage() - Unable to load bitmap for image '%s'.", mImageFile);
+                return;
             }
         }
         map->clearImage();
@@ -1591,7 +1592,7 @@ void ImageAsset::setLayerImage(const U32 index, const char* imagePath, const boo
     if (getOwned())
     {
         const char* path = expandAssetFilePath(imagePath);
-        mImageLayers[index].mImageFile = StringTable->insert(path);
+        mImageLayers[index].mImageFile = StringTable->insert(imagePath);
         mImageLayers[index].LoadImage(path);
     }
     else
@@ -1666,10 +1667,7 @@ void ImageAsset::setBlendColor(const ColorF color, const bool doRedraw)
     
     mImageLayers[0].mBlendColor.set(color.red, color.green, color.blue, color.alpha);
 
-    if (doRedraw)
-    {
-        redrawImage();
-    }
+    completeLayerChange(doRedraw);
 }
 
 const ColorF ImageAsset::getBlendColor()

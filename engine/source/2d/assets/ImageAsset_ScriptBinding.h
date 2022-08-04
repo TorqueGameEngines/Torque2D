@@ -33,11 +33,21 @@ ConsoleMethodWithDocs(ImageAsset, setImageFile, ConsoleVoid, 3, 3, (ImageFile))
 //-----------------------------------------------------------------------------
 
 /*! Gets the image file.
-    @return Returns the bitmap image file.
+    @return Returns the bitmap image file, typically as an absolute path.
 */
 ConsoleMethodWithDocs(ImageAsset, getImageFile, ConsoleString, 2, 2, ())
 {
     return object->getImageFile();
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Gets the image file.
+    @return Returns the bitmap image file as a path relative to the asset file.
+*/
+ConsoleMethodWithDocs(ImageAsset, getRelativeImageFile, ConsoleString, 2, 2, ())
+{
+    return object->getRelativeImageFile();
 }
 
 //------------------------------------------------------------------------------

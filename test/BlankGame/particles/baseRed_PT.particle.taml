@@ -1,0 +1,7 @@
+<ParticleAsset
+    AssetName="baseRed_PT">
+    <ParticleAssetEmitter
+        EmitterName="DefaultEmitter"
+        Image="@asset=BlankGame:baseRed"
+        Frame="0" />
+</ParticleAsset>

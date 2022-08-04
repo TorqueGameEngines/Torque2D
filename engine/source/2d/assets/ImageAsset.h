@@ -219,6 +219,7 @@ public:
 
     void                    setImageFile( const char* pImageFile );
     inline StringTableEntry getImageFile( void ) const                      { return mImageFile; };
+    inline StringTableEntry getRelativeImageFile(void) const { return collapseAssetFilePath(mImageFile); };
 
     void                    setForce16Bit( const bool force16Bit );
     inline bool             getForce16Bit( void ) const                     { return mForce16Bit; }
