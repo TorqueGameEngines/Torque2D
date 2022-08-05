@@ -121,9 +121,9 @@ void GBitmap::deleteImage()
    SAFE_DELETE(pPalette);
 }
 
-void GBitmap::clearImage()
+void GBitmap::clearImage(const ColorF blendColor)
 {
-    ColorI clearColor(255, 255, 255, 0);
+    ColorI clearColor(blendColor.red, blendColor.green, blendColor.blue, 0);
     for (U32 h = 0; h < getHeight(); h++)
     {
         for (U32 w = 0; w < getWidth(); w++)

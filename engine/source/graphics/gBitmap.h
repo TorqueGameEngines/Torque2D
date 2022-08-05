@@ -130,7 +130,7 @@ class GBitmap: public ResourceInstance
    static U32 sBitmapIdSource;
 
    void deleteImage();
-   void clearImage();
+   void clearImage(const ColorF blendColor);
 
    BitmapFormat internalFormat;
   public:

@@ -1430,7 +1430,7 @@ void ImageAsset::redrawImage()
                 return;
             }
         }
-        map->clearImage();
+        map->clearImage(mBlendColor);
         for (auto &layer : mImageLayers)
         {
             map->mergeLayer(layer.mPosition, layer.mBitmap, layer.mBlendColor);
