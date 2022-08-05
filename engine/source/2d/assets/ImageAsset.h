@@ -304,7 +304,7 @@ public:
     void setLayerImage(const U32 index, const char* imagePath, const bool doRedraw = true);
     void setLayerPosition(const U32 index, const Point2I position, const bool doRedraw = true);
     void setLayerBlendColor(const U32 index, const ColorF color, const bool doRedraw = true);
-    const U32 getLayerCount() { return mImageLayers.size() - 1; } //We pretend layer 0 doesn't exist as it is internally created
+    const U32 getLayerCount() { return getMax(mImageLayers.size() - 1, 0); } //We pretend layer 0 doesn't exist as it is internally created
     const char* getLayerImage(const U32 index);
     const Point2I getLayerPosition(const U32 index);
     const ColorF getLayerBlendColor(const U32 index);
