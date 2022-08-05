@@ -1429,6 +1429,7 @@ void ImageAsset::redrawImage()
                 Con::warnf("ImageAsset::redrawImage() - Unable to load bitmap for image '%s'.", mImageFile);
                 return;
             }
+            mImageLayers[0].LoadImage(mImageLayers[0].mImageFile);
         }
         map->clearImage(mBlendColor);
         for (auto &layer : mImageLayers)
