@@ -1686,7 +1686,7 @@ void ImageAsset::onTamlCustomWrite( TamlCustomNodes& customNodes )
     // Call parent.
     Parent::onTamlCustomWrite( customNodes );
 
-    if (mExplicitFrames.size() > 0)
+    if (mExplicitMode && mExplicitFrames.size() > 0)
     {
         // Add cell custom node.
         TamlCustomNode* pCustomCellNodes = customNodes.addNode( cellCustomNodeCellsName );
