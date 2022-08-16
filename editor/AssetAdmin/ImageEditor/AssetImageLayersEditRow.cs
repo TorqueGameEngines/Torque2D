@@ -234,19 +234,19 @@ function AssetImageLayersEditRow::scrubColor(%this, %color)
 function AssetImageLayersEditRow::scrubChannel(%this, %val)
 {
 	%val = mFloatLength(mClamp(%val, 0, 1), 3);
-	if(getSubStr(%val, 4, 1) != "0")
+	if(getSubStr(%val, 4, 1) !$= "0")
 	{
 		return %val;
 	}
 	%val = getSubStr(%val, 0, 4);
 
-	if(getSubStr(%val, 3, 1) != "0")
+	if(getSubStr(%val, 3, 1) !$= "0")
 	{
 		return %val;
 	}
 	%val = getSubStr(%val, 0, 3);
 
-	if(getSubStr(%val, 2, 1) != "0")
+	if(getSubStr(%val, 2, 1) !$= "0")
 	{
 		return %val;
 	}
