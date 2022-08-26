@@ -1,0 +1,15 @@
+<ModuleDefinition
+	ModuleId="ScreenFade"
+	VersionId="1"
+	BuildID="5"
+	Synchronized="1"
+	Description="Switches the Canvas with a quick screen fade. Can be used for a temporary background for dialogs or windows."
+	Author="Torque2D"
+	ScriptFile="screenFade.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy">
+		<DeclaredAssets
+			Path="gui"
+			Extension="image.taml"
+			Recurse="false"/>
+</ModuleDefinition>
