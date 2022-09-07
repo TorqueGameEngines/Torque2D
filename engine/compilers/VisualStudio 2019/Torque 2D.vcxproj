@@ -516,6 +516,7 @@
     <ClCompile Include="..\..\source\2d\scene\WorldQuery.cc" />
     <ClCompile Include="..\..\source\algorithm\crc.cc" />
     <ClCompile Include="..\..\source\algorithm\hashFunction.cc" />
+    <ClCompile Include="..\..\source\algorithm\pcg_basic.c" />
     <ClCompile Include="..\..\source\algorithm\Perlin.cc" />
     <ClCompile Include="..\..\source\assets\assetBase.cc" />
     <ClCompile Include="..\..\source\assets\assetFieldTypes.cc" />
@@ -677,6 +678,7 @@
     <ClCompile Include="..\..\source\math\mFluid.cpp" />
     <ClCompile Include="..\..\source\math\mPoint.cpp" />
     <ClCompile Include="..\..\source\math\noise\NoiseGenerator.cc" />
+    <ClCompile Include="..\..\source\math\noise\RandomNumberGenerator.cc" />
     <ClCompile Include="..\..\source\math\rectClipper.cpp" />
     <ClCompile Include="..\..\source\memory\dataChunker.cc" />
     <ClCompile Include="..\..\source\memory\frameAllocator_ScriptBinding.cc" />
@@ -940,6 +942,7 @@
     <ClInclude Include="..\..\source\algorithm\crctab.h" />
     <ClInclude Include="..\..\source\algorithm\hashFunction.h" />
     <ClInclude Include="..\..\source\algorithm\md5.h" />
+    <ClInclude Include="..\..\source\algorithm\pcg_basic.h" />
     <ClInclude Include="..\..\source\algorithm\Perlin.h" />
     <ClInclude Include="..\..\source\assets\assetBase.h" />
     <ClInclude Include="..\..\source\assets\assetBase_ScriptBinding.h" />
@@ -1182,6 +1185,8 @@
     <ClInclude Include="..\..\source\math\mNormalDistribution.h" />
     <ClInclude Include="..\..\source\math\noise\NoiseGenerator.h" />
     <ClInclude Include="..\..\source\math\noise\NoiseGenerator_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\math\noise\RandomNumberGenerator.h" />
+    <ClInclude Include="..\..\source\math\noise\RandomNumberGenerator_ScriptBinding.h" />
     <ClInclude Include="..\..\source\math\random_ScriptBinding.h" />
     <ClInclude Include="..\..\source\math\rectClipper.h" />
     <ClInclude Include="..\..\source\math\vector_ScriptBinding.h" />

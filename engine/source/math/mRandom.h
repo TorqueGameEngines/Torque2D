@@ -27,6 +27,8 @@
 #include "platform/platform.h"
 #endif
 
+#include "algorithm/pcg_basic.h"
+
 //-----------------------------------------------------------------------------
 
 class RandomGeneratorBase
@@ -95,6 +97,36 @@ public:
 
    void setSeed( const S32 seed );
    U32 randI( void );
+};
+
+//-----------------------------------------------------------------------------
+
+
+//-----------------------------------------------------------------------------
+/// PCG Random Number Generator
+/// 
+/// Fast and statistically excellent random numbers
+///
+/// Period = 2^64
+///
+/// Copyright 2014 Melissa O'Neill <oneill@pcg-random.org>
+///
+/// Licensed under the Apache License, Version 2.0
+//-----------------------------------------------------------------------------
+class RandomPCG : public RandomGeneratorBase
+{
+private:
+    pcg32_random_t rng;
+
+public:
+    RandomPCG();
+    RandomPCG(const S32 seed);
+    RandomPCG(const S32 seed, const S32 stream);
+
+    void setSeed(const S32 seed);
+    void setSeed(const S32 seed, const S32 stream);
+    U32 randI(void) { return static_cast<U32>(pcg32_random_r(&rng)); }
+    U32 randI(U32 bound) { return static_cast<U32>(pcg32_boundedrand_r(&rng, static_cast<uint32_t>(bound))); }
 };
 
 //-----------------------------------------------------------------------------
