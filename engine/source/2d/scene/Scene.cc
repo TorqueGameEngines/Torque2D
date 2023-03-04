@@ -3578,7 +3578,7 @@ void Scene::setDebugSceneObject( SceneObject* pSceneObject )
 void Scene::setLayerSortMode( const U32 layer, const SceneRenderQueue::RenderSort sortMode )
 {
     // Is the layer valid?
-    if ( layer > MAX_LAYERS_SUPPORTED )
+    if ( layer >= MAX_LAYERS_SUPPORTED )
     {
         // No, so warn.
         Con::warnf( "Scene::setLayerSortMode() - Layer '%d' is out of range.", layer );
@@ -3603,7 +3603,7 @@ void Scene::setLayerSortMode( const U32 layer, const SceneRenderQueue::RenderSor
 SceneRenderQueue::RenderSort Scene::getLayerSortMode( const U32 layer )
 {
     // Is the layer valid?
-    if ( layer > MAX_LAYERS_SUPPORTED )
+    if ( layer >= MAX_LAYERS_SUPPORTED )
     {
         // No, so warn.
         Con::warnf( "Scene::getLayerSortMode() - Layer '%d' is out of range.", layer );
