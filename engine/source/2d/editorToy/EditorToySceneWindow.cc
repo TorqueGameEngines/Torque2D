@@ -382,10 +382,8 @@ bool EditorToySceneWindow::initCursors()
       mLeftRightCursor = dynamic_cast<GuiCursor*>(obj);
       obj = Sim::findObject("DefaultCursor");
       mDefaultCursor = dynamic_cast<GuiCursor*>(obj);
-      obj = Sim::findObject("MoveCursor");
-      mMoveCursor = dynamic_cast<GuiCursor*>(obj);
 
-      return(mMoveCursor != NULL && mUpDownCursor != NULL && mLeftRightCursor != NULL && mDefaultCursor != NULL && mMoveCursor != NULL);
+      return(mMoveCursor != NULL && mUpDownCursor != NULL && mLeftRightCursor != NULL && mDefaultCursor != NULL);
    }
    else
       return(true);
