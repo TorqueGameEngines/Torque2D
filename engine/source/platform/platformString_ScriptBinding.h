@@ -347,7 +347,7 @@ ConsoleFunctionWithDocs( stripTrailingSpaces, ConsoleString, 2, 2, ( string ))
    S32 temp = S32(dStrlen( argv[1] ));
    if ( temp )
    {
-      while ( ( argv[1][temp - 1] == ' ' || argv[1][temp - 1] == '_' ) && temp >= 1 )
+      while ( temp >= 1 && ( argv[1][temp - 1] == ' ' || argv[1][temp - 1] == '_' ) )
          temp--;
 
       if ( temp )
