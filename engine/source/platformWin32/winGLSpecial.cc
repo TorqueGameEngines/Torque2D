@@ -190,28 +190,28 @@ static const char * TypeToString( GLenum t )
 // GLU Log Functions
 static void APIENTRY loggluOrtho2D(GLdouble left, GLdouble right, GLdouble bottom, GLdouble top)
 {
-   fprintf(winState.log_fp, "gluOrtho2D( %d, %d, %d, %d )\n", left, right, bottom, top);
+   fprintf(winState.log_fp, "gluOrtho2D( %f, %f, %f, %f )\n", left, right, bottom, top);
    fflush(winState.log_fp);
    dllgluOrtho2D(left, right, bottom, top);
 }
 
 static void APIENTRY loggluPerspective(GLdouble fovy, GLdouble aspect, GLdouble zNear, GLdouble zFar)
 {
-   fprintf(winState.log_fp, "gluPerspective( %d, %d, %d, %d )\n", fovy, aspect, zNear, zFar);
+   fprintf(winState.log_fp, "gluPerspective( %f, %f, %f, %f )\n", fovy, aspect, zNear, zFar);
    fflush(winState.log_fp);
    dllgluPerspective(fovy, aspect, zNear, zFar);
 }
 
 static void APIENTRY loggluPickMatrix(GLdouble x, GLdouble y, GLdouble width, GLdouble height, GLint viewport[4])
 {
-   fprintf(winState.log_fp, "gluPickMatrix(%d, %d, %d, %d, VIEW)\n", x, y, width, height);
+   fprintf(winState.log_fp, "gluPickMatrix(%f, %f, %f, %f, VIEW)\n", x, y, width, height);
    fflush(winState.log_fp);
    dllgluPickMatrix(x, y, width, height, viewport);
 }
 
 static void APIENTRY loggluLookAt(GLdouble eyex, GLdouble eyey, GLdouble eyez, GLdouble centerx, GLdouble centery, GLdouble centerz, GLdouble upx, GLdouble upy, GLdouble upz)
 {
-   fprintf(winState.log_fp, "gluLookAt(%d, %d, %d, %d, %d, %d, %d, %d, %d)\n",eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz);
+   fprintf(winState.log_fp, "gluLookAt(%f, %f, %f, %f, %f, %f, %f, %f, %f)\n",eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz);
    fflush(winState.log_fp);
    dllgluLookAt(eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz);
 }
