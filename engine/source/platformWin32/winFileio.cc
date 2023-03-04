@@ -981,7 +981,8 @@ bool Platform::hasSubDirectory(const char *pPath)
             continue;
 
          Platform::clearExcludedDirectories();
-
+         FindClose(handle);
+         
          return true;
       }      
    }
