@@ -4029,7 +4029,7 @@ void SceneObject::onTamlCustomRead( const TamlCustomNodes& customNodes )
             }
 
             // Is point count valid?
-            if ( pointCount == 0 || pointCount != 2 )
+            if ( pointCount != 2 )
             {
                 // No, so warn.
                 Con::warnf( "SceneObject::onTamlCustomRead() - No points (or not two points) on edge collision shape." );
