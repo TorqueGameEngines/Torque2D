@@ -42,7 +42,7 @@ ConsoleFunctionWithDocs(enableWinConsole, ConsoleVoid, 2, 2, ( enable ))
 ConsoleFunctionWithDocs(getWinNTVersion, ConsoleVoid, 1, 1, ())
 {
 	std::string ver = getWinNTVersion();
-	Con::printf("%s", ver);
+	Con::printf("%s", ver.c_str());
 }
 
 /*! @} */ // end group WindowsPlatform
