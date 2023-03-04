@@ -77,6 +77,7 @@ public:
    {
       if (mNodes.empty()) return false;
       if((index >= 0) && (index < mNodes.size())) return true;
+      return false;
    }
 
    void attachObject(SceneObject* object, F32 speed, F32 force, bool orientToPath, F32 angleOff, bool snapToNode, S32 startNode, bool loop, S32 maxLoop);
