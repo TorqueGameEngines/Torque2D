@@ -56,8 +56,6 @@ ConsoleFunctionWithDocs(GLEnableLogging, ConsoleVoid, 2, 2, ( enable ))
          time( &aclock );
          newtime = localtime( &aclock );
 
-         asctime( newtime );
-
          winState.log_fp = fopen( "gl_log.txt", "wt" );
 
          fprintf( winState.log_fp, "%s\n", asctime( newtime ) );
