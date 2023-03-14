@@ -345,7 +345,7 @@ StringTableEntry Platform::makeRelativePathName(const char *path, const char *to
       return StringTable->insert(buffer);
    }
 
-   if((*pathPtr == 0 && *toPtr == '/') || (*toPtr == '/' && *pathPtr == 0))
+   if(*toPtr == '/' && *pathPtr == 0)
       branch = pathPtr;
 
    // Figure out parent dirs

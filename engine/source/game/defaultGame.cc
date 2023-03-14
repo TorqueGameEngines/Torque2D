@@ -592,9 +592,6 @@ void DefaultGame::processTimeEvent(TimeEvent *event)
    {
       elapsedTime = (U32) (elapsedTime * gTimeScale);
    }
-   {
-       elapsedTime = elapsedTime;
-   }
 
    Platform::advanceTime(elapsedTime);
    bool tickPass;
