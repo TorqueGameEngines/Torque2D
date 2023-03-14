@@ -571,7 +571,7 @@ ConsoleFunctionWithDocs(exec, ConsoleBool, 2, 4, ( fileName, [nocalls]?, [journa
 
         if ( scriptExecutionEcho )
             Con::printf("Loaded compiled script %s. Took %.0f ms", scriptFileName, etf);
-	delete code;
+
       ret = true;
    }
    else if(rScr) //Luma : Load normal cs file here.
@@ -595,7 +595,7 @@ ConsoleFunctionWithDocs(exec, ConsoleBool, 2, 4, ( fileName, [nocalls]?, [journa
          
         if ( scriptExecutionEcho )
             Con::printf("Executed %s. Took %.0f ms", scriptFileName, etf);
-	delete newCodeBlock;
+
          ret = true;
    }
    else
