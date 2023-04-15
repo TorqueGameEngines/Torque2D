@@ -2,7 +2,8 @@ APPNAME := ../../../Torque2D
 
 2D_SOURCES :=            $(shell find ../../source/2d/ -name "*.cc") + \
 						 $(shell find ../../source/2d/ -name "*.cpp")
-ALGORITHM_SOURCES :=     $(shell find ../../source/algorithm/ -name "*.cc")
+ALGORITHM_SOURCES :=     $(shell find ../../source/algorithm/ -name "*.cc") + \
+                         $(shell find ../../source/algorithm/ -name "*.c")
 ASSETS_SOURCES :=        $(shell find ../../source/assets/ -name "*.cc")
 AUDIO_SOURCES :=         $(shell find ../../source/audio/ -name "*.cc")
 BITMAPFONT_SOURCES :=    $(shell find ../../source/bitmapFont/ -name "*.cc")
