@@ -27,7 +27,7 @@
 #include "2d/assets/ParticleAssetField.h"
 #endif
 
-#ifndef _HASHTABLE_H
+#ifndef _HASHTABLE_H_
 #include "collection/hashTable.h"
 #endif
 
