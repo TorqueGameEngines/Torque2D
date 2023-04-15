@@ -64,7 +64,7 @@ SOURCES := $(2D_SOURCES) + \
 LDFLAGS := -g -m64
 LDLIBS := -lstdc++ -lm -ldl -lpthread -lrt -lX11 -lXft -lSDL -lopenal
 
-CFLAGS := -std=c++14 -MMD -I. -Wfatal-errors -Wunused -m64 -msse -march=x86-64 -pipe
+CFLAGS := -std=c++17 -MMD -I. -Wfatal-errors -Wunused -m64 -msse -march=x86-64 -pipe
 
 CFLAGS += -I/usr/include
 CFLAGS += -I/usr/include/freetype2
