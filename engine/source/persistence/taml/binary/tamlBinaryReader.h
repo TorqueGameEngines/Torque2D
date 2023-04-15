@@ -23,7 +23,7 @@
 #ifndef _TAML_BINARYREADER_H_
 #define _TAML_BINARYREADER_H_
 
-#ifndef _HASHTABLE_H
+#ifndef _HASHTABLE_H_
 #include "collection/hashTable.h"
 #endif
 

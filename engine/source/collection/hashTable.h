@@ -20,8 +20,8 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 
-#ifndef _HASHTABLE_H
-#define _HASHTABLE_H
+#ifndef _HASHTABLE_H_
+#define _HASHTABLE_H_
 
 #include "vector.h"
 #include "platform/platform.h"
@@ -697,4 +697,4 @@ inline Value& HashMap<Key,Value,Sequence>::operator[](const Key& key)
 
 
 
-#endif// _HASHTABLE_H
+#endif// _HASHTABLE_H_

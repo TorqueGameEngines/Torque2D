@@ -27,7 +27,7 @@
 #include "2d/sceneobject/SceneObject.h"
 #endif
 
-#ifndef _HASHTABLE_H
+#ifndef _HASHTABLE_H_
 #include "collection/hashTable.h"
 #endif
 

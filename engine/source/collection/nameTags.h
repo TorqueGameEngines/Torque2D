@@ -27,7 +27,7 @@
 #include "sim/simBase.h"
 #endif
 
-#ifndef _HASHTABLE_H
+#ifndef _HASHTABLE_H_
 #include "collection/hashTable.h"
 #endif
 
