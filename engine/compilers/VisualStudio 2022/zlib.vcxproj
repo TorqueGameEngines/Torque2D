@@ -26,40 +26,70 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\lib\zlib\adler32.c" />
+    <ClCompile Include="..\..\lib\zlib\compress.c" />
+    <ClCompile Include="..\..\lib\zlib\crc32.c" />
+    <ClCompile Include="..\..\lib\zlib\deflate.c" />
+    <ClCompile Include="..\..\lib\zlib\gzclose.c" />
+    <ClCompile Include="..\..\lib\zlib\gzlib.c" />
+    <ClCompile Include="..\..\lib\zlib\gzread.c" />
+    <ClCompile Include="..\..\lib\zlib\gzwrite.c" />
+    <ClCompile Include="..\..\lib\zlib\infback.c" />
+    <ClCompile Include="..\..\lib\zlib\inffast.c" />
+    <ClCompile Include="..\..\lib\zlib\inflate.c" />
+    <ClCompile Include="..\..\lib\zlib\inftrees.c" />
+    <ClCompile Include="..\..\lib\zlib\trees.c" />
+    <ClCompile Include="..\..\lib\zlib\uncompr.c" />
+    <ClCompile Include="..\..\lib\zlib\zutil.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\lib\zlib\crc32.h" />
+    <ClInclude Include="..\..\lib\zlib\deflate.h" />
+    <ClInclude Include="..\..\lib\zlib\gzguts.h" />
+    <ClInclude Include="..\..\lib\zlib\inffast.h" />
+    <ClInclude Include="..\..\lib\zlib\inffixed.h" />
+    <ClInclude Include="..\..\lib\zlib\inflate.h" />
+    <ClInclude Include="..\..\lib\zlib\inftrees.h" />
+    <ClInclude Include="..\..\lib\zlib\trees.h" />
+    <ClInclude Include="..\..\lib\zlib\zconf.h" />
+    <ClInclude Include="..\..\lib\zlib\zlib.h" />
+    <ClInclude Include="..\..\lib\zlib\zutil.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{AF1179E3-A838-46A3-A427-1E62AA4C52F4}</ProjectGuid>
-    <WindowsTargetPlatformVersion>10.0.19041.0</WindowsTargetPlatformVersion>
+    <ProjectGuid>{86CB2525-0CF3-40D3-BF42-A0A95035EE8C}</ProjectGuid>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Shipping|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseOfMfc>false</UseOfMfc>
-    <PlatformToolset>v141</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -92,18 +122,18 @@
   <PropertyGroup>
     <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\../../Link/Debug\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\../../Link/Debug/lpng\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">.\../../Link/Debug/zlib\</IntDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\../../Link/Release\</OutDir>
     <OutDir Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">.\../../Link/Release\</OutDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\../../Link/Release/lpng\</IntDir>
-    <IntDir Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">.\../../Link/Release/lpng\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">.\../../Link/Release/zlib\</IntDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Shipping|Win32'">.\../../Link/Release/zlib\</IntDir>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(ProjectName)_DEBUG</TargetName>
     <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectName)_DEBUG</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Lib\lpng;..\..\Lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>TORQUE_DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -111,10 +141,10 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>.\../../Link/Debug/lpng/lpng.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../Link/Debug/lpng/</AssemblerListingLocation>
-      <ObjectFileName>.\../../Link/Debug/lpng/</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../Link/Debug/lpng/</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../Link/Debug/zlib/zlib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../Link/Debug/zlib/</AssemblerListingLocation>
+      <ObjectFileName>.\../../Link/Debug/zlib/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../Link/Debug/zlib/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
@@ -132,7 +162,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\Lib\lpng;..\..\Lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>TORQUE_DEBUG;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -140,10 +170,10 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>.\../../Link/Debug/lpng/lpng.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../Link/Debug/lpng/</AssemblerListingLocation>
-      <ObjectFileName>.\../../Link/Debug/lpng/</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../Link/Debug/lpng/</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../Link/Debug/zlib/zlib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../Link/Debug/zlib/</AssemblerListingLocation>
+      <ObjectFileName>.\../../Link/Debug/zlib/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../Link/Debug/zlib/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
@@ -154,7 +184,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\../../Link/Debug\lpng.lib</OutputFile>
+      <OutputFile>.\../../Link/Debug\zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -162,7 +192,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\Lib\lpng;..\..\Lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -171,10 +201,10 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>.\../../Link/Release/lpng/lpng.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../Link/Release/lpng/</AssemblerListingLocation>
-      <ObjectFileName>.\../../Link/Release/lpng/</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../Link/Release/lpng/</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../Link/Release/zlib/zlib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../Link/Release/zlib/</AssemblerListingLocation>
+      <ObjectFileName>.\../../Link/Release/zlib/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../Link/Release/zlib/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
@@ -184,7 +214,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\../../Link/Release\lpng.lib</OutputFile>
+      <OutputFile>.\../../Link/Release\zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -192,7 +222,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\Lib\lpng;..\..\Lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -201,10 +231,10 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>.\../../Link/Release/lpng/lpng.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../Link/Release/lpng/</AssemblerListingLocation>
-      <ObjectFileName>.\../../Link/Release/lpng/</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../Link/Release/lpng/</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../Link/Release/zlib/zlib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../Link/Release/zlib/</AssemblerListingLocation>
+      <ObjectFileName>.\../../Link/Release/zlib/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../Link/Release/zlib/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
@@ -214,7 +244,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\../../Link/Release\lpng.lib</OutputFile>
+      <OutputFile>.\../../Link/Release\zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -222,7 +252,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\Lib\lpng;..\..\Lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -231,10 +261,10 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>.\../../Link/Release/lpng/lpng.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../Link/Release/lpng/</AssemblerListingLocation>
-      <ObjectFileName>.\../../Link/Release/lpng/</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../Link/Release/lpng/</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../Link/Release/zlib/zlib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../Link/Release/zlib/</AssemblerListingLocation>
+      <ObjectFileName>.\../../Link/Release/zlib/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../Link/Release/zlib/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
@@ -244,7 +274,7 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\../../Link/Release\lpng.lib</OutputFile>
+      <OutputFile>.\../../Link/Release\zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
@@ -252,7 +282,7 @@
     <ClCompile>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>..\..\Lib\lpng;..\..\Lib\zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>zlib;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -261,10 +291,10 @@
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>
       </PrecompiledHeader>
-      <PrecompiledHeaderOutputFile>.\../../Link/Release/lpng/lpng.pch</PrecompiledHeaderOutputFile>
-      <AssemblerListingLocation>.\../../Link/Release/lpng/</AssemblerListingLocation>
-      <ObjectFileName>.\../../Link/Release/lpng/</ObjectFileName>
-      <ProgramDataBaseFileName>.\../../Link/Release/lpng/</ProgramDataBaseFileName>
+      <PrecompiledHeaderOutputFile>.\../../Link/Release/zlib/zlib.pch</PrecompiledHeaderOutputFile>
+      <AssemblerListingLocation>.\../../Link/Release/zlib/</AssemblerListingLocation>
+      <ObjectFileName>.\../../Link/Release/zlib/</ObjectFileName>
+      <ProgramDataBaseFileName>.\../../Link/Release/zlib/</ProgramDataBaseFileName>
       <WarningLevel>Level3</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <CompileAs>Default</CompileAs>
@@ -274,42 +304,10 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
     <Lib>
-      <OutputFile>.\../../Link/Release\lpng.lib</OutputFile>
+      <OutputFile>.\../../Link/Release\zlib.lib</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ProjectReference Include="zlib.vcxproj">
-      <Project>{86cb2525-0cf3-40d3-bf42-a0a95035ee8c}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="..\..\lib\lpng\png.c" />
-    <ClCompile Include="..\..\lib\lpng\pngerror.c" />
-    <ClCompile Include="..\..\lib\lpng\pngget.c" />
-    <ClCompile Include="..\..\lib\lpng\pngmem.c" />
-    <ClCompile Include="..\..\lib\lpng\pngpread.c" />
-    <ClCompile Include="..\..\lib\lpng\pngread.c" />
-    <ClCompile Include="..\..\lib\lpng\pngrio.c" />
-    <ClCompile Include="..\..\lib\lpng\pngrtran.c" />
-    <ClCompile Include="..\..\lib\lpng\pngrutil.c" />
-    <ClCompile Include="..\..\lib\lpng\pngset.c" />
-    <ClCompile Include="..\..\lib\lpng\pngtrans.c" />
-    <ClCompile Include="..\..\lib\lpng\pngwio.c" />
-    <ClCompile Include="..\..\lib\lpng\pngwrite.c" />
-    <ClCompile Include="..\..\lib\lpng\pngwtran.c" />
-    <ClCompile Include="..\..\lib\lpng\pngwutil.c" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="..\..\lib\lpng\png.h" />
-    <ClInclude Include="..\..\lib\lpng\pngconf.h" />
-    <ClInclude Include="..\..\lib\lpng\pngdebug.h" />
-    <ClInclude Include="..\..\lib\lpng\pnginfo.h" />
-    <ClInclude Include="..\..\lib\lpng\pnglibconf.h" />
-    <ClInclude Include="..\..\lib\lpng\pngpriv.h" />
-    <ClInclude Include="..\..\lib\lpng\pngstruct.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

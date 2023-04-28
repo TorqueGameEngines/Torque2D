@@ -203,7 +203,7 @@
       <UniqueIdentifier>{598766e4-7dc1-45b8-8acf-f133f4fced82}</UniqueIdentifier>
     </Filter>
     <Filter Include="math\noise">
-      <UniqueIdentifier>{1ca99a8e-9e94-4ab8-996e-b4835a603512}</UniqueIdentifier>
+      <UniqueIdentifier>{1a2a7ebc-eda6-4a67-b9ab-bc9f437b5d5c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -1334,6 +1334,12 @@
       <Filter>algorithm</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\math\noise\NoiseGenerator.cc">
+      <Filter>math\noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\algorithm\pcg_basic.c">
+      <Filter>algorithm</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\math\noise\RandomNumberGenerator.cc">
       <Filter>math\noise</Filter>
     </ClCompile>
   </ItemGroup>
@@ -3056,6 +3062,15 @@
       <Filter>math\noise</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\math\noise\NoiseGenerator_ScriptBinding.h">
+      <Filter>math\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\algorithm\pcg_basic.h">
+      <Filter>algorithm</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\noise\RandomNumberGenerator.h">
+      <Filter>math\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\math\noise\RandomNumberGenerator_ScriptBinding.h">
       <Filter>math\noise</Filter>
     </ClInclude>
   </ItemGroup>
