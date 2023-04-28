@@ -6,7 +6,9 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.0.3
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '[16.0, 17.0)'
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Debug /p:Platform=win32
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Release /p:Platform=win32
       - uses: actions/upload-artifact@v2
@@ -21,7 +23,10 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.0.3
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '[16.0, 17.0)'
+          msbuild-architecture: x64
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Debug /p:Platform=x64
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Release /p:Platform=x64
       - uses: actions/upload-artifact@v2
@@ -31,32 +36,37 @@ jobs:
             .
             ! .git/
             ! engine/
-  Build-Windows-32bit-VS2017:
-    name: 32-bit Windows On VS2017
+  Build-Windows-32bit-VS2022:
+    name: 32-bit Windows On VS2022
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.0.3
-      - run: msbuild -m "engine/compilers/VisualStudio 2017/Torque 2D.sln" /p:Configuration=Debug /p:Platform=win32
-      - run: msbuild -m "engine/compilers/VisualStudio 2017/Torque 2D.sln" /p:Configuration=Release /p:Platform=win32
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '[17.0, 18.0)'
+      - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Debug /p:Platform=win32
+      - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Release /p:Platform=win32
       - uses: actions/upload-artifact@v2
         with:
-          name: Torque2D_Windows_x86_32bit_VS2017
+          name: Torque2D_Windows_x86_32bit_VS2022
           path: |
             .
             ! .git/
             ! engine/
-  Build-Windows-64bit-VS2017:
-    name: 64-bit Windows On VS2017
+  Build-Windows-64bit-VS2022:
+    name: 64-bit Windows On VS2022
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: microsoft/setup-msbuild@v1.0.3
-      - run: msbuild -m "engine/compilers/VisualStudio 2017/Torque 2D.sln" /p:Configuration=Debug /p:Platform=x64
-      - run: msbuild -m "engine/compilers/VisualStudio 2017/Torque 2D.sln" /p:Configuration=Release /p:Platform=x64
+      - uses: microsoft/setup-msbuild@v1.1
+        with:
+          vs-version: '[17.0, 18.0)'
+          msbuild-architecture: x64
+      - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Debug /p:Platform=x64
+      - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Release /p:Platform=x64
       - uses: actions/upload-artifact@v2
         with:
-          name: Torque2D_Windows_x86_64bit_VS2017
+          name: Torque2D_Windows_x86_64bit_VS2022
           path: |
             .
             ! .git/
