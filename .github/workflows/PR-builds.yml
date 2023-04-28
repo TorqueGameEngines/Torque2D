@@ -3,7 +3,7 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   Build-Windows-32bit-VS2019:
     name: 32-bit Windows On VS2019
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/setup-msbuild@v1.1
@@ -20,7 +20,7 @@ jobs:
             ! engine/
   Build-Windows-64bit-VS2019:
     name: 64-bit Windows On VS2019
-    runs-on: windows-latest
+    runs-on: windows-2019
     steps:
       - uses: actions/checkout@v2
       - uses: microsoft/setup-msbuild@v1.1
