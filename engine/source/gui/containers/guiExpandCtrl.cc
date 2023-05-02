@@ -116,6 +116,12 @@ void GuiExpandCtrl::parentResized(const Point2I &oldParentExtent, const Point2I 
 	setUpdate();
 }
 
+void GuiExpandCtrl::childResized(GuiControl* child)
+{
+	calcExpandedExtent();
+	Parent::childResized(child);
+}
+
 void GuiExpandCtrl::setCollapsedExtent(const Point2I &extent)
 {
 	mCollapsedExtent = extent;
@@ -170,12 +176,27 @@ bool GuiExpandCtrl::processExpansion()
 		mBounds.extent.x = processValue(progress, mExpandedExtent.x, mCollapsedExtent.x);
 		mBounds.extent.y = processValue(progress, mExpandedExtent.y, mCollapsedExtent.y);
 	}
+
+	GuiControl* parent = getParent();
+	if (parent)
+	{
+		if (mHorizSizing == horizResizeCenter)
+		{
+			mBounds.point.x = (parent->mBounds.extent.x - mBounds.extent.x) / 2;
+		}
+		if (mVertSizing == vertResizeCenter)
+		{
+			mBounds.point.y = (parent->mBounds.extent.y - mBounds.extent.y) / 2;
+		}
+
+		parent->childResized(this);
+	}
 	setUpdate();
 
-	GuiControl *parent = getParent();
-	if (parent)
-		parent->childResized(this);
-
+	if (isMethod("onResize"))
+	{
+		Con::executef(this, 2, "onResize");
+	}
 
 	if (mAnimationProgress >= 1.0f)
 	{

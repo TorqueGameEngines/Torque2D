@@ -305,10 +305,7 @@ void GuiControl::addObject(SimObject *object)
    if(mAwake)
       ctrl->awaken();
 
-  // If we are a child, notify our parent that we've been added
-  GuiControl *parent = ctrl->getParent();
-  if( parent )
-     parent->onChildAdded( ctrl );
+    onChildAdded( ctrl );
 }
 
 void GuiControl::removeObject(SimObject *object)
@@ -319,16 +316,14 @@ void GuiControl::removeObject(SimObject *object)
 		AssertWarn(0, "GuiControl::removeObject: attempted to remove NON GuiControl from set");
 		return;
 	}
-	GuiControl *parent = ctrl->getParent();
 
-   AssertFatal(mAwake == static_cast<GuiControl*>(object)->isAwake(), "GuiControl::removeObject: child control wake state is bad");
+   AssertFatal(mAwake == ctrl->isAwake(), "GuiControl::removeObject: child control wake state is bad");
    if (mAwake)
-      static_cast<GuiControl*>(object)->sleep();
+      ctrl->sleep();
     Parent::removeObject(object);
 
 	// If we are a child, notify our parent that we've been removed
-	if (parent)
-		parent->onChildRemoved(ctrl);
+	onChildRemoved(ctrl);
 }
 
 GuiControl *GuiControl::getParent()
@@ -416,13 +411,28 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 
 	Point2I oldExtent = mBounds.extent;
 
+    //force center if using center positioning
+    Point2I actualNewPosition = Point2I(newPosition);
+    GuiControl* parent = getParent();
+    if (parent)
+    {
+        if (mHorizSizing == horizResizeCenter)
+        {
+            actualNewPosition.x = (parent->mBounds.extent.x - actualNewExtent.x) / 2;
+        }
+        if (mVertSizing == vertResizeCenter)
+        {
+            actualNewPosition.y = (parent->mBounds.extent.y - actualNewExtent.y) / 2;
+        }
+    }
+
    // only do the child control resizing stuff if you really need to.
    bool extentChanged = (actualNewExtent != oldExtent);
 
    if (extentChanged) {
       //call set update both before and after
       setUpdate();
-      mBounds.set(newPosition, actualNewExtent);
+      mBounds.set(actualNewPosition, actualNewExtent);
       iterator i;
       for(i = begin(); i != end(); i++)
       {
@@ -430,7 +440,6 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
          ctrl->parentResized(oldExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), actualNewExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
       }
 
-      GuiControl *parent = getParent();
       if (parent)
          parent->childResized(this);
       setUpdate();
@@ -441,7 +450,7 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	  }
    }
    else {
-      mBounds.point = newPosition;
+      mBounds.point = actualNewPosition;
    }
 }
 void GuiControl::setPosition( const Point2I &newPosition )
@@ -552,29 +561,35 @@ Point2I GuiControl::extentBattery(Point2I &newExtent)
 	}
 
 	Point2I result = Point2I(newExtent);
-	if (newExtent.x < mBounds.extent.x && newExtent.x < mMinExtent.x)
-	{
-		mStoredExtent.x += mBounds.extent.x > mMinExtent.x ? (mMinExtent.x - newExtent.x) : (mBounds.extent.x - newExtent.x);
-		result.x = mMinExtent.x;
-	}
-	else if (newExtent.x > mBounds.extent.x && mStoredExtent.x > 0)
-	{
-		S32 charge = getMin(newExtent.x - mBounds.extent.x, mStoredExtent.x);
-		mStoredExtent.x -= charge;
-		result.x = newExtent.x - charge;
-	}
+    if (mHorizSizing != horizResizeRelative)
+    {
+        if (newExtent.x < mBounds.extent.x && newExtent.x < mMinExtent.x)
+        {
+            mStoredExtent.x += mBounds.extent.x > mMinExtent.x ? (mMinExtent.x - newExtent.x) : (mBounds.extent.x - newExtent.x);
+            result.x = mMinExtent.x;
+        }
+        else if (newExtent.x > mBounds.extent.x && mStoredExtent.x > 0)
+        {
+            S32 charge = getMin(newExtent.x - mBounds.extent.x, mStoredExtent.x);
+            mStoredExtent.x -= charge;
+            result.x = newExtent.x - charge;
+        }
+    }
 
-	if (newExtent.y < mBounds.extent.y && newExtent.y < mMinExtent.y)
-	{
-		mStoredExtent.y += mBounds.extent.y > mMinExtent.y ? (mMinExtent.y - newExtent.y) : (mBounds.extent.y - newExtent.y);
-		result.y = mMinExtent.y;
-	}
-	else if (newExtent.y > mBounds.extent.y && mStoredExtent.y > 0)
-	{
-		S32 charge = getMin(newExtent.y - mBounds.extent.y, mStoredExtent.y);
-		mStoredExtent.y -= charge;
-		result.y = newExtent.y - charge;
-	}
+    if (mVertSizing != vertResizeRelative)
+    {
+        if (newExtent.y < mBounds.extent.y && newExtent.y < mMinExtent.y)
+        {
+            mStoredExtent.y += mBounds.extent.y > mMinExtent.y ? (mMinExtent.y - newExtent.y) : (mBounds.extent.y - newExtent.y);
+            result.y = mMinExtent.y;
+        }
+        else if (newExtent.y > mBounds.extent.y && mStoredExtent.y > 0)
+        {
+            S32 charge = getMin(newExtent.y - mBounds.extent.y, mStoredExtent.y);
+            mStoredExtent.y -= charge;
+            result.y = newExtent.y - charge;
+        }
+    }
 	return result;
 }
 

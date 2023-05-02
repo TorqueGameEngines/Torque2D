@@ -81,6 +81,15 @@ void GuiChainCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 
 void GuiChainCtrl::onChildAdded(GuiControl *child)
 {
+	//Ensure the child isn't positioned to the center
+	if (child->getHorizSizing() == horizResizeCenter && !mIsVertical)
+	{
+		child->setHorizSizing(horizResizeLeft);
+	}
+	if (child->getVertSizing() == vertResizeCenter && mIsVertical)
+	{
+		child->setVertSizing(vertResizeTop);
+	}
 	Parent::onChildAdded(child);
 	calculateExtent();
 }

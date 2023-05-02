@@ -116,7 +116,7 @@ public:
             if(type <= TypeInternalString)
             {
                 fval = val;
-                ival = static_cast<U32>(val);
+                ival = static_cast<U32>(static_cast<S32>(val));
                 if(sval != typeValueEmpty)
                 {
                     dFree(sval);

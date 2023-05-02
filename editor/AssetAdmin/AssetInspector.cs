@@ -113,7 +113,10 @@ function AssetInspector::onAdd(%this)
 	%this.emitterGraphPage = %this.createTabPage("Emitter Graph", "AssetParticleGraphEmitterTool", "AssetParticleGraphTool");
 
 	//Image Frame Edit Tool
-	%this.imageFrameEditPage = %this.createTabPage("Frame Edit", "AssetImageFrameEditTool", "");
+	%this.imageFrameEditPage = %this.createTabPage("Explicit Frames", "AssetImageFrameEditTool", "");
+
+	//Image Layer Edit Tool
+	%this.imageLayersEditPage = %this.createTabPage("Image Layers", "AssetImageLayersEditTool", "");
 }
 
 function AssetInspector::createTabPage(%this, %name, %class, %superClass)
@@ -205,6 +208,8 @@ function AssetInspector::resetInspector(%this)
 	%this.tabBook.selectPage(0);
 	%this.tabBook.removeIfMember(%this.scaleGraphPage);
 	%this.tabBook.removeIfMember(%this.emitterGraphPage);
+	%this.tabBook.removeIfMember(%this.imageFrameEditPage);
+	%this.tabBook.removeIfMember(%this.imageLayersEditPage);
 
 	%this.emitterButtonBar.visible = false;
 	%this.deleteAssetButton.visible = true;
@@ -214,6 +219,7 @@ function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 {
 	%this.resetInspector();
 	%this.tabBook.add(%this.imageFrameEditPage);
+	%this.tabBook.add(%this.imageLayersEditPage);
 	%this.tabBook.selectPage(0);
 	%this.titlebar.setText("Image Asset:" SPC %imageAsset.AssetName);
 
@@ -227,6 +233,7 @@ function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 	%this.inspector.openGroupByIndex(0);
 
 	%this.imageFrameEditPage.inspect(%imageAsset);
+	%this.imageLayersEditPage.inspect(%imageAsset);
 }
 
 function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)

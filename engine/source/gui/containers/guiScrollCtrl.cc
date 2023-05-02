@@ -95,8 +95,27 @@ void GuiScrollCtrl::initPersistFields()
 
 void GuiScrollCtrl::resize(const Point2I &newPos, const Point2I &newExt)
 {
-   Parent::resize(newPos, newExt);
-   computeSizes();
+	bool hasH = mHasHScrollBar;
+	bool hasV = mHasVScrollBar;
+	Parent::resize(newPos, newExt);
+	computeSizes();
+
+	if (hasH != mHasHScrollBar || hasV != mHasVScrollBar)
+	{
+		S32 deltaY = hasH != mHasHScrollBar ? (mHasHScrollBar ? mScrollBarThickness : -mScrollBarThickness) : 0;
+		S32 deltaX = hasV != mHasVScrollBar ? (mHasVScrollBar ? mScrollBarThickness : -mScrollBarThickness) : 0;
+
+		iterator i;
+		for (i = begin(); i != end(); i++)
+		{
+			GuiControl* ctrl = static_cast<GuiControl*>(*i);
+			ctrl->mRenderInsetRB = Point2I(ctrl->mRenderInsetRB.x + deltaX, ctrl->mRenderInsetRB.y + deltaY);
+			ctrl->parentResized(mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
+		}
+
+		Parent::resize(newPos, newExt);
+		computeSizes();
+	}
 }
 
 void GuiScrollCtrl::childResized(GuiControl *child)

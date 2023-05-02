@@ -121,6 +121,65 @@ void GBitmap::deleteImage()
    SAFE_DELETE(pPalette);
 }
 
+void GBitmap::clearImage(const ColorF blendColor)
+{
+    ColorI clearColor(blendColor.red, blendColor.green, blendColor.blue, 0);
+    for (U32 h = 0; h < getHeight(); h++)
+    {
+        for (U32 w = 0; w < getWidth(); w++)
+        {
+            setColor(w, h, clearColor);
+        }
+    }
+}
+
+bool GBitmap::mergeLayer(const Point2I pos, const GBitmap* layer, const ColorF blendColor)
+{
+    if (layer != nullptr && (getFormat() == BitmapFormat::RGBA || getFormat() == BitmapFormat::RGB) && (layer->getFormat() == BitmapFormat::RGBA || layer->getFormat() == BitmapFormat::RGB))
+    {
+        for (U32 h = getMax(0, pos.y); h < getHeight() && (h - pos.y) < layer->getHeight(); h++)
+        {
+            for (U32 w = getMax(0, pos.x); w < getWidth() && (w - pos.x) < layer->getWidth(); w++)
+            {
+                const U8* layerByte = layer->getAddress(w - pos.x, h - pos.y);
+                U8* baseByte = getAddress(w, h);
+
+                float layerAlpha = blendColor.alpha;
+                if (layer->getFormat() == BitmapFormat::RGBA)
+                {
+                    layerAlpha = (layerByte[3] / 255.0f) * blendColor.alpha;
+                }
+                if (layerAlpha <= 0.005f)
+                {
+                    continue;
+                }
+
+                float baseAlpha = 1.0f;
+                if (getFormat() == BitmapFormat::RGBA)
+                {
+                    baseAlpha = (baseByte[3] / 255.0f);
+                }
+                float alpha = layerAlpha + baseAlpha * (1 - layerAlpha);
+
+                float red = ((float)layerByte[0]/255.0f * layerAlpha * blendColor.red) + ((float)baseByte[0]/255.0f * baseAlpha * (1 - layerAlpha)) / alpha;
+                float green = ((float)layerByte[1]/255.0f * layerAlpha * blendColor.green) + ((float)baseByte[1]/255.0f * baseAlpha * (1 - layerAlpha)) / alpha;
+                float blue = ((float)layerByte[2]/255.0f * layerAlpha * blendColor.blue) + ((float)baseByte[2]/255.0f * baseAlpha * (1 - layerAlpha)) / alpha;
+
+                baseByte[0] = (U8)mClamp(red * 255.0f, 0.0f, 255.0f);
+                baseByte[1] = (U8)mClamp(green * 255.0f, 0.0f, 255.0f);
+                baseByte[2] = (U8)mClamp(blue * 255.0f, 0.0f, 255.0f);
+
+                if (getFormat() == BitmapFormat::RGBA)
+                {
+                    baseByte[3] = (U8)mClamp(alpha * 255.0f, 0.0f, 255.0f);
+                }
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
 
 //--------------------------------------------------------------------------
 void GBitmap::setPalette(GPalette* in_pPalette)

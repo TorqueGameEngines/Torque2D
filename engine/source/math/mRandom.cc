@@ -181,4 +181,27 @@ U32 RandomR250::randI( void )
     return new_rand >> 1;
 }
 
+RandomPCG::RandomPCG()
+{
+    pcg32_srandom_r(&rng, generateSeed(), generateSeed());
+}
 
+RandomPCG::RandomPCG(const S32 seed)
+{
+    pcg32_srandom_r(&rng, seed, generateSeed());
+}
+
+RandomPCG::RandomPCG(const S32 seed, const S32 stream)
+{
+    pcg32_srandom_r(&rng, seed, stream);
+}
+
+void RandomPCG::setSeed(const S32 seed)
+{
+    pcg32_srandom_r(&rng, seed, generateSeed());
+}
+
+void RandomPCG::setSeed(const S32 seed, const S32 stream)
+{
+    pcg32_srandom_r(&rng, seed, stream);
+}

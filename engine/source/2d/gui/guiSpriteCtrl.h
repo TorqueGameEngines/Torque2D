@@ -49,6 +49,7 @@ protected:
 	Point2I mImageSize; //The size of the image, reduced, if needed, to fit the content area
 	bool mFullSize; //If true, the image will take all available space
 	bool mConstrainProportions; //If true, the image will maintain its aspect ratio 
+	bool mClampImage; //If true, the image will be forced into the control's content area.
 	bool mSingleFrameBitmap; //If true and bitmaps are used, this will assume there's only one frame when scanning the bitmap
 
 	Fluid mFluidMoveTo;
@@ -110,6 +111,8 @@ public:
 	inline void setImageSize(Point2I size) { mImageSize = size; }
 	inline bool getFullSize() { return mFullSize; }
 	inline void setFullSize(bool isFull) { mFullSize = isFull; }
+	inline bool getClampImage() { return mClampImage; }
+	inline void setClampImage(bool clamp) { mClampImage = clamp; }
 	inline bool getConstrainProportions() { return mConstrainProportions; }
 	inline void setConstrainProportions(bool setting) { mConstrainProportions = setting; }
 	inline bool getSingleFrameBitmap() { return mSingleFrameBitmap; }

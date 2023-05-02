@@ -180,13 +180,10 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 
 	//Render the triangle
-	if(mProfile->usesDefaultRendering(currentState))
-	{
-		RectI drawArea = RectI(contentRect.point.x + contentRect.extent.x - contentRect.extent.y, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
-		ColorI color = ColorI(getFontColor(mProfile, currentState));
-		renderTriangleIcon(drawArea, color, GuiDirection::Down, 8);
-		contentRect.extent.x -= contentRect.extent.y;
-	}
+	RectI drawArea = RectI(contentRect.point.x + contentRect.extent.x - contentRect.extent.y, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
+	ColorI color = ColorI(getFontColor(mProfile, currentState));
+	renderTriangleIcon(drawArea, color, GuiDirection::Down, 8);
+	contentRect.extent.x -= contentRect.extent.y;
 
 	//Render the text
 	S32 index = mListBox->getSelectedItem();

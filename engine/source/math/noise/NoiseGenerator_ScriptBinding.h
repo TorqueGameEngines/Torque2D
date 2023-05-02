@@ -23,7 +23,7 @@
 ConsoleMethodGroupBeginWithDocs(NoiseGenerator, ScriptObject)
 
 /*! Sets the seed for the noise generater.
-@param seed An interger seed value.
+@param seed An integer seed value.
 @return No return value.
 */
 ConsoleMethodWithDocs(NoiseGenerator, setSeed, ConsoleVoid, 3, 3, (int seed))
