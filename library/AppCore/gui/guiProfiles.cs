@@ -112,14 +112,14 @@ function AppCore::createGuiProfiles(%this)
 	%this.SafeCreateNamedObject("LeftRightCursor", new GuiCursor()
 	{
 	   hotSpot = "0.5 0";
-	   renderOffset = "0.5 0";
+	   renderOffset = "0.5 0.4";
 	   bitmapName = "^AppCore/gui/images/cursors/leftRight";
 	});
 
 	%this.SafeCreateNamedObject("UpDownCursor", new GuiCursor()
 	{
 	   hotSpot = "1 1";
-	   renderOffset = "0 1";
+	   renderOffset = "0.5 0.5";
 	   bitmapName = "^AppCore/gui/images/cursors/upDown";
 	});
 

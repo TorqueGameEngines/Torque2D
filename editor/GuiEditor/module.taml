@@ -1,0 +1,8 @@
+<ModuleDefinition
+	ModuleId="GuiEditor"
+	VersionId="1"
+	Dependencies="EditorCore=1"
+	Description="Allows for the creation and editing of GUI files."
+	ScriptFile="GuiEditor.cs"
+	CreateFunction="create"
+	DestroyFunction="destroy" />

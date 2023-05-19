@@ -101,6 +101,41 @@ function BaseTheme::makeCursors(%this)
 	    bitmapName = "^EditorCore/Themes/BaseTheme/images/cursors/defaultCursor.png";
 	};
 
+	%this.leftRightCursor = new GuiCursor()
+	{
+	   hotSpot = "0.5 0";
+	   renderOffset = "0.5 0.4";
+	   bitmapName = "^EditorCore/Themes/BaseTheme/images/cursors/leftRight.png";
+	};
+
+	%this.upDownCursor = new GuiCursor()
+	{
+	   hotSpot = "1 1";
+	   renderOffset = "0.5 0.4";
+	   bitmapName = "^EditorCore/Themes/BaseTheme/images/cursors/upDown.png";
+	};
+
+	%this.NWSECursor = new GuiCursor()
+	{
+	   hotSpot = "1 1";
+	   renderOffset = "0.5 0.5";
+	   bitmapName = "^EditorCore/Themes/BaseTheme/images/cursors/NWSE.png";
+	};
+
+	%this.NESWCursor = new GuiCursor()
+	{
+	   hotSpot = "1 1";
+	   renderOffset = "0.5 0.5";
+	   bitmapName = "^EditorCore/Themes/BaseTheme/images/cursors/NESW.png";
+	};
+
+	%this.moveCursor = new GuiCursor()
+	{
+	   hotSpot = "1 1";
+	   renderOffset = "0.5 0.5";
+	   bitmapName = "^EditorCore/Themes/BaseTheme/images/cursors/move.png";
+	};
+
 	%this.editCursor = new GuiCursor()
 	{
 	   hotSpot = "0 0";
@@ -1744,6 +1779,14 @@ function BaseTheme::makeWindowProfile(%this)
 		paddingNA = 1;
 	};
 
+	%windowContentTopBorder = new GuiBorderProfile()
+	{
+		padding = 1;
+		paddingHL = 1;
+		paddingSL = 1;
+		paddingNA = 1;
+	};
+
 	%this.windowContentProfile = new GuiControlProfile()
 	{
 		fillColor = %this.color1;
@@ -1751,7 +1794,7 @@ function BaseTheme::makeWindowProfile(%this)
 
 		borderLeft = %windowContentBorder;
 		borderRight = %windowContentBorder;
-		borderTop = %this.emptyBorder;
+		borderTop = %windowContentTopBorder;
 		borderBottom = %windowContentBorder;
 	};
 

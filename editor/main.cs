@@ -31,6 +31,7 @@ EditorManager.scanModules( "./" );
 EditorManager.LoadExplicit("EditorConsole");
 Editormanager.LoadExplicit("ProjectManager");
 EditorManager.LoadExplicit("AssetAdmin");
+EditorManager.LoadExplicit("GuiEditor");
 
 if(!isObject(AppCore))
 {

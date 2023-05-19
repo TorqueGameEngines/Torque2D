@@ -161,6 +161,13 @@ function ThemeManager::setProfile(%this, %gui, %profileName, %profileTag)
 	{
 		%gui.editCursor = %this.activeTheme.editCursor;
 	}
+
+	if(%profileName $= "windowProfile")
+	{
+		%gui.leftRightCursor = %this.activeTheme.leftRightCursor;
+		%gui.upDownCursor = %this.activeTheme.upDownCursor;
+		%gui.NWSECursor = %this.activeTheme.NWSECursor;
+	}
 }
 
 function ThemeManager::setImage(%this, %sprite, %imageName, %frame)

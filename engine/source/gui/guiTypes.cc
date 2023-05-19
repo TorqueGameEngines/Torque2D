@@ -769,12 +769,7 @@ void GuiControlProfile::incRefCount(F32 fontAdjust)
 
 void GuiControlProfile::decRefCount()
 {
-   // Not sure why this was being tripped when
-   // switching profiles in guieditor, but...
-   // following the way this works, it seems that a profile
-   // is being removed before it is added =/
-
-   AssertFatal(mRefCount, avar("GuiControlProfile::%s::decRefCount: zero ref count", this->getName()));
+	AssertFatal(mRefCount, avar("GuiControlProfile::%s::decRefCount: zero ref count", this->getName()));
    if(!mRefCount)
 	  return;
    --mRefCount;
@@ -923,11 +918,8 @@ ConsoleSetType( TypeGuiProfile )
    if((*obj) == profile)
 	  return;
 
-   if(*obj)
-	  (*obj)->decRefCount();
-
    *obj = profile;
-   (*obj)->incRefCount();
+   //Note: reference counts are change in guiControl only if the guiControl is awake.
 }
 
 ConsoleGetType( TypeGuiProfile )

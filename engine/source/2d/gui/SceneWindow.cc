@@ -214,12 +214,12 @@ void SceneWindow::initPersistFields()
     addField("BackgroundColor", TypeColorF, Offset(mBackgroundColor, SceneWindow), &writeBackgroundColor, "" );
 
 	//Standard scroll bar settings
-	addProtectedField("constantThumbHeight", TypeBool, Offset(mUseConstantHeightThumb, GuiScrollCtrl), &setConstantThumbFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
-	addProtectedField("scrollBarThickness", TypeS32, Offset(mScrollBarThickness, GuiScrollCtrl), &setScrollBarThicknessFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
-	addProtectedField("showArrowButtons", TypeBool, Offset(mShowArrowButtons, GuiScrollCtrl), &setShowArrowButtonsFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
-	addProtectedField("thumbProfile", TypeGuiProfile, Offset(mThumbProfile, GuiScrollCtrl), &setThumbProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
-	addProtectedField("trackProfile", TypeGuiProfile, Offset(mTrackProfile, GuiScrollCtrl), &setTrackProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
-	addProtectedField("arrowProfile", TypeGuiProfile, Offset(mArrowProfile, GuiScrollCtrl), &setArrowProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("constantThumbHeight", TypeBool, Offset(mUseConstantHeightThumb, SceneWindow), &setConstantThumbFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("scrollBarThickness", TypeS32, Offset(mScrollBarThickness, SceneWindow), &setScrollBarThicknessFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("showArrowButtons", TypeBool, Offset(mShowArrowButtons, SceneWindow), &setShowArrowButtonsFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("thumbProfile", TypeGuiProfile, Offset(mThumbProfile, SceneWindow), &setThumbProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("trackProfile", TypeGuiProfile, Offset(mTrackProfile, SceneWindow), &setTrackProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
+	addProtectedField("arrowProfile", TypeGuiProfile, Offset(mArrowProfile, SceneWindow), &setArrowProfileFn, &defaultProtectedGetFn, &writeScrollSettingFn, "");
 }
 
 bool SceneWindow::onWake()

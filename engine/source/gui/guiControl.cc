@@ -355,19 +355,20 @@ void GuiControl::inspectPreApply()
       smEditorHandle->controlInspectPreApply(this);
    
    // The canvas never sleeps
+   // This forced sleep will allow us to unload and reload things in the editor.
+   mPreviouslyAwake = mAwake;
    if(mAwake && dynamic_cast<GuiCanvas*>(this) == NULL )
    {
       onSleep(); // release all our resources.
-      mAwake = true;
    }
 }
 
 void GuiControl::inspectPostApply()
 {
    // Shhhhhhh, you don't want to wake the canvas!
-   if(mAwake && dynamic_cast<GuiCanvas*>(this) == NULL )
+   // If this control was awake before we should revive it.
+   if(mPreviouslyAwake && !mAwake && dynamic_cast<GuiCanvas*>(this) == NULL )
    {
-      mAwake = false;
       onWake();
    }
    
@@ -2208,6 +2209,46 @@ void GuiControl::setTextID(S32 id)
 const char *GuiControl::getText()
 {
 	return mText;
+}
+
+void GuiControl::setDataField(StringTableEntry slotName, const char* array, const char* value)
+{
+	this->findField(slotName);
+	const AbstractClassRep::Field* fld = this->findField(slotName);
+	if(fld)
+	{
+		if (fld->type == AbstractClassRep::DepricatedFieldType ||
+			fld->type == AbstractClassRep::StartGroupFieldType ||
+			fld->type == AbstractClassRep::EndGroupFieldType)
+			return;
+
+		ConsoleBaseType* cbt = ConsoleBaseType::getType(fld->type);
+		bool isProfile = strcmp(cbt->getTypeName(), "TypeGuiProfile") == 0;
+
+		if(isProfile && mAwake)
+		{
+			//Decrease the ref count on the old profile
+			void* dptr = (void*)(((const char*)this) + fld->offset);
+			GuiControlProfile** obj = (GuiControlProfile**)dptr;
+			if((*obj))
+				(*obj)->decRefCount();
+		}
+
+		SimObject::setDataField(slotName, array, value);
+
+		if (isProfile && mAwake)
+		{
+			//Increase the ref count on the new profile
+			void* dptr = (void*)(((const char*)this) + fld->offset);
+			GuiControlProfile** obj = (GuiControlProfile**)dptr;
+			if ((*obj))
+				(*obj)->incRefCount();
+		}
+	}
+	else 
+	{
+		SimObject::setDataField(slotName, array, value);
+	}
 }
 
 AlignmentType GuiControl::getAlignmentType()

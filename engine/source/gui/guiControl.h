@@ -773,6 +773,7 @@ public:
     S32 getOuterWidth(S32 innerExtent, GuiControlState currentState, GuiControlProfile* profile);
     S32 getOuterHeight(S32 innerExtent, GuiControlState currentState, GuiControlProfile* profile);
 
+
     virtual void inspectPostApply();
     virtual void inspectPreApply();
 
@@ -788,7 +789,10 @@ public:
     void relPosBattery(Point2F& battery, S32 pos, S32 ext, S32 parentExt);
     void resetStoredRelPos() { mUseRelPosH = false; mUseRelPosV = false; }
 
+	virtual void setDataField(StringTableEntry slotName, const char* array, const char* value);
+
 protected:
+	bool mPreviouslyAwake;
 	virtual void interpolateTick(F32 delta) {};
 	virtual void processTick() {};
 	virtual void advanceTime(F32 timeDelta) {};
