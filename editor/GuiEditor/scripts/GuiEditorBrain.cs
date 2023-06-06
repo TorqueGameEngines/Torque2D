@@ -7,7 +7,6 @@ function GuiEditorBrain::onAdd(%this)
 
 function GuiEditorBrain::onControlDragged(%this, %payload, %position)
 {
-    echo("GuiEditorBrain::onControlDragged - Enter");
 	%pos = VectorSub(%position, %this.getGlobalPosition());
 	%x = getWord(%pos, 0);
 	%y = getWord(%pos, 1);
@@ -22,13 +21,10 @@ function GuiEditorBrain::onControlDragged(%this, %payload, %position)
 	{
 		%this.setCurrentAddSet(%target);
 	}
-	//GuiEditorCtrlProperties.update(%ctrl);
-    echo("GuiEditorBrain::onControlDragged - Leave");
 }
 
 function GuiEditorBrain::onControlDropped(%this, %payload, %position)
 {
-    echo("GuiEditorBrain::onControlDropped - Enter");
    %pos = %payload.getGlobalPosition();
    %x = getWord(%pos, 0);
    %y = getWord(%pos, 1);
@@ -43,5 +39,36 @@ function GuiEditorBrain::onControlDropped(%this, %payload, %position)
 
    %payload.setPositionGlobal(%x, %y);
    %this.setFirstResponder();
-    echo("GuiEditorBrain::onControlDropped - Leave");
+    %this.postEvent("Inspect", %payload);
+}
+
+function GuiEditorBrain::onSelect(%this, %ctrl)
+{
+	GuiEditorBrain.clearSelection();
+	GuiEditorBrain.select(%ctrl);
+    %this.postEvent("Inspect", %ctrl);
+}
+
+function GuiEditorBrain::onClearSelected(%this)
+{
+    %this.postEvent("ClearInspect");
+}
+
+function GuiEditorBrain::onSelectionParentChange(%this)
+{
+}
+
+function GuiEditorBrain::onDelete(%this)
+{
+	%this.postEvent("ClearInspect", %ctrl);
+}
+
+function GuiEditorBrain::onAddSelected(%this,%ctrl)
+{
+    %this.postEvent("AlsoInspect", %ctrl);
+}
+
+function GuiEditorBrain::onRemoveSelected(%this,%ctrl)
+{
+    %this.postEvent("ClearInspect", %ctrl);
 }

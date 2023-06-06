@@ -56,10 +56,12 @@ void GuiButtonCtrl::initPersistFields()
 {
 	Parent::initPersistFields();
 
+	addGroup("Gui Button Easing");
 	addField("easeFillColorHL", TypeEnum, Offset(mEaseFillColorHL, GuiButtonCtrl), 1, &gEasingTable);
 	addField("easeFillColorSL", TypeEnum, Offset(mEaseFillColorSL, GuiButtonCtrl), 1, &gEasingTable);
 	addField("easeTimeFillColorHL", TypeS32, Offset(mEaseTimeFillColorHL, GuiButtonCtrl));
 	addField("easeTimeFillColorSL", TypeS32, Offset(mEaseTimeFillColorSL, GuiButtonCtrl));
+	endGroup("Gui Button Easing");
 }
 
 void GuiButtonCtrl::setActive(bool value)

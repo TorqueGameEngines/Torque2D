@@ -43,8 +43,10 @@ void GuiChainCtrl::initPersistFields()
 {
 	Parent::initPersistFields();
 
+	addGroup("Gui Chain Settings");
 	addField("ChildSpacing", TypeS32, Offset(mChildSpacing, GuiChainCtrl));
 	addField("IsVertical", TypeBool, Offset(mIsVertical, GuiChainCtrl));
+	endGroup("Gui Chain Settings");
 }
 
 //------------------------------------------------------------------------------

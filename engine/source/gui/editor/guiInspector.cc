@@ -379,6 +379,15 @@ ConsoleMethod( GuiInspector, getInspectObject, const char*, 2, 2, "() - Returns 
    return "";
 }
 
+
+ConsoleMethod(GuiInspector, clear, const char*, 2, 2, "() - Uninspects\n"
+	"@return Not used.")
+{
+	object->clearGroups();
+
+	return "";
+}
+
 void GuiInspector::setName( const char* newName )
 {
    if( mTarget == NULL )

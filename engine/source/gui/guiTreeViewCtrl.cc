@@ -1087,7 +1087,7 @@ void GuiTreeViewCtrl::moveItemDown( S32 itemId )
 
 bool GuiTreeViewCtrl::onWake()
 {
-   if(!Parent::onWake() || !mProfile->constructBitmapArray())
+   if(!Parent::onWake())
       return false;
 
    // If destroy on sleep, then we have to give things a chance to rebuild.

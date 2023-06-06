@@ -1,6 +1,6 @@
-//GuiEditorControlList.cs
+//GuiEditorControlListWindow.cs
 
-function GuiEditorControlList::onAdd(%this)
+function GuiEditorControlListWindow::onAdd(%this)
 {
     %this.scroller = new GuiScrollCtrl()
 	{
@@ -35,7 +35,7 @@ function GuiEditorControlList::onAdd(%this)
     %this.populate();
 }
 
-function GuiEditorControlList::onRemove(%this)
+function GuiEditorControlListWindow::onRemove(%this)
 {
     if(isObject(%this.scroller))
     {
@@ -43,7 +43,7 @@ function GuiEditorControlList::onRemove(%this)
     }
 }
 
-function GuiEditorControlList::populate(%this)
+function GuiEditorControlListWindow::populate(%this)
 {
     %controls = enumerateConsoleClasses("GuiControl");
 	%this.listBox.clearItems();
@@ -56,6 +56,7 @@ function GuiEditorControlList::populate(%this)
             getSubStr(%field, 0, 12) !$= "GuiInspector" && %field !$= "GuiMessageVectorCtrl" &&
             %field !$= "GuiParticleGraphInspector" && %field !$= "GuiGraphCtrl" && %field !$= "GuiSceneObjectCtrl")
         {
+			echo("adding item "@ %field);
 		    %this.listBox.addItem(%field);
         }
 	}

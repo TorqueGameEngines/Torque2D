@@ -497,7 +497,9 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
             box.inset(1,1);
          dglDrawRect(box, ColorI(0, 101, 0,190));
             box.inset(1,1);
-            dglDrawRect(box, ColorI(0, 101, 0,200));
+         dglDrawRect(box, ColorI(0, 101, 0,200));
+			box.inset(1, 1);
+		 dglDrawRect(box, ColorI(0, 101, 0, 220));
       }
       Vector<GuiControl *>::iterator i;
       bool multisel = mSelectedControls.size() > 1;

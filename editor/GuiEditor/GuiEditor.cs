@@ -23,8 +23,10 @@
 function GuiEditor::create( %this )
 {
 	exec("./scripts/GuiEditorBrain.cs");
-	exec("./scripts/GuiEditorControlList.cs");
+	exec("./scripts/GuiEditorControlListWindow.cs");
 	exec("./scripts/GuiEditorControlListBox.cs");
+	exec("./scripts/GuiEditorInspectorWindow.cs");
+	exec("./scripts/GuiEditorExplorerWindow.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Gui Editor", %this);
 
@@ -46,10 +48,10 @@ function GuiEditor::create( %this )
     ThemeManager.setProfile(%this.content, "emptyProfile");
     %this.guiPage.add(%this.content);
 
-    %this.brain = new GuiEditCtrl(GuiEditorBrain)
+    %this.brain = new GuiEditCtrl()
     {
         Profile = "GuiTextEditProfile";
-        //Class = "GuiEditorBrain";
+        Class = "GuiEditorBrain";
 		HorizSizing = "width";
         VertSizing = "height";
         Position = "0 0";
@@ -59,10 +61,10 @@ function GuiEditor::create( %this )
 
     %this.ctrlListWindow = new GuiWindowCtrl()
     {
-        Class = "GuiEditorControlList";
+        Class = "GuiEditorControlListWindow";
         HorizSizing = "right";
         VertSizing = "bottom";
-        Position = "0 0";
+        Position = "360 0";
         Extent = "250 380";
         MinExtent = "100 100";
         text = "Control List";
@@ -79,6 +81,54 @@ function GuiEditor::create( %this )
     ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "MinButtonProfile");
     ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "MaxButtonProfile");
     %this.guiPage.add(%this.ctrlListWindow);
+
+    %this.inspectorWindow = new GuiWindowCtrl()
+    {
+        Class = "GuiEditorInspectorWindow";
+        HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "0 0";
+        Extent = "360 380";
+        MinExtent = "100 100";
+        text = "Gui Inspector";
+        canMove = true;
+        canClose = false;
+        canMinimize = true;
+        canMaximize = false;
+        resizeWidth = false;
+        resizeHeight = true;
+    };
+    ThemeManager.setProfile(%this.inspectorWindow, "windowProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowContentProfile", "ContentProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "CloseButtonProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "MinButtonProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "MaxButtonProfile");
+    %this.guiPage.add(%this.inspectorWindow);
+    %this.inspectorWindow.startListening(%this.brain);
+
+    %this.explorerWindow = new GuiWindowCtrl()
+    {
+        Class = "GuiEditorExplorerWindow";
+        HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "610 0";
+        Extent = "250  380";
+        MinExtent = "100 100";
+        text = "Explorer";
+        canMove = true;
+        canClose = false;
+        canMinimize = true;
+        canMaximize = false;
+        resizeWidth = false;
+        resizeHeight = true;
+    };
+    ThemeManager.setProfile(%this.explorerWindow, "windowProfile");
+    ThemeManager.setProfile(%this.explorerWindow, "windowContentProfile", "ContentProfile");
+    ThemeManager.setProfile(%this.explorerWindow, "windowButtonProfile", "CloseButtonProfile");
+    ThemeManager.setProfile(%this.explorerWindow, "windowButtonProfile", "MinButtonProfile");
+    ThemeManager.setProfile(%this.explorerWindow, "windowButtonProfile", "MaxButtonProfile");
+    %this.guiPage.add(%this.explorerWindow);
+    %this.explorerWindow.startListening(%this.brain);
 
     %this.onNewGui();
 
@@ -112,4 +162,5 @@ function GuiEditor::onNewGui(%this)
     %this.content.add(%this.blankGui);
     %this.brain.setRoot(%this.blankGui);
     %this.brain.root = %this.blankGui;
+    %this.explorerWindow.open(%this.blankGui);
 }
