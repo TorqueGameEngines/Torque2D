@@ -58,7 +58,11 @@ void ConsoleBaseType::initialize()
 
 ConsoleBaseType  *ConsoleBaseType::getType(const S32 typeID)
 {
-   return gConsoleTypeTable[typeID];
+	if(typeID > 0)
+	{
+		return gConsoleTypeTable[typeID];
+	}
+	return NULL;
 }
 //-------------------------------------------------------------------------
 

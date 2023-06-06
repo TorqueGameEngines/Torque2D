@@ -813,9 +813,11 @@ StringTableEntry SimObject::getDataFieldPrefix( StringTableEntry fieldName )
     // Return nothing if field was not found.
     if ( pField == NULL )
         return StringTable->EmptyString;
-
     // Yes, so fetch the console base type.
     ConsoleBaseType* pConsoleBaseType = ConsoleBaseType::getType( pField->type );
+
+	if(pConsoleBaseType == NULL)
+		return StringTable->EmptyString;
 
     // Fetch the type prefix.
     return pConsoleBaseType->getTypePrefix();
