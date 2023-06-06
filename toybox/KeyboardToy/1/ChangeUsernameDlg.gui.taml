@@ -10,7 +10,7 @@
 	HelpTag="0"
 	Image="@asset=Sandbox:blueGradient">
 
-    <GuiConsoleEditCtrl
+    <GuiTextEditCtrl
       Name="ChangeUsernameEntry"
 		Profile="GuiConsoleTextEditProfile"
 		HorizSizing="width"
@@ -20,13 +20,9 @@
 		minExtent="8 8"
 		Visible="1"
 		AltCommand="VirtualKeyboard.pop();UserNameTxt.setText(ChangeUsernameEntry.getText());"
-		HelpTag="0"
 		MaxLength="255"
-		HistorySize="40"
 		password="0"
-		TabComplete="0"
 		SinkAllKeyEvents="1"
-		UseSiblingScroller="1"
 	/>
 
 	<GuiButtonCtrl
