@@ -1146,6 +1146,7 @@
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiTreeViewCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiTypes.h" />
     <ClInclude Include="..\..\source\gui\language\lang.h" />
     <ClInclude Include="..\..\source\gui\messageVector.h" />

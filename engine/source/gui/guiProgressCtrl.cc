@@ -37,6 +37,7 @@ GuiProgressCtrl::GuiProgressCtrl()
    mCurrent = 0.0f;
    mStart = 0.0f;
    mEnd = 0.0f;
+   mIsContainer = false;
 
    setAnimationLength(250);
    setEasingFunction(EaseInOut);

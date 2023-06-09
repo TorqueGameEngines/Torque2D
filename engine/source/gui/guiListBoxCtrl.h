@@ -56,6 +56,9 @@ public:
    class LBItem
    {
    public:
+      LBItem() : itemText(StringTable->EmptyString), isSelected(0), isActive(1), ID(0), itemData(nullptr), color(ColorF()), hasColor(0) { }
+	  virtual ~LBItem() { }
+
       StringTableEntry  itemText;
       bool              isSelected;
 	  bool				isActive;
@@ -115,6 +118,7 @@ public:
    S32               addItemWithColor( StringTableEntry text, ColorF color = ColorF(-1, -1, -1), void *itemData = NULL);
    S32				 addItemWithID(StringTableEntry text, S32 ID = 0, void *itemData = NULL);
    S32               insertItem( S32 index, StringTableEntry text, void *itemData = NULL );
+   virtual LBItem*	 createItem();
    S32               insertItemWithColor( S32 index, StringTableEntry text, ColorF color = ColorF(-1, -1, -1), void *itemData = NULL);
    S32               findItemText( StringTableEntry text, bool caseSensitive = false );
 
@@ -156,7 +160,12 @@ public:
    // Mouse Events
    virtual void      onTouchDown( const GuiEvent &event );
    virtual void      onTouchDragged(const GuiEvent &event);
-   virtual bool		onKeyDown(const GuiEvent &event);
+   virtual bool		 onKeyDown(const GuiEvent &event);
+   virtual S32		 getHitIndex(const GuiEvent& event);
+   virtual void      handleItemClick(LBItem* hitItem, S32 hitIndex, const GuiEvent& event);
+   virtual void      handleItemClick_SingleSelection(LBItem* hitItem, S32 hitIndex, const GuiEvent& event);
+   virtual bool      handleItemClick_MultiSelection(LBItem* hitItem, S32 hitIndex, const GuiEvent& event);
+   virtual void      handleItemClick_ClickCallbacks(LBItem* hitItem, S32 hitIndex, const GuiEvent& event);
 
    // Sorting
    virtual void		 sortByText(bool increasing = true);

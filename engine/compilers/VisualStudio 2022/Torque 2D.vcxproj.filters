@@ -765,9 +765,6 @@
     <ClCompile Include="..\..\source\gui\guiTextEditSliderCtrl.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiTypes.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -1341,6 +1338,9 @@
     </ClCompile>
     <ClCompile Include="..\..\source\math\noise\RandomNumberGenerator.cc">
       <Filter>math\noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\guiTreeViewCtrl.cc">
+      <Filter>gui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1966,9 +1966,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiTypes.h">
@@ -3072,6 +3069,12 @@
     </ClInclude>
     <ClInclude Include="..\..\source\math\noise\RandomNumberGenerator_ScriptBinding.h">
       <Filter>math\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiTreeViewCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

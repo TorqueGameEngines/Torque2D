@@ -273,6 +273,10 @@ void GuiListBoxCtrl::setCurSel( S32 index )
    // If index -1 is specified, we clear the selection
    if( index == -1 )
    {
+		for (auto item : mItems)
+		{
+			item->isSelected = false;
+		}
 	  mSelectedItems.clear();
 	  return;
    }
@@ -471,7 +475,7 @@ S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData
 	  return -1;
    }
 
-   LBItem *newItem = new LBItem;
+   LBItem *newItem = createItem();
    if( !newItem )
    {
 	  Con::warnf("GuiListBoxCtrl::insertItem - error allocating item memory!" );
@@ -495,6 +499,16 @@ S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData
 
    // Return our index in list (last)
    return index;
+}
+
+GuiListBoxCtrl::LBItem* GuiListBoxCtrl::createItem()
+{
+	LBItem* newItem = new LBItem;
+	if (!newItem)
+	{
+		return nullptr;
+	}
+	return newItem;
 }
 
 S32 GuiListBoxCtrl::insertItemWithColor( S32 index, StringTableEntry text, ColorF color, void *itemData )
@@ -636,7 +650,6 @@ void GuiListBoxCtrl::onRender( Point2I offset, const RectI &updateRect )
 		mItemSize.x = clip.extent.x;
 	}
 
-
 	for ( S32 i = 0; i < mItems.size(); i++)
 	{
 		// Only render visible items
@@ -713,19 +726,18 @@ void GuiListBoxCtrl::onTouchDragged(const GuiEvent &event)
 		return;
 	}
 
-   Point2I localPoint = globalToLocalCoord(event.mousePoint);
-   S32 itemHit = (localPoint.y < 0) ? -1 : (S32)mFloor((F32)localPoint.y / (F32)mItemSize.y);
+	S32 hitIndex = getHitIndex(event);
 
-   if (itemHit >= mItems.size() || itemHit == -1)
+   if (hitIndex >= mItems.size() || hitIndex == -1)
 	   return;
 
-   LBItem *hitItem = mItems[itemHit];
+   LBItem *hitItem = mItems[hitIndex];
    if (hitItem == NULL || !hitItem->isActive)
 	   return;
 
 	if(caller->isMethod("onTouchDragged"))
 	{
-		Con::executef(caller, 3, "onTouchDragged", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
+		Con::executef(caller, 3, "onTouchDragged", Con::getIntArg(hitIndex), hitItem->itemText, hitItem->ID);
 	}
 	else
 	{
@@ -744,87 +756,101 @@ void GuiListBoxCtrl::onTouchDown( const GuiEvent &event )
 
 	setFirstResponder();
 
-   Point2I localPoint = globalToLocalCoord(event.mousePoint);
-   S32 itemHit = ( localPoint.y < 0 ) ? -1 : (S32)mFloor( (F32)localPoint.y / (F32)mItemSize.y );
+   S32 hitIndex = getHitIndex(event);
 
-   if ( itemHit >= mItems.size() || itemHit == -1 )
+   if ( hitIndex >= mItems.size() || hitIndex == -1 )
 	  return;
 
-   LBItem *hitItem = mItems[ itemHit ];
+   LBItem *hitItem = mItems[ hitIndex ];
    if ( hitItem == NULL || !hitItem->isActive)
 	  return;
 
-   // If we're not a multiple selection listbox, we simply select/unselect an item
+	handleItemClick(hitItem, hitIndex, event);
+}
+
+S32 GuiListBoxCtrl::getHitIndex(const GuiEvent& event)
+{
+	Point2I localPoint = globalToLocalCoord(event.mousePoint);
+	return (localPoint.y < 0) ? -1 : (S32)mFloor((F32)localPoint.y / (F32)mItemSize.y);
+}
+
+void GuiListBoxCtrl::handleItemClick(LBItem* hitItem, S32 hitIndex, const GuiEvent& event)
+{
    if( !mMultipleSelections )
    {
-	  // No current selection?  Just select the cell and move on
-	  S32 selItem = getSelectedItem();
-
-	  if ( selItem != itemHit && selItem != -1 )
-		 clearSelection();
-
-	  // Set the current selection
-	  setCurSel( itemHit );
-
-		if( itemHit == selItem && event.mouseClickCount == 2)
-		{
-			if(caller->isMethod("onDoubleClick") )
-				Con::executef(caller, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
-		}
-		else if (caller->isMethod("onClick"))
-		{
-			Con::executef(caller, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
-		}
-
-	  // Store the clicked item
-	  mLastClickItem = hitItem;
-
-	  return;
-   }
-   
-   // Deal with multiple selections
-   if( event.modifier & SI_CTRL)
-   {
-	  // Ctrl-Click toggles selection
-	  if( hitItem->isSelected )
-	  {
-		 removeSelection( hitItem, itemHit );
-
-		 // We return here when we deselect an item because we don't store last clicked when we deselect
-		 return;
-	  }
-	  else
-		 addSelection( hitItem, itemHit );
-   }
-   else if( event.modifier & SI_SHIFT )
-   {
-	  if( !mLastClickItem )
-		 addSelection( hitItem, itemHit );
-	  else
-		 setCurSelRange( getItemIndex( mLastClickItem ), itemHit );
+	  handleItemClick_SingleSelection(hitItem, hitIndex, event);
    }
    else
    {
-	  if( getSelCount() != 0 )
-	  {
-		 S32 selItem = getSelectedItem();
-		 if( selItem != -1 && mItems[selItem] != hitItem )
-			clearSelection();
-	  }
-	  addSelection( hitItem, itemHit );
+	   if (!handleItemClick_MultiSelection(hitItem, hitIndex, event))
+	   {
+		   return;
+	   }
    }
 
-   if( hitItem == mLastClickItem && event.mouseClickCount == 2)
-   {
-		if(caller->isMethod("onDoubleClick") )
-			Con::executef(caller, 3, "onDoubleClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
-	}
-   else if (caller->isMethod("onClick"))
-   {
-	   Con::executef(caller, 3, "onClick", Con::getIntArg(itemHit), hitItem->itemText, hitItem->ID);
-   }
-
+   handleItemClick_ClickCallbacks(hitItem, hitIndex, event);
    mLastClickItem = hitItem;
+}
+
+void GuiListBoxCtrl::handleItemClick_SingleSelection(LBItem* hitItem, S32 hitIndex, const GuiEvent& event)
+{
+	// No current selection?  Just select the cell and move on
+	S32 selItem = getSelectedItem();
+
+	if (selItem != hitIndex && selItem != -1)
+		clearSelection();
+
+	// Set the current selection
+	setCurSel(hitIndex);
+}
+
+bool GuiListBoxCtrl::handleItemClick_MultiSelection(LBItem* hitItem, S32 hitIndex, const GuiEvent& event)
+{
+	// Deal with multiple selections
+	if (event.modifier & SI_CTRL)
+	{
+		// Ctrl-Click toggles selection
+		if (hitItem->isSelected)
+		{
+			removeSelection(hitItem, hitIndex);
+
+			// We return here when we deselect an item because we don't store last clicked when we deselect
+			return false;
+		}
+		else
+			addSelection(hitItem, hitIndex);
+	}
+	else if (event.modifier & SI_SHIFT)
+	{
+		if (!mLastClickItem)
+			addSelection(hitItem, hitIndex);
+		else
+			setCurSelRange(getItemIndex(mLastClickItem), hitIndex);
+	}
+	else
+	{
+		if (getSelCount() != 0)
+		{
+			S32 selItem = getSelectedItem();
+			if (selItem != -1 && mItems[selItem] != hitItem)
+				clearSelection();
+		}
+		addSelection(hitItem, hitIndex);
+	}
+	return true;
+}
+
+void GuiListBoxCtrl::handleItemClick_ClickCallbacks(LBItem* hitItem, S32 hitIndex, const GuiEvent& event)
+{
+	if (hitItem == mLastClickItem && event.mouseClickCount == 2)
+	{
+		if (caller->isMethod("onDoubleClick"))
+			Con::executef(caller, 4, "onDoubleClick", Con::getIntArg(hitIndex), hitItem->itemText, hitItem->ID);
+	}
+	else if (caller->isMethod("onClick"))
+	{
+		Con::executef(caller, 4, "onClick", Con::getIntArg(hitIndex), hitItem->itemText, hitItem->ID);
+	}
 }
 
 bool GuiListBoxCtrl::onKeyDown(const GuiEvent &event)

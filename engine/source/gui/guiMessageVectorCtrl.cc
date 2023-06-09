@@ -92,6 +92,7 @@ GuiMessageVectorCtrl::GuiMessageVectorCtrl()
    mSpecialColor.set(0, 0, 255);
 
    mMaxColorIndex = 9;
+   mIsContainer = false;
 }
 
 

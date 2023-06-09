@@ -74,6 +74,7 @@ GuiDropDownCtrl::GuiDropDownCtrl()
 	mIsOpen = false;
 	mActive = true;
 	mText = StringTable->insert("none");
+	mIsContainer = false;
 
 	setField("profile", "GuiDropDownProfile");
 

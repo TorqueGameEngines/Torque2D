@@ -65,6 +65,7 @@ GuiColorPickerCtrl::GuiColorPickerCtrl()
    mSelectorGap = 1;
    mActionOnMove = false;
    mShowSelector = false;
+   mIsContainer = false;
 }
 
 //--------------------------------------------------------------------------

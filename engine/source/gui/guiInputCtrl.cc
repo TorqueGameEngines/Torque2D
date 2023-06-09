@@ -25,6 +25,11 @@
 
 IMPLEMENT_CONOBJECT(GuiInputCtrl);
 
+GuiInputCtrl::GuiInputCtrl()
+{
+	mIsContainer = false;
+}
+
 //------------------------------------------------------------------------------
 bool GuiInputCtrl::onWake()
 {

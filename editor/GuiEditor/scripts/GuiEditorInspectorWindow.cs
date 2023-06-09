@@ -50,6 +50,8 @@ function GuiEditorInspectorWindow::onAdd(%this)
 	%this.scroller.add(%this.inspector);
 
     %this.inspectList = new SimSet();
+
+	%this.inspector.addHiddenField("isContainer");
 }
 
 function GuiEditorInspectorWindow::onRemove(%this)

@@ -38,6 +38,8 @@ class GuiInputCtrl : public GuiControl
    public:
       DECLARE_CONOBJECT(GuiInputCtrl);
 
+	  GuiInputCtrl();
+
       bool onWake();
       void onSleep();
 

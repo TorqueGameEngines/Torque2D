@@ -120,7 +120,7 @@ GuiControl::GuiControl()
    mTooltip             = StringTable->EmptyString;
    mTipHoverTime        = 1000;
    mTooltipWidth		= 250;
-   mIsContainer         = false;
+   mIsContainer         = true;
    mTextWrap			= false;
    mTextExtend          = false;
    mUseInput            = true;

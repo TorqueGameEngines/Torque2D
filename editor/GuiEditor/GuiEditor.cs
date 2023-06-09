@@ -27,6 +27,7 @@ function GuiEditor::create( %this )
 	exec("./scripts/GuiEditorControlListBox.cs");
 	exec("./scripts/GuiEditorInspectorWindow.cs");
 	exec("./scripts/GuiEditorExplorerWindow.cs");
+    exec("./scripts/GuiEditorExplorerTree.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Gui Editor", %this);
 
@@ -112,14 +113,14 @@ function GuiEditor::create( %this )
         HorizSizing = "right";
         VertSizing = "bottom";
         Position = "610 0";
-        Extent = "250  380";
+        Extent = "400  380";
         MinExtent = "100 100";
         text = "Explorer";
         canMove = true;
         canClose = false;
         canMinimize = true;
         canMaximize = false;
-        resizeWidth = false;
+        resizeWidth = true;
         resizeHeight = true;
     };
     ThemeManager.setProfile(%this.explorerWindow, "windowProfile");
