@@ -1105,7 +1105,7 @@ void GuiEditCtrl::moveSelectionToCtrl(GuiControl *newParent)
       ctrl->mBounds.set(newpos, ctrl->mBounds.extent);
    }
 
-   Con::executef(this, 1, "onSelectionParentChange");
+   Con::executef(this, 2, "onSelectionParentChange", Con::getIntArg(newParent->getId()));
 }
 
 static Point2I snapPoint(Point2I point, Point2I delta, Point2I gridSnap)

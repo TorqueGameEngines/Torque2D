@@ -49,12 +49,18 @@ function GuiEditorBrain::finishControlDropped(%this, %payload, %x, %y)
    %payload.setPositionGlobal(%x, %y);
 }
 
-function GuiEditorBrain::onInspect(%this, %ctrl)
+function GuiEditorBrain::startRadioSilence(%this)
 {
-    %this.clearSelection();
-	%this.select(%ctrl);
+    %this.removeAllListeners();
 }
 
+function GuiEditorBrain::endRadioSilence(%this)
+{
+    %this.addListener(GuiEditor.explorerWindow);
+    %this.addListener(GuiEditor.inspectorWindow);
+}
+
+//Source callbacks - Events that happened with this control and need to be relayed to other controls.
 function GuiEditorBrain::onSelect(%this, %ctrl)
 {
 	%this.clearSelection();
@@ -62,13 +68,19 @@ function GuiEditorBrain::onSelect(%this, %ctrl)
     %this.postEvent("Inspect", %ctrl);
 }
 
+function GuiEditorBrain::onRemoveSelected(%this,%ctrl)
+{
+    %this.postEvent("ClearInspect", %ctrl);
+}
+
 function GuiEditorBrain::onClearSelected(%this)
 {
     %this.postEvent("ClearInspectAll");
 }
 
-function GuiEditorBrain::onSelectionParentChange(%this)
+function GuiEditorBrain::onAddSelected(%this, %ctrl)
 {
+    %this.postEvent("AlsoInspect", %ctrl);
 }
 
 function GuiEditorBrain::onDelete(%this)
@@ -76,12 +88,44 @@ function GuiEditorBrain::onDelete(%this)
 	%this.postEvent("ObjectRemoved", %ctrl);
 }
 
-function GuiEditorBrain::onAddSelected(%this,%ctrl)
+function GuiEditorBrain::onSelectionParentChange(%this, %parent)
 {
-    %this.postEvent("AlsoInspect", %ctrl);
+    %this.postEvent("ParentChange", %parent);
 }
 
-function GuiEditorBrain::onRemoveSelected(%this,%ctrl)
+//Receiving Callbacks - Events that happened at other controls and need to be reflected with this control.
+function GuiEditorBrain::onInspect(%this, %ctrl)
 {
-    %this.postEvent("ClearInspect", %ctrl);
+    %this.startRadioSilence();
+    %this.clearSelection();
+	%this.select(%ctrl);
+    %this.endRadioSilence();
+}
+
+function GuiEditorBrain::onAlsoInspect(%this, %ctrl)
+{
+    %this.startRadioSilence();
+	%this.addSelection(%ctrl);
+    %this.endRadioSilence();
+}
+
+function GuiEditorBrain::onClearInspect(%this, %ctrl)
+{
+    %this.startRadioSilence();
+	%this.removeSelection(%ctrl);
+    %this.endRadioSilence();
+}
+
+function GuiEditorBrain::onClearInspectAll(%this)
+{
+    %this.startRadioSilence();
+	%this.clearSelection();
+    %this.endRadioSilence();
+}
+
+function GuiEditorBrain::onObjectRemoved(%this, %ctrl)
+{
+    %this.startRadioSilence();
+	%this.deleteSelection();
+    %this.endRadioSilence();
 }

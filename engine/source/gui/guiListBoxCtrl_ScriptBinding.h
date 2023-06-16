@@ -91,7 +91,7 @@ ConsoleMethodWithDocs(GuiListBoxCtrl, setItemID, ConsoleVoid, 4, 4, "(int index,
 
 /*! Returns an item's ID using an index.
 	@param index The zero-based index of the item with the needed ID.
-	@return No return value.
+	@return The ID of the item.
 */
 ConsoleMethodWithDocs(GuiListBoxCtrl, getItemID, ConsoleInt, 3, 3, "(int index)")
 {
@@ -155,7 +155,7 @@ ConsoleMethodWithDocs(GuiListBoxCtrl, setItemInactive, ConsoleVoid, 3, 3, "(int 
 
 /*! Returns if an item is active or not using an index.
 	@param index The zero-based index of the item.
-	@return No return value.
+	@return True if the item is active and false otherwise.
 */
 ConsoleMethodWithDocs(GuiListBoxCtrl, getItemActive, ConsoleBool, 3, 3, "(int index)")
 {

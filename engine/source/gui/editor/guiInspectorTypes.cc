@@ -194,7 +194,7 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl(S32 width)
    for(SimGroup::iterator i = grp->begin(); i != grp->end(); i++)
    {
       GuiControlProfile * profile = dynamic_cast<GuiControlProfile *>(*i);
-      if(profile)
+      if(profile && profile->getName())
       {
          entries.push_back(profile->getName());
       }
@@ -202,8 +202,12 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl(S32 width)
 
    retCtrl->getList()->sortByText();
    for(U32 j = 0; j < (U32)entries.size(); j++)
-	   retCtrl->getList()->addItem(entries[j]);
-
+   {
+		if(entries[j] != NULL)
+		{
+			retCtrl->getList()->addItem(entries[j]);
+		}
+   }
    retCtrl->setField("text", getData());
 
    return retCtrl;

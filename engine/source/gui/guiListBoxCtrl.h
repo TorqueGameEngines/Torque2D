@@ -62,7 +62,7 @@ public:
       StringTableEntry  itemText;
       bool              isSelected;
 	  bool				isActive;
-	  int				ID;
+	  S32				ID;
       void*             itemData;
       ColorF            color;
       bool              hasColor;

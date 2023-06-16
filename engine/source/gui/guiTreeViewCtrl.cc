@@ -34,6 +34,11 @@ GuiTreeViewCtrl::GuiTreeViewCtrl()
 	mActive = true;
 	mIsContainer = false;
 	mIndentSize = 10;
+	mMultipleSelections = true;
+	mTouchPoint = Point2I::Zero;
+	mDragActive = false;
+	mDragIndex = 0;
+	mIsDragLegal = false;
 }
 
 GuiTreeViewCtrl::~GuiTreeViewCtrl()
@@ -58,6 +63,84 @@ void GuiTreeViewCtrl::initPersistFields()
 	Parent::initPersistFields();
 }
 
+void GuiTreeViewCtrl::onTouchDown(const GuiEvent& event)
+{
+	mTouchPoint == event.mousePoint;
+	Parent::onTouchDown(event);
+}
+
+void GuiTreeViewCtrl::onTouchDragged(const GuiEvent& event)
+{
+	mDragActive = false;
+	if (!mActive || !mVisible)
+		return;
+
+	S32 hitIndex = getHitIndex(event);
+	if (hitIndex >= mItems.size() || hitIndex == -1)
+		return;
+
+	LBItem* hitItem = mItems[hitIndex];
+	if (hitItem == NULL || !hitItem->isActive)
+		return;
+
+	if (mAbs(mTouchPoint.x - event.mousePoint.x) > 2 || mAbs(mTouchPoint.y - event.mousePoint.y) > 2)
+	{
+		mDragActive = true;
+	}
+}
+void GuiTreeViewCtrl::onTouchUp(const GuiEvent& event)
+{
+	if (mDragActive && mIsDragLegal)
+	{
+		TreeItem* dragItem = grabItemPtr(mDragIndex);
+		dragItem->isOpen = true;
+		SimGroup* target = static_cast<SimGroup*>(mReorderMethod == ReorderMethod::Insert ? dragItem->itemData : dragItem->trunk->itemData);
+		
+		if (!target)
+		{
+			Con::warnf("GuiTreeViewCtrl::onTouchUp - attempted to drag selection into an object that is not a SimGroup");
+			return;
+		}
+		vector<SimObject*> objectAboveTargetList = vector<SimObject*>();
+		if (mReorderMethod != ReorderMethod::Insert)
+		{
+			S32 index = mReorderMethod == ReorderMethod::Below ? mDragIndex : mDragIndex - 1;
+			TreeItem* checkItem = grabItemPtr(index);
+			while (checkItem->level == dragItem->level)
+			{
+				if(!checkItem->isSelected)
+				{
+					SimObject* obj = static_cast<SimObject*>(checkItem->itemData);
+					objectAboveTargetList.push_back(obj);
+				}
+				index = index - 1;
+				checkItem = grabItemPtr(index);
+			}
+		}
+		for (S32 i = mItems.size() - 1; i >= 0; i--)
+		{
+			TreeItem* treeItem = dynamic_cast<TreeItem*>(mItems[i]);
+			if(treeItem && treeItem->isSelected)
+			{
+				SimObject* obj = static_cast<SimObject*>(treeItem->itemData);
+				if(obj)
+				{
+					target->addObject(obj);
+					target->bringObjectToFront(obj);
+				}
+			}
+		}
+		for (auto obj : objectAboveTargetList)
+		{
+			SimGroup* group = obj->getGroup();
+			group->bringObjectToFront(obj);
+		}
+		refreshTree();
+	}
+	mDragActive = false;
+	Parent::onTouchUp(event);
+}
+
 void GuiTreeViewCtrl::onPreRender()
 {
 	
@@ -72,6 +155,7 @@ void GuiTreeViewCtrl::onRender(Point2I offset, const RectI& updateRect)
 		mItemSize.x = clip.extent.x;
 	}
 
+	RectI dragRect;
 	for (S32 i = 0, j = 0; i < mItems.size(); i++)
 	{
 		// Only render visible items
@@ -90,8 +174,16 @@ void GuiTreeViewCtrl::onRender(Point2I offset, const RectI& updateRect)
 		{
 			// Render our item
 			onRenderItem(itemRect, mItems[i]);
+			if (mDragActive && j == mDragIndex)
+			{
+				dragRect = RectI(itemRect);
+			}
 			j++;
 		}
+	}
+	if(mDragActive && mIsDragLegal)
+	{
+		onRenderDragLine(dragRect);
 	}
 }
 
@@ -139,7 +231,7 @@ void GuiTreeViewCtrl::onRenderItem(RectI& itemRect, LBItem* item)
 	// Render open/close triangle
 	if(obj)
 	{
-		SimSet* setObj = dynamic_cast<SimSet*>(obj);
+		SimGroup* setObj = dynamic_cast<SimGroup*>(obj);
 		GuiControl* guiCtrl = dynamic_cast<GuiControl*>(obj);
 		bool showTriangle = (guiCtrl && guiCtrl->mIsContainer) || (!guiCtrl && setObj && setObj->size() > 0);
 		if (showTriangle)
@@ -154,6 +246,35 @@ void GuiTreeViewCtrl::onRenderItem(RectI& itemRect, LBItem* item)
 	contentRect.extent.x -= contentRect.extent.y;
 
 	renderText(contentRect.point, contentRect.extent, item->itemText, mProfile);
+}
+
+void GuiTreeViewCtrl::onRenderDragLine(RectI& itemRect)
+{
+	ColorI colorW = ColorI(255,255,255,150);
+	ColorI colorB = ColorI(0, 0, 0, 150);
+	RectI rect = RectI(itemRect);
+	rect.inset(4, 2);
+	if (mReorderMethod == ReorderMethod::Insert)
+	{
+		dglDrawRect(itemRect, colorW);
+		itemRect.inset(-1, -1);
+		dglDrawRect(itemRect, colorB);
+	}
+	else if (mReorderMethod == ReorderMethod::Above)
+	{
+		itemRect.extent.y = 4;
+		dglDrawRect(itemRect, colorW);
+		itemRect.inset(-1, -1);
+		dglDrawRect(itemRect, colorB);
+	}
+	else if(mReorderMethod == ReorderMethod::Below)
+	{
+		itemRect.point.y += mItemSize.y;
+		itemRect.extent.y = 4;
+		dglDrawRect(itemRect, colorW);
+		itemRect.inset(-1, -1);
+		dglDrawRect(itemRect, colorB);
+	}
 }
 
 S32 GuiTreeViewCtrl::getHitIndex(const GuiEvent& event)
@@ -171,11 +292,44 @@ S32 GuiTreeViewCtrl::getHitIndex(const GuiEvent& event)
 		{
 			if (j == slot)
 			{
+				S32 roundSlot = (S32)mRound((F32)localPoint.y / (F32)mItemSize.y);
+				mReorderMethod = roundSlot == slot ? ReorderMethod::Above : ReorderMethod::Below;
+
+				SimObject* obj = static_cast<SimObject*>(treeItem->itemData);
+				bool showTriangle = false;
+				if(obj)
+				{
+					SimGroup* setObj = dynamic_cast<SimGroup*>(obj);
+					GuiControl* guiCtrl = dynamic_cast<GuiControl*>(obj);
+					showTriangle = (guiCtrl && guiCtrl->mIsContainer) || (!guiCtrl && setObj && setObj->size() > 0);
+					
+					if (((slot * mItemSize.y) + 5) < localPoint.y && mReorderMethod == ReorderMethod::Above && showTriangle)
+					{
+						mReorderMethod = ReorderMethod::Insert;
+					}
+				}
+				if (j == 0)
+				{
+					mReorderMethod = ReorderMethod::Insert; 
+				}
+
+				mIsDragLegal = true;
+				for(TreeItem* trunk = treeItem; trunk != nullptr; trunk = trunk->trunk)
+				{
+					if (trunk->isSelected)
+					{
+						mIsDragLegal = false;
+						break;
+					}
+				}
+
+				mDragIndex = j;
 				return i;
 			}
 			j++;
 		}
 	}
+	return -1;
 }
 
 void GuiTreeViewCtrl::handleItemClick(LBItem* hitItem, S32 hitIndex, const GuiEvent& event)
@@ -229,7 +383,7 @@ void GuiTreeViewCtrl::inspectObject(SimObject* obj)
 
 void GuiTreeViewCtrl::addBranches(TreeItem* treeItem, SimObject* obj, U16 level)
 {
-	SimSet* setObj = dynamic_cast<SimSet*>(obj);
+	SimGroup* setObj = dynamic_cast<SimGroup*>(obj);
 	if(setObj)
 	{
 		for(auto sub : *setObj)
@@ -260,7 +414,54 @@ void GuiTreeViewCtrl::refreshTree()
 {
 	if (mRootObject)
 	{
+		Vector<U32> selectedList;
+		Vector<U32> openList;
+		for (auto item : mItems)
+		{
+			TreeItem* treeItem = dynamic_cast<TreeItem*>(item);
+			if (item->isSelected)
+			{
+				selectedList.push_back(treeItem->ID);
+			}
+			if (treeItem && treeItem->isOpen)
+			{
+				openList.push_back(treeItem->ID);
+			}
+		}
+
+		Point2I pos = Point2I::Zero;
+		auto scroller = dynamic_cast<GuiScrollCtrl*>(getParent());
+		if (scroller)
+		{
+			pos = scroller->mScrollOffset;
+		}
+		
 		inspectObject(mRootObject);
+
+
+		for (auto item : mItems)
+		{
+			TreeItem* treeItem = dynamic_cast<TreeItem*>(item);
+			if (selectedList.contains(treeItem->ID))
+			{
+				item->isSelected = true;
+				mSelectedItems.push_front(item);
+			}
+			if (treeItem && openList.contains(treeItem->ID))
+			{
+				treeItem->isOpen = true;
+			}
+			else if(treeItem)
+			{
+				treeItem->isOpen = false;
+				setBranchesVisible(treeItem, treeItem->isOpen);
+			}
+		}
+
+		if (scroller)
+		{
+			scroller->scrollTo(pos.x, pos.y);
+		}
 	}
 }
 
@@ -311,4 +512,41 @@ void GuiTreeViewCtrl::setBranchesVisible(TreeItem* treeItem, bool isVisible)
 		}
 		branch->isVisible = isVisible;
 	}
+}
+
+void GuiTreeViewCtrl::setItemOpen(S32 index, bool isOpen)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiTreeViewCtrl::setItemOpen - invalid index");
+		return;
+	}
+
+	TreeItem* item = dynamic_cast<TreeItem*>(mItems[index]);
+	item->isOpen = isOpen;
+}
+
+bool GuiTreeViewCtrl::getItemOpen(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf("GuiTreeViewCtrl::getItemOpen - invalid index");
+		return true;
+	}
+
+	TreeItem* item = dynamic_cast<TreeItem*>(mItems[index]);
+	return item->isOpen;
+}
+
+S32 GuiTreeViewCtrl::getItemTrunk(S32 index)
+{
+	if ((index >= mItems.size()) || index < 0)
+	{
+		Con::warnf(" GuiTreeViewCtrl::getItemTrunk - invalid index");
+		return -1;
+	}
+
+	TreeItem* item = dynamic_cast<TreeItem*>(mItems[index]);
+	
+	return item->level == 0 ? -1 : getItemIndex(item->trunk);
 }

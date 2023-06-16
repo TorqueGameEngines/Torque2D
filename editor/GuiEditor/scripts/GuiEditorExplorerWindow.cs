@@ -38,33 +38,55 @@ function GuiEditorExplorerWindow::open(%this, %object)
 
 function GuiEditorExplorerWindow::onInspect(%this, %ctrl)
 {
+	%this.tree.startRadioSilence();
 	%index = %this.tree.findItemID(%ctrl.getID());
 	%this.tree.clearSelection();
 	%this.tree.setSelected(%index, true);
+	%this.tree.endRadioSilence();
 }
 
 function GuiEditorExplorerWindow::onAlsoInspect(%this, %ctrl)
 {
-	%this.tree.setSelected(%ctrl, true);
+	%this.tree.startRadioSilence();
+	%index = %this.tree.findItemID(%ctrl.getID());
+	%this.tree.setSelected(%index, true);
+	%this.tree.endRadioSilence();
 }
 
 function GuiEditorExplorerWindow::onClearInspect(%this, %ctrl)
 {
+	%this.tree.startRadioSilence();
 	%this.tree.setSelected(%ctrl, false);
+	%this.tree.endRadioSilence();
 }
 
 function GuiEditorExplorerWindow::onClearInspectAll(%this)
 {
+	%this.tree.startRadioSilence();
 	%this.tree.clearSelection();
+	%this.tree.endRadioSilence();
 }
 
 function GuiEditorExplorerWindow::onObjectRemoved(%this, %ctrl)
 {
+	%this.tree.startRadioSilence();
 	%index = %this.tree.findItemID(%ctrl.getID());
 	%this.tree.deleteItem(%index);
+	%this.tree.endRadioSilence();
 }
 
 function GuiEditorExplorerWindow::onAddControl(%this, %ctrl)
 {
+	%this.tree.refresh();
+}
+
+function GuiEditorExplorerWindow::onParentChange(%this, %parent)
+{
+	%index = %this.tree.findItemID(%parent);
+	while(%index != -1)
+	{
+		%this.tree.setItemOpen(%index, true);
+		%index = %this.tree.getItemParent(%index);
+	} 
 	%this.tree.refresh();
 }

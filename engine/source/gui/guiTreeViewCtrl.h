@@ -32,10 +32,18 @@ class GuiTreeViewCtrl : public GuiListBoxCtrl
 {
 private:
 	typedef GuiListBoxCtrl Parent;
+	class TreeItem;
+
+	enum class ReorderMethod { Above, Below, Insert };
 
 protected:
 	SimObjectPtr<SimObject> mRootObject;
 	S32 mIndentSize;
+	Point2I mTouchPoint;
+	bool mDragActive;
+	S32 mDragIndex;
+	bool mIsDragLegal;
+	ReorderMethod mReorderMethod;
 
 public:
 	GuiTreeViewCtrl();
@@ -45,7 +53,7 @@ public:
 	class TreeItem : public GuiListBoxCtrl::LBItem
 	{
 	public:
-		TreeItem() : isOpen(1), level(0), triangleArea(RectI()), isVisible(1) { }
+		TreeItem() : isOpen(1), level(0), triangleArea(RectI()), isVisible(1), branchList(vector<TreeItem*>()), trunk(nullptr) { }
 		virtual ~TreeItem() { }
 
 		bool				isOpen;
@@ -65,14 +73,14 @@ public:
 	//void onSleep();
 	//void onPreRender();
 	//bool onKeyDown(const GuiEvent& event);
-	//void onTouchDown(const GuiEvent& event);
+	void onTouchDown(const GuiEvent& event);
 	//void onMiddleMouseDown(const GuiEvent& event);
 	//void onTouchMove(const GuiEvent& event);
 	//void onTouchEnter(const GuiEvent& event);
 	//void onTouchLeave(const GuiEvent& event);
 	//void onRightMouseDown(const GuiEvent& event);
-	//void onTouchDragged(const GuiEvent& event);
-	//void onTouchUp(const GuiEvent& event);
+	void onTouchDragged(const GuiEvent& event);
+	void onTouchUp(const GuiEvent& event);
 
 	//bool onAdd();
 	void onPreRender();
@@ -80,6 +88,7 @@ public:
 	//void setControlProfile(GuiControlProfile* prof);
 	//void resize(const Point2I& newPosition, const Point2I& newExtent);
 	virtual void onRenderItem(RectI& itemRect, LBItem* item);
+	virtual void onRenderDragLine(RectI& itemRect);
 
 	S32 getHitIndex(const GuiEvent& event);
 	virtual void handleItemClick(LBItem* hitItem, S32 hitIndex, const GuiEvent& event);
@@ -92,6 +101,9 @@ public:
 	void calculateHeaderExtent();
 	virtual GuiListBoxCtrl::LBItem* createItem();
 	void setBranchesVisible(TreeItem* treeItem, bool isVisible);
+	void setItemOpen(S32 index, bool isOpen);
+	bool getItemOpen(S32 index);
+	S32 getItemTrunk(S32 index);
 
 	DECLARE_CONOBJECT(GuiTreeViewCtrl);
 };

@@ -94,6 +94,11 @@ void GuiListBoxCtrl::clearSelection()
 	  (*i)->isSelected = false;
 
    mSelectedItems.clear();
+
+   if (caller->isMethod("onUnselectAll"))
+   {
+	   Con::executef(caller, 1, "onUnselectAll");
+   }
 }
 
 void GuiListBoxCtrl::removeSelection( S32 index )
@@ -121,7 +126,10 @@ void GuiListBoxCtrl::removeSelection( LBItem *item, S32 index )
 	  {
 		 mSelectedItems.erase( &mSelectedItems[i] );
 		 item->isSelected = false;
-		 Con::executef(caller, 3, "onUnSelect", Con::getIntArg( index ), item->itemText, item->ID);
+		 if (caller->isMethod("onUnselect"))
+		 {
+			Con::executef(caller, 4, "onUnselect", Con::getIntArg( index ), item->itemText, Con::getIntArg(item->ID));
+		 }
 		 return;
 	  }
    }
@@ -169,7 +177,7 @@ void GuiListBoxCtrl::addSelection( LBItem *item, S32 index )
    ScrollToIndex(index);
 
    if(caller->isMethod("onSelect"))
-		Con::executef(caller, 3, "onSelect", Con::getIntArg( index ), item->itemText, item->ID);
+		Con::executef(caller, 4, "onSelect", Con::getIntArg( index ), item->itemText, Con::getIntArg(item->ID));
 
 }
 
@@ -251,13 +259,16 @@ S32 GuiListBoxCtrl::findItemText( StringTableEntry text, bool caseSensitive )
 
 void GuiListBoxCtrl::setSelectionInternal(StringTableEntry text)
 {
-	S32 index = findItemText(text);
-	if (index != -1)
+	if(text != StringTable->EmptyString)
 	{
-		mSelectedItems.clear();
-		LBItem *item = mItems[index];
-		item->isSelected = true;
-		mSelectedItems.push_front(item);
+		S32 index = findItemText(text);
+		if (index != -1)
+		{
+			mSelectedItems.clear();
+			LBItem *item = mItems[index];
+			item->isSelected = true;
+			mSelectedItems.push_front(item);
+		}
 	}
 }
 
@@ -471,7 +482,7 @@ S32 GuiListBoxCtrl::insertItem( S32 index, StringTableEntry text, void *itemData
    // Sanity checking
    if( !text )
    {
-	  Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL string" );
+ 	  Con::warnf("GuiListBoxCtrl::insertItem - cannot add NULL string" );
 	  return -1;
    }
 
@@ -737,7 +748,7 @@ void GuiListBoxCtrl::onTouchDragged(const GuiEvent &event)
 
 	if(caller->isMethod("onTouchDragged"))
 	{
-		Con::executef(caller, 3, "onTouchDragged", Con::getIntArg(hitIndex), hitItem->itemText, hitItem->ID);
+		Con::executef(caller, 4, "onTouchDragged", Con::getIntArg(hitIndex), hitItem->itemText, Con::getIntArg(hitItem->ID));
 	}
 	else
 	{
@@ -845,11 +856,11 @@ void GuiListBoxCtrl::handleItemClick_ClickCallbacks(LBItem* hitItem, S32 hitInde
 	if (hitItem == mLastClickItem && event.mouseClickCount == 2)
 	{
 		if (caller->isMethod("onDoubleClick"))
-			Con::executef(caller, 4, "onDoubleClick", Con::getIntArg(hitIndex), hitItem->itemText, hitItem->ID);
+			Con::executef(caller, 4, "onDoubleClick", Con::getIntArg(hitIndex), hitItem->itemText, Con::getIntArg(hitItem->ID));
 	}
 	else if (caller->isMethod("onClick"))
 	{
-		Con::executef(caller, 4, "onClick", Con::getIntArg(hitIndex), hitItem->itemText, hitItem->ID);
+		Con::executef(caller, 4, "onClick", Con::getIntArg(hitIndex), hitItem->itemText, Con::getIntArg(hitItem->ID));
 	}
 }
 
@@ -898,7 +909,7 @@ bool GuiListBoxCtrl::onKeyDown(const GuiEvent &event)
 		break;
 	case KEY_DELETE:
 		if (index != -1 && isMethod("onDeleteKey"))
-			Con::executef(caller, 3, "onDeleteKey", Con::getIntArg(index), getItemText(index), getItemID(index));
+			Con::executef(caller, 4, "onDeleteKey", Con::getIntArg(index), getItemText(index), Con::getIntArg(getItemID(index)));
 		break;
 	default:
 		return(Parent::onKeyDown(event));
