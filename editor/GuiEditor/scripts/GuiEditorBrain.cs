@@ -41,7 +41,7 @@ function GuiEditorBrain::onControlDropped(%this, %payload, %position)
    %this.setFirstResponder();
    %this.postEvent("AddControl", %payload);
     %this.postEvent("Inspect", %payload);
-   %this.schedule(100, "finishControlDropped", %payload, %x, %y);
+   %this.schedule(40, "finishControlDropped", %payload, %x, %y);
 }
 
 function GuiEditorBrain::finishControlDropped(%this, %payload, %x, %y)

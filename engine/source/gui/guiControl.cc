@@ -413,6 +413,7 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	Point2I oldExtent = mBounds.extent;
 
     //force center if using center positioning
+	Point2I oldPosition = mBounds.point;
     Point2I actualNewPosition = Point2I(newPosition);
     GuiControl* parent = getParent();
     if (parent)
@@ -429,6 +430,7 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 
    // only do the child control resizing stuff if you really need to.
    bool extentChanged = (actualNewExtent != oldExtent);
+   bool positionChanged = (actualNewPosition != oldPosition);
 
    if (extentChanged) {
       //call set update both before and after
@@ -450,8 +452,16 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 		  Con::executef(this, 2, "onResize");
 	  }
    }
-   else {
+   if(positionChanged) 
+   {
       mBounds.point = actualNewPosition;
+	  if(parent)
+		parent->childMoved(this);
+
+	  if (isMethod("onMoved"))
+	  {
+		  Con::executef(this, 2, "onMoved");
+	  }
    }
 }
 void GuiControl::setPosition( const Point2I &newPosition )
@@ -496,6 +506,26 @@ void GuiControl::childResized(GuiControl *child)
 	if (isMethod("onChildResized"))
 	{
 		Con::executef(this, 3, "onChildResized", child->getIdString());
+	}
+}
+
+void GuiControl::childMoved(GuiControl* child)
+{
+	// Default to do nothing. Do not call resize from here as it will create an infinite loop.
+
+	if (isMethod("onChildMoved"))
+	{
+		Con::executef(this, 3, "onChildMoved", child->getIdString());
+	}
+}
+
+void GuiControl::childrenReordered()
+{
+	// Default to do nothing.
+
+	if (isMethod("onChildrenReordered"))
+	{
+		Con::executef(this, 2, "onChildrenReordered");
 	}
 }
 

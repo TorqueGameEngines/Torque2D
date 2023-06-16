@@ -50,12 +50,13 @@ GuiTreeViewCtrl::TreeItem* GuiTreeViewCtrl::grabItemPtr(S32 index)
 	// Range Check
 	if (index >= mItems.size() || index < 0)
 	{
-		Con::warnf("GuiListBoxCtrl::grabItemPtr - index out of range!");
+		Con::warnf("GuiTreeViewCtrl::grabItemPtr - index out of range!");
 		return nullptr;
 	}
 
 	// Grab our item
-	return dynamic_cast<GuiTreeViewCtrl::TreeItem*>(mItems[index]);
+	TreeItem* treeItem = dynamic_cast<GuiTreeViewCtrl::TreeItem*>(mItems[index]);
+	return treeItem;
 }
 
 void GuiTreeViewCtrl::initPersistFields()
@@ -93,7 +94,10 @@ void GuiTreeViewCtrl::onTouchUp(const GuiEvent& event)
 	if (mDragActive && mIsDragLegal)
 	{
 		TreeItem* dragItem = grabItemPtr(mDragIndex);
-		dragItem->isOpen = true;
+		if (mReorderMethod == ReorderMethod::Below && dragItem->isOpen)
+		{
+			mReorderMethod = ReorderMethod::Insert;
+		}
 		SimGroup* target = static_cast<SimGroup*>(mReorderMethod == ReorderMethod::Insert ? dragItem->itemData : dragItem->trunk->itemData);
 		
 		if (!target)
@@ -117,6 +121,11 @@ void GuiTreeViewCtrl::onTouchUp(const GuiEvent& event)
 				checkItem = grabItemPtr(index);
 			}
 		}
+		else
+		{
+			dragItem->isOpen = true;
+		}
+
 		for (S32 i = mItems.size() - 1; i >= 0; i--)
 		{
 			TreeItem* treeItem = dynamic_cast<TreeItem*>(mItems[i]);
@@ -134,6 +143,11 @@ void GuiTreeViewCtrl::onTouchUp(const GuiEvent& event)
 		{
 			SimGroup* group = obj->getGroup();
 			group->bringObjectToFront(obj);
+		}
+		GuiControl* control = static_cast<GuiControl*>(mReorderMethod != ReorderMethod::Insert ? dragItem->trunk->itemData : dragItem->itemData);
+		if (control)
+		{
+			control->childrenReordered();
 		}
 		refreshTree();
 	}
@@ -389,8 +403,8 @@ void GuiTreeViewCtrl::addBranches(TreeItem* treeItem, SimObject* obj, U16 level)
 		for(auto sub : *setObj)
 		{
 			StringTableEntry text = getObjectText(sub);
-			S32 id = addItemWithID(text, sub->getId(), sub);
-			TreeItem* branch = grabItemPtr(id);
+			S32 index = addItemWithID(text, sub->getId(), sub);
+			TreeItem* branch = grabItemPtr(index);
 			branch->level = level;
 			branch->trunk = treeItem;
 			treeItem->branchList.push_back(branch);

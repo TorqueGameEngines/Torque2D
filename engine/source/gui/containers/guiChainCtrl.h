@@ -17,19 +17,23 @@ class GuiChainCtrl : public GuiControl
 {
 private:
 	typedef GuiControl Parent;
+	bool mPrevIsVertical;
 
 protected:
 	S32 mChildSpacing;
 	bool mIsVertical;
 
-	virtual void calculateExtent();
+	virtual void calculateExtent(bool holdLength = false);
 	virtual S32 positionChildren(RectI &innerRect);
 
 public:
 	GuiChainCtrl();
 
 	void childResized(GuiControl *child);
+	void childMoved(GuiControl* child);
+	void childrenReordered();
 	void resize(const Point2I &newPosition, const Point2I &newExtent);
+	void inspectPreApply();
 	void inspectPostApply();
 	void onChildAdded(GuiControl *child);
 	void onChildRemoved(SimObject *child);

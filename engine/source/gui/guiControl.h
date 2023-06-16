@@ -445,6 +445,13 @@ public:
     /// @param   child   Child object
     virtual void childResized(GuiControl *child);
 
+	/// Called when a child control of the object is moved
+	/// @param   child   Child object
+	virtual void childMoved(GuiControl* child);
+
+	/// Called when the children of this control may have been reordered
+	virtual void childrenReordered();
+
     /// Called when this objects parent is resized
     /// @param   oldParentExtent   The old size of the parent object
     /// @param   newParentExtent   The new size of the parent object

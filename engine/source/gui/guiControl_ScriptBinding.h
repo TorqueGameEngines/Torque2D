@@ -247,7 +247,7 @@ ConsoleMethodWithDocs( GuiControl, setPositionGlobal, ConsoleVoid, 4, 4, (int x,
    lPosOffset.x += object->mBounds.point.x;
    lPosOffset.y += object->mBounds.point.y;
 
-   object->mBounds.set(lPosOffset,object->mBounds.extent);
+   object->resize(lPosOffset,object->mBounds.extent);
 }
 
 /*! Sets the current control position in local space

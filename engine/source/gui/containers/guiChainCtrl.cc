@@ -50,9 +50,29 @@ void GuiChainCtrl::initPersistFields()
 }
 
 //------------------------------------------------------------------------------
+void GuiChainCtrl::inspectPreApply()
+{
+	mPrevIsVertical = mIsVertical;
+	Parent::inspectPreApply();
+}
 
 void GuiChainCtrl::inspectPostApply()
 {
+	if (mPrevIsVertical != mIsVertical && smDesignTime)
+	{
+		//Since we're in the editor, we'll swap x and y, then calculateExtent will fix one of them.
+		iterator i;
+		for (i = begin(); i != end(); i++)
+		{
+			GuiControl* ctrl = static_cast<GuiControl*>(*i);
+			if (ctrl->isVisible())
+			{
+				S32 temp = ctrl->mBounds.point.x;
+				ctrl->mBounds.point.x = ctrl->mBounds.point.y;
+				ctrl->mBounds.point.y = temp;
+			}
+		}
+	}
 	calculateExtent();
 	Parent::inspectPostApply();
 }
@@ -61,7 +81,20 @@ void GuiChainCtrl::inspectPostApply()
 
 void GuiChainCtrl::childResized(GuiControl *child)
 {
-	calculateExtent();
+	calculateExtent(smDesignTime);
+	Parent::childResized(child);
+}
+
+void GuiChainCtrl::childMoved(GuiControl* child)
+{
+	calculateExtent(smDesignTime);
+	Parent::childMoved(child);
+}
+
+void GuiChainCtrl::childrenReordered()
+{
+	calculateExtent(smDesignTime);
+	Parent::childrenReordered();
 }
 
 void GuiChainCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
@@ -92,6 +125,12 @@ void GuiChainCtrl::onChildAdded(GuiControl *child)
 	{
 		child->setVertSizing(vertResizeTop);
 	}
+
+	if (smDesignTime)
+	{
+		child->mBounds.point = Point2I::Zero;
+	}
+
 	Parent::onChildAdded(child);
 	calculateExtent();
 }
@@ -101,13 +140,24 @@ void GuiChainCtrl::onChildRemoved(SimObject *child)
 	calculateExtent();
 }
 
-void GuiChainCtrl::calculateExtent()
+void GuiChainCtrl::calculateExtent(bool holdLength)
 {
 	Point2I offset = Point2I(mBounds.point.Zero);
 	Point2I extent = Point2I(getExtent());
 	RectI innerRect = getInnerRect(offset, extent, NormalState, mProfile);
 
 	S32 length = positionChildren(innerRect);
+	S32 oldLength = mIsVertical ? innerRect.extent.y : innerRect.extent.x;
+
+	if (smDesignTime)
+	{
+		length += 20;//This gives some space to add new controls.
+	}
+
+	if (holdLength && oldLength > length)
+	{
+		length = oldLength;
+	}
 
 	if (!mIsVertical)
 	{
@@ -139,7 +189,7 @@ S32 GuiChainCtrl::positionChildren(RectI &innerRect)
 	for (i = begin(); i != end(); i++)
 	{
 		GuiControl *ctrl = static_cast<GuiControl *>(*i);
-		if (ctrl->isVisible())
+		if (ctrl->isVisible() || smDesignTime)
 		{
 			if (length != 0)
 			{
@@ -154,7 +204,7 @@ S32 GuiChainCtrl::positionChildren(RectI &innerRect)
 			{
 				childPos.y = length;
 			}
-			ctrl->setPosition(childPos);
+			ctrl->mBounds.point = childPos;
 			length += mIsVertical ? ctrl->getExtent().y : ctrl->getExtent().x;
 		}
 	}
