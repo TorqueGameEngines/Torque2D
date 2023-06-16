@@ -2,7 +2,7 @@
 function GuiEditorBrain::onAdd(%this)
 {
     %this.setFirstResponder();
-    %this.setSnapToGrid("8");
+    %this.setSnapToGrid("10");
 }
 
 function GuiEditorBrain::onControlDragged(%this, %payload, %position)

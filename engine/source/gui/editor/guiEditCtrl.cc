@@ -224,14 +224,6 @@ bool GuiEditCtrl::onWake()
 
    setEditMode(true);
 
-   // TODO: paxorr: I'm not sure this is the best way to set these defaults.
-   bool snap = Con::getBoolVariable("$pref::GuiEditor::snap2grid",false);
-   U32 grid = Con::getIntVariable("$pref::GuiEditor::snap2gridsize",8);
-   Con::setBoolVariable("$pref::GuiEditor::snap2grid", snap);
-   Con::setIntVariable("$pref::GuiEditor::snap2gridsize",grid);
-
-   setSnapToGrid( snap ? grid : 0);
-
    return true;
 }
 
@@ -1373,7 +1365,7 @@ bool GuiEditCtrl::onKeyDown(const GuiEvent &event)
    if (! mActive)
       return Parent::onKeyDown(event);
 
-   if (!(event.modifier & SI_CTRL))
+   if (!(event.modifier & SI_CTRL) && !(event.modifier & SI_SHIFT))
    {
       switch(event.keyCode)
       {
@@ -1382,7 +1374,37 @@ bool GuiEditCtrl::onKeyDown(const GuiEvent &event)
             deleteSelection();
             Con::executef(this,1,"onDelete");
             return true;
+		 case KEY_LEFT:
+			moveSelection(Point2I(-1, 0));
+			return true;
+		 case KEY_RIGHT:
+			 moveSelection(Point2I(1, 0));
+			 return true;
+		 case KEY_UP:
+			 moveSelection(Point2I(0, -1));
+			 return true;
+		 case KEY_DOWN:
+			 moveSelection(Point2I(0, 1));
+			 return true;
       }
+   }
+   else if (event.modifier & SI_SHIFT)
+   {
+	   switch (event.keyCode)
+	   {
+	   case KEY_LEFT:
+		   moveSelection(Point2I(mGridSnap.x != 0 ? -mGridSnap.x : -10, 0));
+		   return true;
+	   case KEY_RIGHT:
+		   moveSelection(Point2I(mGridSnap.x != 0 ? mGridSnap.x : 10, 0));
+		   return true;
+	   case KEY_UP:
+		   moveSelection(Point2I(0, mGridSnap.y != 0 ? -mGridSnap.y : -10));
+		   return true;
+	   case KEY_DOWN:
+		   moveSelection(Point2I(0, mGridSnap.y != 0 ? mGridSnap.y : 10));
+		   return true;
+	   }
    }
    return false;
 }
