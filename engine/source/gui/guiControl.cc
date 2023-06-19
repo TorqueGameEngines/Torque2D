@@ -35,6 +35,7 @@
 #include "string/unicode.h"
 #include "collection/vector.h"
 #include "2d/core/Utility.h"
+#include "gui/containers/guiScrollCtrl.h"
 
 #include <sstream>
 #include <iostream>
@@ -162,7 +163,7 @@ void GuiControl::onChildAdded( GuiControl *child )
 		//This will cause the child control to be centered if it needs to be.
 		RectI innerRect = this->getInnerRect(mBounds.point, mBounds.extent, GuiControlState::NormalState, mProfile);
 		child->parentResized(innerRect.extent, innerRect.extent);
-
+		
 		if (isMethod("onChildAdded"))
 		{
 			Con::executef(this, 3, "onChildAdded", child->getIdString());

@@ -149,6 +149,10 @@ void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	Point2I actualNewPosition = Point2I(newPosition);
 	if(mIsExtentDynamic)
 	{
+		if(smDesignTime)
+		{
+			mRunningChainHeight += 20; 
+		}
 		if (IsVertical())
 		{
 			innerRect.extent.y = mRunningChainHeight;
@@ -158,6 +162,7 @@ void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 			innerRect.extent.x = mRunningChainHeight;
 		}
 		actualNewExtent = getOuterExtent(innerRect.extent, NormalState, mProfile);
+
 	}
 
 	mBounds.set(actualNewPosition, actualNewExtent);
@@ -331,11 +336,31 @@ void GuiGridCtrl::onChildAdded(GuiControl *child)
 		child->setVertSizing(vertResizeTop);
 	}
 	resize(getPosition(), getExtent());
+
+	Parent::onChildAdded(child);
 }
 
 void GuiGridCtrl::onChildRemoved(SimObject *child)
 {
 	resize(getPosition(), getExtent());
+}
+
+void GuiGridCtrl::childResized(GuiControl* child)
+{
+	resize(getPosition(), getExtent());
+	Parent::childResized(child);
+}
+
+void GuiGridCtrl::childMoved(GuiControl* child)
+{
+	resize(getPosition(), getExtent());
+	Parent::childMoved(child);
+}
+
+void GuiGridCtrl::childrenReordered()
+{
+	resize(getPosition(), getExtent());
+	Parent::childrenReordered();
 }
 
 void GuiGridCtrl::setCellSize(F32 width, F32 height)

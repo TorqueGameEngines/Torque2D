@@ -157,9 +157,13 @@ public:
    virtual void onTouchLeave(const GuiEvent &event);
    virtual void onMouseWheelUp(const GuiEvent &event);
    virtual void onMouseWheelDown(const GuiEvent &event);
+   virtual bool onMouseDownEditor(const GuiEvent& event, Point2I offset);
+   virtual bool onMouseUpEditor(const GuiEvent& event, Point2I offset);
+   virtual bool onMouseDraggedEditor(const GuiEvent& event, Point2I offset);
 
    virtual bool onWake();
    virtual void onSleep();
+   virtual void inspectPostApply();
    virtual void setControlThumbProfile(GuiControlProfile* prof);
    virtual void setControlTrackProfile(GuiControlProfile* prof);
    virtual void setControlArrowProfile(GuiControlProfile* prof);

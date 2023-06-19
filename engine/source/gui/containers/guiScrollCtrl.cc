@@ -161,6 +161,12 @@ void GuiScrollCtrl::onSleep()
 	   mArrowProfile->decRefCount();
 }
 
+void GuiScrollCtrl::inspectPostApply()
+{
+	Parent::inspectPostApply();
+	computeSizes();
+}
+
 void GuiScrollCtrl::setControlThumbProfile(GuiControlProfile* prof)
 {
 	AssertFatal(prof, "GuiScrollCtrl::setControlThumbProfile: invalid thumb profile");
@@ -797,6 +803,46 @@ void GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
    if (parent && (previousPos == mScrollOffset))
       parent->onMouseWheelDown(event);
 }
+
+bool GuiScrollCtrl::onMouseDownEditor(const GuiEvent& event, Point2I offset)
+{
+	Point2I curMousePos = globalToLocalCoord(event.mousePoint);
+	Region hitRegion = findHitRegion(curMousePos);
+
+	if (hitRegion != Region::Content)
+	{
+		onTouchDown(event);
+		return true;
+	}
+	return false;
+}
+
+bool GuiScrollCtrl::onMouseUpEditor(const GuiEvent& event, Point2I offset)
+{
+	Point2I curMousePos = globalToLocalCoord(event.mousePoint);
+	Region hitRegion = findHitRegion(curMousePos);
+
+	if (hitRegion != Region::Content || mDepressed)
+	{
+		onTouchUp(event);
+		return true;
+	}
+	return false;
+}
+
+bool GuiScrollCtrl::onMouseDraggedEditor(const GuiEvent& event, Point2I offset)
+{
+	Point2I curMousePos = globalToLocalCoord(event.mousePoint);
+	Region hitRegion = findHitRegion(curMousePos);
+
+	if (hitRegion != Region::Content || mDepressed)
+	{
+		onTouchDragged(event);
+		return true;
+	}
+	return false;
+}
+
 #pragma endregion
 
 #pragma region rendering

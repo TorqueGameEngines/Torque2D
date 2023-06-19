@@ -982,7 +982,6 @@ void GuiEditCtrl::onTouchDragged(const GuiEvent &event)
       }
 
       ctrl->resize(newPosition, newExtent);
-      mCurrentAddSet->childResized(ctrl);
       Con::executef(this, 2, "onSelect", Con::getIntArg(mSelectedControls[0]->getId()));
    }
    else if (mMouseDownMode == MovingSelection && mSelectedControls.size())
@@ -1405,6 +1404,28 @@ bool GuiEditCtrl::onKeyDown(const GuiEvent &event)
 		   moveSelection(Point2I(0, mGridSnap.y != 0 ? mGridSnap.y : 10));
 		   return true;
 	   }
+   }
+   else if (event.modifier & SI_CTRL)
+   {
+		if(mSelectedControls.size() == 1)
+		{
+			GuiControl* ctrl = mSelectedControls.first();
+			switch (event.keyCode)
+			{
+			case KEY_LEFT:
+				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x - 1, ctrl->mBounds.extent.y));
+				return true;
+			case KEY_RIGHT:
+				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x + 1, ctrl->mBounds.extent.y));
+				return true;
+			case KEY_UP:
+				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x, ctrl->mBounds.extent.y - 1));
+				return true;
+			case KEY_DOWN:
+				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x, ctrl->mBounds.extent.y + 1));
+				return true;
+			}
+		}
    }
    return false;
 }

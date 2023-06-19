@@ -69,7 +69,10 @@ public:
 	bool onWake();
 	void onSleep();
 	void onChildAdded(GuiControl *child);
-	void onChildRemoved(SimObject *child);
+	void onChildRemoved(SimObject *child); 
+	void childResized(GuiControl* child);
+	void childMoved(GuiControl* child);
+	void childrenReordered();
 
 	void setCellSize(F32 width, F32 height);
 	inline Vector2 getCellSize(void) const { return Vector2(mCellSizeX, mCellSizeY); }
