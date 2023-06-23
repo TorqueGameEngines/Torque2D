@@ -92,6 +92,173 @@ function EditorCore::initGui(%this)
 			};
 		};
 		new GuiMenuItemCtrl() {
+			Text = "File";
+
+			new GuiMenuItemCtrl() {
+				Text = "New Gui...";
+				Command = "GuiEditor.NewGui();";
+				Accelerator = "Ctrl N";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Open Gui...";
+				Command = "GuiEditor.OpenGui();";
+				Accelerator = "Ctrl O";
+			};
+			new GuiMenuItemCtrl() { Text = "-"; };
+			new GuiMenuItemCtrl() {
+				Text = "Save Gui...";
+				Command = "GuiEditor.SaveGui();";
+				Accelerator = "Ctrl S";
+			};
+		};
+		new GuiMenuItemCtrl() {
+			Text = "Edit";
+
+			new GuiMenuItemCtrl() {
+				Text = "Undo";
+				Command = "GuiEditor.Undo();";
+				Accelerator = "Ctrl Z";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Redo";
+				Command = "GuiEditor.Redo();";
+				Accelerator = "Ctrl-Shift Z";
+			};
+			new GuiMenuItemCtrl() { Text = "-"; };
+			new GuiMenuItemCtrl() {
+				Text = "Cut";
+				Command = "GuiEditor.Cut();";
+				Accelerator = "Ctrl X";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Copy";
+				Command = "GuiEditor.Copy();";
+				Accelerator = "Ctrl C";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Paste";
+				Command = "GuiEditor.Paste();";
+				Accelerator = "Ctrl V";
+			};
+		};
+		new GuiMenuItemCtrl() {
+			Text = "Layout";
+
+			new GuiMenuItemCtrl() {
+				Text = "Nudge Up";
+				Command = "GuiEditor.brain.moveSelection(0,-1);";
+				Accelerator = "Up";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Nudge Down";
+				Command = "GuiEditor.brain.moveSelection(0,1);";
+				Accelerator = "Down";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Nudge Right";
+				Command = "GuiEditor.brain.moveSelection(1,0);";
+				Accelerator = "Right";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Nudge Left";
+				Command = "GuiEditor.brain.moveSelection(-1,0);";
+				Accelerator = "Left";
+			};
+			new GuiMenuItemCtrl() { Text = "-"; };
+			new GuiMenuItemCtrl() {
+				Text = "Expand Height";
+				Command = "GuiEditor.changeExtent(0, 1)";
+				Accelerator = "Ctrl Up";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Shrink Height";
+				Command = "GuiEditor.changeExtent(0,-1);";
+				Accelerator = "Ctrl Down";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Expand Width";
+				Command = "GuiEditor.changeExtent(1,0);";
+				Accelerator = "Ctrl Right";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Shrink Width";
+				Command = "GuiEditor.changeExtent(-1,0);";
+				Accelerator = "Ctrl Left";
+			};
+			new GuiMenuItemCtrl() { Text = "-"; };
+			new GuiMenuItemCtrl() {
+				Text = "Align Left";
+				Command = "GuiEditor.brain.Justify(0);";
+				Accelerator = "Ctrl L";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Align Right";
+				Command = "GuiEditor.brain.Justify(2);";
+				Accelerator = "Ctrl R";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Align Top";
+				Command = "GuiEditor.brain.Justify(3);";
+				Accelerator = "Ctrl T";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Align Bottom";
+				Command = "GuiEditor.brain.Justify(4);";
+				Accelerator = "Ctrl B";
+			};
+			new GuiMenuItemCtrl() { Text = "-"; };
+			new GuiMenuItemCtrl() {
+				Text = "Center Horizontally";
+				Command = "GuiEditor.brain.Justify(1);";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Space Vertically";
+				Command = "GuiEditor.brain.Justify(5);";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Space Horizontally";
+				Command = "GuiEditor.brain.Justify(6);";
+			};
+			new GuiMenuItemCtrl() { Text = "-"; };
+			new GuiMenuItemCtrl() {
+				Text = "Bring to Front";
+				Command = "GuiEditor.brain.BringToFront();";
+				Accelerator = "Ctrl-Shift Up";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Push to Back";
+				Command = "GuiEditor.brain.PushToBack();";
+				Accelerator = "Ctrl-Shift Down";
+			};
+			new GuiMenuItemCtrl() { Text = "-"; };
+			new GuiMenuItemCtrl() {
+				Text = "Set Grid Size...";
+				Command = "GuiEditor.SetGridSize();";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Snap to Grid";
+				Toggle = "1";
+				IsOn = "1";
+				Command = "GuiEditor.SnapToGrid(true);";
+				AltCommand = "GuiEditor.SnapToGrid(false);";
+				Accelerator = "Ctrl G";
+			};
+		};
+		new GuiMenuItemCtrl() {
+			Text = "Select";
+
+			new GuiMenuItemCtrl() {
+				Text = "Select All";
+				Command = "GuiEditor.brain.SelectAll;";
+				Accelerator = "Ctrl A";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Deselect";
+				Command = "GuiEditor.brain.clearSelection();";
+				Accelerator = "Esc";
+			};
+		};
+		new GuiMenuItemCtrl() {
 			Text = "Theme";
 
 			new GuiMenuItemCtrl() {

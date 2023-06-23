@@ -134,6 +134,7 @@ class GuiEditCtrl : public GuiControl
    void bringToFront();
    void pushToBack();
    void setSnapToGrid(U32 gridsize);
+   bool hasSnapToGrid() { return mGridSnap.x && mGridSnap.y; }
    void moveSelectionToCtrl(GuiControl*);
 };
 

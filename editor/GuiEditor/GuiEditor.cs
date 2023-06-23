@@ -165,3 +165,79 @@ function GuiEditor::onNewGui(%this)
     %this.brain.root = %this.blankGui;
     %this.explorerWindow.open(%this.blankGui);
 }
+
+//MENU FUNCTIONS---------------------------------------------------------------
+function GuiEditor::NewGui(%this)
+{
+
+}
+
+function GuiEditor::OpenGui(%this)
+{
+    
+}
+
+function GuiEditor::SaveGui(%this)
+{
+    
+}
+
+function GuiEditor::Undo(%this)
+{
+    %undoManager = %this.brain.getUndoManager();
+    %undoManager.undo();
+}
+
+function GuiEditor::Redo(%this)
+{
+    %undoManager = %this.brain.getUndoManager();
+    %undoManager.redo();
+
+    %count = %undoManager.getRedoCount();
+
+}
+
+function GuiEditor::Cut(%this)
+{
+    
+}
+
+function GuiEditor::Copy(%this)
+{
+    
+}
+
+function GuiEditor::Paste(%this)
+{
+    
+}
+
+function GuiEditor::changeExtent(%this, %x, %y)
+{
+    %set = %this.brain.getSelected();
+    if(%set.getCount() == 1)
+    {
+        %obj = %set.getObject(0);
+        %ext = %obj.getExtent();
+        %obj.setExtent(getWord(%ext, 0) + %x, getWord(%ext, 1) + %y);
+    }
+}
+
+function GuiEditor::SetGridSize(%this)
+{
+    
+}
+
+function GuiEditor::SnapToGrid(%this, %gridOn)
+{
+    if(%gridOn)
+    {
+        %this.brain.setSnapToGrid(10);
+    }
+    else 
+    {
+        %this.brain.setSnapToGrid(0);
+    }
+}
+
+//METHODS-----------------------------------------------------------------

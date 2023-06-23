@@ -173,7 +173,14 @@ ConsoleMethod( GuiEditCtrl, moveSelection, void, 4, 4, "(int deltax, int deltay)
               "@param deltax,deltay The change in coordinates.\n"
               "@return No return value.")
 {
-   object->moveAndSnapSelection(Point2I(dAtoi(argv[2]), dAtoi(argv[3])));
+	if(object->hasSnapToGrid())
+	{
+		object->moveAndSnapSelection(Point2I(dAtoi(argv[2]), dAtoi(argv[3])));
+	}
+	else
+	{
+		object->moveSelection(Point2I(dAtoi(argv[2]), dAtoi(argv[3])));
+	}
 }
 
 ConsoleMethod( GuiEditCtrl, saveSelection, void, 3, 3, "(string fileName) Saves the current selection to given filename\n"
@@ -1145,6 +1152,11 @@ void GuiEditCtrl::moveAndSnapSelection(const Point2I &delta)
 
 void GuiEditCtrl::moveSelection(const Point2I &delta)
 {
+	// move / nudge gets a special callback so that multiple small moves can be
+   // coalesced into one large undo action.
+   // undo
+   Con::executef(this, 2, "onPreSelectionNudged", Con::getIntArg(getSelectedSet().getId()));
+
    Vector<GuiControl *>::iterator i;
    for(i = mSelectedControls.begin(); i != mSelectedControls.end(); i++)
    {
@@ -1154,6 +1166,9 @@ void GuiEditCtrl::moveSelection(const Point2I &delta)
 
       (*i)->resize((*i)->mBounds.point + delta, (*i)->mBounds.extent);
    }
+
+   // undo
+   Con::executef(this, 2, "onPostSelectionNudged", Con::getIntArg(getSelectedSet().getId()));
 
    // allow script to update the inspector
    if (mSelectedControls.size() == 1)
