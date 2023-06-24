@@ -28,6 +28,7 @@ function GuiEditor::create( %this )
 	exec("./scripts/GuiEditorInspectorWindow.cs");
 	exec("./scripts/GuiEditorExplorerWindow.cs");
     exec("./scripts/GuiEditorExplorerTree.cs");
+    exec("./scripts/GuiEditorSaveGuiDialog.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Gui Editor", %this);
 
@@ -152,7 +153,7 @@ function GuiEditor::close(%this)
 
 function GuiEditor::onNewGui(%this)
 {
-    %this.blankGui = new GuiControl()
+    %this.rootGui = new GuiControl()
     {
         HorizSizing = "width";
         VertSizing = "height";
@@ -160,10 +161,10 @@ function GuiEditor::onNewGui(%this)
         Extent = %this.guiPage.getExtent();
         Profile = GuiDefaultProfile;
     };
-    %this.content.add(%this.blankGui);
-    %this.brain.setRoot(%this.blankGui);
-    %this.brain.root = %this.blankGui;
-    %this.explorerWindow.open(%this.blankGui);
+    %this.content.add(%this.rootGui);
+    %this.brain.setRoot(%this.rootGui);
+    %this.brain.root = %this.rootGui;
+    %this.explorerWindow.open(%this.rootGui);
 }
 
 //MENU FUNCTIONS---------------------------------------------------------------
@@ -179,7 +180,20 @@ function GuiEditor::OpenGui(%this)
 
 function GuiEditor::SaveGui(%this)
 {
-    
+    %width = 700;
+	%height = 340;
+	%dialog = new GuiControl()
+	{
+		class = "GuiEditorSaveGuiDialog";
+		superclass = "EditorDialog";
+		dialogSize = (%width + 8) SPC (%height + 8);
+		dialogCanClose = true;
+		dialogText = "Save Gui";
+	};
+	%dialog.init(%width, %height);
+	%this.startListening(%dialog);
+
+	Canvas.pushDialog(%dialog);
 }
 
 function GuiEditor::Undo(%this)
