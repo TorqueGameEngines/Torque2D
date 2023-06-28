@@ -29,11 +29,12 @@ function GuiEditorExplorerWindow::onAdd(%this)
 	};
 	ThemeManager.setProfile(%this.tree, "listboxProfile");
 	%this.scroller.add(%this.tree);
+	%this.tree.startListening(GuiEditor.inspectorWindow.inspector);
 }
 
-function GuiEditorExplorerWindow::open(%this, %object)
+function GuiEditorExplorerWindow::inspect(%this, %object)
 {
-    %this.tree.open(%object);
+    %this.tree.inspect(%object);
 }
 
 function GuiEditorExplorerWindow::onInspect(%this, %ctrl)

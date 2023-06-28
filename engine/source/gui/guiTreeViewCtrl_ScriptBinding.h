@@ -26,7 +26,7 @@ ConsoleMethodGroupBeginWithDocs(GuiTreeViewCtrl, GuiListBoxCtrl)
 	@param obj A SimGroup that will be viewed as a tree.
 	@return No return value.
 */
-ConsoleMethodWithDocs( GuiTreeViewCtrl, open, ConsoleVoid, 3, 3, (SimGroup obj))
+ConsoleMethodWithDocs( GuiTreeViewCtrl, inspect, ConsoleVoid, 3, 3, (SimGroup obj))
 {
    SimGroup* treeRoot = NULL;
    SimObject* target = Sim::findObject(argv[2]);
@@ -35,6 +35,15 @@ ConsoleMethodWithDocs( GuiTreeViewCtrl, open, ConsoleVoid, 3, 3, (SimGroup obj))
       treeRoot = dynamic_cast<SimGroup*>(target);
 
    object->inspectObject(treeRoot);
+}
+
+
+/*! Removes the root object.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiTreeViewCtrl, uninspect, ConsoleVoid, 2, 2, ())
+{
+	object->uninspectObject();
 }
 
 /*! Informs the tree that the contents of the tree have changed and should be refreshed but preserves selection if possible.
@@ -88,6 +97,22 @@ ConsoleMethodWithDocs(GuiTreeViewCtrl, getItemParent, ConsoleInt, 3, 3, "(int in
 		return -1;
 	}
 	return object->getItemTrunk(dAtoi(argv[2]));
+}
+
+/*! Refreshes the text of the item based on the inspected object.
+	@param index The zero-based index of the item that will be updated.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiTreeViewCtrl, refreshItemText, ConsoleVoid, 3, 3, "(S32 index)")
+{
+	S32 index = dAtoi(argv[2]);
+	if (index < 0 || index >= object->mItems.size())
+	{
+		Con::warnf("GuiTreeViewCtrl::refreshItemText() - Invalid index given.");
+		return;
+	}
+	SimObject* sub = static_cast<SimObject*>(object->mItems[index]->itemData);
+	object->setItemText(index, object->getObjectText(sub));
 }
 
 ConsoleMethodGroupEndWithDocs(GuiTreeViewCtrl)

@@ -488,6 +488,10 @@ void GuiInspectorField::setData( const char* data )
       return;
 
    mTarget->inspectPreApply();
+   if (mGroup->mInspector->isMethod("onPreApply"))
+   {
+	   Con::executef(mGroup->mInspector, 3, "onPreApply", Con::getIntArg(mTarget->getId()));
+   }
 
    mTarget->setDataField( mField->pFieldname, mFieldArrayIndex, data );
 
@@ -495,6 +499,10 @@ void GuiInspectorField::setData( const char* data )
    updateValue( data );
 
    mTarget->inspectPostApply();
+   if (mGroup->mInspector->isMethod("onPostApply"))
+   {
+	   Con::executef(mGroup->mInspector, 3, "onPostApply", Con::getIntArg(mTarget->getId()));
+   }
 }
 
 const char* GuiInspectorField::getData()

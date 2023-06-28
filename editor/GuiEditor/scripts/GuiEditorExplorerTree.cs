@@ -41,3 +41,12 @@ function GuiEditorExplorerTree::onDeleteKey(%this, %index, %text, %item)
 {
 	%this.postEvent("ObjectRemoved", %item);
 }
+
+function GuiEditorExplorerTree::onPostApply(%this, %obj)
+{
+    %index = %this.findItemID(%obj.getId());
+    if(%index > -1)
+    {
+        %this.refreshItemText(%index);
+    }
+}

@@ -95,6 +95,7 @@ public:
 	virtual void handleItemClick_ClickCallbacks(LBItem* hitItem, S32 hitIndex, const GuiEvent& event);
 
 	void inspectObject(SimObject* obj);
+	void uninspectObject();
 	void addBranches(TreeItem* treeItem, SimObject* obj, U16 level);
 	void refreshTree();
 	StringTableEntry getObjectText(SimObject* obj);

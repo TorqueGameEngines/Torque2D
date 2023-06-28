@@ -26,6 +26,7 @@ function GuiEditor::create( %this )
 	exec("./scripts/GuiEditorControlListWindow.cs");
 	exec("./scripts/GuiEditorControlListBox.cs");
 	exec("./scripts/GuiEditorInspectorWindow.cs");
+    exec("./scripts/GuiEditorInspector.cs");
 	exec("./scripts/GuiEditorExplorerWindow.cs");
     exec("./scripts/GuiEditorExplorerTree.cs");
     exec("./scripts/GuiEditorSaveGuiDialog.cs");
@@ -132,7 +133,7 @@ function GuiEditor::create( %this )
     %this.guiPage.add(%this.explorerWindow);
     %this.explorerWindow.startListening(%this.brain);
 
-    %this.onNewGui();
+    %this.NewGui();
 
     EditorCore.FinishRegistration(%this.guiPage);
 }
@@ -141,19 +142,26 @@ function GuiEditor::create( %this )
 
 function GuiEditor::destroy( %this )
 {
+    if(isObject(%this.rootGui))
+    {
+        %this.content.removeIfMember(%this.rootGui);
+    }
 }
 
-function GuiEditor::open(%this)
+function GuiEditor::open(%this, %content)
 {
+    
 }
 
 function GuiEditor::close(%this)
 {
+
 }
 
-function GuiEditor::onNewGui(%this)
+//MENU FUNCTIONS---------------------------------------------------------------
+function GuiEditor::NewGui(%this)
 {
-    %this.rootGui = new GuiControl()
+    %content = new GuiControl()
     {
         HorizSizing = "width";
         VertSizing = "height";
@@ -161,21 +169,57 @@ function GuiEditor::onNewGui(%this)
         Extent = %this.guiPage.getExtent();
         Profile = GuiDefaultProfile;
     };
-    %this.content.add(%this.rootGui);
-    %this.brain.setRoot(%this.rootGui);
-    %this.brain.root = %this.rootGui;
-    %this.explorerWindow.open(%this.rootGui);
-}
-
-//MENU FUNCTIONS---------------------------------------------------------------
-function GuiEditor::NewGui(%this)
-{
-
+    %this.DisplayGuiContent(%content);
 }
 
 function GuiEditor::OpenGui(%this)
 {
-    
+    %path = pathConcat(getMainDotCsDir(), ProjectManager.getProjectFolder());
+	%dialog = new OpenFileDialog()
+	{
+		Filters = "GUI (*.GUI;*.GUI.DSO)|*.GUI;*.GUI.DSO";
+		ChangePath = false;
+		MultipleFiles = false;
+		DefaultFile = "";
+		defaultPath = %path;
+		title = "Open Gui File";
+	};
+	%result = %dialog.execute();
+
+	if ( %result )
+	{
+        exec(%dialog.fileName);
+        if(isObject(%guiContent))
+        {
+            %this.DisplayGuiContent(%guiContent, %dialog.fileName);
+        }
+        else 
+        {
+            EditorCore.alert("Something went wrong while opening the Gui File. Gui Files should be structures with the root object assigned to %guiContent. If this file was made outside of the editor, you can change it manually and then open it in the Gui Editor.");
+        }
+	}
+	// Cleanup
+	%dialog.delete();
+}
+
+function GuiEditor::DisplayGuiContent(%this, %content, %filePath)
+{
+    if(isObject(%this.rootGui))
+    {
+        %this.filePath = "";
+        %this.content.removeIfMember(%this.rootGui);
+        %this.explorerWindow.tree.uninspect();
+        %this.prevGui = %this.rootGui;
+    }
+
+    %this.filePath = %filePath;
+    %this.rootGui = %content;
+    %this.content.add(%content);
+    %this.brain.setRoot(%content);
+    %this.brain.root = %content;
+    %this.explorerWindow.inspect(%content);
+
+    %this.brain.onSelect(%content);
 }
 
 function GuiEditor::SaveGui(%this)

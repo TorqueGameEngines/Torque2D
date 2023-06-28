@@ -395,6 +395,12 @@ void GuiTreeViewCtrl::inspectObject(SimObject* obj)
 	addBranches(treeItem, obj, 1);
 }
 
+void GuiTreeViewCtrl::uninspectObject()
+{
+	clearItems();
+	mRootObject = NULL;
+}
+
 void GuiTreeViewCtrl::addBranches(TreeItem* treeItem, SimObject* obj, U16 level)
 {
 	SimGroup* setObj = dynamic_cast<SimGroup*>(obj);

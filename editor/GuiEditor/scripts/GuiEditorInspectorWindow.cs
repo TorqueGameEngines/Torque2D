@@ -22,6 +22,7 @@ function GuiEditorInspectorWindow::onAdd(%this)
 
     %this.inspector = new GuiInspector()
 	{
+		Class = "GuiEditorInspector";
 		HorizSizing="width";
 		VertSizing="height";
 		Position="0 0";
@@ -81,11 +82,12 @@ function GuiEditorInspectorWindow::onClearInspect(%this, %object)
             %this.inspector.inspect(%this.inspectList.getObject(%count - 1));
         }
     }
-    else 
-    {
-        %this.inspectList.clear();
-        %this.inspector.clear();
-    }
+}
+
+function GuiEditorInspectorWindow::onClearInspectAll(%this)
+{
+	%this.inspectList.clear();
+    %this.inspector.clear();
 }
 
 function GuiEditorInspectorWindow::onAlsoInspect(%this, %object)

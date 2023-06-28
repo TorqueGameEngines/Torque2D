@@ -509,3 +509,9 @@ function EditorCore::finishProjectSelection(%this)
 	ModuleDatabase.LoadExplicit("AppCore", 1);
 	%this.editorKeyMap.bindCmd( "keyboard", "ctrl tilde", "EditorCore.toggleEditor();", "");
 }
+
+function EditorCore::alert(%this, %text)
+{
+	//Eventually this should open a dialog with this text. For now we'll dump it into the console and hope the user notices.
+	warn(%text);
+}
