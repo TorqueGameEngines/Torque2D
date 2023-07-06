@@ -53,13 +53,13 @@ function GuiEditor::create( %this )
 
     %this.brain = new GuiEditCtrl()
     {
-        Profile = "GuiTextEditProfile";
         Class = "GuiEditorBrain";
 		HorizSizing = "width";
         VertSizing = "height";
         Position = "0 0";
         Extent = %this.guiPage.getExtent();
     };
+    ThemeManager.setProfile(%this.brain, "guiEditorProfile");
     %this.guiPage.add(%this.brain);
 
     %this.ctrlListWindow = new GuiWindowCtrl()

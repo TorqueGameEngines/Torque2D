@@ -67,6 +67,7 @@ function BaseTheme::onAdd(%this)
 	%this.makeGraphProfile();
 	%this.makeTextDisplayProfile();
 	%this.makeSubListProfile();
+	%this.makeGuiEditorProfile();
 }
 
 function BaseTheme::init(%this)
@@ -1900,7 +1901,7 @@ function BaseTheme::makeGraphProfile(%this)
 	{
 		padding = 4;
 		border = %this.borderSize;
-		borderColor = %this.color3; //Used for the border as normal
+		borderColor = %this.color1; //Used for the border as normal
 	};
 
 	%this.graphProfile = new GuiControlProfile()
@@ -2004,6 +2005,27 @@ function BaseTheme::makeTextDisplayProfile(%this)
 		borderLeft = %spacerBorder;
 		borderRight = %spacerBorder;
 		borderBottom = %spacerBorder;
+	};
+}
+
+function BaseTheme::makeGuiEditorProfile(%this)
+{
+	%border = new GuiBorderProfile()
+	{
+		border = 1;
+		borderColor = %this.color1; //Used for a single selected nut without key focus
+		borderColorHL = %this.color1; //Used for a multiple selected nuts without key focus
+		borderColorSL = %this.color1; //Used for nuts if the editor has key focus
+	};
+
+	%this.guiEditorProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color4; //Used single selected nuts
+		fillColorHL = %this.color3; //Used for multi selected nuts
+		fillColorSL = %this.color5; //Used for nuts if the editor has key focus
+		fillColorNA = %this.color5; //Used for the add set control and ruler lines
+		
+		borderDefault = %border;
 	};
 }
 

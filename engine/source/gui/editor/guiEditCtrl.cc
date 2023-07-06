@@ -420,31 +420,32 @@ void GuiEditCtrl::drawNuts(RectI &box, ColorI &outlineColor, ColorI &nutColor)
    S32 lx = box.point.x, rx = box.point.x + box.extent.x - 1;
    S32 cx = (lx + rx) >> 1;
    S32 ty = box.point.y, by = box.point.y + box.extent.y - 1;
-   S32 cy = (ty + by) >> 1;
-   ColorF greenLine(0.0f, 1.0f, 0.0f ,0.6f);
-   ColorF lightGreenLine(0.0f, 1.0f, 0.0f, 0.3f);
+   S32 cy = (ty + by) >> 1; 
+   ColorI fillColor = mProfile->getFillColor(DisabledState);
+   ColorI weakColor(fillColor.red, fillColor.green, fillColor.blue, 120);
+   ColorI strongColor(fillColor.red, fillColor.green, fillColor.blue, 200);
    if(lx > 0 && ty > 0)
    {
-      dglDrawLine(0, ty, lx, ty, greenLine);
-      dglDrawLine(lx, 0, lx, ty, greenLine);
+      dglDrawLine(0, ty, lx, ty, weakColor);
+      dglDrawLine(lx, 0, lx, ty, weakColor);
    }
    if(lx > 0 && by > 0)
-      dglDrawLine(0, by, lx, by, greenLine);
+      dglDrawLine(0, by, lx, by, weakColor);
 
    if(rx > 0 && ty > 0)
-      dglDrawLine(rx, 0, rx, ty, greenLine);
+      dglDrawLine(rx, 0, rx, ty, weakColor);
 
    Point2I extent = localToGlobalCoord(mBounds.extent);
 
    if(lx < extent.x && by < extent.y)
-      dglDrawLine(lx, by, lx, extent.y, lightGreenLine);
+      dglDrawLine(lx, by, lx, extent.y, strongColor);
    if(rx < extent.x && by < extent.y)
    {
-      dglDrawLine(rx, by, rx, extent.y, lightGreenLine);
-      dglDrawLine(rx, by, extent.x, by, lightGreenLine);
+      dglDrawLine(rx, by, rx, extent.y, strongColor);
+      dglDrawLine(rx, by, extent.x, by, strongColor);
    }
    if(rx < extent.x && ty < extent.y)
-      dglDrawLine(rx, ty, extent.x, ty, lightGreenLine);
+      dglDrawLine(rx, ty, extent.x, ty, strongColor);
 
    // adjust nuts, so they dont straddle the controls
    lx -= NUT_SIZE;
@@ -489,19 +490,22 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
          cext = mCurrentAddSet->getExtent();
          ctOffset = mCurrentAddSet->localToGlobalCoord(Point2I(0,0));
          RectI box(ctOffset.x, ctOffset.y, cext.x, cext.y);
-
-            box.inset(-5, -5);
-         dglDrawRect(box, ColorI(0, 101, 0,160));
-            box.inset(1,1);
-         dglDrawRect(box, ColorI(0, 101, 0,170));
-            box.inset(1,1);
-         dglDrawRect(box, ColorI(0, 101, 0,180));
-            box.inset(1,1);
-         dglDrawRect(box, ColorI(0, 101, 0,190));
-            box.inset(1,1);
-         dglDrawRect(box, ColorI(0, 101, 0,200));
-			box.inset(1, 1);
-		 dglDrawRect(box, ColorI(0, 101, 0, 220));
+		 ColorI fillColor = mProfile->getFillColor(DisabledState);
+		 bool isRoot = (getCurrentAddSet() == mContentControl);
+		 S32 d = isRoot ? 1 : -1;
+		 if (!isRoot)
+		 {
+			 box.inset(d, d);
+		 }
+         dglDrawRect(box, ColorI(fillColor.red, fillColor.green, fillColor.blue, 200));
+            box.inset(d,d);
+         dglDrawRect(box, ColorI(fillColor.red, fillColor.green, fillColor.blue, 180));
+            box.inset(d,d);
+         dglDrawRect(box, ColorI(fillColor.red, fillColor.green, fillColor.blue, 160));
+            box.inset(d,d);
+         dglDrawRect(box, ColorI(fillColor.red, fillColor.green, fillColor.blue, 140));
+            box.inset(d,d);
+         dglDrawRect(box, ColorI(fillColor.red, fillColor.green, fillColor.blue, 120));
       }
       Vector<GuiControl *>::iterator i;
       bool multisel = mSelectedControls.size() > 1;
@@ -511,10 +515,14 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
          cext = ctrl->getExtent();
          ctOffset = ctrl->localToGlobalCoord(Point2I(0,0));
          RectI box(ctOffset.x,ctOffset.y, cext.x, cext.y);
-         ColorI nutColor = multisel ? ColorI(255,255,255) : ColorI(0,0,0);
-         ColorI outlineColor = multisel ? ColorI(0,0,0) : ColorI(255,255,255);
-         if(!keyFocused)
-            nutColor.set(128,128,128);
+		 auto border = mProfile->getTopBorder();
+         ColorI nutColor = multisel ? mProfile->getFillColor(HighlightState) : mProfile->getFillColor(NormalState);
+         ColorI outlineColor = multisel ? border->getBorderColor(HighlightState) : border->getBorderColor(NormalState);
+         if(keyFocused)
+		 {
+            nutColor = mProfile->getFillColor(SelectedState);
+			outlineColor = border->getBorderColor(SelectedState);
+		 }
 
          drawNuts(box, outlineColor, nutColor);
       }
@@ -523,7 +531,8 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
          RectI b;
          getDragRect(b);
          b.point += offset;
-         dglDrawRect(b, ColorI(255, 255, 255));
+		 ColorI fillColor = mProfile->getFillColor(DisabledState);
+         dglDrawRect(b, fillColor);
       }
    }
 
@@ -555,12 +564,13 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
       AssertFatal(ndot <= maxdot, "dot overflow");
       
       // draw the points.
+	  ColorI fillColor = mProfile->getFillColor(DisabledState);
       glEnableClientState(GL_VERTEX_ARRAY);
       glEnable( GL_BLEND );
       glBlendFunc( GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA );
 
       glVertexPointer(2, GL_FLOAT, 0, dots);
-      glColor4ub(50, 50, 254, 200);
+      glColor4ub(fillColor.red, fillColor.green, fillColor.blue, 200);
       glDrawArrays( GL_POINTS, 0, ndot);
       glDisableClientState(GL_VERTEX_ARRAY);
       glDisable(GL_BLEND);
