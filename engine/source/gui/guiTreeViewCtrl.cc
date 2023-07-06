@@ -24,6 +24,7 @@
 #include "graphics/dgl.h"
 #include "gui/guiDefaultControlRender.h"
 #include "gui/guiCanvas.h"
+#include "gui/editor/guiEditCtrl.h"
 
 #include "guiTreeViewCtrl_ScriptBinding.h"
 
@@ -39,6 +40,8 @@ GuiTreeViewCtrl::GuiTreeViewCtrl()
 	mDragActive = false;
 	mDragIndex = 0;
 	mIsDragLegal = false;
+	mIsBoundToGuiEditor = false;
+	mFocusControl = nullptr;
 }
 
 GuiTreeViewCtrl::~GuiTreeViewCtrl()
@@ -62,12 +65,30 @@ GuiTreeViewCtrl::TreeItem* GuiTreeViewCtrl::grabItemPtr(S32 index)
 void GuiTreeViewCtrl::initPersistFields()
 {
 	Parent::initPersistFields();
+	addField("BindToGuiEditor", TypeBool, Offset(mIsBoundToGuiEditor, GuiTreeViewCtrl));
 }
 
 void GuiTreeViewCtrl::onTouchDown(const GuiEvent& event)
 {
 	mTouchPoint == event.mousePoint;
-	Parent::onTouchDown(event);
+	S32 hitIndex = getHitIndex(event);
+	if (mIsBoundToGuiEditor && smDesignTime && hitIndex == 0)
+	{
+		if (!(event.modifier & SI_CTRL) && !(event.modifier & SI_SHIFT))
+		{
+			clearSelection();
+			GuiEditCtrl* edit = GuiControl::smEditorHandle;
+			if (edit)
+			{
+				GuiControl* root = static_cast<GuiControl*>(mItems[0]->itemData);
+				edit->setCurrentAddSet(root, true);
+			}
+		}
+	}
+	else 
+	{
+		Parent::onTouchDown(event);
+	}
 }
 
 void GuiTreeViewCtrl::onTouchDragged(const GuiEvent& event)
@@ -157,11 +178,38 @@ void GuiTreeViewCtrl::onTouchUp(const GuiEvent& event)
 
 void GuiTreeViewCtrl::onPreRender()
 {
-	
+	if (mIsBoundToGuiEditor && smDesignTime && smEditorHandle)
+	{
+		GuiEditCtrl* edit = GuiControl::smEditorHandle;
+		if (edit)
+		{
+			const GuiControl* oldFocus = mFocusControl;
+			mFocusControl = edit->getCurrentAddSet();
+			if(oldFocus != mFocusControl)
+			{
+				for (S32 i = 0; i < mItems.size(); i++)
+				{
+					LBItem* item = mItems[i];
+					TreeItem* treeItem = dynamic_cast<TreeItem*>(item);
+					SimObject* obj = static_cast<SimObject*>(item->itemData);
+					if (obj && obj->getId() == mFocusControl->getId())
+					{
+						treeItem->isSelected = false;
+						if(!treeItem->isOpen)
+						{
+							treeItem->isOpen = true;
+							refreshTree();
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 void GuiTreeViewCtrl::onRender(Point2I offset, const RectI& updateRect)
 {
+	mFocusLevel = -1;
 	RectI clip = dglGetClipRect();
 	if (mFitParentWidth && (mBounds.extent.x != clip.extent.x || mItemSize.x != clip.extent.x))
 	{
@@ -186,8 +234,19 @@ void GuiTreeViewCtrl::onRender(Point2I offset, const RectI& updateRect)
 
 		if(!treeItem || treeItem->isVisible)
 		{
+			if (mFocusLevel >= 0 && mFocusLevel >= treeItem->level)
+			{
+				mFocusLevel = -1;
+			}
+
 			// Render our item
 			onRenderItem(itemRect, mItems[i]);
+
+			if (mItems[i]->ID == mFocusControl->getId())
+			{
+				mFocusLevel = treeItem->level;
+			}
+
 			if (mDragActive && j == mDragIndex)
 			{
 				dragRect = RectI(itemRect);
@@ -217,6 +276,7 @@ void GuiTreeViewCtrl::onRenderItem(RectI& itemRect, LBItem* item)
 	{
 		cursorPt = root->getCursorPos();
 	}
+	bool isFocus = obj == mFocusControl;
 	GuiControlState currentState = GuiControlState::NormalState;
 	if (!mActive || !item->isActive)
 		currentState = GuiControlState::DisabledState;
@@ -238,6 +298,23 @@ void GuiTreeViewCtrl::onRenderItem(RectI& itemRect, LBItem* item)
 	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, currentState, mProfile);
 	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, currentState, mProfile);
 
+	//indent to the focus level
+	if(mFocusLevel >= 0)
+	{
+		contentRect.point.x += (mFocusLevel * contentRect.extent.y);
+		contentRect.extent.x -= (mFocusLevel * contentRect.extent.y);
+
+		//convert this space to a line by crushing down the sides
+		S32 crush = mRound((contentRect.extent.y - 2) / 2);
+		RectI line = RectI(contentRect.point.x + crush, contentRect.point.y, 2, contentRect.extent.y);
+		ColorI lineColor = currentState == SelectedState ? mProfile->getFillColor(NormalState) : mProfile->getFillColor(SelectedState);
+		dglDrawRectFill(line, lineColor);
+
+		//Remove indent
+		contentRect.point.x -= (mFocusLevel * contentRect.extent.y);
+		contentRect.extent.x += (mFocusLevel * contentRect.extent.y);
+	}
+
 	// Indent by level
 	contentRect.point.x += (treeItem->level * contentRect.extent.y);
 	contentRect.extent.x -= (treeItem->level * contentRect.extent.y);
@@ -253,6 +330,10 @@ void GuiTreeViewCtrl::onRenderItem(RectI& itemRect, LBItem* item)
 			RectI drawArea = RectI(contentRect.point.x, contentRect.point.y, contentRect.extent.y, contentRect.extent.y);
 			treeItem->triangleArea.set(drawArea.point, drawArea.extent);
 			ColorI color = mProfile->getFontColor(currentState);
+			if (isFocus)
+			{
+				color = mProfile->getFillColor(SelectedState);
+			}
 			renderTriangleIcon(drawArea, color, treeItem->isOpen ? GuiDirection::Down : GuiDirection::Right, 8);
 		}
 	}
@@ -490,6 +571,15 @@ StringTableEntry GuiTreeViewCtrl::getObjectText(SimObject* obj)
 	char buffer[1024];
 	if (obj)
 	{
+		if (isMethod("onGetObjectText"))
+		{
+			const char* text = Con::executef(this, 2, "onGetObjectText", Con::getIntArg(obj->getId()));
+			StringTableEntry name = StringTable->insert(text, true);
+			if (name != StringTable->EmptyString)
+			{
+				return name;
+			}
+		}
 		const char* pObjName = obj->getName();
 		const char* pInternalName = obj->getInternalName();
 		if (pObjName != NULL)

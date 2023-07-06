@@ -116,7 +116,7 @@ ConsoleMethod( GuiEditCtrl, select, void, 3, 3, "(GuiControl ctrl) Finds and sel
    if(!Sim::findObject(argv[2], ctrl))
       return;
 
-   object->setSelection(ctrl, false);
+   object->setSelection(ctrl);
 }
 
 ConsoleMethod( GuiEditCtrl, setCurrentAddSet, void, 3, 3, "(GuiControl ctrl) Set the current control set in which controls are added.\n"
@@ -195,12 +195,11 @@ ConsoleMethod( GuiEditCtrl, loadSelection, void, 3, 3, "(string fileName) Loads 
    object->loadSelection(argv[2]);
 }
 
-ConsoleMethod( GuiEditCtrl, selectAll, void, 2, 2, "() Selects all controls in list\n"
-              "@return No return value.")
+ConsoleMethod(GuiEditCtrl, selectAll, void, 2, 2, "() Selects all controls\n"
+	"@return No return value.")
 {
-   object->selectAll();
+	object->selectAll();
 }
-
 
 ConsoleMethod( GuiEditCtrl, getSelected, S32, 2, 2, "() Gets the GUI control(s) the editor is currently selecting\n"
               "@return Returns the ID of the control.")
@@ -291,7 +290,7 @@ void GuiEditCtrl::setEditMode(bool value)
    Con::executef(this, 1, "onClearSelected");
    mSelectedControls.clear();
    if (mActive && mAwake)
-      mCurrentAddSet = NULL;
+      mCurrentAddSet = mContentControl;
 }
 
 void GuiEditCtrl::setCurrentAddSet(GuiControl *ctrl, bool clearSelection)
@@ -315,11 +314,15 @@ const GuiControl* GuiEditCtrl::getCurrentAddSet() const
 void GuiEditCtrl::clearSelection(void)
 {
    mSelectedControls.clear();
+   if (isMethod("onClearSelected"))
+   {
+	   Con::executef(this, 1, "onClearSelected");
+   }
 }
-void GuiEditCtrl::setSelection(GuiControl *ctrl, bool inclusive)
+void GuiEditCtrl::setSelection(GuiControl *ctrl)
 {
    //sanity check
-   if (! ctrl)
+   if (!ctrl)
       return;
 
    if(mContentControl == ctrl)
@@ -334,7 +337,7 @@ void GuiEditCtrl::setSelection(GuiControl *ctrl, bool inclusive)
       GuiControl *newAddSet = ctrl->getParent();
 
       //see if we should clear the old selection set
-      if (newAddSet != mCurrentAddSet || (! inclusive)) {
+      if (newAddSet != mCurrentAddSet) {
          Con::executef(this, 1, "onClearSelected");
          mSelectedControls.clear();
       }
@@ -1339,19 +1342,27 @@ void GuiEditCtrl::saveSelection(const char* filename)
 
 void GuiEditCtrl::selectAll()
 {
-   GuiControl::iterator i;
-   if (!mCurrentAddSet)
-      return;
-   Con::executef(this, 1, "onClearSelected");
-   mSelectedControls.clear();
-   for(i = mCurrentAddSet->begin(); i != mCurrentAddSet->end(); i++)
-   {
-      GuiControl *ctrl = dynamic_cast<GuiControl *>(*i);
-      //if (!(ctrl->isLocked())) {
-         mSelectedControls.push_back(ctrl);
-         Con::executef(this, 2, "onAddSelected", Con::getIntArg(ctrl->getId()));
-      //}
-   }
+	if (!mCurrentAddSet)
+		return;
+
+	mSelectedControls.clear();
+	if (isMethod("onClearSelected"))
+	{
+		Con::executef(this, 1, "onClearSelected");
+	}
+
+	for (GuiControl::iterator i = mCurrentAddSet->begin(); i != mCurrentAddSet->end(); i++)
+	{
+		GuiControl* ctrl = dynamic_cast<GuiControl*>(*i);
+		if (ctrl)
+		{
+			mSelectedControls.push_back(ctrl);
+			if(isMethod("onAddSelected"))
+			{
+				Con::executef(this, 2, "onAddSelected", Con::getIntArg(ctrl->getId()));
+			}
+		}
+	}
 }
 
 void GuiEditCtrl::bringToFront()

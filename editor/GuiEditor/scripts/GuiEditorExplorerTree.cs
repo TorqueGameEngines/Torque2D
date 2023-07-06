@@ -50,3 +50,12 @@ function GuiEditorExplorerTree::onPostApply(%this, %obj)
         %this.refreshItemText(%index);
     }
 }
+
+function GuiEditorExplorerTree::onGetObjectText(%this, %obj)
+{
+    if(%obj == GuiEditor.rootGui)
+    {
+        return "Canvas Simulation";
+    }
+    return "";
+}

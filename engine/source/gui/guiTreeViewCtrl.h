@@ -35,6 +35,7 @@ private:
 	class TreeItem;
 
 	enum class ReorderMethod { Above, Below, Insert };
+	S32 mFocusLevel;
 
 protected:
 	SimObjectPtr<SimObject> mRootObject;
@@ -44,6 +45,8 @@ protected:
 	S32 mDragIndex;
 	bool mIsDragLegal;
 	ReorderMethod mReorderMethod;
+	bool mIsBoundToGuiEditor;
+	const GuiControl* mFocusControl;
 
 public:
 	GuiTreeViewCtrl();

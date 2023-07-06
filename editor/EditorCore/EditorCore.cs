@@ -249,13 +249,13 @@ function EditorCore::initGui(%this)
 
 			new GuiMenuItemCtrl() {
 				Text = "Select All";
-				Command = "GuiEditor.brain.SelectAll;";
+				Command = "GuiEditor.brain.SelectAll();";
 				Accelerator = "Ctrl A";
 			};
 			new GuiMenuItemCtrl() {
 				Text = "Deselect";
 				Command = "GuiEditor.brain.clearSelection();";
-				Accelerator = "Esc";
+				Accelerator = "Ctrl D";
 			};
 		};
 		new GuiMenuItemCtrl() {

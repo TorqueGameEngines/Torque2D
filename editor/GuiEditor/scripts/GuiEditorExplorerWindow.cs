@@ -26,8 +26,9 @@ function GuiEditorExplorerWindow::onAdd(%this)
 		VertSizing="height";
 		Position="0 0";
 		Extent="228 355";
+		BindToGuiEditor="1";
 	};
-	ThemeManager.setProfile(%this.tree, "listboxProfile");
+	ThemeManager.setProfile(%this.tree, "treeViewProfile");
 	%this.scroller.add(%this.tree);
 	%this.tree.startListening(GuiEditor.inspectorWindow.inspector);
 }

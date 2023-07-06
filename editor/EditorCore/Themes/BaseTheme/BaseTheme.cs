@@ -63,6 +63,7 @@ function BaseTheme::onAdd(%this)
 	%this.makeDropDownProfile();
 	%this.makeWindowProfile();
 	%this.makeListBoxProfile();
+	%this.makeTreeViewProfile();
 	%this.makeGraphProfile();
 	%this.makeTextDisplayProfile();
 	%this.makeSubListProfile();
@@ -1863,6 +1864,33 @@ function BaseTheme::makeListBoxProfile(%this)
 		fontColorNA = %this.adjustValue(%this.color4, -30);
 
 		borderDefault = %borderProfile;
+	};
+}
+
+function BaseTheme::makeTreeViewProfile(%this)
+{
+	%this.treeViewProfile = new GuiControlProfile ()
+	{
+	    // fill color
+	    fillColor = %this.adjustValue(%this.color1, 2);
+	    fillColorHL = %this.adjustValue(%this.color1, 4);
+	    fillColorSL = %this.color5;
+	    fillColorNA = %this.setAlpha(%this.color1, 150);
+		align = left;
+		vAlign = middle;
+
+		tab = false;
+		canKeyFocus = true;
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 2;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 20);
+		fontColorSL = %this.adjustValue(%this.color1, 2);
+		fontColorNA = %this.adjustValue(%this.color4, -30);
+
+		borderDefault = %this.emptyBorder;
 	};
 }
 
