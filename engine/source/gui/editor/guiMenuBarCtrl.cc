@@ -311,13 +311,28 @@ void GuiMenuBarCtrl::ApplyMenuSettings()
 	for (i = begin(); i != end(); i++)
 	{
 		GuiMenuItemCtrl *ctrl = static_cast<GuiMenuItemCtrl *>(*i);
-		if (ctrl->isVisible() && ctrl->isActive() && ctrl->mHasGoodChildren)
-		{
-			ctrl->ApplyMenuSettings();
-		}
+		ctrl->ApplyMenuSettings();
 		ctrl->setControlProfile(mMenuProfile);
 	}
 	setUpdate();
+}
+
+void GuiMenuBarCtrl::setMenuActive(const char* name, bool isActive)
+{
+	iterator i;
+	for (i = begin(); i != end(); i++)
+	{
+		GuiMenuItemCtrl* ctrl = static_cast<GuiMenuItemCtrl*>(*i);
+		StringTableEntry ctrlName = StringTable->insert(ctrl->getText(), true);
+		StringTableEntry target = StringTable->insert(name, true);
+		if (ctrlName == target)
+		{
+			ctrl->setActive(isActive);
+		}
+		ctrl->setMenuActive(target, isActive);
+		ctrl->ApplyMenuSettings();
+		ctrl->setControlProfile(mMenuProfile);
+	}
 }
 
 void GuiMenuBarCtrl::acceleratorKeyPress(U32 index)
@@ -792,10 +807,7 @@ void GuiMenuItemCtrl::ApplyMenuSettings()
 	for (i = begin(); i != end(); i++)
 	{
 		GuiMenuItemCtrl *ctrl = static_cast<GuiMenuItemCtrl *>(*i);
-		if (ctrl->isVisible() && ctrl->isActive() && ctrl->mHasGoodChildren)
-		{
-			ctrl->ApplyMenuSettings();
-		}
+		ctrl->ApplyMenuSettings();
 	}
 	setControlProfile(mMenuBar->mMenuItemProfile);
 }
@@ -1006,6 +1018,21 @@ bool GuiMenuItemCtrl::onKeyDown(const GuiEvent &event)
 			mList->processMenuItem(mList->mHoveredItem);
 		}
 		return true;
+	}
+}
+
+void GuiMenuItemCtrl::setMenuActive(StringTableEntry name, bool isActive)
+{
+	iterator i;
+	for (i = begin(); i != end(); i++)
+	{
+		GuiMenuItemCtrl* ctrl = static_cast<GuiMenuItemCtrl*>(*i);
+		StringTableEntry ctrlName = StringTable->insert(ctrl->getText(), true);
+		if (ctrlName == name)
+		{
+			ctrl->setActive(isActive);
+		}
+		ctrl->setMenuActive(name, isActive);
 	}
 }
 #pragma endregion

@@ -93,6 +93,7 @@ function EditorCore::initGui(%this)
 		};
 		new GuiMenuItemCtrl() {
 			Text = "File";
+			Active = "0";
 
 			new GuiMenuItemCtrl() {
 				Text = "New Gui...";
@@ -113,6 +114,7 @@ function EditorCore::initGui(%this)
 		};
 		new GuiMenuItemCtrl() {
 			Text = "Edit";
+			Active = "0";
 
 			new GuiMenuItemCtrl() {
 				Text = "Undo";
@@ -143,6 +145,7 @@ function EditorCore::initGui(%this)
 		};
 		new GuiMenuItemCtrl() {
 			Text = "Layout";
+			Active = "0";
 
 			new GuiMenuItemCtrl() {
 				Text = "Nudge Up";
@@ -246,6 +249,7 @@ function EditorCore::initGui(%this)
 		};
 		new GuiMenuItemCtrl() {
 			Text = "Select";
+			Active = "0";
 
 			new GuiMenuItemCtrl() {
 				Text = "Select All";

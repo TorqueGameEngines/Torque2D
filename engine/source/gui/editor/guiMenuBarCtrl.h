@@ -71,6 +71,7 @@ public:
    void openMenu();
    void closeMenu();
    void ApplyMenuSettings();
+   void setMenuActive(const char* name, bool isActive);
 
    bool mUseKeyMode;
    virtual void acceleratorKeyPress(U32 index);
@@ -171,6 +172,7 @@ public:
 	virtual void turnOffPrevRadio();
 	virtual void turnOffNextRadio();
 	virtual bool onKeyDown(const GuiEvent &event);
+	void setMenuActive(StringTableEntry name, bool isActive);
 };
 
 class GuiMenuBGCtrl : public GuiControl

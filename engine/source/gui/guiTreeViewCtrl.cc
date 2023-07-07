@@ -582,12 +582,27 @@ StringTableEntry GuiTreeViewCtrl::getObjectText(SimObject* obj)
 		}
 		const char* pObjName = obj->getName();
 		const char* pInternalName = obj->getInternalName();
-		if (pObjName != NULL)
-			dSprintf(buffer, sizeof(buffer), "%d: %s - %s", obj->getId(), obj->getClassName(), pObjName);
-		else if (pInternalName != NULL)
-			dSprintf(buffer, sizeof(buffer), "%d: %s [%s]", obj->getId(), obj->getClassName(), pInternalName);
-		else
-			dSprintf(buffer, sizeof(buffer), "%d: %s", obj->getId(), obj->getClassName());
+		GuiControl* ctrl = dynamic_cast<GuiControl*>(obj);
+		const char* theText = ctrl ? ctrl->getText() : "";
+		StringTableEntry textEntry = StringTable->insert(theText, true);
+		if(textEntry == StringTable->EmptyString)
+		{
+			if (pObjName != NULL)
+				dSprintf(buffer, sizeof(buffer), "%d: %s - %s", obj->getId(), obj->getClassName(), pObjName);
+			else if (pInternalName != NULL)
+				dSprintf(buffer, sizeof(buffer), "%d: %s [%s]", obj->getId(), obj->getClassName(), pInternalName);
+			else
+				dSprintf(buffer, sizeof(buffer), "%d: %s", obj->getId(), obj->getClassName());
+		}
+		else 
+		{
+			if (pObjName != NULL)
+				dSprintf(buffer, sizeof(buffer), "%d: %s \"%s\" - %s", obj->getId(), obj->getClassName(), textEntry, pObjName);
+			else if (pInternalName != NULL)
+				dSprintf(buffer, sizeof(buffer), "%d: %s \"%s\" [%s]", obj->getId(), obj->getClassName(), textEntry, pInternalName);
+			else
+				dSprintf(buffer, sizeof(buffer), "%d: %s \"%s\"", obj->getId(), obj->getClassName(), textEntry);
+		}
 	}
 
 	return StringTable->insert(buffer, true);

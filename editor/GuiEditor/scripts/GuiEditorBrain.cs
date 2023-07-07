@@ -66,31 +66,37 @@ function GuiEditorBrain::onSelect(%this, %ctrl)
 	%this.clearSelection();
 	%this.select(%ctrl);
     %this.postEvent("Inspect", %ctrl);
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onRemoveSelected(%this,%ctrl)
 {
     %this.postEvent("ClearInspect", %ctrl);
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onClearSelected(%this)
 {
     %this.postEvent("ClearInspectAll");
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onAddSelected(%this, %ctrl)
 {
     %this.postEvent("AlsoInspect", %ctrl);
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onDelete(%this)
 {
 	%this.postEvent("ObjectRemoved", %ctrl);
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onSelectionParentChange(%this, %parent)
 {
     %this.postEvent("ParentChange", %parent);
+    %this.toggleDeselect();
 }
 
 //Receiving Callbacks - Events that happened at other controls and need to be reflected with this control.
@@ -100,6 +106,7 @@ function GuiEditorBrain::onInspect(%this, %ctrl)
     %this.clearSelection();
 	%this.select(%ctrl);
     %this.endRadioSilence();
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onAlsoInspect(%this, %ctrl)
@@ -107,6 +114,7 @@ function GuiEditorBrain::onAlsoInspect(%this, %ctrl)
     %this.startRadioSilence();
 	%this.addSelection(%ctrl);
     %this.endRadioSilence();
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onClearInspect(%this, %ctrl)
@@ -114,6 +122,7 @@ function GuiEditorBrain::onClearInspect(%this, %ctrl)
     %this.startRadioSilence();
 	%this.removeSelection(%ctrl);
     %this.endRadioSilence();
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onClearInspectAll(%this)
@@ -121,6 +130,7 @@ function GuiEditorBrain::onClearInspectAll(%this)
     %this.startRadioSilence();
 	%this.clearSelection();
     %this.endRadioSilence();
+    %this.toggleDeselect();
 }
 
 function GuiEditorBrain::onObjectRemoved(%this, %ctrl)
@@ -128,4 +138,10 @@ function GuiEditorBrain::onObjectRemoved(%this, %ctrl)
     %this.startRadioSilence();
 	%this.deleteSelection();
     %this.endRadioSilence();
+    %this.toggleDeselect();
+}
+
+function GuiEditorBrain::toggleDeselect(%this)
+{
+    EditorCore.menuBar.setMenuActive("Deselect", %this.getSelected().getCount() != 0);
 }

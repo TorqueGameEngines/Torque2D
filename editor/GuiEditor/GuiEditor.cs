@@ -150,12 +150,18 @@ function GuiEditor::destroy( %this )
 
 function GuiEditor::open(%this, %content)
 {
-    
+    EditorCore.menuBar.setMenuActive("File", true);
+    EditorCore.menuBar.setMenuActive("Edit", true);
+    EditorCore.menuBar.setMenuActive("Layout", true);
+    EditorCore.menuBar.setMenuActive("Select", true);
 }
 
 function GuiEditor::close(%this)
 {
-
+    EditorCore.menuBar.setMenuActive("File", false);
+    EditorCore.menuBar.setMenuActive("Edit", false);
+    EditorCore.menuBar.setMenuActive("Layout", false);
+    EditorCore.menuBar.setMenuActive("Select", false);
 }
 
 //MENU FUNCTIONS---------------------------------------------------------------

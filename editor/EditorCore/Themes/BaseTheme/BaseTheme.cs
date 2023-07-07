@@ -1459,7 +1459,7 @@ function BaseTheme::makeMenuProfile(%this)
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color4;
-		fontColorNA = %this.adjustValue(%this.color4, 100);
+		fontColorNA = %this.setAlpha(%this.color4, 100);
 
 		canKeyFocus = true;
 	};

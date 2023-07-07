@@ -511,72 +511,48 @@ function TorqueSuitTheme::makeConsoleProfile(%this)
 
 function TorqueSuitTheme::makeMenuProfile(%this)
 {
-	%menuBarBorder = new GuiBorderProfile()
-	{
-		padding = 2;
-	};
-
 	%this.menuBarProfile = new GuiControlProfile()
 	{
 		fillColor = %this.adjustValue(%this.color1, -7);
 		canKeyFocus = true;
-		borderDefault = %menuBarBorder;
+		borderDefault = %this.emptyBorder;
 	};
 
 	%menuBorder = new GuiBorderProfile()
 	{
-		margin = 2;
-		marginHL = 0;
-		marginSL = 0;
-		marginNA = 2;
-
-		border = 0;
-		borderHL = 2;
-		borderSL = 2;
-		borderNA = 0;
-
-		borderColorHL = "255 255 255 30";
-		borderColorSL = %this.color5;
+		padding = 3;
+		paddingHL = 3;
+		paddingSL = 3;
+		paddingNA = 3;
 	};
 
 	%menuBottomBorder = new GuiBorderProfile()
 	{
-		paddingSL = 2;
-
-		margin = 2;
-		marginHL = 0;
-		marginSL = 0;
-		marginNA = 2;
+		padding = 3;
+		paddingHL = 1;
+		paddingSL = 3;
+		paddingNA = 3;
 
 		border = 0;
 		borderHL = 2;
-		borderSL = 2;
+		borderSL = 0;
 		borderNA = 0;
 
-		borderColorHL = "255 255 255 30";
-		borderColorSL = %this.color5;
+		borderColorHL = %this.color5;
 	};
 
 	%menuSideBorder = new GuiBorderProfile()
 	{
-		border = 0;
-		borderHL = 2;
-		borderSL = 2;
-		borderNA = 0;
-
-		padding = 10;
-		paddingHL = 8;
-		paddingSL = 8;
-		paddingNA = 10;
-
-		borderColorHL = "255 255 255 30";
-		borderColorSL = %this.color5;
+		padding = 14;
+		paddingHL = 14;
+		paddingSL = 14;
+		paddingNA = 14;
 	};
 
 	%this.menuProfile = new GuiControlProfile()
 	{
 		fillColor = "0 0 0 0";
-		fillColorHL = "255 255 255 10";
+		fillColorHL = %this.color2;
 		fillColorSL = %this.adjustValue(%this.color5, -15);
 		fillColorNA = "0 0 0 0";
 
@@ -587,12 +563,12 @@ function TorqueSuitTheme::makeMenuProfile(%this)
 
 		fontType = %this.font[3];
 		fontDirectory = %this.fontDirectory;
-		fontSize = %this.fontSize;
+		fontSize = %this.fontSize + 2;
 
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color4, 10);
 		fontColorSL = %this.color1;
-		fontColorNA = %this.adjustValue(%this.color4, 100);
+		fontColorNA = %this.color2;
 
 		canKeyFocus = true;
 	};
@@ -660,7 +636,7 @@ function TorqueSuitTheme::makeMenuProfile(%this)
 	{
 		fillColor = %this.adjustValue(%this.color1, -5);
 		fillColorHL = %this.adjustValue(%this.color5, -15);
-		fillColorNA = %this.color1;
+		fillColorNA = %this.adjustValue(%this.color1, -5);
 		align = left;
 
 		tab = false;
@@ -668,11 +644,11 @@ function TorqueSuitTheme::makeMenuProfile(%this)
 
 		fontType = %this.font[3];
 		fontDirectory = %this.fontDirectory;
-		fontSize = %this.fontSize;
+		fontSize = %this.fontSize + 2;
 
 		fontColor = %this.color4;
 		fontColorHL = %this.adjustValue(%this.color1, 10);
-		fontColorNA = %this.setAlpha(%this.color1, 150);
+		fontColorNA = %this.color2;
 
 		borderDefault = %menuItemBorderSide;
 		borderTop = %menuItemBorderTop;
@@ -733,5 +709,32 @@ function TorqueSuitTheme::makeListBoxProfile(%this)
 
 		borderDefault = %borderProfile;
 		borderLeft = %leftBorderProfile;
+	};
+}
+
+function TorqueSuitTheme::makeTreeViewProfile(%this)
+{
+	%this.treeViewProfile = new GuiControlProfile ()
+	{
+	    // fill color
+	    fillColor = %this.adjustValue(%this.color1, 2);
+	    fillColorHL = %this.adjustValue(%this.color1, 4);
+	    fillColorSL = %this.color5;
+	    fillColorNA = %this.setAlpha(%this.color1, 150);
+		align = left;
+		vAlign = middle;
+
+		tab = false;
+		canKeyFocus = true;
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 4;
+		fontColor = %this.color4;
+		fontColorHL = %this.adjustValue(%this.color4, 20);
+		fontColorSL = %this.adjustValue(%this.color1, 2);
+		fontColorNA = %this.adjustValue(%this.color4, -30);
+
+		borderDefault = %this.emptyBorder;
 	};
 }

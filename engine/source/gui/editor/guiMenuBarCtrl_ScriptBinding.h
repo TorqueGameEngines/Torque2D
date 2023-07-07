@@ -106,4 +106,20 @@ ConsoleMethodWithDocs(GuiMenuBarCtrl, setArrowProfile, ConsoleVoid, 3, 3, (GuiCo
 		object->setControlArrowProfile(profile);
 }
 
+/*! Sets a menu item to active or inactive based on a name.
+	@param menuName The name of the menu that should be enabled or disabled. If multiple menu items have the same name they will all be enabled or disabled. Case sensative.
+	@param isActive True if the menu should be enabled. False if it is disabled.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiMenuBarCtrl, setMenuActive, ConsoleVoid, 4, 4, ("string menuName, bool isActive"))
+{
+	if (argc != 4)
+	{
+		Con::warnf("GuiMenuBarCtrl::setMenuActive() - Invalid number of parameters! Should be (string menuName, bool isActive).");
+		return;
+	}
+
+	object->setMenuActive(argv[2], dAtob(argv[3]));
+}
+
 ConsoleMethodGroupEndWithDocs(GuiMenuBarCtrl)
