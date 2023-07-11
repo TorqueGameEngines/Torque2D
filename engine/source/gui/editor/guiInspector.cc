@@ -942,7 +942,7 @@ bool GuiInspectorDynamicGroup::createContent()
 
       char commandBuf[64];
       dSprintf(commandBuf, 64, "%d.addDynamicField();", this->getId());
-      addFieldBtn->setField("profile", "GuiButtonDynProfile");
+      addFieldBtn->setField("profile", "GuiButtonProfile");
       addFieldBtn->setField("command", commandBuf);
       addFieldBtn->setField("text", "+");
       addFieldBtn->setExtent(Point2I(30, 30));
@@ -1233,7 +1233,7 @@ GuiControl* GuiInspectorDynamicField::constructRenameControl()
    {
       dSprintf(szBuffer, 512, "%d.%s = \"\";%d.inspectGroup();", mTarget->getId(), getFieldName(), mGroup->getId());
 
-      delButt->setField("profile", "GuiButtonDynProfile");
+      delButt->setField("profile", "GuiButtonProfile");
       delButt->setField("Text", "X");
       delButt->setPosition(Point2I((getExtent().x - 40), 0));
       delButt->setField("extent", "30 30");

@@ -107,11 +107,6 @@ function GuiEditorSaveGuiDialog::Validate(%this)
 	%folderPath = %this.getFolderPath();
 	%guiName = %this.guiNameBox.getText();
 
-	if(%this.folderBox.getText() $= "")
-	{
-		%this.folderBox.setText(mgetMainDotCsDir());
-	}
-
 	if(%folderPath !$= %this.prevFolder)
 	{
 		%modSig = EditorCore.findModuleOfPath(%folderPath @ "a.txt");

@@ -75,6 +75,7 @@ void GuiInspectorTypeEnum::consoleInit()
 
 void GuiInspectorTypeEnum::updateValue( StringTableEntry newValue )
 {
+	newValue = StringTable->insert(newValue, true);//despite the type already being a StringTableEntry, sometimes plain const char* are sent instead.
 	GuiDropDownCtrl *ctrl = dynamic_cast<GuiDropDownCtrl*>( mEdit );
 	if (ctrl != NULL)
 	{
@@ -196,7 +197,11 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl(S32 width)
       GuiControlProfile * profile = dynamic_cast<GuiControlProfile *>(*i);
       if(profile && profile->getName())
       {
-         entries.push_back(profile->getName());
+		StringTableEntry name = StringTable->insert(profile->getName());
+		if(name != StringTable->EmptyString)
+		{
+			entries.push_back(name);
+		}
       }
    }
 
@@ -259,10 +264,14 @@ GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl(S32 width)
    for (SimGroup::iterator i = grp->begin(); i != grp->end(); i++)
    {
       GuiBorderProfile * profile = dynamic_cast<GuiBorderProfile *>(*i);
-      if (profile)
-      {
-         entries.push_back(profile->getName());
-      }
+	  if (profile && profile->getName())
+	  {
+		  StringTableEntry name = StringTable->insert(profile->getName());
+		  if (name != StringTable->EmptyString)
+		  {
+			  entries.push_back(name);
+		  }
+	  }
    }
 
    retCtrl->getList()->sortByText();

@@ -42,8 +42,11 @@ function GuiEditorExplorerWindow::onInspect(%this, %ctrl)
 {
 	%this.tree.startRadioSilence();
 	%index = %this.tree.findItemID(%ctrl.getID());
-	%this.tree.clearSelection();
-	%this.tree.setSelected(%index, true);
+	if(%index != -1)
+	{
+		%this.tree.clearSelection();
+		%this.tree.setSelected(%index, true);
+	}
 	%this.tree.endRadioSilence();
 }
 
@@ -51,14 +54,21 @@ function GuiEditorExplorerWindow::onAlsoInspect(%this, %ctrl)
 {
 	%this.tree.startRadioSilence();
 	%index = %this.tree.findItemID(%ctrl.getID());
-	%this.tree.setSelected(%index, true);
+	if(%index != -1)
+	{
+		%this.tree.setSelected(%index, true);
+	}
 	%this.tree.endRadioSilence();
 }
 
 function GuiEditorExplorerWindow::onClearInspect(%this, %ctrl)
 {
 	%this.tree.startRadioSilence();
-	%this.tree.setSelected(%ctrl, false);
+	%index = %this.tree.findItemID(%ctrl.getID());
+	if(%index != -1)
+	{
+		%this.tree.setSelected(%ctrl, false);
+	}
 	%this.tree.endRadioSilence();
 }
 

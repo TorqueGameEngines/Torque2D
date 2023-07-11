@@ -56,7 +56,6 @@ function GuiEditorControlListWindow::populate(%this)
             getSubStr(%field, 0, 12) !$= "GuiInspector" && %field !$= "GuiMessageVectorCtrl" &&
             %field !$= "GuiParticleGraphInspector" && %field !$= "GuiGraphCtrl" && %field !$= "GuiSceneObjectCtrl")
         {
-			echo("adding item "@ %field);
 		    %this.listBox.addItem(%field);
         }
 	}
