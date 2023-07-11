@@ -876,17 +876,19 @@ bool GuiListBoxCtrl::onKeyDown(const GuiEvent &event)
 	case KEY_RETURN:
 		if (mAltConsoleCommand[0])
 			Con::evaluate(mAltConsoleCommand, false);
-		break;
+		return true;
 	case KEY_LEFT:
 	case KEY_UP:
 		if (index == -1)
 		{
 			//Select the bottom item
 			addSelection(mItems.size() - 1);
+			return true;
 		}
 		else if(index != 0)
 		{
 			addSelection(index - 1);
+			return true;
 		}
 		break;
 	case KEY_DOWN:
@@ -895,26 +897,29 @@ bool GuiListBoxCtrl::onKeyDown(const GuiEvent &event)
 		{
 			//Select the top item
 			addSelection(0);
+			return true;
 		}
 		else if (index != (mItems.size() - 1))
 		{
 			addSelection(index + 1);
+			return true;
 		}
 		break;
 	case KEY_HOME:
 		addSelection(0);
-		break;
+		return true;
 	case KEY_END:
 		addSelection(mItems.size() - 1);
-		break;
+		return true;
 	case KEY_DELETE:
 		if (index != -1 && isMethod("onDeleteKey"))
 			Con::executef(caller, 4, "onDeleteKey", Con::getIntArg(index), getItemText(index), Con::getIntArg(getItemID(index)));
-		break;
+
+		return true;
 	default:
-		return(Parent::onKeyDown(event));
-		break;
+		return Parent::onKeyDown(event);
 	};
+	return false;
 }
 #pragma endregion
 

@@ -66,37 +66,37 @@ function GuiEditorBrain::onSelect(%this, %ctrl)
 	%this.clearSelection();
 	%this.select(%ctrl);
     %this.postEvent("Inspect", %ctrl);
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onRemoveSelected(%this,%ctrl)
 {
     %this.postEvent("ClearInspect", %ctrl);
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onClearSelected(%this)
 {
     %this.postEvent("ClearInspectAll");
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onAddSelected(%this, %ctrl)
 {
     %this.postEvent("AlsoInspect", %ctrl);
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onDelete(%this)
 {
-	%this.postEvent("ObjectRemoved", %ctrl);
-    %this.toggleDeselect();
+	%this.postEvent("ObjectRemoved");
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onSelectionParentChange(%this, %parent)
 {
     %this.postEvent("ParentChange", %parent);
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 //Receiving Callbacks - Events that happened at other controls and need to be reflected with this control.
@@ -106,7 +106,7 @@ function GuiEditorBrain::onInspect(%this, %ctrl)
     %this.clearSelection();
 	%this.select(%ctrl);
     %this.endRadioSilence();
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onAlsoInspect(%this, %ctrl)
@@ -114,7 +114,7 @@ function GuiEditorBrain::onAlsoInspect(%this, %ctrl)
     %this.startRadioSilence();
 	%this.addSelection(%ctrl);
     %this.endRadioSilence();
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onClearInspect(%this, %ctrl)
@@ -122,7 +122,7 @@ function GuiEditorBrain::onClearInspect(%this, %ctrl)
     %this.startRadioSilence();
 	%this.removeSelection(%ctrl);
     %this.endRadioSilence();
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onClearInspectAll(%this)
@@ -130,7 +130,7 @@ function GuiEditorBrain::onClearInspectAll(%this)
     %this.startRadioSilence();
 	%this.clearSelection();
     %this.endRadioSilence();
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
 function GuiEditorBrain::onObjectRemoved(%this, %ctrl)
@@ -138,10 +138,28 @@ function GuiEditorBrain::onObjectRemoved(%this, %ctrl)
     %this.startRadioSilence();
 	%this.deleteSelection();
     %this.endRadioSilence();
-    %this.toggleDeselect();
+    %this.toggleMenuItems();
 }
 
-function GuiEditorBrain::toggleDeselect(%this)
+function GuiEditorBrain::toggleMenuItems(%this)
 {
-    EditorCore.menuBar.setMenuActive("Deselect", %this.getSelected().getCount() != 0);
+    %count = %this.getSelected().getCount();
+    EditorCore.menuBar.setMenuActive("Deselect", %count != 0);
+    EditorCore.menuBar.setMenuActive("Nudge Up", %count != 0);
+    EditorCore.menuBar.setMenuActive("Nudge Down", %count != 0);
+    EditorCore.menuBar.setMenuActive("Nudge Left", %count != 0);
+    EditorCore.menuBar.setMenuActive("Nudge Right", %count != 0);
+    EditorCore.menuBar.setMenuActive("Expand Height", %count != 0);
+    EditorCore.menuBar.setMenuActive("Shrink Height", %count != 0);
+    EditorCore.menuBar.setMenuActive("Expand Width", %count != 0);
+    EditorCore.menuBar.setMenuActive("Shrink Width", %count != 0);
+    EditorCore.menuBar.setMenuActive("Align Top", %count > 1);
+    EditorCore.menuBar.setMenuActive("Align Bottom", %count > 1);
+    EditorCore.menuBar.setMenuActive("Align Left", %count > 1);
+    EditorCore.menuBar.setMenuActive("Align Right", %count > 1);
+    EditorCore.menuBar.setMenuActive("Center Horizontally", %count > 1);
+    EditorCore.menuBar.setMenuActive("Space Vertically", %count > 2);
+    EditorCore.menuBar.setMenuActive("Space Horizontally", %count > 2);
+    EditorCore.menuBar.setMenuActive("Bring to Front", %count == 1);
+    EditorCore.menuBar.setMenuActive("Push to Back", %count == 1);
 }

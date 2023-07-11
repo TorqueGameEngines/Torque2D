@@ -19,9 +19,13 @@ function GuiEditorSaveGuiDialog::init(%this, %width, %height)
 	%this.guiNameBox = %form.createTextEditItem(%item);
 	%this.guiNameBox.Command = %this.getId() @ ".Validate();";
 
-	if(GuiEditor.rootGui.getName() !$= "")
+	if(%this.defaultFileName !$= "")
 	{
-		%name = %this.blankGui.getName() @ ".gui";
+		%name = %this.defaultFileName;
+	}
+	else if(GuiEditor.rootGui.getName() !$= "")
+	{
+		%name = GuiEditor.rootGui.getName() @ ".gui";
 	}
 	else
 	{
@@ -29,13 +33,27 @@ function GuiEditorSaveGuiDialog::init(%this, %width, %height)
 	}
 	%this.guiNameBox.text = %name;
 
+	%item = %form.addFormItem("Save Format", %width SPC 30);
+	%this.guiFormatDropDown = %form.createDropDownItem(%item);
+	%this.guiFormatDropDown.Command = %this.getId() @ ".Validate();";
+	%this.populateFormatDropDown();
+	%this.guiFormatDropDown.setSelected(%this.formatIndex);
+
 	%item = %form.addFormItem("Target Folder", %width SPC 30);
 	%this.folderBox = %form.createFolderOpenItem(%item, "Select Target Folder");
 	%this.folderBox.Command = %this.getId() @ ".Validate();";
+	if(%this.defaultFolder !$= "")
+	{
+		%this.folderBox.setText(%this.defaultFolder);
+	}
 
 	%item = %form.addFormItem("Target Module", %width SPC 30);
 	%this.moduleNameBox = %form.createTextEditItem(%item);
 	%this.moduleNameBox.setActive(false);
+	if(%this.defaultModule !$= "")
+	{
+		%this.moduleNameBox.setText(%this.defaultModule);
+	}
 
 	%content.add(%form);
 
@@ -43,7 +61,7 @@ function GuiEditorSaveGuiDialog::init(%this, %width, %height)
 	{
 		HorizSizing = "right";
 		VertSizing = "bottom";
-		Position = "12 170";
+		Position = "12 220";
 		Extent = (%width - 24) SPC 80;
 		text = "Select a name and target folder!";
 		textWrap = true;
@@ -55,7 +73,7 @@ function GuiEditorSaveGuiDialog::init(%this, %width, %height)
 	{
 		HorizSizing = "right";
 		VertSizing = "bottom";
-		Position = "478 270";
+		Position = "478 320";
 		Extent = "100 30";
 		Text = "Cancel";
 		Command = %this.getID() @ ".onClose();";
@@ -66,7 +84,7 @@ function GuiEditorSaveGuiDialog::init(%this, %width, %height)
 	{
 		HorizSizing = "right";
 		VertSizing = "bottom";
-		Position = "588 268";
+		Position = "588 318";
 		Extent = "100 34";
 		Text = "Save";
 		Command = %this.getID() @ ".onSave();";
@@ -78,6 +96,8 @@ function GuiEditorSaveGuiDialog::init(%this, %width, %height)
 	%content.add(%this.saveButton);
 
 	%this.prevFolder = "";
+
+	%this.validate();
 }
 
 function GuiEditorSaveGuiDialog::Validate(%this)
@@ -161,14 +181,9 @@ function GuiEditorSaveGuiDialog::onSave(%this)
 {
 	if(%this.validate())
 	{
-		%filePath = %this.getFilePath();
-		%fo = new FileObject();
-		%fo.openForWrite(%filePath);
-		%fo.writeLine("//--- Created with the GuiEditor ---//");
-		%fo.writeObject(GuiEditor.rootGui, "%guiContent = ");
-		%fo.writeLine("//--- GuiEditor End ---//");
-		%fo.close();
-		%fo.delete();
+    	%filePath = %this.getFilePath();
+		%formatIndex = %this.guiFormatDropDown.getSelectedItem();
+		GuiEditor.SaveCore(%filePath, %formatIndex, %this.folderBox.getText(), %this.moduleNameBox.getText());
 
 		%this.onClose();
 	}
@@ -185,14 +200,38 @@ function GuiEditorSaveGuiDialog::getFilePath(%this)
 	%fileName = %this.guiNameBox.getText();
 	%filePath = pathConcat(%folderPath, %fileName);
 	%length = strlen(%filePath);
-	%sub = "";
-	if(%length >= 4)
+	if(%this.guiFormatDropDown.getSelectedItem() == 0)
 	{
-		%sub = getSubStr(%filePath, %length - 4, 4);
+		if(%length >= 4)
+		{
+			%sub = getSubStr(%filePath, %length - 4, 4);
+		}
+		if(%sub !$= ".gui")
+		{
+			%filePath = %filePath @ ".gui";
+		}
 	}
-	if(%sub !$= ".gui")
+	else 
 	{
-		%filePath = %filePath @ ".gui";
+		if(%length >= 4)
+		{
+			%sub4 = getSubStr(%filePath, %length - 4, 4);
+		}
+		if(%length >= 9)
+		{
+			%sub9 = getSubStr(%filePath, %length - 9, 9);
+		}
+		if(%sub9 !$= ".gui.taml")
+		{
+			if(%sub4 $= ".gui")
+			{
+				%filePath = %filePath @ ".taml";
+			}
+			else
+			{
+				%filePath = %filePath @ ".gui.taml";
+			}
+		}
 	}
 
 	return %filePath;
@@ -208,4 +247,17 @@ function GuiEditorSaveGuiDialog::getFolderPath(%this)
 		return %folderPath;
 	}
 	return %folderPath @ "/";
+}
+
+function GuiEditorSaveGuiDialog::onDropDownClosed(%this, %dropDown)
+{
+	%this.validate();
+}
+
+function GuiEditorSaveGuiDialog::populateFormatDropDown(%this)
+{
+	%this.guiFormatDropDown.clearItems();
+	%this.guiFormatDropDown.addItem("GUI File (*.gui)");
+	%this.guiFormatDropDown.addItem("TAML (*.gui.taml)");
+	%this.guiFormatDropDown.setSelected(0);
 }

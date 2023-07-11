@@ -133,7 +133,24 @@ function GuiEditor::create( %this )
     %this.guiPage.add(%this.explorerWindow);
     %this.explorerWindow.startListening(%this.brain);
 
-    %this.NewGui();
+    %this.rootGui = new GuiControl()
+    {
+        HorizSizing = "width";
+        VertSizing = "height";
+        Position = "0 0";
+        Extent = %this.content.getExtent();
+        Profile = GuiDefaultProfile;
+        class = "SimulatedCanvas";
+    };
+    %this.content.add(%this.rootGui);
+    %this.fileName = "";
+    %this.filePath = "";
+    %this.formatIndex = 0;
+    %this.folder = "";
+    %this.module = "";
+    %this.brain.setRoot(%this.rootGui);
+    %this.brain.root = %this.rootGui;
+    %this.explorerWindow.inspect(%this.rootGui);
 
     EditorCore.FinishRegistration(%this.guiPage);
 }
@@ -142,10 +159,7 @@ function GuiEditor::create( %this )
 
 function GuiEditor::destroy( %this )
 {
-    if(isObject(%this.rootGui))
-    {
-        %this.content.removeIfMember(%this.rootGui);
-    }
+
 }
 
 function GuiEditor::open(%this, %content)
@@ -167,15 +181,14 @@ function GuiEditor::close(%this)
 //MENU FUNCTIONS---------------------------------------------------------------
 function GuiEditor::NewGui(%this)
 {
-    %content = new GuiControl()
-    {
-        HorizSizing = "width";
-        VertSizing = "height";
-        Position = "0 0";
-        Extent = %this.guiPage.getExtent();
-        Profile = GuiDefaultProfile;
-    };
-    %this.DisplayGuiContent(%content);
+    %this.rootGui.clear();
+    %this.fileName = "";
+    %this.filePath = "";
+    %this.formatIndex = 0;
+    %this.folder = "";
+    %this.module = "";
+    %this.brain.clearSelection();
+    %this.explorerWindow.tree.refresh();
 }
 
 function GuiEditor::OpenGui(%this)
@@ -183,7 +196,7 @@ function GuiEditor::OpenGui(%this)
     %path = pathConcat(getMainDotCsDir(), ProjectManager.getProjectFolder());
 	%dialog = new OpenFileDialog()
 	{
-		Filters = "GUI (*.GUI;*.GUI.DSO)|*.GUI;*.GUI.DSO";
+		Filters = "ALL (*.GUI;*.GUI.DSO;*.GUI.TAML)|*.GUI;*.GUI.DSO;*.GUI.TAML|GUI (*.GUI;*.GUI.DSO)|*.GUI;*.GUI.DSO|TAML (*.GUI.TAML)|*.GUI.TAML";
 		ChangePath = false;
 		MultipleFiles = false;
 		DefaultFile = "";
@@ -194,44 +207,85 @@ function GuiEditor::OpenGui(%this)
 
 	if ( %result )
 	{
-        exec(%dialog.fileName);
+        if(fileExt(%dialog.fileName) $= ".taml")
+        {
+            %guiContent = TAMLRead(%dialog.fileName);
+            %includesSimulatedCanvas = (%guiContent.class $= "SimulatedCanvas");
+        }
+        else 
+        {
+            exec(%dialog.fileName);
+        }
+        if(%includesSimulatedCanvas $= "")
+        {
+            %includesSimulatedCanvas = true;
+        }
         if(isObject(%guiContent))
         {
-            %this.DisplayGuiContent(%guiContent, %dialog.fileName);
+            %this.fileName = fileName(%dialog.fileName);
+            %this.filePath = %dialog.fileName;
+            %this.formatIndex = 0;
+            if(getSubStr(%dialog.fileName, strlen(%dialog.fileName) - 5, 5) $= ".taml")
+            {
+                %this.formatIndex = 1;
+            }
+            %this.folder = makeRelativePath(filePath(%dialog.fileName), getMainDotCsDir());
+            %this.module = EditorCore.findModuleOfPath(%dialog.fileName);
+            %this.DisplayGuiContent(%guiContent, %includesSimulatedCanvas);
         }
         else 
         {
             EditorCore.alert("Something went wrong while opening the Gui File. Gui Files should be structures with the root object assigned to %guiContent. If this file was made outside of the editor, you can change it manually and then open it in the Gui Editor.");
         }
-	}
+    }
 	// Cleanup
 	%dialog.delete();
 }
 
-function GuiEditor::DisplayGuiContent(%this, %content, %filePath)
+function GuiEditor::DisplayGuiContent(%this, %content, %includesSimulatedCanvas)
 {
-    if(isObject(%this.rootGui))
+    %this.rootGui.deleteObjects();
+    %this.brain.clearSelection();
+
+    if(%includesSimulatedCanvas)
     {
-        %this.filePath = "";
-        %this.content.removeIfMember(%this.rootGui);
-        %this.explorerWindow.tree.uninspect();
-        %this.prevGui = %this.rootGui;
+        %count = %content.getCount();
+        for(%i = 0; %i < %count; %i++)
+        {
+            %obj[%i] = %content.getObject(%i);
+        }
+        for(%i = 0; %i < %count; %i++)
+        {
+            %this.rootGui.add(%obj[%i]);
+        }
+        %content.delete();
+        %this.explorerWindow.tree.refresh();
+        %this.brain.onSelect(%this.rootGui.getObject(0));
     }
-
-    %this.filePath = %filePath;
-    %this.rootGui = %content;
-    %this.content.add(%content);
-    %this.brain.setRoot(%content);
-    %this.brain.root = %content;
-    %this.explorerWindow.inspect(%content);
-
-    %this.brain.onSelect(%content);
+    else 
+    {
+        %this.rootGui.add(%content);
+        %this.explorerWindow.tree.refresh();
+        %this.brain.onSelect(%content);
+    }
 }
 
 function GuiEditor::SaveGui(%this)
 {
+    if(%this.fileName $= "")
+    {
+        %this.SaveGuiAs();
+    }
+    else 
+    {
+        %this.SaveCore(%this.filePath, %this.formatIndex, %this.folder, %this.module);
+    }
+}
+
+function GuiEditor::SaveGuiAs(%this)
+{
     %width = 700;
-	%height = 340;
+	%height = 390;
 	%dialog = new GuiControl()
 	{
 		class = "GuiEditorSaveGuiDialog";
@@ -239,11 +293,57 @@ function GuiEditor::SaveGui(%this)
 		dialogSize = (%width + 8) SPC (%height + 8);
 		dialogCanClose = true;
 		dialogText = "Save Gui";
+        defaultFileName = %this.fileName;
+        formatIndex = %this.formatIndex;
+        defaultFolder = %this.folder;
+        defaultModule = %this.module;
 	};
 	%dialog.init(%width, %height);
 	%this.startListening(%dialog);
 
 	Canvas.pushDialog(%dialog);
+}
+
+function GuiEditor::SaveCore(%this, %filePath, %formatIndex, %folder, %module)
+{
+    if(%formatIndex == 0)
+    {
+        %fo = new FileObject();
+        %fo.openForWrite(%filePath);
+        %fo.writeLine("//--- Created with the GuiEditor ---//");
+        if(%this.rootGui.getCount() == 1)
+        {
+            //Saved without the simulated canvas
+            %fo.writeLine("%includesSimulatedCanvas = false;");
+            %fo.writeObject(%this.rootGui.getObject(0), "%guiContent = ");
+        }
+        else 
+        {
+            //We have multiple top level objects so include the containing simulated canvas
+            %fo.writeLine("%includesSimulatedCanvas = true;");
+            %fo.writeObject(%this.rootGui, "%guiContent = ");
+        }
+        %fo.writeLine("//--- GuiEditor End ---//");
+        %fo.close();
+        %fo.delete();
+    }
+    else 
+    {
+        if(GuiEditor.rootGui.getCount() == 1)
+        {
+            //Saved without the Simulated Canvas
+            TAMLWrite(%this.rootGui.getObject(0), %filePath);
+        }
+        else 
+        {
+            TAMLWrite(%this.rootGui, %filePath);
+        }
+    }
+    %this.fileName = fileName(%filePath);
+    %this.filePath = %filePath;
+    %this.formatIndex = %formatIndex;
+    %this.folder = %folder;
+    %this.module = %module;
 }
 
 function GuiEditor::Undo(%this)
@@ -279,7 +379,7 @@ function GuiEditor::Paste(%this)
 function GuiEditor::changeExtent(%this, %x, %y)
 {
     %set = %this.brain.getSelected();
-    if(%set.getCount() == 1)
+    if(%set.getCount() >= 1)
     {
         %obj = %set.getObject(0);
         %ext = %obj.getExtent();

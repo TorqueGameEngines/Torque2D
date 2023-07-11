@@ -221,8 +221,6 @@ void GuiControl::initPersistFields()
    addField("canSave",           TypeBool,			Offset(mCanSave, GuiControl));
    addField("Visible",           TypeBool,			Offset(mVisible, GuiControl));
    addField("useInput",          TypeBool,          Offset(mUseInput, GuiControl));
-   addDepricatedField("Modal");
-   addField("SetFirstResponder", TypeBool, Offset(mFirstResponder, GuiControl));
 
    addField("Variable",          TypeString,		Offset(mConsoleVariable, GuiControl));
    addField("Command",           TypeString,		Offset(mConsoleCommand, GuiControl));
@@ -1775,7 +1773,7 @@ bool GuiControl::isFirstResponder()
 
 void GuiControl::setFirstResponder( GuiControl* firstResponder )
 {
-   if ( firstResponder && firstResponder->mProfile->mCanKeyFocus )
+   if ( firstResponder && firstResponder->mProfile && firstResponder->mProfile->mCanKeyFocus )
       mFirstResponder = firstResponder;
 
    GuiControl *parent = getParent();

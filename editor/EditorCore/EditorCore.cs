@@ -96,7 +96,7 @@ function EditorCore::initGui(%this)
 			Active = "0";
 
 			new GuiMenuItemCtrl() {
-				Text = "New Gui...";
+				Text = "New Gui";
 				Command = "GuiEditor.NewGui();";
 				Accelerator = "Ctrl N";
 			};
@@ -110,6 +110,11 @@ function EditorCore::initGui(%this)
 				Text = "Save Gui...";
 				Command = "GuiEditor.SaveGui();";
 				Accelerator = "Ctrl S";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Save Gui As...";
+				Command = "GuiEditor.SaveGuiAs();";
+				Accelerator = "Ctrl-Shift S";
 			};
 		};
 		new GuiMenuItemCtrl() {
@@ -158,47 +163,37 @@ function EditorCore::initGui(%this)
 				Accelerator = "Down";
 			};
 			new GuiMenuItemCtrl() {
-				Text = "Nudge Right";
-				Command = "GuiEditor.brain.moveSelection(1,0);";
-				Accelerator = "Right";
-			};
-			new GuiMenuItemCtrl() {
 				Text = "Nudge Left";
 				Command = "GuiEditor.brain.moveSelection(-1,0);";
 				Accelerator = "Left";
 			};
-			new GuiMenuItemCtrl() { Text = "-"; };
 			new GuiMenuItemCtrl() {
-				Text = "Expand Height";
-				Command = "GuiEditor.changeExtent(0, 1)";
-				Accelerator = "Ctrl Up";
+				Text = "Nudge Right";
+				Command = "GuiEditor.brain.moveSelection(1,0);";
+				Accelerator = "Right";
 			};
+			new GuiMenuItemCtrl() { Text = "-"; };
 			new GuiMenuItemCtrl() {
 				Text = "Shrink Height";
 				Command = "GuiEditor.changeExtent(0,-1);";
-				Accelerator = "Ctrl Down";
+				Accelerator = "Ctrl Up";
 			};
 			new GuiMenuItemCtrl() {
-				Text = "Expand Width";
-				Command = "GuiEditor.changeExtent(1,0);";
-				Accelerator = "Ctrl Right";
+				Text = "Expand Height";
+				Command = "GuiEditor.changeExtent(0, 1);";
+				Accelerator = "Ctrl Down";
 			};
 			new GuiMenuItemCtrl() {
 				Text = "Shrink Width";
 				Command = "GuiEditor.changeExtent(-1,0);";
 				Accelerator = "Ctrl Left";
 			};
+			new GuiMenuItemCtrl() {
+				Text = "Expand Width";
+				Command = "GuiEditor.changeExtent(1,0);";
+				Accelerator = "Ctrl Right";
+			};
 			new GuiMenuItemCtrl() { Text = "-"; };
-			new GuiMenuItemCtrl() {
-				Text = "Align Left";
-				Command = "GuiEditor.brain.Justify(0);";
-				Accelerator = "Ctrl L";
-			};
-			new GuiMenuItemCtrl() {
-				Text = "Align Right";
-				Command = "GuiEditor.brain.Justify(2);";
-				Accelerator = "Ctrl R";
-			};
 			new GuiMenuItemCtrl() {
 				Text = "Align Top";
 				Command = "GuiEditor.brain.Justify(3);";
@@ -208,6 +203,16 @@ function EditorCore::initGui(%this)
 				Text = "Align Bottom";
 				Command = "GuiEditor.brain.Justify(4);";
 				Accelerator = "Ctrl B";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Align Left";
+				Command = "GuiEditor.brain.Justify(0);";
+				Accelerator = "Ctrl L";
+			};
+			new GuiMenuItemCtrl() {
+				Text = "Align Right";
+				Command = "GuiEditor.brain.Justify(2);";
+				Accelerator = "Ctrl R";
 			};
 			new GuiMenuItemCtrl() { Text = "-"; };
 			new GuiMenuItemCtrl() {
@@ -237,6 +242,7 @@ function EditorCore::initGui(%this)
 			new GuiMenuItemCtrl() {
 				Text = "Set Grid Size...";
 				Command = "GuiEditor.SetGridSize();";
+				Accelerator = "Ctrl-Shift G";
 			};
 			new GuiMenuItemCtrl() {
 				Text = "Snap to Grid";

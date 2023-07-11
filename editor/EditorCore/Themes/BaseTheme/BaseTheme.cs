@@ -2026,6 +2026,9 @@ function BaseTheme::makeGuiEditorProfile(%this)
 		fillColorNA = %this.color5; //Used for the add set control and ruler lines
 		
 		borderDefault = %border;
+
+		tab = false;
+		canKeyFocus = true;
 	};
 }
 

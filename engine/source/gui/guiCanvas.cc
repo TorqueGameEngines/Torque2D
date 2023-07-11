@@ -393,8 +393,10 @@ bool GuiCanvas::processInputEvent(const InputEvent *event)
       else if(event->action == SI_BREAK)
       {
          if(mFirstResponder)
+		 {
             if(mFirstResponder->onKeyUp(mLastEvent))
                return true;
+		 }
 
          //see if there's an accelerator
          for (U32 i = 0; i < (U32)mAcceleratorMap.size(); i++)
@@ -408,6 +410,11 @@ bool GuiCanvas::processInputEvent(const InputEvent *event)
       }
       else if(event->action == SI_REPEAT)
       {
+		  if (mFirstResponder)
+		  {
+			  if (mFirstResponder->onKeyRepeat(mLastEvent))
+				  return true;
+		  }
 
          //if not handled, search for an accelerator
          for (U32 i = 0; i < (U32)mAcceleratorMap.size(); i++)
@@ -418,10 +425,6 @@ bool GuiCanvas::processInputEvent(const InputEvent *event)
                return true;
             }
          }
-
-         if(mFirstResponder)
-            mFirstResponder->onKeyRepeat(mLastEvent);
-         return true;
       }
    }
    else if(event->deviceType == MouseDeviceType && cursorON)

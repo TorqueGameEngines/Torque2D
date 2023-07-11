@@ -69,12 +69,9 @@ function GuiEditorExplorerWindow::onClearInspectAll(%this)
 	%this.tree.endRadioSilence();
 }
 
-function GuiEditorExplorerWindow::onObjectRemoved(%this, %ctrl)
+function GuiEditorExplorerWindow::onObjectRemoved(%this)
 {
-	%this.tree.startRadioSilence();
-	%index = %this.tree.findItemID(%ctrl.getID());
-	%this.tree.deleteItem(%index);
-	%this.tree.endRadioSilence();
+	%this.tree.refresh();
 }
 
 function GuiEditorExplorerWindow::onAddControl(%this, %ctrl)

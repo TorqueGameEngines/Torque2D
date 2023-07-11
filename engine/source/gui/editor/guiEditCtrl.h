@@ -36,6 +36,7 @@ class GuiEditCtrl : public GuiControl
    Point2I              mLastMousePos;
    Point2I              mSelectionAnchor;
    Point2I              mGridSnap;
+   bool					mUseGridSnap;
    Point2I				   mDragBeginPoint;
    Vector<Point2I>		mDragBeginPoints;
 
@@ -134,7 +135,7 @@ class GuiEditCtrl : public GuiControl
    void bringToFront();
    void pushToBack();
    void setSnapToGrid(U32 gridsize);
-   bool hasSnapToGrid() { return mGridSnap.x && mGridSnap.y; }
+   bool hasSnapToGrid() { return mUseGridSnap; }
    void moveSelectionToCtrl(GuiControl*);
 };
 

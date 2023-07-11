@@ -53,6 +53,7 @@ function GuiEditorInspectorWindow::onAdd(%this)
     %this.inspectList = new SimSet();
 
 	%this.inspector.addHiddenField("isContainer");
+	%this.inspector.addHiddenField("BindToGuiEditor");
 }
 
 function GuiEditorInspectorWindow::onRemove(%this)
@@ -94,4 +95,9 @@ function GuiEditorInspectorWindow::onAlsoInspect(%this, %object)
 {
     %this.inspectList.add(%object);
     %this.inspector.inspect(%object);
+}
+
+function GuiEditorInspectorWindow::onObjectRemoved(%this)
+{
+	%this.onClearInspectAll(%this);
 }

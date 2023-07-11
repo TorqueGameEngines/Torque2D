@@ -34,7 +34,7 @@ IMPLEMENT_CONOBJECT(GuiEditCtrl);
 
 GuiEditCtrl::GuiEditCtrl(): mCurrentAddSet(NULL),
                             mContentControl(NULL),
-                            mGridSnap(0,0),
+                            mGridSnap(10,10),
                             mDragBeginPoint(-1,-1)                            
 {
    VECTOR_SET_ASSOCIATION(mSelectedControls);
@@ -43,6 +43,7 @@ GuiEditCtrl::GuiEditCtrl(): mCurrentAddSet(NULL),
    mActive = true;
    mDragBeginPoints.clear();
    mSelectedControls.clear();
+   mUseGridSnap = true;
 
    mDefaultCursor    = NULL;
    mLeftRightCursor  = NULL;
@@ -538,7 +539,7 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
 
    renderChildControls(offset, mBounds, updateRect);
 
-   if(mActive && mCurrentAddSet && (mGridSnap.x && mGridSnap.y) && 
+   if(mActive && mCurrentAddSet && mUseGridSnap && 
        (mMouseDownMode == MovingSelection || mMouseDownMode == SizingSelection))
    {
       Point2I cext = mCurrentAddSet->getExtent();
@@ -1409,59 +1410,26 @@ bool GuiEditCtrl::onKeyDown(const GuiEvent &event)
             deleteSelection();
             Con::executef(this,1,"onDelete");
             return true;
-		 case KEY_LEFT:
-			moveSelection(Point2I(-1, 0));
-			return true;
-		 case KEY_RIGHT:
-			 moveSelection(Point2I(1, 0));
-			 return true;
-		 case KEY_UP:
-			 moveSelection(Point2I(0, -1));
-			 return true;
-		 case KEY_DOWN:
-			 moveSelection(Point2I(0, 1));
-			 return true;
       }
    }
-   else if (event.modifier & SI_SHIFT)
+   else if (event.modifier & SI_SHIFT && !(event.modifier & SI_CTRL))
    {
+	   //holding shift while using arrow keys toggles the grid snap
 	   switch (event.keyCode)
 	   {
 	   case KEY_LEFT:
-		   moveSelection(Point2I(mGridSnap.x != 0 ? -mGridSnap.x : -10, 0));
+		   moveSelection(Point2I(mUseGridSnap ? -1 : -mGridSnap.x, 0));
 		   return true;
 	   case KEY_RIGHT:
-		   moveSelection(Point2I(mGridSnap.x != 0 ? mGridSnap.x : 10, 0));
+		   moveSelection(Point2I(mUseGridSnap ? 1 : mGridSnap.x, 0));
 		   return true;
 	   case KEY_UP:
-		   moveSelection(Point2I(0, mGridSnap.y != 0 ? -mGridSnap.y : -10));
+		   moveSelection(Point2I(0, mUseGridSnap ? -1 : -mGridSnap.y));
 		   return true;
 	   case KEY_DOWN:
-		   moveSelection(Point2I(0, mGridSnap.y != 0 ? mGridSnap.y : 10));
+		   moveSelection(Point2I(0, mUseGridSnap ? 1 : mGridSnap.y));
 		   return true;
 	   }
-   }
-   else if (event.modifier & SI_CTRL)
-   {
-		if(mSelectedControls.size() == 1)
-		{
-			GuiControl* ctrl = mSelectedControls.first();
-			switch (event.keyCode)
-			{
-			case KEY_LEFT:
-				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x - 1, ctrl->mBounds.extent.y));
-				return true;
-			case KEY_RIGHT:
-				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x + 1, ctrl->mBounds.extent.y));
-				return true;
-			case KEY_UP:
-				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x, ctrl->mBounds.extent.y - 1));
-				return true;
-			case KEY_DOWN:
-				ctrl->resize(ctrl->mBounds.point, Point2I(ctrl->mBounds.extent.x, ctrl->mBounds.extent.y + 1));
-				return true;
-			}
-		}
    }
    return false;
 }
@@ -1475,7 +1443,15 @@ ConsoleMethod(GuiEditCtrl, setSnapToGrid, void, 3, 3, "(gridsize) Set the size o
 
 void GuiEditCtrl::setSnapToGrid(U32 gridsize)
 {
-   mGridSnap.set(gridsize, gridsize);
+	if (gridsize == 0)
+	{
+		mUseGridSnap = false;
+	}
+	else 
+	{
+		mGridSnap.set(gridsize, gridsize);
+		mUseGridSnap = true;
+	}
 }
 
 
