@@ -146,12 +146,6 @@ function NewAudioAssetDialog::Validate(%this)
 	return true;
 }
 
-function NewAudioAssetDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewAudioAssetDialog::onCreate(%this)
 {
 	if(%this.validate())

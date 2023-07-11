@@ -90,12 +90,6 @@ function NewDeclaredAssetDialog::Validate(%this)
 	return true;
 }
 
-function NewDeclaredAssetDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewDeclaredAssetDialog::onCreate(%this)
 {
 	if(%this.validate())

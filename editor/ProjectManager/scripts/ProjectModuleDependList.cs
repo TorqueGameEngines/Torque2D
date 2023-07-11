@@ -151,17 +151,6 @@ function ProjectModuleDependList::onRemoveDepend(%this, %data)
 	%this.schedule(50, "show", %this.activeModule);
 }
 
-function ProjectModuleDependList::onDialogClosed(%this, %dialog)
-{
-	%this.dialog = %dialog;
-	%this.schedule(100, "deleteDialog");
-}
-
-function ProjectModuleDependList::deleteDialog(%this)
-{
-	%this.dialog.delete();
-}
-
 function ProjectModuleDependList::buildPossibleDependList(%this)
 {
 	%allModules = ModuleDatabase.findModules(false);

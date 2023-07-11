@@ -153,12 +153,6 @@ function NewImageAssetDialog::Validate(%this)
 	return true;
 }
 
-function NewImageAssetDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewImageAssetDialog::onCreate(%this)
 {
 	if(%this.validate())

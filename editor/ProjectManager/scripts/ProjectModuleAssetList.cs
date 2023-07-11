@@ -151,14 +151,3 @@ function ProjectModuleAssetList::onRemoveAsset(%this, %asset)
 	%this.activeModule.save();
 	%this.schedule(50, "show", %this.activeModule);
 }
-
-function ProjectModuleAssetList::onDialogClosed(%this, %dialog)
-{
-	%this.dialog = %dialog;
-	%this.schedule(100, "deleteDialog");
-}
-
-function ProjectModuleAssetList::deleteDialog(%this)
-{
-	%this.dialog.delete();
-}

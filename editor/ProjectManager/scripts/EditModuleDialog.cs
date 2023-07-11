@@ -115,12 +115,6 @@ function EditModuleDialog::Validate(%this)
 	return true;
 }
 
-function EditModuleDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function EditModuleDialog::onSave(%this)
 {
 	if(%this.validate())

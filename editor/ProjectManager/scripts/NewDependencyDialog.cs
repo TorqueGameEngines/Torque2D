@@ -125,12 +125,6 @@ function NewDependencyDialog::Validate(%this)
 	return true;
 }
 
-function NewDependencyDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewDependencyDialog::onCreate(%this)
 {
 	if(%this.validate())

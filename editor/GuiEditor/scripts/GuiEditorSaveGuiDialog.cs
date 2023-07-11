@@ -166,12 +166,6 @@ function GuiEditorSaveGuiDialog::Validate(%this)
 	return true;
 }
 
-function GuiEditorSaveGuiDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function GuiEditorSaveGuiDialog::onSave(%this)
 {
 	if(%this.validate())

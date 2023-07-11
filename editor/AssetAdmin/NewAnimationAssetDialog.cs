@@ -154,12 +154,6 @@ function NewAnimationAssetDialog::Validate(%this)
 	return true;
 }
 
-function NewAnimationAssetDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewAnimationAssetDialog::onCreate(%this)
 {
 	if(%this.validate())

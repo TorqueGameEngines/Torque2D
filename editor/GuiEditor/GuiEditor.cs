@@ -299,7 +299,6 @@ function GuiEditor::SaveGuiAs(%this)
         defaultModule = %this.module;
 	};
 	%dialog.init(%width, %height);
-	%this.startListening(%dialog);
 
 	Canvas.pushDialog(%dialog);
 }

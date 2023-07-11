@@ -90,17 +90,6 @@ function ProjectGamePanel::createNewModule(%this)
 	Canvas.pushDialog(%dialog);
 }
 
-function ProjectGamePanel::onDialogClosed(%this, %dialog)
-{
-	%this.dialog = %dialog;
-	%this.schedule(100, "deleteDialog");
-}
-
-function ProjectGamePanel::deleteDialog(%this)
-{
-	%this.dialog.delete();
-}
-
 function ProjectGamePanel::onModuleCreated(%this, %data)
 {
 	if(%data.template !$= "none")

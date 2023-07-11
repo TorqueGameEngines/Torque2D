@@ -165,12 +165,6 @@ function NewParticleAssetDialog::Validate(%this)
 	return true;
 }
 
-function NewParticleAssetDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewParticleAssetDialog::onCreate(%this)
 {
 	if(%this.validate())

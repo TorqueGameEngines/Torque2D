@@ -115,12 +115,6 @@ function NewProjectDialog::Validate(%this)
 	return true;
 }
 
-function NewProjectDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewProjectDialog::onCreate(%this)
 {
 	if(%this.validate())

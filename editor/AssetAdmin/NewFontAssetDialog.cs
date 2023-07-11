@@ -146,12 +146,6 @@ function NewFontAssetDialog::Validate(%this)
 	return true;
 }
 
-function NewFontAssetDialog::onClose(%this)
-{
-	Canvas.popDialog(%this);
-	%this.postEvent("DialogClosed", %this);
-}
-
 function NewFontAssetDialog::onCreate(%this)
 {
 	if(%this.validate())

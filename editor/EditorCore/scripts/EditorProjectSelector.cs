@@ -204,17 +204,6 @@ function EditorProjectSelector::onNewProject(%this)
 	Canvas.pushDialog(%dialog);
 }
 
-function EditorProjectSelector::onDialogClosed(%this, %dialog)
-{
-	%this.dialog = %dialog;
-	%this.schedule(100, "deleteDialog");
-}
-
-function EditorProjectSelector::deleteDialog(%this)
-{
-	%this.dialog.delete();
-}
-
 function EditorProjectSelector::onProjectCreated(%this, %folder)
 {
 	%this.scanFolder(%folder);

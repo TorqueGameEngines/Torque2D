@@ -65,7 +65,14 @@ function EditorDialog::onAdd(%this)
 	%this.window.add(%this.content);
 }
 
+function EditorDialog::onClose(%this)
+{
+	Canvas.popDialog(%this);
+	EditorCore.dialog = %this;
+	EditorCore.schedule(100, "deleteDialog");
+}
+
 function EditorDialogWindow::onClose(%this)
 {
-	%this.dialog.call("onClose");
+	%this.dialog.onClose();
 }
