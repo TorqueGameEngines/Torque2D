@@ -149,7 +149,7 @@ void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	Point2I actualNewPosition = Point2I(newPosition);
 	if(mIsExtentDynamic)
 	{
-		if(smDesignTime)
+		if(isEditMode())
 		{
 			mRunningChainHeight += 20; 
 		}

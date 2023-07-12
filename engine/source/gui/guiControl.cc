@@ -36,6 +36,7 @@
 #include "collection/vector.h"
 #include "2d/core/Utility.h"
 #include "gui/containers/guiScrollCtrl.h"
+#include "gui/editor/guiEditCtrl.h"
 
 #include <sstream>
 #include <iostream>
@@ -350,7 +351,7 @@ GuiCanvas *GuiControl::getRoot()
 
 void GuiControl::inspectPreApply()
 {
-   if(smDesignTime && smEditorHandle)
+   if(isEditMode())
       smEditorHandle->controlInspectPreApply(this);
    
    // The canvas never sleeps
@@ -371,7 +372,7 @@ void GuiControl::inspectPostApply()
       onWake();
    }
    
-   if(smDesignTime && smEditorHandle)
+   if(isEditMode())
       smEditorHandle->controlInspectPostApply(this);
 }
 
@@ -2056,7 +2057,7 @@ void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, co
 		}
 
 		Point2I start = Point2I(0, 0);
-		F32 rotation;
+		F32 rotation = 0.0f;
 		if (rot == tRotateNone)
 		{
             start.x += offsetX;
@@ -2303,4 +2304,24 @@ VertAlignmentType GuiControl::getVertAlignmentType(GuiControlProfile* profile)
 const ColorI& GuiControl::getFontColor(GuiControlProfile* profile, const GuiControlState state)
 {
     return mOverrideFontColor ? mFontColor : profile->getFontColor(state);
+}
+
+bool GuiControl::isEditMode()
+{
+	if (smDesignTime && smEditorHandle)
+	{
+		GuiEditCtrl* edit = GuiControl::smEditorHandle;
+		if (this == edit->getRoot())
+		{
+			return true;
+		}
+
+		//work up the parent chain to see if one of the parents is the edit root
+		GuiControl* parent = getParent();
+		if (parent)
+		{
+			return parent->isEditMode();
+		}
+		return false;
+	}
 }

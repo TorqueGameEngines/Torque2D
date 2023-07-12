@@ -71,6 +71,7 @@ class GuiEditCtrl : public GuiControl
 
    void select(GuiControl *ctrl);
    void setRoot(GuiControl *ctrl);
+   GuiControl* getRoot() { return mContentControl; }
    void setEditMode(bool value);
    S32 getSizingHitKnobs(const Point2I &pt, const RectI &box);
    void getDragRect(RectI &b);
@@ -99,9 +100,9 @@ class GuiEditCtrl : public GuiControl
 
 
    const Vector<GuiControl *> *getSelected() const { return &mSelectedControls; }
-   const SimSet& getSelectedSet() { updateSelectedSet(); return mSelectedSet; }
+   SimSet& getSelectedSet() { updateSelectedSet(); return mSelectedSet; }
    const SimGroup& getTrash() { return mTrash; }
-   const GuiControl *getAddSet() const { return mCurrentAddSet; }; //JDD
+   const GuiControl* getAddSet() const { return mCurrentAddSet; };
 
    bool onKeyDown(const GuiEvent &event);
    void onTouchDown(const GuiEvent &event);
@@ -138,6 +139,7 @@ class GuiEditCtrl : public GuiControl
    bool hasSnapToGrid() { return mUseGridSnap; }
    S32 getGridSize() { return mGridSnap.x; }
    void moveSelectionToCtrl(GuiControl*);
+   ColorI getEditorColor() { return mProfile->getFillColor(DisabledState); }
 };
 
 #endif //_GUI_EDIT_CTRL_H

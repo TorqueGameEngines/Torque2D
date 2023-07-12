@@ -18,6 +18,7 @@ class GuiChainCtrl : public GuiControl
 private:
 	typedef GuiControl Parent;
 	bool mPrevIsVertical;
+	const S32 mEditOpenSpace = 30;
 
 protected:
 	S32 mChildSpacing;
@@ -37,6 +38,7 @@ public:
 	void inspectPostApply();
 	void onChildAdded(GuiControl *child);
 	void onChildRemoved(SimObject *child);
+	void onRender(Point2I offset, const RectI& updateRect);
 
 	inline void setChildSpacing(S32 space) { mChildSpacing = space; }
 	inline S32 getChildSpacing() { return mChildSpacing; }

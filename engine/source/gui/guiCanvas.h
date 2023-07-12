@@ -401,6 +401,8 @@ public:
    /// @param   firstResponder    Control to designate as first responder
    virtual void setFirstResponder(GuiControl *firstResponder);
    /// @}
+
+   virtual bool isEditMode();
 };
 
 extern GuiCanvas *Canvas;

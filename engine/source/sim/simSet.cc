@@ -107,6 +107,21 @@ void SimSet::callOnChildren( const char * method, S32 argc, const char *argv[], 
    }
 }
 
+bool SimSet::isMember(SimObject* obj)
+{
+	lock();
+	for (SimSet::iterator i = begin(); i != end(); i++)
+	{
+		if (*i == obj)
+		{
+			unlock();
+			return true;
+		}
+	}
+	unlock();
+	return false;
+}
+
 bool SimSet::reOrder( SimObject *obj, SimObject *target )
 {
    MutexHandle handle;

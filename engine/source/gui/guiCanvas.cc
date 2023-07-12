@@ -1529,3 +1529,10 @@ void GuiCanvas::setFirstResponder( GuiControl* newResponder )
     if ( oldResponder && ( oldResponder != mFirstResponder ) )
         oldResponder->onLoseFirstResponder();
 }
+
+bool GuiCanvas::isEditMode()
+{
+	//If we've walked up the chain all the way to canvas and haven't found the 
+	//editor then we are not in edit mode.
+	return false;
+}

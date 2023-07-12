@@ -23,6 +23,7 @@
 #include "console/consoleTypes.h"
 #include "console/console.h"
 #include "gui/containers/guiChainCtrl.h"
+#include "gui/editor/guiEditCtrl.h"
 
 #include "guiChainCtrl_ScriptBinding.h"
 
@@ -35,6 +36,7 @@ GuiChainCtrl::GuiChainCtrl()
 	mIsContainer = true;
 	mChildSpacing = 0;
 	mIsVertical = true;
+	mBounds.extent.set(140, mEditOpenSpace);
 }
 
 //------------------------------------------------------------------------------
@@ -58,7 +60,7 @@ void GuiChainCtrl::inspectPreApply()
 
 void GuiChainCtrl::inspectPostApply()
 {
-	if (mPrevIsVertical != mIsVertical && smDesignTime)
+	if (mPrevIsVertical != mIsVertical && isEditMode())
 	{
 		//Since we're in the editor, we'll swap x and y, then calculateExtent will fix one of them.
 		iterator i;
@@ -81,19 +83,19 @@ void GuiChainCtrl::inspectPostApply()
 
 void GuiChainCtrl::childResized(GuiControl *child)
 {
-	calculateExtent(smDesignTime);
+	calculateExtent(isEditMode());
 	Parent::childResized(child);
 }
 
 void GuiChainCtrl::childMoved(GuiControl* child)
 {
-	calculateExtent(smDesignTime);
+	calculateExtent(isEditMode());
 	Parent::childMoved(child);
 }
 
 void GuiChainCtrl::childrenReordered()
 {
-	calculateExtent(smDesignTime);
+	calculateExtent(isEditMode());
 	Parent::childrenReordered();
 }
 
@@ -126,7 +128,7 @@ void GuiChainCtrl::onChildAdded(GuiControl *child)
 		child->setVertSizing(vertResizeTop);
 	}
 
-	if (smDesignTime)
+	if (isEditMode())
 	{
 		child->mBounds.point = Point2I::Zero;
 	}
@@ -149,9 +151,9 @@ void GuiChainCtrl::calculateExtent(bool holdLength)
 	S32 length = positionChildren(innerRect);
 	S32 oldLength = mIsVertical ? innerRect.extent.y : innerRect.extent.x;
 
-	if (smDesignTime)
+	if (isEditMode())
 	{
-		length += 20;//This gives some space to add new controls.
+		length += mEditOpenSpace;//This gives some space to add new controls.
 	}
 
 	if (holdLength && oldLength > length)
@@ -210,4 +212,38 @@ S32 GuiChainCtrl::positionChildren(RectI &innerRect)
 	}
 
 	return length;
+}
+
+void GuiChainCtrl::onRender(Point2I offset, const RectI& updateRect)
+{
+	Parent::onRender(offset, updateRect);
+
+	if (isEditMode())
+	{
+		GuiEditCtrl* edit = GuiControl::smEditorHandle;
+		const GuiControl* addSet = edit->getAddSet();
+		SimSet& selectSet = edit->getSelectedSet();
+		if(this == addSet || selectSet.isMember(this))
+		{
+			ColorI fill = edit->getEditorColor();
+			fill.alpha = 100;
+
+			RectI rect;
+			if (mIsVertical)
+			{
+				rect = RectI(0, mBounds.extent.y - mEditOpenSpace, mBounds.extent.x, mEditOpenSpace);
+			}
+			else 
+			{
+				rect = RectI(mBounds.extent.x - mEditOpenSpace, 0, mEditOpenSpace, mBounds.extent.y);
+			}
+			rect.point = localToGlobalCoord(rect.point);
+			dglDrawRectFill(rect, fill);
+			dglSetBitmapModulation(getFontColor(edit->mProfile, NormalState));
+			F32 tempAdjust = mFontSizeAdjust;
+			mFontSizeAdjust = 1.5f;
+			renderText(rect.point, rect.extent, "+", edit->mProfile);
+			mFontSizeAdjust = tempAdjust;
+		}
+	}
 }

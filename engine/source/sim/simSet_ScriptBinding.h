@@ -367,18 +367,7 @@ ConsoleMethodWithDocs(SimSet, isMember, ConsoleBool, 3, 3, (object))
       return false;
    }
 
-   object->lock();
-   for(SimSet::iterator i = object->begin(); i != object->end(); i++)
-   {
-      if(*i == testObject)
-      {
-         object->unlock();
-         return true;
-      }
-   }
-   object->unlock();
-
-   return false;
+   return object->isMember(testObject);
 }
 
 /*! Returns the object with given internal name

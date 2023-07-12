@@ -151,6 +151,7 @@ public:
        return false;
    }
 
+   bool isMember(SimObject* obj);
    virtual bool reOrder( SimObject *obj, SimObject *target=0 );
    SimObject* at(S32 index) const { return objectList.at(index); }
 

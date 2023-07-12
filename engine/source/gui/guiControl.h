@@ -159,6 +159,8 @@ public:
     static GuiEditCtrl *smEditorHandle; ///< static GuiEditCtrl pointer that gives controls access to editor-NULL if editor is closed
     /// @}
 
+	virtual bool isEditMode();
+
     /// @name Keyboard Input
     /// @{
     GuiControl* mFirstResponder;

@@ -2029,6 +2029,13 @@ function BaseTheme::makeGuiEditorProfile(%this)
 
 		tab = false;
 		canKeyFocus = true;
+
+		fontType = %this.font[3];
+		fontDirectory = %this.fontDirectory;
+		fontSize = 22;
+		fontColor = %this.color1;
+		align = "center";
+		vAlign = "middle";
 	};
 }
 

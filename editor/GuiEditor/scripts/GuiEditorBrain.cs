@@ -7,9 +7,8 @@ function GuiEditorBrain::onAdd(%this)
 
 function GuiEditorBrain::onControlDragged(%this, %payload, %position)
 {
-	%pos = VectorSub(%position, %this.root.getGlobalPosition());
-	%x = getWord(%pos, 0);
-	%y = getWord(%pos, 1);
+	%x = getWord(%position, 0);
+	%y = getWord(%position, 1);
 	%target = GuiEditor.content.findHitControl(%x, %y);
 
 	while(! %target.isContainer )
