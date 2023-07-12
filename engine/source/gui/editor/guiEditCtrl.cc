@@ -1441,6 +1441,13 @@ ConsoleMethod(GuiEditCtrl, setSnapToGrid, void, 3, 3, "(gridsize) Set the size o
    object->setSnapToGrid(gridsize);
 }
 
+ConsoleMethod(GuiEditCtrl, getGridSize, S32, 2, 2, "() Returns the grid size even if the grid is off.\n"
+	"@return A single int as the grid size.")
+{
+	U32 gridSize = object->getGridSize();
+	return gridSize;
+}
+
 void GuiEditCtrl::setSnapToGrid(U32 gridsize)
 {
 	if (gridsize == 0)

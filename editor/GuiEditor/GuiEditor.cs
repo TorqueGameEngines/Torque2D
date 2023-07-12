@@ -30,6 +30,7 @@ function GuiEditor::create( %this )
 	exec("./scripts/GuiEditorExplorerWindow.cs");
     exec("./scripts/GuiEditorExplorerTree.cs");
     exec("./scripts/GuiEditorSaveGuiDialog.cs");
+    exec("./scripts/GuiEditorGridSizeDialog.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Gui Editor", %this);
 
@@ -388,7 +389,19 @@ function GuiEditor::changeExtent(%this, %x, %y)
 
 function GuiEditor::SetGridSize(%this)
 {
-    
+    %width = 300;
+	%height = 140;
+	%dialog = new GuiControl()
+	{
+		class = "GuiEditorGridSizeDialog";
+		superclass = "EditorDialog";
+		dialogSize = (%width + 8) SPC (%height + 8);
+		dialogCanClose = true;
+		dialogText = "Grid Size";
+	};
+	%dialog.init(%width, %height);
+
+	Canvas.pushDialog(%dialog);
 }
 
 function GuiEditor::SnapToGrid(%this, %gridOn)
