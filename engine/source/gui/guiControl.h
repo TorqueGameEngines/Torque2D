@@ -515,7 +515,7 @@ public:
 	virtual void onGroupRemove();
 
     /// Called when this object is added to the scene
-    bool onAdd();
+    virtual bool onAdd();
 
     /// Called when this object has a new child. Congratulations!
     virtual void onChildAdded( GuiControl *child );

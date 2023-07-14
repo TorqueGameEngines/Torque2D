@@ -164,3 +164,8 @@ void GuiTabPageCtrl::onRender(Point2I offset, const RectI &updateRect)
 		renderChildControls(offset, contentRect, updateRect);
 	}
 }
+
+void GuiTabPageCtrl::parentResized(const Point2I& oldParentExtent, const Point2I& newParentExtent)
+{
+	//Do nothing. If the parent of a page resized then it will tell us what size to be later.
+}

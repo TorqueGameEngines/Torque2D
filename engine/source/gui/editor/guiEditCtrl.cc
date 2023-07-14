@@ -537,7 +537,8 @@ void GuiEditCtrl::onRender(Point2I offset, const RectI &updateRect)
       }
    }
 
-   renderChildControls(offset, mBounds, updateRect);
+   RectI contentRect = RectI(offset, mBounds.extent);
+   renderChildControls(offset, contentRect, updateRect);
 
    if(mActive && mCurrentAddSet && mUseGridSnap && 
        (mMouseDownMode == MovingSelection || mMouseDownMode == SizingSelection))

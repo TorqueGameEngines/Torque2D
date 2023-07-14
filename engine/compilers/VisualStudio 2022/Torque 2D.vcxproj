@@ -624,7 +624,7 @@
     <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiFrameSetCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
@@ -1113,7 +1113,8 @@
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiFrameSetCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiFrameSetCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl_ScriptBinding.h" />

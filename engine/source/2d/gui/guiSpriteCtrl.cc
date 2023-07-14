@@ -652,7 +652,7 @@ void GuiSpriteCtrl::RenderTiledImage(RectI &bounds, Point2I &start, Point2I &siz
 	{
 		for (int x = 0; x < xdone; ++x)
 		{
-			dstRegion.set((size.x * x) + start.x, (size.y * y) + start.y, size.x, size.y);
+			dstRegion.set((size.x * x) + start.x + bounds.point.x, (size.y * y) + start.y + bounds.point.y, size.x, size.y);
 			dglDrawBitmapStretchSR(texture, dstRegion, srcRegion, false);
 		}
 	}

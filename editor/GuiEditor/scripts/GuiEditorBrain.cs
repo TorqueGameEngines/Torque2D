@@ -9,7 +9,7 @@ function GuiEditorBrain::onControlDragged(%this, %payload, %position)
 {
 	%x = getWord(%position, 0);
 	%y = getWord(%position, 1);
-	%target = GuiEditor.content.findHitControl(%x, %y);
+	%target = %this.root.findHitControl(%x, %y);
 
 	while(! %target.isContainer )
 	{
@@ -27,13 +27,6 @@ function GuiEditorBrain::onControlDropped(%this, %payload, %position)
    %pos = %payload.getGlobalPosition();
    %x = getWord(%pos, 0);
    %y = getWord(%pos, 1);
-
-   if(%x < %this.root.position.x || %y < %this.root.poisition.y || 
-    %x > (%this.root.extent.x + %this.root.position.x) || %y > (%this.root.extent.y + %this.root.position.y))
-   {
-      messageBox("Error", "Cannot add a control outside the root gui element!");
-      return;
-   }
 
    %this.addNewCtrl(%payload);
    %payload.setPositionGlobal(%x, %y);

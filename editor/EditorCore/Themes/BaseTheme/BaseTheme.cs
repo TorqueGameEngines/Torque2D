@@ -1765,20 +1765,20 @@ function BaseTheme::makeWindowProfile(%this)
 
 	%windowContentBorder = new GuiBorderProfile()
 	{
-		border = 3;
-		borderHL = 3;
-		borderSL = 3;
-		borderNA = 3;
+		border = 1;
+		borderHL = 1;
+		borderSL = 2;
+		borderNA = 1;
 
 		borderColor = %this.adjustValue(%this.color3, -50);
 		borderColorHL = %this.adjustValue(%this.color3, -60);
 		borderColorSL = %this.adjustValue(%this.color3, -60);
 		borderColorNA = %this.adjustValue(%this.color3, -50);
 
-		padding = 1;
-		paddingHL = 1;
-		paddingSL = 1;
-		paddingNA = 1;
+		padding = 3;
+		paddingHL = 3;
+		paddingSL = 2;
+		paddingNA = 3;
 	};
 
 	%windowContentTopBorder = new GuiBorderProfile()
@@ -2036,6 +2036,19 @@ function BaseTheme::makeGuiEditorProfile(%this)
 		fontColor = %this.color1;
 		align = "center";
 		vAlign = "middle";
+	};
+
+	%this.frameSetProfile = new GuiControlProfile()
+	{
+		fillColor = %this.adjustValue(%this.color1, 10); 
+		fillColorHL = %this.adjustValue(%this.color2, 20); 
+		fillColorSL = %this.color3; 
+		fillColorNA = %this.color2; 
+		
+		borderDefault = %this.emptyBorder;
+
+		tab = false;
+		canKeyFocus = true;
 	};
 }
 

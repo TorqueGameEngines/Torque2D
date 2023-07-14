@@ -45,6 +45,7 @@ class GuiTabPageCtrl : public GuiControl
 
       virtual void setText(const char *txt = NULL); ///< Override setText function to signal parent we need to update.
 	  void onRender(Point2I offset, const RectI &updateRect);
+	  void parentResized(const Point2I& oldParentExtent, const Point2I& newParentExtent);
 };
 
 #endif //_GUITABPAGECTRL_H_

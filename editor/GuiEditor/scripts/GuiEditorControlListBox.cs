@@ -1,7 +1,7 @@
 
 function GuiEditorControlListBox::onTouchDragged(%this, %index, %text)
 {
-	%position = GuiEditor.guiPage.getGlobalPosition();
+	%position = GuiEditor.brain.getGlobalPosition();
 	%cursorpos = Canvas.getCursorPos();
 
 	%class = %this.getItemText(%this.getSelectedItem());
@@ -32,7 +32,7 @@ function GuiEditorControlListBox::onTouchDragged(%this, %index, %text)
 	};
 
 	%dragCtrl.add(%payload);
-	GuiEditor.guiPage.add(%dragCtrl);
+	GuiEditor.brain.add(%dragCtrl);
 
 	%dragCtrl.startDragging(%xOffset, %yOffset);
 }

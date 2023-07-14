@@ -34,23 +34,31 @@ function GuiEditor::create( %this )
 
 	%this.guiPage = EditorCore.RegisterEditor("Gui Editor", %this);
 
-    %this.content = new GuiSpriteCtrl() {
+    %this.content = new GuiFrameSetCtrl() {
 		HorizSizing = "width";
         VertSizing = "height";
         Position = "0 0";
         Extent = %this.guiPage.getExtent();
-		imageColor = "255 255 255 255";
-        bitmap = "./images/gridTiny2";
-		singleFrameBitmap = "1";
-		tileImage = "1";
-		positionOffset = "0 0";
-		imageSize = "128 128";
-		fullSize = "0";
-		constrainProportions = "1";
-        isContainer = true;
+        DividerThickness = 6;
 	};
-    ThemeManager.setProfile(%this.content, "emptyProfile");
+    ThemeManager.setProfile(%this.content, "frameSetProfile");
     %this.guiPage.add(%this.content);
+
+    %idList = %this.content.createHorizontalSplit(1);
+    %leftID = getWord(%idList, 0);
+    %rightID = getWord(%idList, 1);
+    %this.content.anchorFrame(%rightID);
+    %this.content.setFrameSize(%rightID, 300);
+    
+    %ids = %this.content.createHorizontalSplit(%leftID);
+    %inspectorFrameID = getWord(%ids, 0);
+    %centerFrameID = getWord(%ids, 1);
+    %this.content.setFrameSize(%inspectorFrameID, 360);
+    
+    %ids = %this.content.createVerticalSplit(%rightID);
+    %toolFrameID = getWord(%ids, 0);
+    %explorerFrameID = getWord(%ids, 1);
+    %this.content.setFrameSize(%toolFrameID, 380);
 
     %this.brain = new GuiEditCtrl()
     {
@@ -58,33 +66,9 @@ function GuiEditor::create( %this )
 		HorizSizing = "width";
         VertSizing = "height";
         Position = "0 0";
-        Extent = %this.guiPage.getExtent();
+        Extent = "100 100";
     };
     ThemeManager.setProfile(%this.brain, "guiEditorProfile");
-    %this.guiPage.add(%this.brain);
-
-    %this.ctrlListWindow = new GuiWindowCtrl()
-    {
-        Class = "GuiEditorControlListWindow";
-        HorizSizing = "right";
-        VertSizing = "bottom";
-        Position = "360 0";
-        Extent = "250 380";
-        MinExtent = "100 100";
-        text = "Control List";
-        canMove = true;
-        canClose = false;
-        canMinimize = true;
-        canMaximize = false;
-        resizeWidth = false;
-        resizeHeight = true;
-    };
-    ThemeManager.setProfile(%this.ctrlListWindow, "windowProfile");
-    ThemeManager.setProfile(%this.ctrlListWindow, "windowContentProfile", "ContentProfile");
-    ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "CloseButtonProfile");
-    ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "MinButtonProfile");
-    ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "MaxButtonProfile");
-    %this.guiPage.add(%this.ctrlListWindow);
 
     %this.inspectorWindow = new GuiWindowCtrl()
     {
@@ -107,8 +91,48 @@ function GuiEditor::create( %this )
     ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "CloseButtonProfile");
     ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "MinButtonProfile");
     ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "MaxButtonProfile");
-    %this.guiPage.add(%this.inspectorWindow);
+    %this.content.add(%this.inspectorWindow);
     %this.inspectorWindow.startListening(%this.brain);
+
+    %this.background = new GuiSpriteCtrl() {
+		HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "0 0";
+        Extent = "100 100";
+		imageColor = "255 255 255 255";
+        bitmap = "./images/gridTiny2";
+		singleFrameBitmap = "1";
+		tileImage = "1";
+		positionOffset = "0 0";
+		imageSize = "128 128";
+		fullSize = "0";
+		constrainProportions = "1";
+	};
+    ThemeManager.setProfile(%this.background, "emptyProfile");
+    %this.content.add(%this.background);
+
+    %this.ctrlListWindow = new GuiWindowCtrl()
+    {
+        Class = "GuiEditorControlListWindow";
+        HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "360 0";
+        Extent = "250 380";
+        MinExtent = "100 100";
+        text = "Control List";
+        canMove = true;
+        canClose = false;
+        canMinimize = true;
+        canMaximize = false;
+        resizeWidth = false;
+        resizeHeight = true;
+    };
+    ThemeManager.setProfile(%this.ctrlListWindow, "windowProfile");
+    ThemeManager.setProfile(%this.ctrlListWindow, "windowContentProfile", "ContentProfile");
+    ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "CloseButtonProfile");
+    ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "MinButtonProfile");
+    ThemeManager.setProfile(%this.ctrlListWindow, "windowButtonProfile", "MaxButtonProfile");
+    %this.content.add(%this.ctrlListWindow);
 
     %this.explorerWindow = new GuiWindowCtrl()
     {
@@ -131,7 +155,7 @@ function GuiEditor::create( %this )
     ThemeManager.setProfile(%this.explorerWindow, "windowButtonProfile", "CloseButtonProfile");
     ThemeManager.setProfile(%this.explorerWindow, "windowButtonProfile", "MinButtonProfile");
     ThemeManager.setProfile(%this.explorerWindow, "windowButtonProfile", "MaxButtonProfile");
-    %this.guiPage.add(%this.explorerWindow);
+    %this.content.add(%this.explorerWindow);
     %this.explorerWindow.startListening(%this.brain);
 
     %this.rootGui = new GuiControl()
@@ -139,11 +163,13 @@ function GuiEditor::create( %this )
         HorizSizing = "width";
         VertSizing = "height";
         Position = "0 0";
-        Extent = %this.content.getExtent();
+        Extent = %this.background.getExtent();
         Profile = GuiDefaultProfile;
         class = "SimulatedCanvas";
     };
-    %this.content.add(%this.rootGui);
+    %this.background.add(%this.rootGui);
+    %this.brain.extent = %this.background.getExtent();
+    %this.background.add(%this.brain);
     %this.fileName = "";
     %this.filePath = "";
     %this.formatIndex = 0;
