@@ -68,6 +68,7 @@ GuiGridCtrl::GuiGridCtrl()
 	mOrderMode = OrderMode::LRTB;
 	mIsExtentDynamic = true;
    setField("profile", "GuiDefaultProfile");
+   mResizeGuard = false;
 }
 
 //------------------------------------------------------------------------------
@@ -117,60 +118,65 @@ void GuiGridCtrl::inspectPostApply()
 
 void GuiGridCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 {
-	Point2I actualNewExtent = Point2I(getMax(mMinExtent.x, newExtent.x),
-		getMax(mMinExtent.y, newExtent.y));
-
-	//call set update both before and after
-	setUpdate();
-
-	Point2I zero = mBounds.point.Zero;
-	RectI innerRect = getInnerRect(zero, actualNewExtent, NormalState, mProfile);
-	if (!innerRect.isValidRect() && !mIsExtentDynamic)
+	if (!mResizeGuard)//Prevent circular resizing
 	{
-		return;
-	}
+		mResizeGuard = true;
+		Point2I actualNewExtent = Point2I(getMax(mMinExtent.x, newExtent.x),
+			getMax(mMinExtent.y, newExtent.y));
+
+		//call set update both before and after
+		setUpdate();
+
+		Point2I zero = mBounds.point.Zero;
+		RectI innerRect = getInnerRect(zero, actualNewExtent, NormalState, mProfile);
+		if (!innerRect.isValidRect() && !mIsExtentDynamic)
+		{
+			return;
+		}
 		
-	AdjustGrid(innerRect.extent);
+		AdjustGrid(innerRect.extent);
 
-	iterator i;
-	U16 cellNumber = 0;
-	mChainNumber = 0;
-	mRunningChainHeight = 0;
-	mCurrentChainHeight = 0;
-	for (i = begin(); i != end(); i++, cellNumber++)
-	{
-		GuiControl *ctrl = static_cast<GuiControl *>(*i);
-		Point2I cellPos = getCellPosition(cellNumber, innerRect.extent, ctrl);
-		Point2I cellExt = getCellExtent(ctrl);
-		ctrl->resize(cellPos, cellExt);
+		iterator i;
+		U16 cellNumber = 0;
+		mChainNumber = 0;
+		mRunningChainHeight = 0;
+		mCurrentChainHeight = 0;
+		for (i = begin(); i != end(); i++, cellNumber++)
+		{
+			GuiControl *ctrl = static_cast<GuiControl *>(*i);
+			Point2I cellPos = getCellPosition(cellNumber, innerRect.extent, ctrl);
+			Point2I cellExt = getCellExtent(ctrl);
+			ctrl->resize(cellPos, cellExt);
+		}
+		mRunningChainHeight += mCurrentChainHeight;
+
+		Point2I actualNewPosition = Point2I(newPosition);
+		if(mIsExtentDynamic)
+		{
+			if(isEditMode())
+			{
+				mRunningChainHeight += 20; 
+			}
+			if (IsVertical())
+			{
+				innerRect.extent.y = mRunningChainHeight;
+			}
+			else
+			{
+				innerRect.extent.x = mRunningChainHeight;
+			}
+			actualNewExtent = getOuterExtent(innerRect.extent, NormalState, mProfile);
+
+		}
+
+		mBounds.set(actualNewPosition, actualNewExtent);
+
+		GuiControl *parent = getParent();
+		if (parent)
+			parent->childResized(this);
+		setUpdate();
+		mResizeGuard = false;
 	}
-	mRunningChainHeight += mCurrentChainHeight;
-
-	Point2I actualNewPosition = Point2I(newPosition);
-	if(mIsExtentDynamic)
-	{
-		if(isEditMode())
-		{
-			mRunningChainHeight += 20; 
-		}
-		if (IsVertical())
-		{
-			innerRect.extent.y = mRunningChainHeight;
-		}
-		else
-		{
-			innerRect.extent.x = mRunningChainHeight;
-		}
-		actualNewExtent = getOuterExtent(innerRect.extent, NormalState, mProfile);
-
-	}
-
-	mBounds.set(actualNewPosition, actualNewExtent);
-
-	GuiControl *parent = getParent();
-	if (parent)
-		parent->childResized(this);
-	setUpdate();
 }
 
 //------------------------------------------------------------------------------

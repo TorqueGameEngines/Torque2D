@@ -26,6 +26,7 @@
 #include "gui/guiCanvas.h"
 #include "gui/containers/guiWindowCtrl.h"
 #include "gui/guiDefaultControlRender.h"
+#include "gui/containers/guiFrameSetCtrl.h"
 
 #include "guiWindowCtrl_ScriptBinding.h"
 
@@ -869,6 +870,11 @@ void GuiWindowCtrl::getCursor(GuiCursor *&cursor, bool &showCursor, const GuiEve
 	if (!parent)
 	{
 		return;
+	}
+	GuiFrameSetCtrl* frame = static_cast<GuiFrameSetCtrl*>(parent);
+	if (frame)
+	{
+		return;//Resizing doesn't happen when in a frame set.
 	}
 	Point2I offset = getParent()->localToGlobalCoord(Point2I(0,0));
 	RectI rightRect = RectI( ( ( winRect.extent.x + winRect.point.x ) - mResizeRightWidth + offset.x), winRect.point.y + mTitleHeight + offset.y, mResizeRightWidth, winRect.extent.y );

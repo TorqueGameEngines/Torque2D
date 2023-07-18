@@ -23,6 +23,7 @@ private:
 	U32 mRunningChainHeight;
 	U32 mCurrentChainHeight;
 	U8 mChainNumber;
+	bool mResizeGuard;
 
 public:
 	enum CellMode

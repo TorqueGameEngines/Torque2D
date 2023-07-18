@@ -36,6 +36,7 @@ GuiExpandCtrl::GuiExpandCtrl()
    mExpandedExtent.set(64, 64);
    mEasingFunction = EasingFunction::Linear;
    mAnimationLength = 500;
+   mCalcGuard = false;
 }
 
 void GuiExpandCtrl::initPersistFields()
@@ -101,8 +102,9 @@ void GuiExpandCtrl::parentResized(const Point2I &oldParentExtent, const Point2I 
 		setCollapsedExtent(newExtent);
 	}
 
+	mCalcGuard = true;
 	resize(newPosition, newExtent);
-
+	mCalcGuard = false;
 	calcExpandedExtent();
 
 	if (mExpanded)
@@ -134,16 +136,18 @@ bool GuiExpandCtrl::calcExpandedExtent()
 	if (!size())
 		return false;
 
-	mExpandedExtent = Point2I(0, 0);
-	for (iterator itr = begin(); itr != end(); ++itr)
+	if(!mCalcGuard)//Prevent needless calcuations
 	{
-		GuiControl* child = dynamic_cast<GuiControl*>(*itr);
-		mExpandedExtent.setMax(child->getExtent() + child->getPosition());
+		mExpandedExtent = Point2I(0, 0);
+		for (iterator itr = begin(); itr != end(); ++itr)
+		{
+			GuiControl* child = dynamic_cast<GuiControl*>(*itr);
+			mExpandedExtent.setMax(child->getExtent() + child->getPosition());
+		}
+
+		mExpandedExtent = getOuterExtent(mExpandedExtent, GuiControlState::NormalState, mProfile);
+		mExpandedExtent.set(getMax(mCollapsedExtent.x, mExpandedExtent.x), getMax(mCollapsedExtent.y, mExpandedExtent.y));
 	}
-
-	mExpandedExtent = getOuterExtent(mExpandedExtent, GuiControlState::NormalState, mProfile);
-	mExpandedExtent.set(getMax(mCollapsedExtent.x, mExpandedExtent.x), getMax(mCollapsedExtent.y, mExpandedExtent.y));
-
 	return true;
 }
 

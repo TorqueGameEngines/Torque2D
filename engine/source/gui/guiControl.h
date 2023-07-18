@@ -686,7 +686,8 @@ public:
     virtual void setFirstResponder();
 
     /// Clears the first responder for this chain
-    void clearFirstResponder();
+	void clearFirstResponder();
+	void clearFirstResponder(GuiControl* target);
 
     /// Returns the first responder for this chain
     GuiControl *getFirstResponder() { return mFirstResponder; }
@@ -814,6 +815,42 @@ protected:
     VertAlignmentType getVertAlignmentType(GuiControlProfile* profile);
     const ColorI& getFontColor(GuiControlProfile* profile, const GuiControlState state = GuiControlState::NormalState);
 };
+
 /// @}
+/// <summary>
+/// Can be inherited from to add the members and methods needed to easily add smooth 
+/// transitions between fill colors in default rendering. To use this:
+/// 1. First, inherit from this class instead of GuiControl.
+/// 2. In the render function, when it calls renderUniversalRect(), pass in getFillColor() and true to 
+///    override the existing fill color. It should look like:
+///	   renderUniversalRect(ctrlRect, mProfile, currentState, getFillColor(currentState), true);
+/// 
+/// Note that this will only change the fill color used during default rendering.
+/// </summary>
+class GuiEasingSupport : public GuiControl
+{
+private:
+	typedef GuiControl Parent;
+
+protected:
+	FluidColorI mFluidFillColor; //The actual fill color as it moves fluidly from one color to another.
+	GuiControlState mPreviousState;
+	GuiControlState mCurrentState;
+
+public:
+	GuiEasingSupport();
+	static void initPersistFields();
+
+	EasingFunction mEaseFillColorHL; //Transitioning to or from HL (if SL is not involved)
+	EasingFunction mEaseFillColorSL; //Transitioning to or from SL (over HL)
+
+	S32 mEaseTimeFillColorHL;
+	S32 mEaseTimeFillColorSL;
+
+	virtual void setControlProfile(GuiControlProfile* prof);
+	const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.
+	virtual void processTick();
+	inline const char* getEasingFunctionDescription(const EasingFunction ease) { return mFluidFillColor.getEasingFunctionDescription(ease); };
+};
 
 #endif

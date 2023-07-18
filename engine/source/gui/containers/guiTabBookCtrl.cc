@@ -230,7 +230,10 @@ void GuiTabBookCtrl::resize(const Point2I &newPosition, const Point2I &newExtent
 
 void GuiTabBookCtrl::childResized(GuiControl *child)
 {
-   child->resize( Point2I(0,0), mPageRect.extent );
+	if(mPageRect.extent != child->mBounds.extent || child->mBounds.point != Point2I::Zero)
+	{
+		child->resize( Point2I(0,0), mPageRect.extent );
+	}
 }
 
 Point2I GuiTabBookCtrl::getTabLocalCoord(const Point2I &src)

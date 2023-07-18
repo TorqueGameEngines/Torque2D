@@ -19,6 +19,7 @@ private:
 	typedef GuiControl Parent;
 	bool mPrevIsVertical;
 	const S32 mEditOpenSpace = 30;
+	bool mResizeGuard;
 
 protected:
 	S32 mChildSpacing;

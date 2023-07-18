@@ -29,14 +29,18 @@
 
 void GuiFrameSetCtrl::Frame::resize(const Point2I& newPosition, const Point2I& newExtent)
 {
+	const S32 minSize = owner->minSize;
 	extent.set(newExtent.x, newExtent.y);
 	if (control)
 	{
+		if (control->mMinExtent.x > minSize || control->mMinExtent.y > minSize)
+		{
+			control->mMinExtent.set(minSize, minSize);
+		}
 		control->resize(newPosition, newExtent);
 	}
 	else if (child1 && child2)
 	{
-		const S32 minSize = owner->minSize;
 		S32 spaceX = isVertical ? newExtent.x : newExtent.x - owner->mDividerThickness;
 		S32 spaceY = !isVertical ? newExtent.y : newExtent.y - owner->mDividerThickness;
 
@@ -75,6 +79,15 @@ void GuiFrameSetCtrl::Frame::resize(const Point2I& newPosition, const Point2I& n
 		Point2I ext1 = Point2I(x1, y1);
 		Point2I ext2 = Point2I(x2, y2);
 		Point2I pos2 = isVertical ? Point2I(newPosition.x, y1 + owner->mDividerThickness) : Point2I(x1 + owner->mDividerThickness, newPosition.y);
+
+		if(isVertical)
+		{
+			dividerRect.set(newPosition.x, newPosition.y + y1, x1, owner->mDividerThickness);
+		}
+		else
+		{
+			dividerRect.set(newPosition.x + x1, newPosition.y, owner->mDividerThickness, y1);
+		}
 
 		child1->resize(newPosition, ext1);
 		child2->resize(pos2, ext2);
@@ -126,6 +139,24 @@ GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::twin()
 	return this;
 }
 
+GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findHitDivider(const Point2I& position)
+{
+	S32 x = position.x;
+	S32 y = position.y;
+
+	if (child1 && child2)
+	{
+		if (x >= dividerRect.point.x && x <= (dividerRect.point.x + dividerRect.extent.x) && 
+			y >= dividerRect.point.y && y <= (dividerRect.point.y + dividerRect.extent.y))
+		{
+			return this;
+		}
+		Frame* attempt = child1->findHitDivider(position);
+		return attempt ? attempt : child2->findHitDivider(position);
+	}
+	return nullptr;
+}
+
 
 //------------------------------------------------------------------------------
 
@@ -139,9 +170,21 @@ GuiFrameSetCtrl::GuiFrameSetCtrl()
 	setField("profile", "GuiDefaultProfile");
 
 	mRootFrame = Frame(this, nullptr);
+	mHitDivider = nullptr;
 	mDividerThickness = 8;
 	mNextFrameID = 1;
 	mResizeGuard = false;
+	mDepressed = false;
+	mActive = true;
+	mFrameDragAnchor = 0;
+
+	mEaseFillColorHL = EasingFunction::EaseInOut;
+	mEaseFillColorSL = EasingFunction::EaseOut;
+	mEaseTimeFillColorHL = 500;
+	mEaseTimeFillColorSL = 1000;
+
+	mLeftRightCursor = NULL;
+	mUpDownCursor = NULL;
 }
 
 //------------------------------------------------------------------------------
@@ -151,6 +194,8 @@ void GuiFrameSetCtrl::initPersistFields()
 	Parent::initPersistFields();
 
 	addField("DividerThickness", TypeS32, Offset(mDividerThickness, GuiFrameSetCtrl));
+	addField("leftRightCursor", TypeGuiCursor, Offset(mLeftRightCursor, GuiFrameSetCtrl));
+	addField("upDownCursor", TypeGuiCursor, Offset(mUpDownCursor, GuiFrameSetCtrl));
 }
 
 //------------------------------------------------------------------------------
@@ -334,25 +379,132 @@ void GuiFrameSetCtrl::setFrameSize(S32 frameID, S32 size)
 
 void GuiFrameSetCtrl::onRender(Point2I offset, const RectI& updateRect)
 {
-	RectI ctrlRect = applyMargins(offset, mBounds.extent, NormalState, mProfile);
+	Parent::onRender(offset, updateRect);
 
-	if (!ctrlRect.isValidRect())
+	if (mHitDivider)
+	{
+		GuiControlState currentState = mDepressed ? SelectedState : HighlightState;
+
+		mOldHitDivider = mHitDivider;
+		RectI contentRect = RectI(localToGlobalCoord(mHitDivider->dividerRect.point), mHitDivider->dividerRect.extent);
+		renderUniversalRect(contentRect, mProfile, currentState, getFillColor(currentState), true);
+	}
+	else if (mOldHitDivider && (mCurrentState == HighlightState || mFluidFillColor.isAnimating()))
+	{
+		RectI contentRect = RectI(localToGlobalCoord(mOldHitDivider->dividerRect.point), mOldHitDivider->dividerRect.extent);
+		renderUniversalRect(contentRect, mProfile, NormalState, getFillColor(NormalState), true);
+	}
+	else if (mOldHitDivider)
+	{
+		mOldHitDivider = nullptr;
+	}
+}
+
+void GuiFrameSetCtrl::onTouchMove(const GuiEvent& event)
+{
+	if (!mVisible || !mAwake)
+		return;
+
+	if(!mDepressed)
+	{
+		Point2I localPoint = globalToLocalCoord(event.mousePoint);
+		mHitDivider = mRootFrame.findHitDivider(localPoint);
+	}
+
+	if (!mHitDivider)
+	{
+		Parent::onTouchMove(event);
+	}
+}
+
+void GuiFrameSetCtrl::onTouchDragged(const GuiEvent& event)
+{
+	if (mDepressed && mHitDivider && mHitDivider->child1 && mHitDivider->child2)
+	{
+		S32 offset = (mHitDivider->isVertical ? event.mousePoint.y : event.mousePoint.x) - mFrameDragAnchor;
+		if(offset != 0)
+		{
+			if (mHitDivider->isVertical)
+			{
+				mHitDivider->child1->extent.y = getMax(minSize, mHitDivider->child1->extent.y + offset);
+				mHitDivider->child2->extent.y = getMax(minSize, mHitDivider->child2->extent.y - offset);
+			}
+			else
+			{
+				mHitDivider->child1->extent.x = getMax(minSize, mHitDivider->child1->extent.x + offset);
+				mHitDivider->child2->extent.x = getMax(minSize, mHitDivider->child2->extent.x - offset);
+			}
+			resize(getPosition(), getExtent());
+			mFrameDragAnchor = mHitDivider->isVertical ? event.mousePoint.y : event.mousePoint.x;
+		}
+	}
+}
+
+void GuiFrameSetCtrl::onTouchDown(const GuiEvent& event)
+{
+ 	if (!mActive)
+		return;
+
+	if(mHitDivider)
+	{
+		mDepressed = true;
+		mFrameDragAnchor = mHitDivider->isVertical ? event.mousePoint.y : event.mousePoint.x;
+
+		//lock the mouse
+		mouseLock();
+
+		//update
+		setUpdate();
+	}
+}
+
+void GuiFrameSetCtrl::onTouchUp(const GuiEvent& event)
+{
+	if (!mActive)
+		return;
+
+	if(mHitDivider)
+	{
+		mouseUnlock();
+
+		mDepressed = false;
+
+		//update
+		setUpdate();
+	}
+}
+
+void GuiFrameSetCtrl::getCursor(GuiCursor*& cursor, bool& showCursor, const GuiEvent& lastGuiEvent)
+{
+	GuiControl* parent = getParent();
+	if (!parent)
 	{
 		return;
 	}
-
-	renderUniversalRect(ctrlRect, mProfile, NormalState);
-
-	//Render Text
-	dglSetBitmapModulation(getFontColor(mProfile));
-	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
-	RectI contentRect = applyPadding(fillRect.point, fillRect.extent, NormalState, mProfile);
-
-	if (contentRect.isValidRect())
+	if (mHitDivider && mHitDivider->isVertical)
 	{
-		renderText(contentRect.point, contentRect.extent, mText, mProfile);
-
-		//Render the childen
-		renderChildControls(offset, contentRect, updateRect);
+		if (mUpDownCursor == NULL)
+		{
+			SimObject* obj;
+			obj = Sim::findObject("UpDownCursor");
+			mUpDownCursor = dynamic_cast<GuiCursor*>(obj);
+		}
+		if (mUpDownCursor != NULL)
+		{
+			cursor = mUpDownCursor;
+		}
+	}
+	else if (mHitDivider && !mHitDivider->isVertical)
+	{
+		if (mLeftRightCursor == NULL)
+		{
+			SimObject* obj;
+			obj = Sim::findObject("LeftRightCursor");
+			mLeftRightCursor = dynamic_cast<GuiCursor*>(obj);
+		}
+		if (mLeftRightCursor != NULL)
+		{
+			cursor = mLeftRightCursor;
+		}
 	}
 }

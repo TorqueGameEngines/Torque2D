@@ -76,6 +76,8 @@ GuiScrollCtrl::GuiScrollCtrl()
    setField("profile", "GuiScrollProfile");
 
    mEventBubbled = false;
+   mCalcGuard = false;
+   mResizeGuard = false;
 }
 
 void GuiScrollCtrl::initPersistFields()
@@ -95,26 +97,33 @@ void GuiScrollCtrl::initPersistFields()
 
 void GuiScrollCtrl::resize(const Point2I &newPos, const Point2I &newExt)
 {
-	bool hasH = mHasHScrollBar;
-	bool hasV = mHasVScrollBar;
-	Parent::resize(newPos, newExt);
-	computeSizes();
-
-	if (hasH != mHasHScrollBar || hasV != mHasVScrollBar)
+	if(!mResizeGuard)
 	{
-		S32 deltaY = hasH != mHasHScrollBar ? (mHasHScrollBar ? mScrollBarThickness : -mScrollBarThickness) : 0;
-		S32 deltaX = hasV != mHasVScrollBar ? (mHasVScrollBar ? mScrollBarThickness : -mScrollBarThickness) : 0;
-
-		iterator i;
-		for (i = begin(); i != end(); i++)
-		{
-			GuiControl* ctrl = static_cast<GuiControl*>(*i);
-			ctrl->mRenderInsetRB = Point2I(ctrl->mRenderInsetRB.x + deltaX, ctrl->mRenderInsetRB.y + deltaY);
-			ctrl->parentResized(mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
-		}
-
+		mResizeGuard = true;
+		bool hasH = mHasHScrollBar;
+		bool hasV = mHasVScrollBar;
+		mCalcGuard = true;
 		Parent::resize(newPos, newExt);
+		mCalcGuard = false;
 		computeSizes();
+
+		if (hasH != mHasHScrollBar || hasV != mHasVScrollBar)
+		{
+			S32 deltaY = hasH != mHasHScrollBar ? (mHasHScrollBar ? mScrollBarThickness : -mScrollBarThickness) : 0;
+			S32 deltaX = hasV != mHasVScrollBar ? (mHasVScrollBar ? mScrollBarThickness : -mScrollBarThickness) : 0;
+
+			iterator i;
+			for (i = begin(); i != end(); i++)
+			{
+				GuiControl* ctrl = static_cast<GuiControl*>(*i);
+				ctrl->mRenderInsetRB = Point2I(ctrl->mRenderInsetRB.x + deltaX, ctrl->mRenderInsetRB.y + deltaY);
+				ctrl->parentResized(mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
+			}
+
+			Parent::resize(newPos, newExt);
+			computeSizes();
+		}
+		mResizeGuard = false;
 	}
 }
 
@@ -272,52 +281,55 @@ GuiScrollCtrl::Region GuiScrollCtrl::findHitRegion(const Point2I& pt)
 #pragma region CalculationFunctions
 void GuiScrollCtrl::computeSizes()
 {
-	calcContentExtents();
-
-	mHBarEnabled = false;
-	mVBarEnabled = false;
-	mHasVScrollBar = (mForceVScrollBar == ScrollBarAlwaysOn);
-	mHasHScrollBar = (mForceHScrollBar == ScrollBarAlwaysOn);
-
-	setUpdate();
-
-	if (calcChildExtents())
+	if (!mCalcGuard)//Prevent needless calcuations
 	{
-		if (mChildExt.x > mContentExt.x && (mForceHScrollBar == ScrollBarDynamic))
-		{
-			mHasHScrollBar = true;
-		}
-		if (mChildExt.y > mContentExt.y && (mForceVScrollBar == ScrollBarDynamic))
-		{
-			mHasVScrollBar = true;
+		calcContentExtents();
 
-			// If Extent X Changed, check Horiz Scrollbar.
-			if (mChildExt.x > mContentExt.x && !mHasHScrollBar && (mForceHScrollBar == ScrollBarDynamic))
+		mHBarEnabled = false;
+		mVBarEnabled = false;
+		mHasVScrollBar = (mForceVScrollBar == ScrollBarAlwaysOn);
+		mHasHScrollBar = (mForceHScrollBar == ScrollBarAlwaysOn);
+
+		setUpdate();
+
+		if (calcChildExtents())
+		{
+			if (mChildExt.x > mContentExt.x && (mForceHScrollBar == ScrollBarDynamic))
 			{
 				mHasHScrollBar = true;
 			}
+			if (mChildExt.y > mContentExt.y && (mForceVScrollBar == ScrollBarDynamic))
+			{
+				mHasVScrollBar = true;
+
+				// If Extent X Changed, check Horiz Scrollbar.
+				if (mChildExt.x > mContentExt.x && !mHasHScrollBar && (mForceHScrollBar == ScrollBarDynamic))
+				{
+					mHasHScrollBar = true;
+				}
+			}
+
+			if (mHasVScrollBar)
+				mContentExt.x -= mScrollBarThickness;
+			if (mHasHScrollBar)
+				mContentExt.y -= mScrollBarThickness;
+
+			// enable needed scroll bars
+			if (mChildExt.x > mContentExt.x)
+				mHBarEnabled = true;
+			if (mChildExt.y > mContentExt.y)
+				mVBarEnabled = true;
+
+			//Are we now over-scrolled?
+			calcScrollOffset();
 		}
-
-		if (mHasVScrollBar)
-			mContentExt.x -= mScrollBarThickness;
-		if (mHasHScrollBar)
-			mContentExt.y -= mScrollBarThickness;
-
-		// enable needed scroll bars
-		if (mChildExt.x > mContentExt.x)
-			mHBarEnabled = true;
-		if (mChildExt.y > mContentExt.y)
-			mVBarEnabled = true;
-
-		//Are we now over-scrolled?
-		calcScrollOffset();
+		// build all the rectangles and such...
+		Point2I zero = mBounds.point.Zero;
+		RectI ctrlRect = applyMargins(zero, mBounds.extent, NormalState, mProfile);
+		RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
+		calcScrollRects(fillRect);
+		calcThumbs();
 	}
-	// build all the rectangles and such...
-	Point2I zero = mBounds.point.Zero;
-	RectI ctrlRect = applyMargins(zero, mBounds.extent, NormalState, mProfile);
-	RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
-	calcScrollRects(fillRect);
-	calcThumbs();
 }
 
 void GuiScrollCtrl::calcContentExtents()
@@ -402,8 +414,10 @@ void GuiScrollCtrl::calcThumbs()
 
 			if (mUseConstantHeightThumb)
 				mHThumbSize = mBaseThumbSize;
-			else
+			else if(mChildExt.x > 0)
 				mHThumbSize = getMax(mBaseThumbSize, S32((mContentExt.x * trackSize) / mChildExt.x));
+			else 
+				mHThumbSize = mBaseThumbSize;
 
 			F32 fraction = (F32)mScrollOffset.x / (F32)totalArea;
 			mHThumbPos = roundf((trackSize - mHThumbSize) * fraction);
@@ -424,8 +438,10 @@ void GuiScrollCtrl::calcThumbs()
 
 			if (mUseConstantHeightThumb)
 				mVThumbSize = mBaseThumbSize;
-			else
+			else if(mChildExt.y > 0)
 				mVThumbSize = getMax(mBaseThumbSize, S32((mContentExt.y * trackSize) / mChildExt.y));
+			else 
+				mVThumbSize = mBaseThumbSize;
 
 			F32 fraction = (F32)mScrollOffset.y / (F32)totalArea;
 			mVThumbPos = roundf((trackSize - mVThumbSize) * fraction);

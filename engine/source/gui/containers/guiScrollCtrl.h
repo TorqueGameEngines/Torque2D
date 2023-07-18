@@ -32,6 +32,8 @@ class GuiScrollCtrl : public GuiControl
 private:
    typedef GuiControl Parent;
    bool mEventBubbled;
+   bool mCalcGuard;
+   bool mResizeGuard;
 
 protected:
 

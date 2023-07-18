@@ -46,6 +46,7 @@ class GuiExpandCtrl : public GuiControl, public Fluid
 {
 private:
    typedef GuiControl Parent;
+   bool mCalcGuard;
 
    void setCollapsedExtent(const Point2I &extent);
 

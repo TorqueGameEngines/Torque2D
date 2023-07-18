@@ -37,6 +37,7 @@ GuiChainCtrl::GuiChainCtrl()
 	mChildSpacing = 0;
 	mIsVertical = true;
 	mBounds.extent.set(140, mEditOpenSpace);
+	mResizeGuard = false;
 }
 
 //------------------------------------------------------------------------------
@@ -101,18 +102,23 @@ void GuiChainCtrl::childrenReordered()
 
 void GuiChainCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 {
-	Point2I actualNewExtent = newExtent;
-	if (mIsVertical)
+	if (!mResizeGuard)
 	{
-		actualNewExtent.y = getExtent().y;
-	}
-	else
-	{
-		actualNewExtent.x = getExtent().x;
-	}
-	if(newPosition != getPosition() || actualNewExtent != getExtent())
-	{
-		Parent::resize(newPosition, actualNewExtent);
+		mResizeGuard = true;
+		Point2I actualNewExtent = newExtent;
+		if (mIsVertical)
+		{
+			actualNewExtent.y = getExtent().y;
+		}
+		else
+		{
+			actualNewExtent.x = getExtent().x;
+		}
+		if(newPosition != getPosition() || actualNewExtent != getExtent())
+		{
+			Parent::resize(newPosition, actualNewExtent);
+		}
+		mResizeGuard = false;
 	}
 }
 

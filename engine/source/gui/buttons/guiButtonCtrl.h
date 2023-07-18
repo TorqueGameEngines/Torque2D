@@ -27,17 +27,14 @@
 #include "gui/guiControl.h"
 #endif
 
-class GuiButtonCtrl : public GuiControl
+class GuiButtonCtrl : public GuiEasingSupport
 {
 private:
-   typedef GuiControl Parent;
+   typedef GuiEasingSupport Parent;
 
 protected:
 	bool mDepressed;
 	bool mMouseOver;
-	FluidColorI mFluidFillColor; //The actual fill color as it moves fluidly from one color to another.
-	GuiControlState mPreviousState;
-	GuiControlState mCurrentState;
 	GuiControlState getCurrentState();
 	S32 getBitmapIndex(const GuiControlState state);
 
@@ -46,12 +43,6 @@ public:
 	static void initPersistFields();
 
 	DECLARE_CONOBJECT(GuiButtonCtrl);
-
-	EasingFunction mEaseFillColorHL; //Transitioning to or from HL (if SL is not involved)
-	EasingFunction mEaseFillColorSL; //Transitioning to or from SL (over HL)
-
-	S32 mEaseTimeFillColorHL;
-	S32 mEaseTimeFillColorSL;
 
 	void acceleratorKeyPress(U32 index);
 	void acceleratorKeyRelease(U32 index);
@@ -75,12 +66,6 @@ public:
 	virtual void onAction();
    
 	virtual void onRender(Point2I offset, const RectI &updateRect);
-	virtual void setControlProfile(GuiControlProfile *prof);
-
-	const ColorI& getFillColor(const GuiControlState state); //Returns the fill color based on the state.
-	virtual void processTick();
-
-	inline const char* getEasingFunctionDescription(const EasingFunction ease) { return mFluidFillColor.getEasingFunctionDescription(ease); };
 };
 
 #endif //_GUI_BUTTON_CTRL_H

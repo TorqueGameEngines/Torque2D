@@ -2041,8 +2041,8 @@ function BaseTheme::makeGuiEditorProfile(%this)
 	%this.frameSetProfile = new GuiControlProfile()
 	{
 		fillColor = %this.adjustValue(%this.color1, 10); 
-		fillColorHL = %this.adjustValue(%this.color2, 20); 
-		fillColorSL = %this.color3; 
+		fillColorHL = %this.adjustValue(%this.color1, 20); 
+		fillColorSL = %this.color4; 
 		fillColorNA = %this.color2; 
 		
 		borderDefault = %this.emptyBorder;

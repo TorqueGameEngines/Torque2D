@@ -1808,10 +1808,15 @@ void GuiControl::setFirstResponder()
 
 void GuiControl::clearFirstResponder()
 {
+	clearFirstResponder(this);
+}
+
+void GuiControl::clearFirstResponder(GuiControl* target)
+{
    GuiControl *parent = this;
    while((parent = parent->getParent()) != NULL)
    {
-      if(parent->mFirstResponder == this)
+      if(parent->mFirstResponder == target)
          parent->mFirstResponder = NULL;
       else
          break;
@@ -2324,4 +2329,96 @@ bool GuiControl::isEditMode()
 		}
 		return false;
 	}
+}
+
+//--------------------------------------------------------------------
+
+GuiEasingSupport::GuiEasingSupport()
+{
+	//fill color
+	mEaseFillColorHL = EasingFunction::Linear;
+	mEaseFillColorSL = EasingFunction::Linear;
+	mEaseTimeFillColorHL = 500;
+	mEaseTimeFillColorSL = 0;
+
+	//control state
+	mPreviousState = GuiControlState::DisabledState;
+	mCurrentState = GuiControlState::DisabledState;
+
+	mFluidFillColor = FluidColorI(); //The actual fill color as it moves fluidly from one color to another.
+}
+
+void GuiEasingSupport::initPersistFields()
+{
+	Parent::initPersistFields();
+
+	addGroup("Gui Easing Settings");
+	addField("easeFillColorHL", TypeEnum, Offset(mEaseFillColorHL, GuiEasingSupport), 1, &gEasingTable);
+	addField("easeFillColorSL", TypeEnum, Offset(mEaseFillColorSL, GuiEasingSupport), 1, &gEasingTable);
+	addField("easeTimeFillColorHL", TypeS32, Offset(mEaseTimeFillColorHL, GuiEasingSupport));
+	addField("easeTimeFillColorSL", TypeS32, Offset(mEaseTimeFillColorSL, GuiEasingSupport));
+	endGroup("Gui Easing Settings");
+}
+
+const ColorI& GuiEasingSupport::getFillColor(const GuiControlState state)
+{
+	if (state != mCurrentState)
+	{
+		//We have just switched states!
+		mPreviousState = mCurrentState;
+		mCurrentState = state;
+		if (mCurrentState == GuiControlState::DisabledState || mPreviousState == GuiControlState::DisabledState)
+		{
+			mFluidFillColor.stopFluidAnimation();
+			mFluidFillColor.set(mProfile->getFillColor(state));
+		}
+		else if (mCurrentState == GuiControlState::SelectedState || mPreviousState == GuiControlState::SelectedState)
+		{
+			mFluidFillColor.setEasingFunction(mEaseFillColorSL);
+			mFluidFillColor.setAnimationLength(mEaseTimeFillColorSL);
+			mFluidFillColor.startFluidAnimation(mProfile->getFillColor(state));
+		}
+		else if (mCurrentState == GuiControlState::HighlightState || mPreviousState == GuiControlState::HighlightState)
+		{
+			mFluidFillColor.setEasingFunction(mEaseFillColorHL);
+			mFluidFillColor.setAnimationLength(mEaseTimeFillColorHL);
+			mFluidFillColor.startFluidAnimation(mProfile->getFillColor(state));
+		}
+		else
+		{
+			//we should never get here...
+			mFluidFillColor.stopFluidAnimation();
+			mFluidFillColor.set(mProfile->getFillColor(state));
+		}
+	}
+
+	if (mFluidFillColor.isAnimating() && !isProcessingTicks())
+	{
+		setProcessTicks(true);
+	}
+
+	if (!mFluidFillColor.isAnimating())
+	{
+		mFluidFillColor.set(mProfile->getFillColor(state));
+	}
+
+	return mFluidFillColor;
+}
+
+void GuiEasingSupport::processTick()
+{
+	bool shouldWeContinue = false;
+
+	shouldWeContinue |= mFluidFillColor.processTick();
+
+	if (!shouldWeContinue)
+	{
+		setProcessTicks(false);
+	}
+}
+
+void GuiEasingSupport::setControlProfile(GuiControlProfile* prof)
+{
+	Parent::setControlProfile(prof);
+	mCurrentState = mCurrentState == DisabledState ? NormalState : DisabledState;
 }

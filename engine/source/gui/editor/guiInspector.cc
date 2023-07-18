@@ -222,15 +222,7 @@ void GuiInspector::resize(const Point2I &newPosition, const Point2I &newExtent)
 
 void GuiInspector::parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent)
 {
-   GuiControl *parent = getParent();
-   if( parent && dynamic_cast<GuiScrollCtrl*>(parent) != NULL )
-   {
-	   // Handle Parent Sizing (We constrain ourself to our parent's width)
-      GuiScrollCtrl *scroll = dynamic_cast<GuiScrollCtrl*>(parent);
-      setWidth(newParentExtent.x - scroll->scrollBarThickness());
-   }
-   else
-      Parent::parentResized(oldParentExtent,newParentExtent);
+   Parent::parentResized(oldParentExtent,newParentExtent);
 }
 
 bool GuiInspector::findExistentGroup( StringTableEntry groupName )
@@ -268,6 +260,9 @@ void GuiInspector::clearGroups()
          (*i)->deleteObject();
 
    mGroups.clear();
+
+   GuiControl* firstRes = getFirstResponder();
+   clearFirstResponder(firstRes);
 }
 
 void GuiInspector::inspectObject( SimObject *object )
