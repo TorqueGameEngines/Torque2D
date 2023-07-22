@@ -120,6 +120,7 @@ class GuiWindowCtrl : public GuiControl
 
       GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1);
       void resize(const Point2I &newPosition, const Point2I &newExtent);
+	  void restore();
 
 	  void onTouchMove(const GuiEvent &event);
       void onTouchDown(const GuiEvent &event);

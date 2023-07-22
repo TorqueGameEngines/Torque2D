@@ -330,7 +330,7 @@ Point2F GuiGridCtrl::GetGridItemHeight(const S32 totalArea, const S32 maxChainLe
 	return Point2F(1, 1);
 }
 
-void GuiGridCtrl::onChildAdded(GuiControl *child)
+void GuiGridCtrl::onChildAdded(GuiControl* child)
 {
 	//Ensure the child isn't positioned to the center
 	if (child->getHorizSizing() == horizResizeCenter)
@@ -346,7 +346,7 @@ void GuiGridCtrl::onChildAdded(GuiControl *child)
 	Parent::onChildAdded(child);
 }
 
-void GuiGridCtrl::onChildRemoved(SimObject *child)
+void GuiGridCtrl::onChildRemoved(GuiControl* child)
 {
 	resize(getPosition(), getExtent());
 }

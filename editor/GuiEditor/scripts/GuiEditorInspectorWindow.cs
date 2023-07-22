@@ -7,7 +7,7 @@ function GuiEditorInspectorWindow::onAdd(%this)
 		HorizSizing="width";
 		VertSizing="height";
 		Position="0 0";
-		Extent="352 355";
+		Extent="352 354";
 		hScrollBar="alwaysOff";
 		vScrollBar="alwaysOn";
 		constantThumbHeight="0";
@@ -26,7 +26,7 @@ function GuiEditorInspectorWindow::onAdd(%this)
 		HorizSizing="width";
 		VertSizing="height";
 		Position="0 0";
-		Extent="338 355";
+		Extent="338 354";
 		FieldCellSize="288 40";
 		ControlOffset="10 18";
 		ConstantThumbHeight=false;

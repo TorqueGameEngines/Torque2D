@@ -68,6 +68,7 @@ function BaseTheme::onAdd(%this)
 	%this.makeTextDisplayProfile();
 	%this.makeSubListProfile();
 	%this.makeGuiEditorProfile();
+	%this.makeFrameSetProfile();
 }
 
 function BaseTheme::init(%this)
@@ -2013,6 +2014,9 @@ function BaseTheme::makeGuiEditorProfile(%this)
 	%border = new GuiBorderProfile()
 	{
 		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+
 		borderColor = %this.color1; //Used for a single selected nut without key focus
 		borderColorHL = %this.color1; //Used for a multiple selected nuts without key focus
 		borderColorSL = %this.color1; //Used for nuts if the editor has key focus
@@ -2037,7 +2041,10 @@ function BaseTheme::makeGuiEditorProfile(%this)
 		align = "center";
 		vAlign = "middle";
 	};
+}
 
+function BaseTheme::makeFrameSetProfile(%this)
+{
 	%this.frameSetProfile = new GuiControlProfile()
 	{
 		fillColor = %this.adjustValue(%this.color1, 10); 
@@ -2049,6 +2056,31 @@ function BaseTheme::makeGuiEditorProfile(%this)
 
 		tab = false;
 		canKeyFocus = true;
+	};
+
+	%borderProfile = new GuiBorderProfile()
+	{
+		border = 2;
+		borderHL = 2;
+		borderSL = 8;
+
+		borderColor = %this.color4;
+		borderColorHL = %this.color5;
+		borderColorSL = %this.setAlpha(%this.color5, 150);
+
+		padding = 4;
+		paddingHL = 4;
+		paddingSL = 4;
+		paddingNA = 4;
+	};
+
+	%this.dropButtonProfile = new GuiControlProfile()
+	{
+		fillColor = %this.adjustValue(%this.color1, 10); 
+		fillColorHL = %this.color2; 
+		fillColorSL = %this.setAlpha(%this.color4, 50); 
+
+		borderDefault = %borderProfile;
 	};
 }
 

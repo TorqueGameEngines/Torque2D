@@ -42,6 +42,7 @@ function GuiEditor::create( %this )
         DividerThickness = 6;
 	};
     ThemeManager.setProfile(%this.content, "frameSetProfile");
+    ThemeManager.setProfile(%this.content, "dropButtonProfile", "dropButtonProfile");
     %this.guiPage.add(%this.content);
 
     %idList = %this.content.createHorizontalSplit(1);
@@ -83,7 +84,7 @@ function GuiEditor::create( %this )
         canClose = false;
         canMinimize = true;
         canMaximize = false;
-        resizeWidth = false;
+        resizeWidth = true;
         resizeHeight = true;
     };
     ThemeManager.setProfile(%this.inspectorWindow, "windowProfile");
@@ -124,7 +125,7 @@ function GuiEditor::create( %this )
         canClose = false;
         canMinimize = true;
         canMaximize = false;
-        resizeWidth = false;
+        resizeWidth = true;
         resizeHeight = true;
     };
     ThemeManager.setProfile(%this.ctrlListWindow, "windowProfile");

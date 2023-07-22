@@ -69,8 +69,8 @@ public:
 	void inspectPostApply();
 	bool onWake();
 	void onSleep();
-	void onChildAdded(GuiControl *child);
-	void onChildRemoved(SimObject *child); 
+	void onChildAdded(GuiControl* child);
+	void onChildRemoved(GuiControl* child);
 	void childResized(GuiControl* child);
 	void childMoved(GuiControl* child);
 	void childrenReordered();

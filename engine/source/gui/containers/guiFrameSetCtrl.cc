@@ -24,13 +24,31 @@
 #include "console/console.h"
 #include "gui/containers/guiFrameSetCtrl.h"
 #include "gui/guiDefaultControlRender.h"
+#include "gui/guiCanvas.h"
+#include "gui/containers/guiWindowCtrl.h"
 
 #include "guiFrameSetCtrl_ScriptBinding.h"
+
+void GuiFrameSetCtrl::Frame::deleteChildren()
+{
+	if (child1)
+	{
+		child1->deleteChildren();
+		delete child1;
+	}
+	if (child2)
+	{
+		child2->deleteChildren();
+		delete child2;
+	}
+}
 
 void GuiFrameSetCtrl::Frame::resize(const Point2I& newPosition, const Point2I& newExtent)
 {
 	const S32 minSize = owner->minSize;
 	extent.set(newExtent.x, newExtent.y);
+	localPosition.set(newPosition.x, newPosition.y);
+	sizeInsertButtons(newPosition, newExtent);
 	if (control)
 	{
 		if (control->mMinExtent.x > minSize || control->mMinExtent.y > minSize)
@@ -78,7 +96,7 @@ void GuiFrameSetCtrl::Frame::resize(const Point2I& newPosition, const Point2I& n
 
 		Point2I ext1 = Point2I(x1, y1);
 		Point2I ext2 = Point2I(x2, y2);
-		Point2I pos2 = isVertical ? Point2I(newPosition.x, y1 + owner->mDividerThickness) : Point2I(x1 + owner->mDividerThickness, newPosition.y);
+		Point2I pos2 = isVertical ? Point2I(newPosition.x, newPosition.y + y1 + owner->mDividerThickness) : Point2I(newPosition.x + x1 + owner->mDividerThickness, newPosition.y);
 
 		if(isVertical)
 		{
@@ -91,6 +109,29 @@ void GuiFrameSetCtrl::Frame::resize(const Point2I& newPosition, const Point2I& n
 
 		child1->resize(newPosition, ext1);
 		child2->resize(pos2, ext2);
+	}
+}
+
+void GuiFrameSetCtrl::Frame::sizeInsertButtons(const Point2I& newPosition, const Point2I& newExtent)
+{
+	const U32 size = 40;
+	const U32 gutter = 10;
+
+	hasLeftRightButtons = false;
+	hasTopBottomButtons = false;
+
+	if (newExtent.x > (4 * (size + gutter)))
+	{
+		hasLeftRightButtons = true;
+		mLeftButtonRect = RectI(newPosition.x + gutter, newPosition.y + ((newExtent.y - size) / 2), size, size);
+		mRightButtonRect = RectI(newPosition.x + newExtent.x - (gutter + size), newPosition.y + ((newExtent.y - size) / 2), size, size);
+	}
+
+	if (newExtent.y > (4 * (size + gutter)))
+	{
+		hasTopBottomButtons = true;
+		mTopButtonRect = RectI(newPosition.x + ((newExtent.x - size) / 2), newPosition.y + gutter, size, size);
+		mBottomButtonRect = RectI(newPosition.x + ((newExtent.x - size) / 2), newPosition.y + newExtent.y - (gutter + size), size, size);
 	}
 }
 
@@ -157,6 +198,48 @@ GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findHitDivider(const Point2I& po
 	return nullptr;
 }
 
+GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findFrameWithCtrl(GuiControl* ctrl)
+{
+	if (ctrl == control)
+	{
+		return this;
+	}
+	else if(child1 && child2)
+	{
+		Frame* attempt = child1->findFrameWithCtrl(ctrl);
+		return attempt ? attempt : child2->findFrameWithCtrl(ctrl);
+	}
+	return nullptr;
+}
+
+GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findFrameWithPoint(const Point2I& point)
+{
+	//Point is local to the frame.
+	if (control)
+	{
+		return this;
+	}
+	if (child1 && child2)
+	{
+		S32 x = point.x;
+		S32 y = point.y;
+
+		Point2I pos2 = isVertical ? Point2I(x, child1->extent.y + owner->mDividerThickness) : Point2I(child1->extent.x + owner->mDividerThickness, y);
+
+
+		if ((isVertical && y < child1->extent.y) || (!isVertical && x < child1->extent.x))
+		{
+			return child1->findFrameWithPoint(point);
+		}
+		else if ((isVertical && y > pos2.y && y < (pos2.y + child2->extent.y)) || (!isVertical && x > pos2.x && x < (pos2.x + child2->extent.x)))
+		{
+			Point2I pt = Point2I(x - pos2.x, y - pos2.y);
+			return child2->findFrameWithPoint(pt);
+		}
+	}
+	return nullptr;//This will happen if the mouse is over a divider.
+}
+
 
 //------------------------------------------------------------------------------
 
@@ -183,8 +266,16 @@ GuiFrameSetCtrl::GuiFrameSetCtrl()
 	mEaseTimeFillColorHL = 500;
 	mEaseTimeFillColorSL = 1000;
 
+	mDropButtonProfile = NULL;
+	setField("dropButtonProfile", "GuiButtonProfile");
+
 	mLeftRightCursor = NULL;
 	mUpDownCursor = NULL;
+}
+
+GuiFrameSetCtrl::~GuiFrameSetCtrl()
+{
+	mRootFrame.deleteChildren();
 }
 
 //------------------------------------------------------------------------------
@@ -194,6 +285,7 @@ void GuiFrameSetCtrl::initPersistFields()
 	Parent::initPersistFields();
 
 	addField("DividerThickness", TypeS32, Offset(mDividerThickness, GuiFrameSetCtrl));
+	addField("dropButtonProfile", TypeGuiProfile, Offset(mDropButtonProfile, GuiFrameSetCtrl));
 	addField("leftRightCursor", TypeGuiCursor, Offset(mLeftRightCursor, GuiFrameSetCtrl));
 	addField("upDownCursor", TypeGuiCursor, Offset(mUpDownCursor, GuiFrameSetCtrl));
 }
@@ -205,6 +297,9 @@ bool GuiFrameSetCtrl::onWake()
 	if (!Parent::onWake())
 		return false;
 
+	if (mDropButtonProfile != NULL)
+		mDropButtonProfile->incRefCount();
+
 	return true;
 }
 
@@ -213,6 +308,9 @@ bool GuiFrameSetCtrl::onWake()
 void GuiFrameSetCtrl::onSleep()
 {
 	Parent::onSleep();
+
+	if (mDropButtonProfile != NULL)
+		mDropButtonProfile->decRefCount();
 }
 
 //------------------------------------------------------------------------------
@@ -289,15 +387,49 @@ void GuiFrameSetCtrl::onChildAdded(GuiControl* child)
 
 	Parent::onChildAdded(child);
 
-	Frame* frame = mRootFrame.findEmptyFrame();
-	if(frame)
+	Frame* frame = mRootFrame.findFrameWithCtrl(child);
+	if(!frame)
 	{
-		frame->control = child;
+		Frame* emptyFrame = mRootFrame.findEmptyFrame();
+		if(emptyFrame)
+		{
+			emptyFrame->control = child;
+		}
 	}
+	resize(getPosition(), getExtent());
 }
 
-void GuiFrameSetCtrl::onChildRemoved(SimObject* child)
+void GuiFrameSetCtrl::onChildRemoved(GuiControl* child)
 {
+	Frame* frame = mRootFrame.findFrameWithCtrl(child);
+
+	if (frame && frame == &mRootFrame)
+	{
+		mRootFrame.control = nullptr;
+	}
+	else if(frame)
+	{
+		//Remove the frame from the heirarchy
+		Frame* frameParent = frame->parent;
+		Frame* frameTwin = frame->twin();
+
+		frameParent->control = frameTwin->control;
+		frameParent->child1 = frameTwin->child1;
+		frameParent->child2 = frameTwin->child2;
+		if (frameParent->child1)
+		{
+			frameParent->child1->parent = frameParent;
+		}
+		if (frameParent->child2)
+		{
+			frameParent->child2->parent = frameParent;
+		}
+		frameParent->isVertical = frameTwin->isVertical;
+
+		delete frame;
+		delete frameTwin;
+	}
+
 	resize(getPosition(), getExtent());
 }
 
@@ -325,30 +457,41 @@ Point2I GuiFrameSetCtrl::splitFrame(S32 frameID, bool isVertical)
 
 	if(frame)
 	{
-		if (!frame->child1 && !frame->child2)
-		{
-			GuiControl* ctrl = frame->control;
-			frame->child1 = new GuiFrameSetCtrl::Frame(this, frame);
-			frame->child2 = new GuiFrameSetCtrl::Frame(this, frame);
-
-			frame->control = nullptr;
-			frame->child1->control = ctrl;
-			frame->child1->id = ++mNextFrameID;
-			frame->child2->id = ++mNextFrameID;
-			frame->child1->isAnchored = true;
-			frame->child2->isAnchored = false;
-		}
-	
-		frame->isVertical = isVertical;
-		return Point2I(static_cast<S32>(frame->child1->id), static_cast<S32>(frame->child2->id));
+		splitFrame(frame, isVertical ? GuiDirection::Up : GuiDirection::Left);
+		return Point2I(frame->child1 ? static_cast<S32>(frame->child1->id) :  0, frame->child2 ? static_cast<S32>(frame->child2->id) : 0);
 	}
 	return Point2I::Zero;
+}
+
+void GuiFrameSetCtrl::splitFrame(GuiFrameSetCtrl::Frame* frame, GuiDirection direction)
+{
+	//The existing control, if any, is moved to the new frame in the direction and anchored. The frame oposite is left empty.
+	if (!frame->child1 && !frame->child2)
+	{
+		GuiControl* ctrl = frame->control;
+		frame->child1 = new GuiFrameSetCtrl::Frame(this, frame);
+		frame->child2 = new GuiFrameSetCtrl::Frame(this, frame);
+
+		frame->control = nullptr;
+		frame->child1->control = direction == GuiDirection::Left || direction == GuiDirection::Up ? ctrl : nullptr;
+		frame->child2->control = direction == GuiDirection::Right || direction == GuiDirection::Down ? ctrl : nullptr;
+		frame->child1->id = ++mNextFrameID;
+		frame->child2->id = ++mNextFrameID;
+		frame->child1->isAnchored = direction == GuiDirection::Left || direction == GuiDirection::Up;
+		frame->child2->isAnchored = direction == GuiDirection::Right || direction == GuiDirection::Down;
+	}
+
+	frame->isVertical = direction == GuiDirection::Up || direction == GuiDirection::Down;
 }
 
 void GuiFrameSetCtrl::anchorFrame(S32 frameID)
 {
 	Frame* frame = mRootFrame.findFrame(frameID);
+	anchorFrame(frame);
+}
 
+void GuiFrameSetCtrl::anchorFrame(GuiFrameSetCtrl::Frame* frame)
+{
 	if (frame && frame != &mRootFrame)//The root frame has no twin and can't be anchored.
 	{
 		frame->isAnchored = true;
@@ -507,4 +650,144 @@ void GuiFrameSetCtrl::getCursor(GuiCursor*& cursor, bool& showCursor, const GuiE
 			cursor = mLeftRightCursor;
 		}
 	}
+}
+
+void GuiFrameSetCtrl::renderDropOptions(GuiWindowCtrl* window)
+{
+	Point2I cursorPt = Point2I(0, 0);
+	GuiCanvas* root = getRoot();
+	if (root)
+	{
+		cursorPt = globalToLocalCoord(root->getCursorPos());
+		cursorPt.x = getMin(getMax(0, cursorPt.x), mRootFrame.extent.x);
+		cursorPt.y = getMin(getMax(0, cursorPt.y), mRootFrame.extent.y);
+	}
+
+	Frame* frame = mRootFrame.findFrameWithPoint(cursorPt);
+	if (frame)
+	{
+		ColorI fillColor = mProfile->getFillColor(SelectedState);
+		fillColor.alpha = 50;
+		const U32 width = getMax(minSize, getMin(frame->extent.x / 2, window->mBounds.extent.x));
+		const U32 height = getMax(minSize, getMin(frame->extent.y / 2, window->mBounds.extent.y));
+
+		if (frame->hasLeftRightButtons)
+		{
+			Point2I fillExt = Point2I(width, frame->extent.y);
+			renderDropButton(frame, frame->mLeftButtonRect, cursorPt, frame->localPosition, fillExt, GuiDirection::Left);
+			renderDropButton(frame, frame->mRightButtonRect, cursorPt, Point2I(frame->localPosition.x + frame->extent.x - width, frame->localPosition.y), fillExt, GuiDirection::Right);
+		}
+
+		if (frame->hasTopBottomButtons)
+		{
+			Point2I fillExt = Point2I(frame->extent.x, height);
+			renderDropButton(frame, frame->mTopButtonRect, cursorPt, frame->localPosition, fillExt, GuiDirection::Up);
+			renderDropButton(frame, frame->mBottomButtonRect, cursorPt, Point2I(frame->localPosition.x, frame->localPosition.y + frame->extent.y - height), fillExt, GuiDirection::Down);
+		}
+	}
+}
+
+void GuiFrameSetCtrl::renderDropButton(const GuiFrameSetCtrl::Frame* frame, const RectI& buttonRect, const Point2I& cursorPt, const Point2I& fillPos, const Point2I& fillExt, GuiDirection direction)
+{
+	GuiControlState state = NormalState;
+	if (buttonRect.pointInRect(cursorPt))
+	{
+		state = HighlightState;
+		RectI rect = RectI(fillPos, fillExt);
+		rect.point = localToGlobalCoord(rect.point);
+		setUpdateRegion(rect.point, rect.extent);
+		renderUniversalRect(rect, mDropButtonProfile, SelectedState);
+	}
+	RectI globalButtonRect = RectI(localToGlobalCoord(buttonRect.point), buttonRect.extent);
+	renderUniversalRect(globalButtonRect, mDropButtonProfile, state);
+
+	dglSetBitmapModulation(getFontColor(mDropButtonProfile, state));
+	ColorI triColor = getFontColor(mDropButtonProfile, state);
+	renderTriangleIcon(globalButtonRect, triColor, direction, 10);
+}
+
+void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
+{
+	Point2I cursorPt = Point2I(0, 0);
+	GuiCanvas* root = getRoot();
+	if (root)
+	{
+		cursorPt = globalToLocalCoord(root->getCursorPos());
+		cursorPt.x = getMin(getMax(0, cursorPt.x), mRootFrame.extent.x);
+		cursorPt.y = getMin(getMax(0, cursorPt.y), mRootFrame.extent.y);
+	}
+	Frame* frame = mRootFrame.findFrameWithPoint(cursorPt);
+
+	if (frame)
+	{
+		const U32 width = getMax(minSize, getMin(frame->extent.x / 2, window->mBounds.extent.x));
+		const U32 height = getMax(minSize, getMin(frame->extent.y / 2, window->mBounds.extent.y));
+
+		bool hitButton = false;
+		if (frame->mLeftButtonRect.pointInRect(cursorPt))
+		{
+			splitFrame(frame, GuiDirection::Right);//This existing control goes right, the new window will go left.
+			anchorFrame(frame->child1);
+			frame->child1->control = window;
+			frame->child1->extent = Point2I(width, frame->extent.y);
+			hitButton = true;
+		}
+		else if (frame->mRightButtonRect.pointInRect(cursorPt))
+		{
+			splitFrame(frame, GuiDirection::Left);
+			anchorFrame(frame->child2);
+			frame->child2->control = window;
+			frame->child2->extent = Point2I(width, frame->extent.y);
+			hitButton = true;
+		}
+		else if (frame->mTopButtonRect.pointInRect(cursorPt))
+		{
+			splitFrame(frame, GuiDirection::Down);
+			anchorFrame(frame->child1);
+			frame->child1->control = window;
+			frame->child1->extent = Point2I(frame->extent.x, height);
+			hitButton = true;
+		}
+		else if (frame->mBottomButtonRect.pointInRect(cursorPt))
+		{
+			splitFrame(frame, GuiDirection::Up);
+			anchorFrame(frame->child2);
+			frame->child2->control = window;
+			frame->child2->extent = Point2I(frame->extent.x, height);
+			hitButton = true;
+		}
+
+		if (hitButton)
+		{
+			addObject(window);
+		}
+	}
+}
+
+void GuiFrameSetCtrl::setDropButtonProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiFrameSetCtrl::setDropButtonProfile: invalid content profile");
+	if (prof == mDropButtonProfile)
+		return;
+	if (mAwake)
+		mDropButtonProfile->decRefCount();
+	mDropButtonProfile = prof;
+	if (mAwake)
+		mDropButtonProfile->incRefCount();
+}
+
+void GuiFrameSetCtrl::setControlLeftRightCursor(GuiCursor* cursor)
+{
+	AssertFatal(cursor, "GuiFrameSetCtrl::setControlLeftRightCursor: invalid cursor");
+	if (cursor == mLeftRightCursor)
+		return;
+	mLeftRightCursor = cursor;
+}
+
+void GuiFrameSetCtrl::setControlUpDownCursor(GuiCursor* cursor)
+{
+	AssertFatal(cursor, "GuiFrameSetCtrl::setControlUpDownCursor: invalid cursor");
+	if (cursor == mUpDownCursor)
+		return;
+	mUpDownCursor = cursor;
 }
