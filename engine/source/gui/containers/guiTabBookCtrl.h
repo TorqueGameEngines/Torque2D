@@ -115,6 +115,8 @@ private:
 
    static void initPersistFields();
 
+   bool mIsFrameSetGenerated;
+
     /// @name Control Events
     /// @{
    bool onAdd();

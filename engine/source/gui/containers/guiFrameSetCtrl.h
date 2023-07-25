@@ -36,7 +36,7 @@ public:
 		Frame() : Frame(nullptr, nullptr) { }
 		Frame(GuiFrameSetCtrl* theOwner, Frame* theParent) : owner(theOwner), parent(theParent), child1(nullptr), child2(nullptr), 
 			control(nullptr), isVertical(true), id(1), extent(Point2I(100, 100)), dividerRect(RectI()),
-			localPosition(Point2I(0, 0)), mLeftButtonRect(RectI()), mRightButtonRect(RectI()),
+			localPosition(Point2I(0, 0)), mLeftButtonRect(RectI()), mRightButtonRect(RectI()), mCenterButtonRect(RectI()),
 			mTopButtonRect(RectI()), mBottomButtonRect(RectI()), isAnchored(true), hasLeftRightButtons(false), hasTopBottomButtons(false) { }
 		virtual ~Frame() { }
 		void deleteChildren();
@@ -51,6 +51,7 @@ public:
 		RectI mRightButtonRect;
 		RectI mTopButtonRect;
 		RectI mBottomButtonRect;
+		RectI mCenterButtonRect;
 		bool hasLeftRightButtons;
 		bool hasTopBottomButtons;
 
@@ -75,6 +76,10 @@ public:
 	Frame* mOldHitDivider;
 	U8 mDividerThickness; 
 	const S32 minSize = 20;
+
+	GuiControlProfile* mTabBookProfile;
+	GuiControlProfile* mTabProfile;
+	GuiControlProfile* mTabPageProfile;
 
 
 private:
@@ -112,8 +117,15 @@ public:
 	void getCursor(GuiCursor*& cursor, bool& showCursor, const GuiEvent& lastGuiEvent);
 
 	void setDropButtonProfile(GuiControlProfile* prof);
+	void setTabBookProfile(GuiControlProfile* prof);
+	void setTabProfile(GuiControlProfile* prof);
+	void setTabPageProfile(GuiControlProfile* prof);
 	void setControlLeftRightCursor(GuiCursor* cursor);
 	void setControlUpDownCursor(GuiCursor* cursor);
+
+	static bool setBookProfileFn(void* obj, const char* data) { GuiControlProfile* profile; Sim::findObject(data, profile); static_cast<GuiFrameSetCtrl*>(obj)->setTabBookProfile(profile); return true; }
+	static bool setTabProfileFn(void* obj, const char* data) { GuiControlProfile* profile; Sim::findObject(data, profile); static_cast<GuiFrameSetCtrl*>(obj)->setTabProfile(profile); return true; }
+	static bool setPageProfileFn(void* obj, const char* data) { GuiControlProfile* profile; Sim::findObject(data, profile); static_cast<GuiFrameSetCtrl*>(obj)->setTabPageProfile(profile); return true; }
 
 	DECLARE_CONOBJECT(GuiFrameSetCtrl);
 };

@@ -64,9 +64,11 @@ GuiTabBookCtrl::GuiTabBookCtrl()
    mMinTabWidth = 64;
    mTabWidth = 64;
    mIsContainer = true;
+   mIsFrameSetGenerated = false;
 
    mTabProfile = NULL;
 
+   setField("profile", "GuiDefaultProfile");
    setField("TabProfile", "GuiTabProfile");
 }
 
@@ -171,7 +173,8 @@ bool GuiTabBookCtrl::onWake()
       mBitmapBounds = mProfile->mBitmapArrayRects.address();
 
    //increment the tab profile
-   mTabProfile->incRefCount();
+   if (mTabProfile != NULL)
+		mTabProfile->incRefCount();
 
    return true;
 }

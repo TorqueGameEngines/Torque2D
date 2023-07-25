@@ -27,6 +27,7 @@
 #include "gui/containers/guiWindowCtrl.h"
 #include "gui/guiDefaultControlRender.h"
 #include "gui/containers/guiFrameSetCtrl.h"
+#include "gui/containers/guiTabPageCtrl.h"
 
 #include "guiWindowCtrl_ScriptBinding.h"
 
@@ -78,6 +79,8 @@ GuiWindowCtrl::GuiWindowCtrl(void)
    mLeftRightCursor = NULL;
    mUpDownCursor = NULL;
    mNWSECursor = NULL;
+
+   mPageDocked = false;
 }
 
 void GuiWindowCtrl::initPersistFields()
@@ -173,6 +176,20 @@ GuiControl* GuiWindowCtrl::findHitControl(const Point2I &pt, S32 initialLayer)
       return this;
 }
 
+void GuiWindowCtrl::dockToPage()
+{
+	mPageDocked = true;
+	setUpdate();
+	Point2I newExtent = mBounds.extent;
+	Point2I oldExtent = Point2I(newExtent.x, newExtent.y - mTitleHeight);
+	iterator i;
+	for (i = begin(); i != end(); i++)
+	{
+		GuiControl* ctrl = static_cast<GuiControl*>(*i);
+		ctrl->parentResized(oldExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), newExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
+	}
+}
+
 void GuiWindowCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 {
 	GuiFrameSetCtrl* frameSet = dynamic_cast<GuiFrameSetCtrl*>(getParent());
@@ -181,6 +198,14 @@ void GuiWindowCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 		mStandardBounds = mBounds;
 		mMaximized = true;
 	}
+
+	GuiTabPageCtrl* page = dynamic_cast<GuiTabPageCtrl*>(getParent());
+	if (page && mPageDocked)
+	{
+		Parent::resize(Point2I::Zero, page->getExtent());
+		return;
+	}
+
    Parent::resize(newPosition, newExtent);
 }
 
@@ -693,33 +718,37 @@ void GuiWindowCtrl::onRender(Point2I offset, const RectI &updateRect)
 	}
 
 	//Render the title bar
-   Point2I extent = Point2I(mBounds.extent.x, mTitleHeight);
-	RectI ctrlRectTitle = applyMargins(offset, extent, currentState, mProfile);
-	if (!ctrlRectTitle.isValidRect())
+	if(!mPageDocked)
 	{
-		return;
-	}
-	mTitleBar.set(Point2I(ctrlRectTitle.point.x - offset.x, ctrlRectTitle.point.y - offset.y), ctrlRectTitle.extent);
-	renderUniversalRect(ctrlRectTitle, mProfile, currentState);
+		Point2I extent = Point2I(mBounds.extent.x, mTitleHeight);
+		RectI ctrlRectTitle = applyMargins(offset, extent, currentState, mProfile);
+		if (!ctrlRectTitle.isValidRect())
+		{
+			return;
+		}
+		mTitleBar.set(Point2I(ctrlRectTitle.point.x - offset.x, ctrlRectTitle.point.y - offset.y), ctrlRectTitle.extent);
+		renderUniversalRect(ctrlRectTitle, mProfile, currentState);
 
-	//Render Text and buttons
-	dglSetBitmapModulation(getFontColor(mProfile, currentState));
-	RectI fillRectTitle = applyBorders(ctrlRectTitle.point, ctrlRectTitle.extent, currentState, mProfile);
-	RectI contentRectTitle = applyPadding(fillRectTitle.point, fillRectTitle.extent, currentState, mProfile);
+		//Render Text and buttons
+		dglSetBitmapModulation(getFontColor(mProfile, currentState));
+		RectI fillRectTitle = applyBorders(ctrlRectTitle.point, ctrlRectTitle.extent, currentState, mProfile);
+		RectI contentRectTitle = applyPadding(fillRectTitle.point, fillRectTitle.extent, currentState, mProfile);
 
-	if (contentRectTitle.isValidRect())
-	{
-		RectI textRect = renderButtons(offset, contentRectTitle);
-		renderText(textRect.point, textRect.extent, mText, mProfile);
+		if (contentRectTitle.isValidRect())
+		{
+			RectI textRect = renderButtons(offset, contentRectTitle);
+			renderText(textRect.point, textRect.extent, mText, mProfile);
+		}
 	}
 
 	//Render window contents
 	if (!mMinimized)
 	{
 		currentState = currentState != SelectedState ? NormalState : SelectedState;
-      Point2I offsetWithTileHeight = Point2I(offset.x, offset.y + mTitleHeight);
-      Point2I boundsExtentMinusTileHeight = Point2I(mBounds.extent.x, mBounds.extent.y - mTitleHeight);
-		RectI ctrlRectWindow = applyMargins(offsetWithTileHeight, boundsExtentMinusTileHeight, currentState, mContentProfile);
+		S32 titleHeight = mPageDocked ? 0 : mTitleHeight;
+		Point2I offsetWithTitleHeight = Point2I(offset.x, offset.y + titleHeight);
+		Point2I boundsExtentMinusTitleHeight = Point2I(mBounds.extent.x, mBounds.extent.y - titleHeight);
+		RectI ctrlRectWindow = applyMargins(offsetWithTitleHeight, boundsExtentMinusTitleHeight, currentState, mContentProfile);
 		if (!ctrlRectWindow.isValidRect())
 		{
 			return;

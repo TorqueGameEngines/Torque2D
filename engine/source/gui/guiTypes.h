@@ -98,7 +98,8 @@ enum class GuiDirection
 	Up,				
 	Down,				
 	Left,				
-	Right			
+	Right,
+	Center
 };
 
 enum AlignmentType

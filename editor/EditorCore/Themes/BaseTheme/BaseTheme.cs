@@ -2079,8 +2079,106 @@ function BaseTheme::makeFrameSetProfile(%this)
 		fillColor = %this.adjustValue(%this.color1, 10); 
 		fillColorHL = %this.color2; 
 		fillColorSL = %this.setAlpha(%this.color4, 50); 
+		
+		fontColor = %this.color4;
+		fontColorHL = %this.color5;
 
 		borderDefault = %borderProfile;
+	};
+	%windowBorderH = new GuiBorderProfile()
+	{
+		padding = 10;
+		paddingHL = 10;
+		paddingSL = 10;
+		paddingNA = 4;
+
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.color1;
+		borderColorHL = %this.color1;
+		borderColorSL = %this.color1;
+		borderColorNA = %this.color1;
+
+		margin = 1;
+		marginHL = 1;
+		marginSL = 1;
+		marginNA = 1;
+	};
+
+
+	%windowBorderT = new GuiBorderProfile()
+	{
+		border = 1;
+		borderHL = 1;
+		borderSL = 2;
+		borderNA = 1;
+
+		borderColor = %this.color1;
+		borderColorHL = %this.color1;
+		borderColorSL = %this.color5;
+		borderColorNA = %this.color1;
+
+		margin = 3;
+		marginHL = 3;
+		marginSL = 3;
+		marginNA = 3;
+
+		padding = 1;
+		paddingHL = 1;
+		paddingSL = 0;
+		paddingNA = 1;
+	};
+
+	%this.frameSetTabProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color2;
+		fillColorHL = %this.adjustValue(%this.color2, 1);
+		fillColorSL = %this.adjustValue(%this.color2, 5);
+		fillColorNA = %this.adjustValue(%this.color1, 5);
+
+		fontType = %this.font[2];
+		fontDirectory = %this.fontDirectory;
+		fontSize = %this.fontSize - 1;
+		fontColor = %this.color3;
+		fontColorHL = %this.adjustValue(%this.color3, 10);
+		fontColorSL = %this.color5;
+		fontColorNA = %this.color2;
+		align = center;
+		vAlign = bottom;
+
+		borderLeft = %windowBorderH;
+		borderRight = %windowBorderH;
+		borderTop = %windowBorderT;
+		borderBottom = %this.emptyBorder;
+	};
+
+	%this.frameSetTabBookProfile = new GuiControlProfile()
+	{
+		fillColor = %this.adjustValue(%this.color1, 10); 
+		fillColorHL = %this.adjustValue(%this.color1, 20); 
+		fillColorSL = %this.color4; 
+		fillColorNA = %this.color2; 
+		
+		borderDefault = %this.emptyBorder;
+
+		tab = false;
+		canKeyFocus = true;
+	};
+
+	%this.frameSetTabPageProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color1; 
+		fillColorHL = %this.color1; 
+		fillColorSL = %this.color1; 
+		fillColorNA = %this.color1; 
+		
+		borderDefault = %this.emptyBorder;
+
+		tab = false;
+		canKeyFocus = true;
 	};
 }
 

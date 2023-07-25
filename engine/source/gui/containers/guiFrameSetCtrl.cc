@@ -26,6 +26,9 @@
 #include "gui/guiDefaultControlRender.h"
 #include "gui/guiCanvas.h"
 #include "gui/containers/guiWindowCtrl.h"
+#include "graphics/dgl.h"
+#include "gui/containers/guiTabBookCtrl.h"
+#include "gui/containers/guiTabPageCtrl.h"
 
 #include "guiFrameSetCtrl_ScriptBinding.h"
 
@@ -133,6 +136,8 @@ void GuiFrameSetCtrl::Frame::sizeInsertButtons(const Point2I& newPosition, const
 		mTopButtonRect = RectI(newPosition.x + ((newExtent.x - size) / 2), newPosition.y + gutter, size, size);
 		mBottomButtonRect = RectI(newPosition.x + ((newExtent.x - size) / 2), newPosition.y + newExtent.y - (gutter + size), size, size);
 	}
+
+	mCenterButtonRect = RectI(newPosition.x + ((newExtent.x - size) / 2), newPosition.y + ((newExtent.y - size) / 2), size, size);
 }
 
 GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findFrame(const S32 frameID)
@@ -269,6 +274,13 @@ GuiFrameSetCtrl::GuiFrameSetCtrl()
 	mDropButtonProfile = NULL;
 	setField("dropButtonProfile", "GuiButtonProfile");
 
+	mTabBookProfile = NULL;
+	mTabProfile = NULL;
+	mTabPageProfile = NULL;
+	setField("tabBookProfile", "GuiDefaultProfile");
+	setField("tabProfile", "GuiTabProfile");
+	setField("tabPageProfile", "GuiDefaultProfile");
+
 	mLeftRightCursor = NULL;
 	mUpDownCursor = NULL;
 }
@@ -288,6 +300,9 @@ void GuiFrameSetCtrl::initPersistFields()
 	addField("dropButtonProfile", TypeGuiProfile, Offset(mDropButtonProfile, GuiFrameSetCtrl));
 	addField("leftRightCursor", TypeGuiCursor, Offset(mLeftRightCursor, GuiFrameSetCtrl));
 	addField("upDownCursor", TypeGuiCursor, Offset(mUpDownCursor, GuiFrameSetCtrl));
+	addProtectedField("TabBookProfile", TypeGuiProfile, Offset(mTabBookProfile, GuiFrameSetCtrl), &setBookProfileFn, &defaultProtectedGetFn, &defaultProtectedWriteFn, "");
+	addProtectedField("TabProfile", TypeGuiProfile, Offset(mTabProfile, GuiFrameSetCtrl), &setTabProfileFn, &defaultProtectedGetFn, &defaultProtectedWriteFn, "");
+	addProtectedField("TabPageProfile", TypeGuiProfile, Offset(mTabPageProfile, GuiFrameSetCtrl), &setPageProfileFn, &defaultProtectedGetFn, &defaultProtectedWriteFn, "");
 }
 
 //------------------------------------------------------------------------------
@@ -300,6 +315,15 @@ bool GuiFrameSetCtrl::onWake()
 	if (mDropButtonProfile != NULL)
 		mDropButtonProfile->incRefCount();
 
+	if (mTabBookProfile != NULL)
+		mTabBookProfile->incRefCount();
+
+	if (mTabProfile != NULL)
+		mTabProfile->incRefCount();
+
+	if (mTabPageProfile != NULL)
+		mTabPageProfile->incRefCount();
+
 	return true;
 }
 
@@ -311,6 +335,15 @@ void GuiFrameSetCtrl::onSleep()
 
 	if (mDropButtonProfile != NULL)
 		mDropButtonProfile->decRefCount();
+
+	if (mTabBookProfile != NULL)
+		mTabBookProfile->decRefCount();
+
+	if (mTabProfile != NULL)
+		mTabProfile->decRefCount();
+
+	if (mTabPageProfile != NULL)
+		mTabPageProfile->decRefCount();
 }
 
 //------------------------------------------------------------------------------
@@ -684,6 +717,11 @@ void GuiFrameSetCtrl::renderDropOptions(GuiWindowCtrl* window)
 			renderDropButton(frame, frame->mTopButtonRect, cursorPt, frame->localPosition, fillExt, GuiDirection::Up);
 			renderDropButton(frame, frame->mBottomButtonRect, cursorPt, Point2I(frame->localPosition.x, frame->localPosition.y + frame->extent.y - height), fillExt, GuiDirection::Down);
 		}
+
+		if (frame->isAnchored || (!frame->control && !frame->child1 && !frame->child2))
+		{
+			renderDropButton(frame, frame->mCenterButtonRect, cursorPt, frame->localPosition, frame->extent, GuiDirection::Center);
+		}
 	}
 }
 
@@ -701,9 +739,20 @@ void GuiFrameSetCtrl::renderDropButton(const GuiFrameSetCtrl::Frame* frame, cons
 	RectI globalButtonRect = RectI(localToGlobalCoord(buttonRect.point), buttonRect.extent);
 	renderUniversalRect(globalButtonRect, mDropButtonProfile, state);
 
-	dglSetBitmapModulation(getFontColor(mDropButtonProfile, state));
 	ColorI triColor = getFontColor(mDropButtonProfile, state);
-	renderTriangleIcon(globalButtonRect, triColor, direction, 10);
+	if(direction != GuiDirection::Center)
+	{
+		renderTriangleIcon(globalButtonRect, triColor, direction, 10);
+	}
+	else
+	{
+		RectI iconRect = RectI(buttonRect);
+		iconRect.inset(15, 15);
+		RectI lineH = RectI(localToGlobalCoord(Point2I(iconRect.point.x, iconRect.point.y + 4)), Point2I(iconRect.extent.x, 2));
+		RectI lineV = RectI(localToGlobalCoord(Point2I(iconRect.point.x + 4, iconRect.point.y)), Point2I(2, iconRect.extent.y));
+		dglDrawRectFill(lineH, triColor);
+		dglDrawRectFill(lineV, triColor);
+	}
 }
 
 void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
@@ -756,6 +805,48 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 			frame->child2->extent = Point2I(frame->extent.x, height);
 			hitButton = true;
 		}
+		else if (frame->mCenterButtonRect.pointInRect(cursorPt))
+		{
+			if (!frame->control)
+			{
+				frame->control = window;
+				hitButton = true;
+			}
+			else
+			{
+				GuiTabBookCtrl* book = dynamic_cast<GuiTabBookCtrl*>(frame->control);
+				GuiTabPageCtrl* page = nullptr;
+				if (!book)
+				{
+					book = new GuiTabBookCtrl();
+					book->setControlProfile(mTabBookProfile);
+					book->setControlTabProfile(mTabProfile);
+					book->mBounds.set(frame->localPosition, frame->extent);
+					book->mIsFrameSetGenerated = true;
+					book->registerObject();
+					book->addNewPage();	
+					page = dynamic_cast<GuiTabPageCtrl*>((*book)[0]);
+					page->setControlProfile(mTabPageProfile);
+					GuiWindowCtrl* windowChild = dynamic_cast<GuiWindowCtrl*>(frame->control);
+					GuiControl* child = dynamic_cast<GuiControl*>(frame->control);
+					if (windowChild)
+					{
+						windowChild->dockToPage();
+					}
+					page->setText(child->getText());
+					frame->control = book;
+					page->addObject(child);
+					addObject(book);
+				}
+				window->dockToPage();
+				book->addNewPage();
+				page = dynamic_cast<GuiTabPageCtrl*>((*book)[book->size() - 1]);
+				page->setControlProfile(mTabPageProfile);
+				page->setText(window->getText());
+				page->addObject(window);
+				book->selectPage(window->getText());
+			}
+		}
 
 		if (hitButton)
 		{
@@ -774,6 +865,81 @@ void GuiFrameSetCtrl::setDropButtonProfile(GuiControlProfile* prof)
 	mDropButtonProfile = prof;
 	if (mAwake)
 		mDropButtonProfile->incRefCount();
+}
+
+void GuiFrameSetCtrl::setTabBookProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiFrameSetCtrl::setTabBookProfile: invalid content profile");
+	if (prof == mTabBookProfile)
+		return;
+	if (mAwake)
+		mTabBookProfile->decRefCount();
+	mTabBookProfile = prof;
+	if (mAwake)
+		mTabBookProfile->incRefCount();
+
+	//Cycle through all children and replace the profiles of frameSetGenerated books.
+	SimSet::iterator i;
+	for (i = begin(); i != end(); i++)
+	{
+		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
+		if (book && book->mIsFrameSetGenerated)
+		{
+			book->setControlProfile(prof);
+		}
+	}
+}
+
+void GuiFrameSetCtrl::setTabProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiFrameSetCtrl::setTabProfile: invalid content profile");
+	if (prof == mTabProfile)
+		return;
+	if (mAwake)
+		mTabProfile->decRefCount();
+	mTabProfile = prof;
+	if (mAwake)
+		mTabProfile->incRefCount();
+
+	SimSet::iterator i;
+	for (i = begin(); i != end(); i++)
+	{
+		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
+		if (book && book->mIsFrameSetGenerated)
+		{
+			book->setControlTabProfile(prof);
+		}
+	}
+}
+
+void GuiFrameSetCtrl::setTabPageProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiFrameSetCtrl::setTabPageProfile: invalid content profile");
+	if (prof == mTabPageProfile)
+		return;
+	if (mAwake)
+		mTabPageProfile->decRefCount();
+	mTabPageProfile = prof;
+	if (mAwake)
+		mTabPageProfile->incRefCount();
+
+	SimSet::iterator i;
+	for (i = begin(); i != end(); i++)
+	{
+		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
+		if (book && book->mIsFrameSetGenerated)
+		{
+			SimSet::iterator j;
+			for (j = begin(); j != end(); j++)
+			{
+				GuiTabPageCtrl* page = static_cast<GuiTabPageCtrl*>(*i);
+				if (page)
+				{
+					page->setControlProfile(prof);
+				}
+			}
+		}
+	}
 }
 
 void GuiFrameSetCtrl::setControlLeftRightCursor(GuiCursor* cursor)

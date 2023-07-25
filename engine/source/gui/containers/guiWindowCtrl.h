@@ -103,6 +103,8 @@ class GuiWindowCtrl : public GuiControl
 
 	   bool mDepressed;
 	   Region curHitRegion;
+	   bool mPageDocked; //True when docked in a GuiTabPageCtrl. 
+	   void dockToPage();
 
 	   Region findHitRegion(const Point2I &);
 	   GuiControlState getRegionCurrentState(GuiWindowCtrl::Region region);

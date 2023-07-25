@@ -43,6 +43,9 @@ function GuiEditor::create( %this )
 	};
     ThemeManager.setProfile(%this.content, "frameSetProfile");
     ThemeManager.setProfile(%this.content, "dropButtonProfile", "dropButtonProfile");
+    ThemeManager.setProfile(%this.content, "frameSetTabBookProfile", "tabBookProfile");
+    ThemeManager.setProfile(%this.content, "frameSetTabProfile", "tabProfile");
+    ThemeManager.setProfile(%this.content, "frameSetTabPageProfile", "tabPageProfile");
     %this.guiPage.add(%this.content);
 
     %idList = %this.content.createHorizontalSplit(1);
