@@ -190,16 +190,35 @@ void GuiWindowCtrl::dockToPage()
 	}
 }
 
+void GuiWindowCtrl::undockFromPage()
+{
+	mPageDocked = false;
+	setUpdate();
+	Point2I newExtent = mBounds.extent;
+	Point2I oldExtent = Point2I(newExtent.x, newExtent.y + mTitleHeight);
+	iterator i;
+	for (i = begin(); i != end(); i++)
+	{
+		GuiControl* ctrl = static_cast<GuiControl*>(*i);
+		ctrl->parentResized(oldExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), newExtent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
+	}
+}
+
 void GuiWindowCtrl::resize(const Point2I &newPosition, const Point2I &newExtent)
 {
 	GuiFrameSetCtrl* frameSet = dynamic_cast<GuiFrameSetCtrl*>(getParent());
-	if (frameSet && !mMinimized && !mMaximized)
+	GuiTabPageCtrl* page = dynamic_cast<GuiTabPageCtrl*>(getParent());
+	GuiTabBookCtrl* book = nullptr;
+	if (page)
+	{
+		book = dynamic_cast<GuiTabBookCtrl*>(page->getParent());
+	}
+	if ((frameSet || (book && book->mIsFrameSetGenerated)) && !mMinimized && !mMaximized)
 	{
 		mStandardBounds = mBounds;
 		mMaximized = true;
 	}
 
-	GuiTabPageCtrl* page = dynamic_cast<GuiTabPageCtrl*>(getParent());
 	if (page && mPageDocked)
 	{
 		Parent::resize(Point2I::Zero, page->getExtent());
@@ -218,6 +237,7 @@ void GuiWindowCtrl::onTouchMove(const GuiEvent &event)
 void GuiWindowCtrl::onTouchLeave(const GuiEvent &event)
 {
 	curHitRegion = None;
+	Parent::onTouchLeave(event);
 }
 
 void GuiWindowCtrl::onTouchDown(const GuiEvent &event)

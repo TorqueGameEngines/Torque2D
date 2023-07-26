@@ -553,6 +553,19 @@ void GuiFrameSetCtrl::setFrameSize(S32 frameID, S32 size)
 	}
 }
 
+void GuiFrameSetCtrl::onPreRender()
+{
+	SimSet::iterator i;
+	for(i = begin(); i < end(); i++)
+	{
+		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
+		if (book->mIsFrameSetGenerated && book->size() == 0)
+		{
+			book->deleteObject();
+		}
+	}
+}
+
 void GuiFrameSetCtrl::onRender(Point2I offset, const RectI& updateRect)
 {
 	Parent::onRender(offset, updateRect);
@@ -718,11 +731,16 @@ void GuiFrameSetCtrl::renderDropOptions(GuiWindowCtrl* window)
 			renderDropButton(frame, frame->mBottomButtonRect, cursorPt, Point2I(frame->localPosition.x, frame->localPosition.y + frame->extent.y - height), fillExt, GuiDirection::Down);
 		}
 
-		if (frame->isAnchored || (!frame->control && !frame->child1 && !frame->child2))
+		if (hasCenterButton(frame))
 		{
 			renderDropButton(frame, frame->mCenterButtonRect, cursorPt, frame->localPosition, frame->extent, GuiDirection::Center);
 		}
 	}
+}
+
+bool GuiFrameSetCtrl::hasCenterButton(GuiFrameSetCtrl::Frame* frame)
+{
+	return (frame != &mRootFrame && (frame->isAnchored || (!frame->control && !frame->child1 && !frame->child2)));
 }
 
 void GuiFrameSetCtrl::renderDropButton(const GuiFrameSetCtrl::Frame* frame, const RectI& buttonRect, const Point2I& cursorPt, const Point2I& fillPos, const Point2I& fillExt, GuiDirection direction)
@@ -773,7 +791,7 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 		const U32 height = getMax(minSize, getMin(frame->extent.y / 2, window->mBounds.extent.y));
 
 		bool hitButton = false;
-		if (frame->mLeftButtonRect.pointInRect(cursorPt))
+		if (frame->hasLeftRightButtons && frame->mLeftButtonRect.pointInRect(cursorPt))
 		{
 			splitFrame(frame, GuiDirection::Right);//This existing control goes right, the new window will go left.
 			anchorFrame(frame->child1);
@@ -781,7 +799,7 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 			frame->child1->extent = Point2I(width, frame->extent.y);
 			hitButton = true;
 		}
-		else if (frame->mRightButtonRect.pointInRect(cursorPt))
+		else if (frame->hasLeftRightButtons && frame->mRightButtonRect.pointInRect(cursorPt))
 		{
 			splitFrame(frame, GuiDirection::Left);
 			anchorFrame(frame->child2);
@@ -789,7 +807,7 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 			frame->child2->extent = Point2I(width, frame->extent.y);
 			hitButton = true;
 		}
-		else if (frame->mTopButtonRect.pointInRect(cursorPt))
+		else if (frame->hasTopBottomButtons && frame->mTopButtonRect.pointInRect(cursorPt))
 		{
 			splitFrame(frame, GuiDirection::Down);
 			anchorFrame(frame->child1);
@@ -797,7 +815,7 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 			frame->child1->extent = Point2I(frame->extent.x, height);
 			hitButton = true;
 		}
-		else if (frame->mBottomButtonRect.pointInRect(cursorPt))
+		else if (frame->hasTopBottomButtons && frame->mBottomButtonRect.pointInRect(cursorPt))
 		{
 			splitFrame(frame, GuiDirection::Up);
 			anchorFrame(frame->child2);
@@ -805,7 +823,7 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 			frame->child2->extent = Point2I(frame->extent.x, height);
 			hitButton = true;
 		}
-		else if (frame->mCenterButtonRect.pointInRect(cursorPt))
+		else if (hasCenterButton(frame) && frame->mCenterButtonRect.pointInRect(cursorPt))
 		{
 			if (!frame->control)
 			{
@@ -845,12 +863,57 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 				page->setText(window->getText());
 				page->addObject(window);
 				book->selectPage(window->getText());
+				window->resize(window->getPosition(), window->getExtent());
 			}
 		}
 
 		if (hitButton)
 		{
 			addObject(window);
+		}
+	}
+}
+
+void GuiFrameSetCtrl::undockWindowFromBook(GuiWindowCtrl* window, GuiTabBookCtrl* book, GuiTabPageCtrl* page)
+{
+	GuiControl* parent = getParent();
+	GuiCanvas* root = getRoot();
+	if (parent && window && book && page && window->mPageDocked && root)
+	{
+		parent->addObject(window);
+		parent->pushObjectToBack(window); 
+		Point2I cursorPt = globalToLocalCoord(root->getCursorPos());
+		
+		window->undockFromPage();
+		window->restore();
+		Point2I newPosition = Point2I(cursorPt.x - (window->getExtent().x / 2), cursorPt.y - (window->getTitleHeight() / 2));
+		Point2I pos = parent->localToGlobalCoord(newPosition);
+		root->addUpdateRegion(pos, window->getExtent());
+		window->resize(newPosition, window->getExtent());
+		GuiEvent event = GuiEvent();
+		event.mousePoint = Point2I(root->getCursorPos());
+		event.mouseClickCount = 1;
+		root->rootScreenTouchUp(event);
+		root->rootScreenTouchDown(event);
+
+		book->removeObject(page);
+		page->deleteObject();
+
+		if (book->size() > 0)
+		{
+			book->calculatePageTabs();
+			book->selectPage(0);
+		}
+
+		if (book->mIsFrameSetGenerated && book->size() == 1)
+		{
+			GuiTabPageCtrl* lastPage = dynamic_cast<GuiTabPageCtrl*>((*book)[0]);
+			GuiWindowCtrl* lastWindow = dynamic_cast<GuiWindowCtrl*>((*lastPage)[0]);
+			GuiFrameSetCtrl::Frame* frame = mRootFrame.findFrameWithCtrl(book);
+			frame->control = lastWindow;
+			addObject(lastWindow);
+			lastPage->deleteObject();
+			lastWindow->undockFromPage();
 		}
 	}
 }
@@ -882,7 +945,7 @@ void GuiFrameSetCtrl::setTabBookProfile(GuiControlProfile* prof)
 	SimSet::iterator i;
 	for (i = begin(); i != end(); i++)
 	{
-		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
+		GuiTabBookCtrl* book = dynamic_cast<GuiTabBookCtrl*>(*i);
 		if (book && book->mIsFrameSetGenerated)
 		{
 			book->setControlProfile(prof);
@@ -904,7 +967,7 @@ void GuiFrameSetCtrl::setTabProfile(GuiControlProfile* prof)
 	SimSet::iterator i;
 	for (i = begin(); i != end(); i++)
 	{
-		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
+		GuiTabBookCtrl* book = dynamic_cast<GuiTabBookCtrl*>(*i);
 		if (book && book->mIsFrameSetGenerated)
 		{
 			book->setControlTabProfile(prof);
@@ -926,13 +989,13 @@ void GuiFrameSetCtrl::setTabPageProfile(GuiControlProfile* prof)
 	SimSet::iterator i;
 	for (i = begin(); i != end(); i++)
 	{
-		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
+		GuiTabBookCtrl* book = dynamic_cast<GuiTabBookCtrl*>(*i);
 		if (book && book->mIsFrameSetGenerated)
 		{
 			SimSet::iterator j;
 			for (j = begin(); j != end(); j++)
 			{
-				GuiTabPageCtrl* page = static_cast<GuiTabPageCtrl*>(*i);
+				GuiTabPageCtrl* page = dynamic_cast<GuiTabPageCtrl*>(*i);
 				if (page)
 				{
 					page->setControlProfile(prof);

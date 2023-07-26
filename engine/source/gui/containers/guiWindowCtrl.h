@@ -105,6 +105,8 @@ class GuiWindowCtrl : public GuiControl
 	   Region curHitRegion;
 	   bool mPageDocked; //True when docked in a GuiTabPageCtrl. 
 	   void dockToPage();
+	   void undockFromPage();
+	   S32 getTitleHeight() { return mTitleHeight; }
 
 	   Region findHitRegion(const Point2I &);
 	   GuiControlState getRegionCurrentState(GuiWindowCtrl::Region region);

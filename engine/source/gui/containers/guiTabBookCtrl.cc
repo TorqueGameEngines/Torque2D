@@ -30,6 +30,7 @@
 #include "gui/containers/guiScrollCtrl.h"
 #include "gui/editor/guiEditCtrl.h"
 #include "gui/guiDefaultControlRender.h"
+#include "gui/containers/guiFrameSetCtrl.h"
 
 #include "guiTabBookCtrl_ScriptBinding.h"
 
@@ -59,6 +60,8 @@ GuiTabBookCtrl::GuiTabBookCtrl()
    mBounds.extent.set( 400, 300 );
    mPageRect = RectI(0,0,0,0);
    mTabRect = RectI(0,0,0,0);
+   mTabDownPosition = Point2I();
+   mDepressed = false;
 
    mPages.reserve(12);
    mMinTabWidth = 64;
@@ -260,6 +263,10 @@ void GuiTabBookCtrl::onTouchDown(const GuiEvent &event)
     Point2I localMouse = globalToLocalCoord( event.mousePoint );
     if( mTabRect.pointInRect( localMouse ) )
     {
+		mTabDownPosition = event.mousePoint;
+		mDepressed = true;
+		mouseLock();
+
 		Point2I tabLocalMouse = getTabLocalCoord(localMouse);
         GuiTabPageCtrl *tab = findHitTab(tabLocalMouse);
         if( tab != NULL && tab->isActive() )
@@ -293,6 +300,40 @@ void GuiTabBookCtrl::onTouchMove(const GuiEvent &event)
 void GuiTabBookCtrl::onTouchLeave( const GuiEvent &event )
 {
    mHoverTab = NULL;
+   Parent::onTouchLeave(event);
+}
+
+void GuiTabBookCtrl::onTouchDragged(const GuiEvent& event)
+{
+	if (mDepressed && mActivePage && mActivePage->size() > 0)
+	{
+		Point2I deltaMousePosition = event.mousePoint - mTabDownPosition;
+		const S32 dragDist = 20;
+		if (mAbs(deltaMousePosition.x) > dragDist || mAbs(deltaMousePosition.y) > dragDist)
+		{
+			//That's cool, but to transform the tab into window, we need a parent FrameSet and a grandchild that's a docked window.
+			GuiFrameSetCtrl* frameSet = dynamic_cast<GuiFrameSetCtrl*>(getParent());
+			GuiWindowCtrl* window = dynamic_cast<GuiWindowCtrl*>((*mActivePage)[0]);
+			if (frameSet && window && window->mPageDocked)
+			{
+				//We have a winner!!!
+				mDepressed = false;
+				mouseUnlock();
+				frameSet->undockWindowFromBook(window, this, mActivePage);
+				return;
+			}
+		}
+	}
+	Parent::onTouchDragged(event);
+}
+
+void GuiTabBookCtrl::onTouchUp(const GuiEvent& event)
+{
+	if (mDepressed)
+	{
+		mouseUnlock();
+	}
+	Parent::onTouchUp(event);
 }
 
 bool GuiTabBookCtrl::onMouseDownEditor(const GuiEvent &event, Point2I offset)

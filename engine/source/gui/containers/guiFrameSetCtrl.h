@@ -13,6 +13,7 @@
 #include "console/console.h"
 #include "console/consoleTypes.h"
 #include "gui/containers/guiWindowCtrl.h"
+#include "gui/containers/guiTabBookCtrl.h"
 
 class GuiFrameSetCtrl : public GuiEasingSupport
 {
@@ -101,14 +102,17 @@ public:
 	void childMoved(GuiControl* child);
 	void childrenReordered();
 	void renderDropOptions(GuiWindowCtrl* window);
+	bool hasCenterButton(GuiFrameSetCtrl::Frame* frame);
 	void renderDropButton(const GuiFrameSetCtrl::Frame* frame, const RectI& buttonRect, const Point2I& cursorPt, const Point2I& fillPos, const Point2I& fillExt, GuiDirection direction);
 	void handleDropButtons(GuiWindowCtrl* window);
+	void undockWindowFromBook(GuiWindowCtrl* window, GuiTabBookCtrl* book, GuiTabPageCtrl* page);
 
 	Point2I splitFrame(S32 frameID, bool isVertical);
 	void splitFrame(GuiFrameSetCtrl::Frame* frame, GuiDirection direction);
 	void anchorFrame(GuiFrameSetCtrl::Frame* frame);
 	void anchorFrame(S32 frameID);
 	void setFrameSize(S32 frameID, S32 size);
+	void onPreRender();
 	void onRender(Point2I offset, const RectI& updateRect);
 	void onTouchMove(const GuiEvent& event);
 	void onTouchDragged(const GuiEvent& event);
