@@ -160,6 +160,7 @@ public:
     /// @}
 
 	virtual bool isEditMode();
+	virtual bool isEditSelected();
 
     /// @name Keyboard Input
     /// @{
@@ -619,22 +620,22 @@ public:
     /// Called when a mouseDown event occurs on a control and the GUI editor is active
     /// @param   event   the GuiEvent which caused the call to this function
     /// @param   offset   the offset which is representative of the units x and y that the editor takes up on screen
-    virtual bool onMouseDownEditor(const GuiEvent &event, Point2I offset) { return false; };
+    virtual bool onMouseDownEditor(const GuiEvent &event, const Point2I& offset);
 
     /// Called when a mouseUp event occurs on a control and the GUI editor is active
     /// @param   event   the GuiEvent which caused the call to this function
     /// @param   offset   the offset which is representative of the units x and y that the editor takes up on screen
-    virtual bool onMouseUpEditor(const GuiEvent &event, Point2I offset) { return false; };
+    virtual bool onMouseUpEditor(const GuiEvent &event, const Point2I& offset) { return false; };
 
     /// Called when a rightMouseDown event occurs on a control and the GUI editor is active
     /// @param   event   the GuiEvent which caused the call to this function
     /// @param   offset   the offset which is representative of the units x and y that the editor takes up on screen
-    virtual bool onRightMouseDownEditor(const GuiEvent &event, Point2I offset) { return false; };
+    virtual bool onRightMouseDownEditor(const GuiEvent &event, const Point2I& offset) { return false; };
 
     /// Called when a mouseDragged event occurs on a control and the GUI editor is active
     /// @param   event   the GuiEvent which caused the call to this function
     /// @param   offset   the offset which is representative of the units x and y that the editor takes up on screen
-    virtual bool onMouseDraggedEditor(const GuiEvent &event, Point2I offset) { return false; };
+    virtual bool onMouseDraggedEditor(const GuiEvent &event, const Point2I& offset) { return false; };
 
     /// @}
 

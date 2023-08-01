@@ -2327,8 +2327,39 @@ bool GuiControl::isEditMode()
 		{
 			return parent->isEditMode();
 		}
-		return false;
 	}
+	return false;
+}
+
+bool GuiControl::isEditSelected()
+{
+	if (smDesignTime && smEditorHandle)
+	{
+		GuiEditCtrl* edit = GuiControl::smEditorHandle;
+		
+		bool selected = false;
+		auto list = edit->getSelected();
+		for (auto i = list->begin(); i < list->end(); i++)
+		{
+			GuiControl* ctrl = dynamic_cast<GuiControl*>(*i);
+			if (ctrl && ctrl == this)
+			{
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool GuiControl::onMouseDownEditor(const GuiEvent& event, const Point2I& offset)
+{
+	GuiEditCtrl* edit = GuiControl::smEditorHandle;
+	GuiControl* parent = getParent();
+	if (this != edit->getRoot() && parent)
+	{
+		return parent->onMouseDownEditor(event, offset);
+	}
+	return false;
 }
 
 //--------------------------------------------------------------------

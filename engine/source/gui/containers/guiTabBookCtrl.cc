@@ -336,7 +336,7 @@ void GuiTabBookCtrl::onTouchUp(const GuiEvent& event)
 	Parent::onTouchUp(event);
 }
 
-bool GuiTabBookCtrl::onMouseDownEditor(const GuiEvent &event, Point2I offset)
+bool GuiTabBookCtrl::onMouseDownEditor(const GuiEvent &event, const Point2I& offset)
 {
    bool handled = false;
    Point2I localMouse = globalToLocalCoord( event.mousePoint );

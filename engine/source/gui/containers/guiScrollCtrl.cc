@@ -820,7 +820,7 @@ void GuiScrollCtrl::onMouseWheelDown(const GuiEvent &event)
       parent->onMouseWheelDown(event);
 }
 
-bool GuiScrollCtrl::onMouseDownEditor(const GuiEvent& event, Point2I offset)
+bool GuiScrollCtrl::onMouseDownEditor(const GuiEvent& event, const Point2I& offset)
 {
 	Point2I curMousePos = globalToLocalCoord(event.mousePoint);
 	Region hitRegion = findHitRegion(curMousePos);
@@ -833,7 +833,7 @@ bool GuiScrollCtrl::onMouseDownEditor(const GuiEvent& event, Point2I offset)
 	return false;
 }
 
-bool GuiScrollCtrl::onMouseUpEditor(const GuiEvent& event, Point2I offset)
+bool GuiScrollCtrl::onMouseUpEditor(const GuiEvent& event, const Point2I& offset)
 {
 	Point2I curMousePos = globalToLocalCoord(event.mousePoint);
 	Region hitRegion = findHitRegion(curMousePos);
@@ -846,7 +846,7 @@ bool GuiScrollCtrl::onMouseUpEditor(const GuiEvent& event, Point2I offset)
 	return false;
 }
 
-bool GuiScrollCtrl::onMouseDraggedEditor(const GuiEvent& event, Point2I offset)
+bool GuiScrollCtrl::onMouseDraggedEditor(const GuiEvent& event, const Point2I& offset)
 {
 	Point2I curMousePos = globalToLocalCoord(event.mousePoint);
 	Region hitRegion = findHitRegion(curMousePos);

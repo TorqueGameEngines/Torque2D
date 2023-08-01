@@ -247,7 +247,7 @@ private:
    void onTouchLeave(const GuiEvent &event);
    void onTouchDragged(const GuiEvent& event);
    void onTouchUp(const GuiEvent& event);
-   virtual bool onMouseDownEditor(const GuiEvent &event, Point2I offset);
+   bool onMouseDownEditor(const GuiEvent &event, const Point2I& offset);
    /// @}
 };
 

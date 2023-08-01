@@ -37,7 +37,7 @@ GuiTabPageCtrl::GuiTabPageCtrl(void)
    mIsContainer = true;
 }
 
-bool GuiTabPageCtrl::onMouseDownEditor(const GuiEvent &event, Point2I offset )
+bool GuiTabPageCtrl::onMouseDownEditor(const GuiEvent &event, const Point2I& offset )
 {
    // This shouldn't be called if it's not design time, but check just incase
    if ( GuiControl::smDesignTime )

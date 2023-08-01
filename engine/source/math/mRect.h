@@ -47,6 +47,7 @@ class RectI
 
    bool intersect(const RectI& clipRect);
    bool pointInRect(const Point2I& pt) const;
+   S32 distanceToRect(const Point2I& pt) const;
    bool contains(const RectI& R) const;
    bool overlaps(RectI R) const;
    void inset(S32 x, S32 y);
@@ -162,6 +163,18 @@ inline bool RectI::intersect(const RectI& clipRect)
 inline bool RectI::pointInRect(const Point2I &pt) const
 {
    return (pt.x >= point.x && pt.x < point.x + extent.x && pt.y >= point.y && pt.y < point.y + extent.y);
+}
+
+inline S32 RectI::distanceToRect(const Point2I& pt) const
+{
+	if (pointInRect(pt))
+	{
+		return 0;
+	}
+	S32 x = pt.x < point.x ? point.x - pt.x : pt.x - (point.x + extent.x);
+	S32 y = pt.y < point.y ? point.y - pt.y : pt.y - (point.y + extent.y);
+
+	return getMax(x, y);
 }
 
 inline bool RectI::contains(const RectI& R) const

@@ -159,9 +159,9 @@ public:
    virtual void onTouchLeave(const GuiEvent &event);
    virtual void onMouseWheelUp(const GuiEvent &event);
    virtual void onMouseWheelDown(const GuiEvent &event);
-   virtual bool onMouseDownEditor(const GuiEvent& event, Point2I offset);
-   virtual bool onMouseUpEditor(const GuiEvent& event, Point2I offset);
-   virtual bool onMouseDraggedEditor(const GuiEvent& event, Point2I offset);
+   virtual bool onMouseDownEditor(const GuiEvent& event, const Point2I& offset);
+   virtual bool onMouseUpEditor(const GuiEvent& event, const Point2I& offset);
+   virtual bool onMouseDraggedEditor(const GuiEvent& event, const Point2I& offset);
 
    virtual bool onWake();
    virtual void onSleep();

@@ -615,7 +615,8 @@ void GuiEditCtrl::onRightMouseDown(const GuiEvent &event)
    //Design time mouse events
    GuiEvent designEvent = event;
    designEvent.mousePoint = mLastMousePos;
-   hitCtrl->onRightMouseDownEditor( designEvent, localToGlobalCoord( Point2I(0,0) ) );
+   Point2I localOffset = localToGlobalCoord( Point2I(0,0) );
+   hitCtrl->onRightMouseDownEditor( designEvent, localOffset );
 
 }
 void GuiEditCtrl::select(GuiControl *ctrl)
@@ -730,8 +731,9 @@ void GuiEditCtrl::onTouchDown(const GuiEvent &event)
    //find the control we clicked
    ctrl = mContentControl->findHitControl(mLastMousePos, mCurrentAddSet->mLayer);
 
-   bool handledEvent = ctrl->onMouseDownEditor( event, localToGlobalCoord( Point2I(0,0) ) );
-   if( handledEvent == true )
+   Point2I editorOffset = localToGlobalCoord(Point2I(0,0));
+   bool handledEvent = ctrl->onMouseDownEditor( event, editorOffset );
+   if( handledEvent )
    {
       // The Control handled the event and requested the edit ctrl
       // *NOT* act on it.  The dude abides.
@@ -857,7 +859,8 @@ void GuiEditCtrl::onTouchUp(const GuiEvent &event)
    //find the control we clicked
    GuiControl *ctrl = mContentControl->findHitControl(mLastMousePos, mCurrentAddSet->mLayer);
 
-   bool handledEvent = ctrl->onMouseUpEditor( event, localToGlobalCoord( Point2I(0,0) ) );
+   Point2I localOffset = localToGlobalCoord( Point2I(0,0) );
+   bool handledEvent = ctrl->onMouseUpEditor( event, localOffset );
    if( handledEvent == true )
    {
       // The Control handled the event and requested the edit ctrl
@@ -923,8 +926,9 @@ void GuiEditCtrl::onTouchDragged(const GuiEvent &event)
    //find the control we clicked
    GuiControl *ctrl = mContentControl->findHitControl(mousePoint, mCurrentAddSet->mLayer);
 
-   bool handledEvent = ctrl->onMouseDraggedEditor( event, localToGlobalCoord( Point2I(0,0) ) );
-   if( handledEvent == true )
+   Point2I dragOffset = localToGlobalCoord( Point2I(0,0) );
+   bool handledEvent = ctrl->onMouseDraggedEditor( event, dragOffset );
+   if( handledEvent )
    {
       // The Control handled the event and requested the edit ctrl
       // *NOT* act on it.  The dude abides.

@@ -38,7 +38,8 @@ public:
 		Frame(GuiFrameSetCtrl* theOwner, Frame* theParent) : owner(theOwner), parent(theParent), child1(nullptr), child2(nullptr), 
 			control(nullptr), isVertical(true), id(1), extent(Point2I(100, 100)), dividerRect(RectI()),
 			localPosition(Point2I(0, 0)), mLeftButtonRect(RectI()), mRightButtonRect(RectI()), mCenterButtonRect(RectI()),
-			mTopButtonRect(RectI()), mBottomButtonRect(RectI()), isAnchored(true), hasLeftRightButtons(false), hasTopBottomButtons(false) { }
+			mTopButtonRect(RectI()), mBottomButtonRect(RectI()), isAnchored(true), hasLeftRightButtons(false), 
+			hasTopBottomButtons(false), spliterRect1(RectI()), spliterRect2(RectI()) { }
 		virtual ~Frame() { }
 		void deleteChildren();
 
@@ -48,6 +49,8 @@ public:
 		Point2I localPosition;
 		bool isAnchored;
 		RectI dividerRect;
+		RectI spliterRect1;//shown in edit mode
+		RectI spliterRect2;//shown in edit mode
 		RectI mLeftButtonRect;
 		RectI mRightButtonRect;
 		RectI mTopButtonRect;
@@ -71,6 +74,7 @@ public:
 		Frame* findHitDivider(const Point2I& position);
 		Frame* findFrameWithCtrl(GuiControl* ctrl);
 		Frame* findFrameWithPoint(const Point2I& point);
+		void editRender(const Point2I& cursorPt, const F32 fade);
 	};
 	Frame mRootFrame;
 	Frame* mHitDivider;
@@ -119,6 +123,10 @@ public:
 	void onTouchDown(const GuiEvent& event);
 	void onTouchUp(const GuiEvent& event);
 	void getCursor(GuiCursor*& cursor, bool& showCursor, const GuiEvent& lastGuiEvent);
+
+	bool onMouseDownEditor(const GuiEvent& event, const Point2I& offset);
+	bool onMouseUpEditor(const GuiEvent& event, const Point2I& offset);
+	bool onMouseDraggedEditor(const GuiEvent& event, const Point2I& offset);
 
 	void setDropButtonProfile(GuiControlProfile* prof);
 	void setTabBookProfile(GuiControlProfile* prof);

@@ -29,6 +29,8 @@
 #include "graphics/dgl.h"
 #include "gui/containers/guiTabBookCtrl.h"
 #include "gui/containers/guiTabPageCtrl.h"
+#include "gui/editor/guiEditCtrl.h"
+#include "collection/vector.h"
 
 #include "guiFrameSetCtrl_ScriptBinding.h"
 
@@ -59,6 +61,26 @@ void GuiFrameSetCtrl::Frame::resize(const Point2I& newPosition, const Point2I& n
 			control->mMinExtent.set(minSize, minSize);
 		}
 		control->resize(newPosition, newExtent);
+	}
+	if (!child1 && !child2 && owner->isEditMode())
+	{
+		if (extent.x > (3 * owner->minSize))
+		{
+			spliterRect1.set(localPosition.x + ((extent.x - owner->mDividerThickness) / 2), localPosition.y, owner->mDividerThickness, extent.y);
+		}
+		else
+		{
+			spliterRect1.set(0, 0, 0, 0);
+		}
+
+		if (extent.y > (3 * owner->minSize))
+		{
+			spliterRect2.set(localPosition.x, localPosition.y + ((extent.y - owner->mDividerThickness) / 2), extent.x, owner->mDividerThickness);
+		}
+		else
+		{
+			spliterRect2.set(0, 0, 0, 0);
+		}
 	}
 	else if (child1 && child2)
 	{
@@ -220,7 +242,7 @@ GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findFrameWithCtrl(GuiControl* ct
 GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findFrameWithPoint(const Point2I& point)
 {
 	//Point is local to the frame.
-	if (control)
+	if (!child1 && !child2)
 	{
 		return this;
 	}
@@ -231,18 +253,68 @@ GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findFrameWithPoint(const Point2I
 
 		Point2I pos2 = isVertical ? Point2I(x, child1->extent.y + owner->mDividerThickness) : Point2I(child1->extent.x + owner->mDividerThickness, y);
 
-
 		if ((isVertical && y < child1->extent.y) || (!isVertical && x < child1->extent.x))
 		{
 			return child1->findFrameWithPoint(point);
 		}
 		else if ((isVertical && y > pos2.y && y < (pos2.y + child2->extent.y)) || (!isVertical && x > pos2.x && x < (pos2.x + child2->extent.x)))
 		{
-			Point2I pt = Point2I(x - pos2.x, y - pos2.y);
+			Point2I pt = isVertical ? Point2I(x, y - pos2.y) : Point2I(x - pos2.x, y);
+
 			return child2->findFrameWithPoint(pt);
 		}
 	}
 	return nullptr;//This will happen if the mouse is over a divider.
+}
+
+void GuiFrameSetCtrl::Frame::editRender(const Point2I& cursorPt, const F32 fade)
+{
+	//cursorPt is local to owner
+	if (!child1 && !child2)
+	{
+		//Show the frame
+		RectI localRect = RectI(localPosition, extent);
+		Point2I pos = localPosition;
+		RectI rect = RectI(owner->localToGlobalCoord(pos), extent);
+		GuiEditCtrl* edit = GuiControl::smEditorHandle;
+		ColorI border = edit->getEditorColor();
+		if (!localRect.pointInRect(cursorPt))
+		{
+			border.alpha = (150 * fade);
+		}
+		dglDrawRect(rect, border);
+		ColorI fill = ColorI(border);
+		fill.alpha = (40 * fade);
+		dglDrawRectFill(rect, fill);
+
+		U8 divThickness = owner->mDividerThickness;
+
+		fill.alpha = (10 * fade);
+		if(spliterRect1.pointInRect(cursorPt))
+		{
+			fill.alpha = (200 * fade);
+		}
+		RectI globalSpliter1 = RectI(owner->localToGlobalCoord(spliterRect1.point), spliterRect1.extent);
+		dglDrawRectFill(globalSpliter1, fill);
+
+		fill.alpha = (10 * fade);
+		if (spliterRect2.pointInRect(cursorPt) && !spliterRect1.pointInRect(cursorPt))
+		{
+			fill.alpha = (200 * fade);
+		}
+		RectI globalSpliter2 = RectI(owner->localToGlobalCoord(spliterRect2.point), spliterRect2.extent);
+		dglDrawRectFill(globalSpliter2, fill);
+	}
+
+	if (child1)
+	{
+		child1->editRender(cursorPt, fade);
+	}
+
+	if (child2)
+	{
+		child2->editRender(cursorPt, fade);
+	}
 }
 
 
@@ -296,7 +368,7 @@ void GuiFrameSetCtrl::initPersistFields()
 {
 	Parent::initPersistFields();
 
-	addField("DividerThickness", TypeS32, Offset(mDividerThickness, GuiFrameSetCtrl));
+	addField("DividerThickness", TypeS8, Offset(mDividerThickness, GuiFrameSetCtrl));
 	addField("dropButtonProfile", TypeGuiProfile, Offset(mDropButtonProfile, GuiFrameSetCtrl));
 	addField("leftRightCursor", TypeGuiCursor, Offset(mLeftRightCursor, GuiFrameSetCtrl));
 	addField("upDownCursor", TypeGuiCursor, Offset(mUpDownCursor, GuiFrameSetCtrl));
@@ -416,7 +488,6 @@ void GuiFrameSetCtrl::onChildAdded(GuiControl* child)
 	{
 		child->setVertSizing(vertResizeTop);
 	}
-	resize(getPosition(), getExtent());
 
 	Parent::onChildAdded(child);
 
@@ -429,7 +500,7 @@ void GuiFrameSetCtrl::onChildAdded(GuiControl* child)
 			emptyFrame->control = child;
 		}
 	}
-	resize(getPosition(), getExtent());
+	//resize(getPosition(), getExtent());
 }
 
 void GuiFrameSetCtrl::onChildRemoved(GuiControl* child)
@@ -558,10 +629,24 @@ void GuiFrameSetCtrl::onPreRender()
 	SimSet::iterator i;
 	for(i = begin(); i < end(); i++)
 	{
-		GuiTabBookCtrl* book = static_cast<GuiTabBookCtrl*>(*i);
-		if (book->mIsFrameSetGenerated && book->size() == 0)
+		GuiTabBookCtrl* book = dynamic_cast<GuiTabBookCtrl*>(*i);
+		if (book && book->mIsFrameSetGenerated && book->size() == 0)
 		{
 			book->deleteObject();
+		}
+	}
+
+	if (isEditMode())
+	{
+		GuiCanvas* root = getRoot();
+		GuiEditCtrl* edit = GuiControl::smEditorHandle;
+		if (root && edit)
+		{
+			Point2I cursorPt = globalToLocalCoord(root->getCursorPos());
+			if (mBounds.pointInRect(cursorPt))
+			{
+				mHitDivider = mRootFrame.findHitDivider(cursorPt);
+			}
 		}
 	}
 }
@@ -586,6 +671,25 @@ void GuiFrameSetCtrl::onRender(Point2I offset, const RectI& updateRect)
 	else if (mOldHitDivider)
 	{
 		mOldHitDivider = nullptr;
+	}
+
+	if (isEditMode())
+	{
+		GuiCanvas* root = getRoot();
+		GuiEditCtrl* edit = GuiControl::smEditorHandle;
+		if(root && edit)
+		{
+			Point2I cursorPt = globalToLocalCoord(root->getCursorPos());
+			RectI visBounds = RectI(mBounds);
+			const S32 fadeDist = 140;
+			visBounds.inset(-fadeDist, -fadeDist);
+			if (visBounds.pointInRect(cursorPt) && isEditSelected())
+			{
+				visBounds.inset(fadeDist, fadeDist);
+				F32 fade = getMin(1.0, getMax(0.0, 1.0 - ((F32)visBounds.distanceToRect(cursorPt) / (F32)fadeDist)));
+				mRootFrame.editRender(cursorPt, fade);
+			}
+		}
 	}
 }
 
@@ -696,6 +800,56 @@ void GuiFrameSetCtrl::getCursor(GuiCursor*& cursor, bool& showCursor, const GuiE
 			cursor = mLeftRightCursor;
 		}
 	}
+}
+
+bool GuiFrameSetCtrl::onMouseDownEditor(const GuiEvent& event, const Point2I& offset)
+{
+	Point2I cursorPt = globalToLocalCoord(event.mousePoint);
+	Frame* frame = mRootFrame.findFrameWithPoint(cursorPt);
+
+	if(frame && isEditSelected())
+	{
+		if (frame->spliterRect1.pointInRect(cursorPt))
+		{
+			splitFrame(frame, GuiDirection::Left);
+			setFrameSize(frame->child1->id, (frame->extent.x - mDividerThickness) / 2);
+			return true;
+		}
+		else if (frame->spliterRect2.pointInRect(cursorPt))
+		{
+			splitFrame(frame, GuiDirection::Up);
+			setFrameSize(frame->child1->id, (frame->extent.y - mDividerThickness) / 2);
+			return true;
+		}
+	}
+	frame = mRootFrame.findHitDivider(cursorPt);
+	if (frame)
+	{
+		onTouchDown(event);
+		return true;
+	}
+
+	return Parent::onMouseDownEditor(event, offset);
+}
+
+bool GuiFrameSetCtrl::onMouseUpEditor(const GuiEvent& event, const Point2I& offset)
+{
+	if (mDepressed)
+	{
+		onTouchUp(event);
+		return true;
+	}
+	return false;
+}
+
+bool GuiFrameSetCtrl::onMouseDraggedEditor(const GuiEvent& event, const Point2I& offset)
+{
+	if (mDepressed)
+	{
+		onTouchDragged(event);
+		return true;
+	}
+	return false;
 }
 
 void GuiFrameSetCtrl::renderDropOptions(GuiWindowCtrl* window)
