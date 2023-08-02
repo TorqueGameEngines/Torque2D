@@ -191,6 +191,20 @@ GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findEmptyFrame()
 	return nullptr;
 }
 
+GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::findEmptyFrameAtLocation(const RectI& location)
+{
+	if (!control && !child1 && !child2 && localPosition == location.point && extent == location.extent)
+	{
+		return this;
+	}
+	else if (child1 && child2)
+	{
+		Frame* attempt = child1->findEmptyFrameAtLocation(location);
+		return attempt ? attempt : child2->findEmptyFrameAtLocation(location);
+	}
+	return nullptr;
+}
+
 GuiFrameSetCtrl::Frame* GuiFrameSetCtrl::Frame::twin()
 {
 	if (parent)
@@ -460,6 +474,13 @@ bool GuiFrameSetCtrl::onAdd()
 	// Always expand to fill the parent (we just ignore the points passed in).
 	parentResized(Point2I(), Point2I());
 
+	Frame* frame = &mRootFrame;
+	loadFrame(frame, 1);
+	clearDynamicFields();
+
+	//resize one last time for the frames
+	resize(getPosition(), getExtent());
+
 	// Return Success.
 	return true;
 }
@@ -470,10 +491,30 @@ void GuiFrameSetCtrl::parentResized(const Point2I& oldParentExtent, const Point2
 	GuiControl* parent = getParent();
 	if(parent)
 	{
-		Point2I origin = Point2I(0, 0);
-		Point2I parentInnerExt = getInnerRect(origin, parent->mBounds.extent, NormalState, parent->mProfile).extent;
+		Point2I origin = Point2I::Zero;
+		Point2I parentInnerExt = parent->getInnerRect().extent;
 
 		resize(origin, parentInnerExt);
+	}
+}
+
+void GuiFrameSetCtrl::loadFrame(GuiFrameSetCtrl::Frame* frame, const U32 frameID)
+{
+	frame->id = frameID;
+	U32 child1ID = dAtoi(getDataField("child1ID", frameID));
+	U32 child2ID = dAtoi(getDataField("child2ID", frameID));
+	frame->isVertical = dAtob(getDataField("isVertical", frameID));
+	U32 frameExtentX = dAtoi(getDataField("frameExtentX", frameID));
+	U32 frameExtentY = dAtoi(getDataField("frameExtentY", frameID));
+	frame->isAnchored = dAtob(getDataField("isAnchored", frameID));
+
+	frame->extent.set(frameExtentX, frameExtentY);
+	if (child1ID && child2ID)
+	{
+		splitFrame(frame, frame->isVertical ? GuiDirection::Up : GuiDirection::Left);
+
+		loadFrame(frame->child1, child1ID);
+		loadFrame(frame->child2, child2ID);
 	}
 }
 
@@ -494,10 +535,18 @@ void GuiFrameSetCtrl::onChildAdded(GuiControl* child)
 	Frame* frame = mRootFrame.findFrameWithCtrl(child);
 	if(!frame)
 	{
-		Frame* emptyFrame = mRootFrame.findEmptyFrame();
+		Frame* emptyFrame = mRootFrame.findEmptyFrameAtLocation(child->getBounds());
 		if(emptyFrame)
 		{
 			emptyFrame->control = child;
+		}
+		else
+		{
+			Frame* emptyFrame = mRootFrame.findEmptyFrame();
+			if (emptyFrame)
+			{
+				emptyFrame->control = child;
+			}
 		}
 	}
 	//resize(getPosition(), getExtent());
@@ -1173,4 +1222,78 @@ void GuiFrameSetCtrl::setControlUpDownCursor(GuiCursor* cursor)
 	if (cursor == mUpDownCursor)
 		return;
 	mUpDownCursor = cursor;
+}
+
+void GuiFrameSetCtrl::writeFields(Stream& stream, U32 tabStop)
+{
+	if (mRootFrame.child1 && mRootFrame.child2)
+	{
+		setModDynamicFields(true);
+		setCanSaveDynamicFields(true);
+
+		Frame* frame = &mRootFrame;
+		generateFrameFields(frame);
+		Parent::writeFields(stream, tabStop);
+		clearDynamicFields();
+
+		setModDynamicFields(false);
+		setCanSaveDynamicFields(false);
+	}
+	else
+	{
+		Parent::writeFields(stream, tabStop);
+	}
+}
+
+void GuiFrameSetCtrl::generateFrameFields(GuiFrameSetCtrl::Frame* frame)
+{
+	//parentID = frame->parent->id
+	//child1ID = frame->child1->id
+	//child2ID = frame->child2->id
+	//isVertical
+	//frameExtent = isVertical ? frame->extent.y : frame->extent.x
+	//isAnchored
+	//and make sure control has the correctID for 
+
+	U32 id = frame->id;
+	U32 child1ID = frame->child1 ? frame->child1->id : 0;
+	U32 child2ID = frame->child2 ? frame->child2->id : 0;
+
+	setDataField("child1ID", id, child1ID);
+	setDataField("child2ID", id, child2ID);
+	setDataField("isVertical", id, frame->isVertical);
+	setDataField("frameExtentX", id, frame->extent.x);
+	setDataField("frameExtentY", id, frame->extent.y);
+	setDataField("isAnchored", id, frame->isAnchored);
+
+	if (frame->child1)
+	{
+		generateFrameFields(frame->child1);
+	}
+
+	if (frame->child2)
+	{
+		generateFrameFields(frame->child2);
+	}
+}
+
+void GuiFrameSetCtrl::setDataField(const char* tag, const U32 id, const U32 value)
+{
+	char idBuffer[16];
+	char valueBuffer[16];
+
+	StringTableEntry tagFieldName = StringTable->insert(tag);
+
+	dSprintf(idBuffer, 16, "%d", id);
+	dSprintf(valueBuffer, 16, "%d", value);
+	SimObject::setDataField(tagFieldName, idBuffer, valueBuffer);
+}
+
+const char* GuiFrameSetCtrl::getDataField(const char* tag, const U32 id)
+{
+	char idBuffer[16];
+	StringTableEntry tagFieldName = StringTable->insert(tag);
+
+	dSprintf(idBuffer, 16, "%d", id);
+	return SimObject::getDataField(tagFieldName, idBuffer);
 }

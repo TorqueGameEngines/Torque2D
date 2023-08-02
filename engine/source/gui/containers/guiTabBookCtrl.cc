@@ -536,7 +536,7 @@ void GuiTabBookCtrl::calculatePageTabs()
    S32 currX      = 0;
    S32 currY      = 0;
    S32 tabHeight  = 0;
-   RectI innerRect = getInnerRect(mBounds.point, mBounds.extent, NormalState, mProfile);
+   RectI innerRect = getInnerRect();
    mFontHeight = mTabProfile->getFont(mFontSizeAdjust)->getHeight();
    Point2I innerExtent = Point2I(mFontHeight, mFontHeight);
    Point2I fontBasedBounds = getOuterExtent(innerExtent, NormalState, mTabProfile);
@@ -706,7 +706,7 @@ void GuiTabBookCtrl::balanceColumn( S32 column , S32 totalTabWidth )
       return;
 
    // Balance the tabs across the remaining space
-   RectI innerRect = getInnerRect(mBounds.point, mBounds.extent, NormalState, mProfile);
+   RectI innerRect = getInnerRect();
    S32 spaceToDivide = innerRect.extent.y - totalTabWidth;
    S32 pointDelta    = 0;
    for( S32 i = 0; i < rowTemp.size(); i++ )
@@ -743,7 +743,7 @@ void GuiTabBookCtrl::balanceRow( S32 row, S32 totalTabWidth )
       return;
 
    // Balance the tabs across the remaining space
-   RectI innerRect = getInnerRect(mBounds.point, mBounds.extent, NormalState, mProfile);
+   RectI innerRect = getInnerRect();
    S32 spaceToDivide = innerRect.extent.x - totalTabWidth;
    S32 pointDelta    = 0;
    for( S32 i = 0; i < rowTemp.size(); i++ )

@@ -150,9 +150,8 @@ void GuiChainCtrl::onChildRemoved(SimObject *child)
 
 void GuiChainCtrl::calculateExtent(bool holdLength)
 {
-	Point2I offset = Point2I(mBounds.point.Zero);
-	Point2I extent = Point2I(getExtent());
-	RectI innerRect = getInnerRect(offset, extent, NormalState, mProfile);
+	Point2I offset = Point2I::Zero;
+	RectI innerRect = getInnerRect(offset);
 
 	S32 length = positionChildren(innerRect);
 	S32 oldLength = mIsVertical ? innerRect.extent.y : innerRect.extent.x;

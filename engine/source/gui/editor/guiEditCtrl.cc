@@ -44,6 +44,7 @@ GuiEditCtrl::GuiEditCtrl(): mCurrentAddSet(NULL),
    mDragBeginPoints.clear();
    mSelectedControls.clear();
    mUseGridSnap = true;
+   mMouseLockedEditCtrl = nullptr;
 
    mDefaultCursor    = NULL;
    mLeftRightCursor  = NULL;
@@ -728,11 +729,18 @@ void GuiEditCtrl::onTouchDown(const GuiEvent &event)
    if(!mCurrentAddSet)
       mCurrentAddSet = mContentControl;
 
-   //find the control we clicked
-   ctrl = mContentControl->findHitControl(mLastMousePos, mCurrentAddSet->mLayer);
-
-   Point2I editorOffset = localToGlobalCoord(Point2I(0,0));
-   bool handledEvent = ctrl->onMouseDownEditor( event, editorOffset );
+   bool handledEvent = false;
+	Point2I editorOffset = localToGlobalCoord(Point2I(0,0));
+   if(mMouseLockedEditCtrl)
+   {
+		handledEvent = mMouseLockedEditCtrl->onMouseDownEditor(event, editorOffset);
+   }
+   else
+   {
+	   //find the control we clicked
+	   ctrl = mContentControl->findHitControl(mLastMousePos, mCurrentAddSet->mLayer);
+	   handledEvent = ctrl->onMouseDownEditor( event, editorOffset );
+   }
    if( handledEvent )
    {
       // The Control handled the event and requested the edit ctrl
@@ -860,7 +868,16 @@ void GuiEditCtrl::onTouchUp(const GuiEvent &event)
    GuiControl *ctrl = mContentControl->findHitControl(mLastMousePos, mCurrentAddSet->mLayer);
 
    Point2I localOffset = localToGlobalCoord( Point2I(0,0) );
-   bool handledEvent = ctrl->onMouseUpEditor( event, localOffset );
+   bool handledEvent = false;
+   if (mMouseLockedEditCtrl)
+   {
+		handledEvent = mMouseLockedEditCtrl->onMouseUpEditor(event, localOffset);
+   }
+   else 
+   {
+		handledEvent = ctrl->onMouseUpEditor( event, localOffset );
+   }
+
    if( handledEvent == true )
    {
       // The Control handled the event and requested the edit ctrl
@@ -870,6 +887,7 @@ void GuiEditCtrl::onTouchUp(const GuiEvent &event)
 
    //unlock the mouse
    mouseUnlock();
+   editMouseUnlock();
 
    // Reset Drag Axis Alignment Information
    mDragBeginPoint.set(-1,-1);
@@ -920,14 +938,21 @@ void GuiEditCtrl::onTouchDragged(const GuiEvent &event)
 
    if(!mCurrentAddSet)
       mCurrentAddSet = mContentControl;
+		
+	Point2I mousePoint = globalToLocalCoord(event.mousePoint);
 
-   Point2I mousePoint = globalToLocalCoord(event.mousePoint);
+   Point2I localOffset = localToGlobalCoord(Point2I(0, 0));
+   bool handledEvent = false;
+   if (mMouseLockedEditCtrl)
+   {
+	   handledEvent = mMouseLockedEditCtrl->onMouseDraggedEditor(event, localOffset);
+   }
+   else
+   {
+		GuiControl *ctrl = mContentControl->findHitControl(mousePoint, mCurrentAddSet->mLayer);
+	   handledEvent = ctrl->onMouseDraggedEditor(event, localOffset);
+   }
 
-   //find the control we clicked
-   GuiControl *ctrl = mContentControl->findHitControl(mousePoint, mCurrentAddSet->mLayer);
-
-   Point2I dragOffset = localToGlobalCoord( Point2I(0,0) );
-   bool handledEvent = ctrl->onMouseDraggedEditor( event, dragOffset );
    if( handledEvent )
    {
       // The Control handled the event and requested the edit ctrl

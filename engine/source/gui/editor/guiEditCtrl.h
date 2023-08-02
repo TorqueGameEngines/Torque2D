@@ -39,6 +39,7 @@ class GuiEditCtrl : public GuiControl
    bool					mUseGridSnap;
    Point2I				   mDragBeginPoint;
    Vector<Point2I>		mDragBeginPoints;
+   GuiControl*			mMouseLockedEditCtrl;
 
    // Undo
    UndoManager          mUndoManager;
@@ -140,6 +141,11 @@ class GuiEditCtrl : public GuiControl
    S32 getGridSize() { return mGridSnap.x; }
    void moveSelectionToCtrl(GuiControl*);
    ColorI getEditorColor() { return mProfile->getFillColor(DisabledState); }
+
+   //Editor Mouse Locking
+   bool editIsMouseLocked(GuiControl* ctrl) { return ctrl == mMouseLockedEditCtrl; }
+   void editMouseLock(GuiControl* ctrl) { mMouseLockedEditCtrl = ctrl; }
+   void editMouseUnlock() { mMouseLockedEditCtrl = nullptr; }
 };
 
 #endif //_GUI_EDIT_CTRL_H

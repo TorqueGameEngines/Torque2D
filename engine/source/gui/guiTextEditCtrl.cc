@@ -581,9 +581,7 @@ bool GuiTextEditCtrl::validate()
 
 const RectI GuiTextEditCtrl::getGlobalInnerRect()
 {
-    Point2I offset = Point2I(mBounds.point.Zero);
-    Point2I extent = Point2I(getExtent());
-    RectI innerRect = getInnerRect(offset, extent, SelectedState, mProfile);
+    RectI innerRect = getInnerRect(SelectedState);
 
     Point2I globalCtrlOffset = localToGlobalCoord(innerRect.point);
     RectI globalInnerRect(globalCtrlOffset, innerRect.extent);

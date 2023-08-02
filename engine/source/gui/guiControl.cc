@@ -162,7 +162,7 @@ void GuiControl::onChildAdded( GuiControl *child )
 	if(mProfile)
 	{
 		//This will cause the child control to be centered if it needs to be.
-		RectI innerRect = this->getInnerRect(mBounds.point, mBounds.extent, GuiControlState::NormalState, mProfile);
+		RectI innerRect = getInnerRect();
 		child->parentResized(innerRect.extent, innerRect.extent);
 		
 		if (isMethod("onChildAdded"))
@@ -543,8 +543,7 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
 	if(mHorizSizing == horizResizeCenter || mVertSizing == vertResizeCenter)
 	{
 		//This is based on the "new" outer extent of the parent.
-      Point2I origin = Point2I(0, 0);
-		parentInnerExt = getInnerRect(origin, parent->mBounds.extent, NormalState, parent->mProfile).extent;
+		parentInnerExt = parent->getInnerRect().extent;
 	}
 
     if (mHorizSizing == horizResizeCenter)
@@ -723,6 +722,16 @@ RectI GuiControl::applyPadding(Point2I &offset, Point2I &extent, GuiControlState
 	S32 bottomSize = (bottomProfile) ? bottomProfile->getPadding(currentState) : 0;
 
 	return RectI(offset.x + leftSize, offset.y + topSize, (extent.x - leftSize) - rightSize, (extent.y - topSize) - bottomSize);
+}
+
+RectI GuiControl::getInnerRect(GuiControlState currentState)
+{
+	return getInnerRect(mBounds.point, mBounds.extent, currentState, mProfile);
+}
+
+RectI GuiControl::getInnerRect(Point2I& offset, GuiControlState currentState)
+{
+	return getInnerRect(offset, mBounds.extent, currentState, mProfile);
 }
 
 RectI GuiControl::getInnerRect(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile)
@@ -1386,12 +1395,23 @@ GuiControl* GuiControl::findHitControl(const Point2I &pt, S32 initialLayer)
 
 bool GuiControl::isMouseLocked()
 {
+	if (isEditMode())
+	{
+		return smEditorHandle->editIsMouseLocked(this);
+	}
+
    GuiCanvas *root = getRoot();
    return root ? root->getMouseLockedControl() == this : false;
 }
 
 void GuiControl::mouseLock(GuiControl *lockingControl)
 {
+	if (isEditMode())
+	{
+		smEditorHandle->editMouseLock(lockingControl);
+		return;
+	}
+
    GuiCanvas *root = getRoot();
    if (root)
       root->mouseLock(lockingControl);
@@ -1399,13 +1419,16 @@ void GuiControl::mouseLock(GuiControl *lockingControl)
 
 void GuiControl::mouseLock()
 {
-   GuiCanvas *root = getRoot();
-   if (root)
-      root->mouseLock(this);
+   mouseLock(this);
 }
 
 void GuiControl::mouseUnlock()
 {
+	if (isEditMode())
+	{
+		smEditorHandle->editMouseUnlock();
+		return;
+	}
    GuiCanvas *root = getRoot();
    if (root)
       root->mouseUnlock(this);

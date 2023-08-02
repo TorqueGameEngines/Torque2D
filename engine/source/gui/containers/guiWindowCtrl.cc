@@ -953,6 +953,12 @@ RectI GuiWindowCtrl::renderButton(const RectI &contentRect, S32 distanceFromEdge
 	return finalButtonContent;
 }
 
+RectI GuiWindowCtrl::getInnerRect(Point2I& offset, Point2I& extent, GuiControlState currentState, GuiControlProfile* profile)
+{
+	Point2I contentExtent = Point2I(extent.x, extent.y - mTitleHeight);
+	return Parent::getInnerRect(offset, contentExtent, currentState, mContentProfile);
+}
+
 GuiControlState GuiWindowCtrl::getRegionCurrentState(GuiWindowCtrl::Region region)
 {
 	GuiControlState currentState = GuiControlState::NormalState;

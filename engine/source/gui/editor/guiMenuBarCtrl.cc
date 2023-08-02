@@ -137,9 +137,7 @@ void GuiMenuBarCtrl::onChildRemoved(SimObject *child)
 
 void GuiMenuBarCtrl::calculateMenus()
 {
-	Point2I zero = mBounds.point.Zero;
-	Point2I extent = getExtent();
-	RectI innerRect = getInnerRect(zero, extent, NormalState, mProfile);
+	RectI innerRect = getInnerRect();
 	iterator i;
 	S32 length = 0;
 	for (i = begin(); i != end(); i++)

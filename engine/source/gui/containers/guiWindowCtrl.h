@@ -146,6 +146,7 @@ class GuiWindowCtrl : public GuiControl
       void onRender(Point2I offset, const RectI &updateRect);
 	  RectI renderButtons(const Point2I &offset, const RectI &contentRect);
 	  RectI renderButton(const RectI &contentRect, S32 distanceFromEdge, GuiControlState buttonState, GuiControlProfile *profile, Icon defaultIcon);
+	  RectI getInnerRect(Point2I& offset, Point2I& extent, GuiControlState currentState, GuiControlProfile* profile);
 
 	  void setControlContentProfile(GuiControlProfile* prof);
 	  void setControlCloseButtonProfile(GuiControlProfile* prof);

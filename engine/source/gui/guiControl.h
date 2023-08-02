@@ -777,7 +777,9 @@ public:
 	RectI applyPadding(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
 
 	/// Returns the bounds of the rect with margin, borders, and padding applied.
-	RectI getInnerRect(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
+	RectI getInnerRect(GuiControlState currentState = GuiControlState::NormalState);
+	RectI getInnerRect(Point2I& offset, GuiControlState currentState = GuiControlState::NormalState);
+	virtual RectI getInnerRect(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile);
 
 	/// Returns the extent of the outer rect given the extent of the inner rect.
 	Point2I getOuterExtent(Point2I &innerExtent, GuiControlState currentState, GuiControlProfile *profile);

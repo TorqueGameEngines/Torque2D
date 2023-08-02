@@ -46,8 +46,9 @@ public:
 		bool isVertical;
 		U32 id;
 		Point2I extent;
-		Point2I localPosition;
 		bool isAnchored;
+
+		Point2I localPosition;
 		RectI dividerRect;
 		RectI spliterRect1;//shown in edit mode
 		RectI spliterRect2;//shown in edit mode
@@ -70,6 +71,7 @@ public:
 		void sizeInsertButtons(const Point2I& newPosition, const Point2I& newExtent);
 		Frame* findFrame(const S32 frameID);
 		Frame* findEmptyFrame();
+		Frame* findEmptyFrameAtLocation(const RectI& location);
 		Frame* twin();
 		Frame* findHitDivider(const Point2I& position);
 		Frame* findFrameWithCtrl(GuiControl* ctrl);
@@ -96,6 +98,7 @@ public:
 	
 	bool onAdd();
 	virtual void parentResized(const Point2I& oldParentExtent, const Point2I& newParentExtent);
+	void loadFrame(GuiFrameSetCtrl::Frame* frame, const U32 frameID);
 	void resize(const Point2I& newPosition, const Point2I& newExtent);
 	void inspectPostApply();
 	bool onWake();
@@ -138,6 +141,12 @@ public:
 	static bool setBookProfileFn(void* obj, const char* data) { GuiControlProfile* profile; Sim::findObject(data, profile); static_cast<GuiFrameSetCtrl*>(obj)->setTabBookProfile(profile); return true; }
 	static bool setTabProfileFn(void* obj, const char* data) { GuiControlProfile* profile; Sim::findObject(data, profile); static_cast<GuiFrameSetCtrl*>(obj)->setTabProfile(profile); return true; }
 	static bool setPageProfileFn(void* obj, const char* data) { GuiControlProfile* profile; Sim::findObject(data, profile); static_cast<GuiFrameSetCtrl*>(obj)->setTabPageProfile(profile); return true; }
+
+	void writeFields(Stream& stream, U32 tabStop);
+	void generateFrameFields(Frame* frame);
+
+	void setDataField(const char* tag, const U32 id, const U32 value);
+	const char* getDataField(const char* tag, const U32 id);
 
 	DECLARE_CONOBJECT(GuiFrameSetCtrl);
 };
