@@ -532,6 +532,11 @@ void GuiFrameSetCtrl::onChildAdded(GuiControl* child)
 
 	Parent::onChildAdded(child);
 
+	assignChildToFrame(child);
+}
+
+void GuiFrameSetCtrl::assignChildToFrame(GuiControl* child)
+{
 	Frame* frame = mRootFrame.findFrameWithCtrl(child);
 	if(!frame)
 	{
@@ -549,7 +554,6 @@ void GuiFrameSetCtrl::onChildAdded(GuiControl* child)
 			}
 		}
 	}
-	//resize(getPosition(), getExtent());
 }
 
 void GuiFrameSetCtrl::onChildRemoved(GuiControl* child)
@@ -1247,14 +1251,6 @@ void GuiFrameSetCtrl::writeFields(Stream& stream, U32 tabStop)
 
 void GuiFrameSetCtrl::generateFrameFields(GuiFrameSetCtrl::Frame* frame)
 {
-	//parentID = frame->parent->id
-	//child1ID = frame->child1->id
-	//child2ID = frame->child2->id
-	//isVertical
-	//frameExtent = isVertical ? frame->extent.y : frame->extent.x
-	//isAnchored
-	//and make sure control has the correctID for 
-
 	U32 id = frame->id;
 	U32 child1ID = frame->child1 ? frame->child1->id : 0;
 	U32 child2ID = frame->child2 ? frame->child2->id : 0;
@@ -1296,4 +1292,205 @@ const char* GuiFrameSetCtrl::getDataField(const char* tag, const U32 id)
 
 	dSprintf(idBuffer, 16, "%d", id);
 	return SimObject::getDataField(tagFieldName, idBuffer);
+}
+
+static StringTableEntry frameNodeSectionName		= StringTable->insert("Frames", true);
+static StringTableEntry frameNodeName				= StringTable->insert("Frame", true);
+static StringTableEntry frameIDName					= StringTable->insert("ID", true);
+static StringTableEntry frameChild1Name				= StringTable->insert("Child1ID", true);
+static StringTableEntry frameChild2Name				= StringTable->insert("Child2ID", true);
+static StringTableEntry frameIsVerticalName			= StringTable->insert("IsVertical", true);
+static StringTableEntry frameExtentXName			= StringTable->insert("ExtentX", true);
+static StringTableEntry frameExtentYName			= StringTable->insert("ExtentY", true);
+static StringTableEntry frameIsAnchoredName			= StringTable->insert("IsAnchored", true);
+static StringTableEntry frameChildMapName			= StringTable->insert("ChildMap", true);
+
+void GuiFrameSetCtrl::onTamlCustomWrite(TamlCustomNodes& customNodes)
+{
+	// Debug Profiling.
+	PROFILE_SCOPE(GuiFrameSetCtrl_OnTamlCustomWrite);
+
+	// Call parent.
+	Parent::onTamlCustomWrite(customNodes);
+
+	if (mRootFrame.child1 && mRootFrame.child2)
+	{
+		TamlCustomNode* pCustomFrameSection = customNodes.addNode(frameNodeSectionName);
+
+		Frame* frame = &mRootFrame;
+		writeFrameCustomTaml(pCustomFrameSection, frame);
+	}
+}
+
+void GuiFrameSetCtrl::writeFrameCustomTaml(TamlCustomNode* pParentNode, GuiFrameSetCtrl::Frame* frame)
+{
+	TamlCustomNode* pFrameNode = pParentNode->addNode(frameNodeName);
+
+	U32 child1ID = frame->child1 ? frame->child1->id : 0;
+	U32 child2ID = frame->child2 ? frame->child2->id : 0;
+
+	pFrameNode->addField(frameIDName, frame->id);
+	pFrameNode->addField(frameChild1Name, child1ID);
+	pFrameNode->addField(frameChild2Name, child2ID);
+	pFrameNode->addField(frameIsVerticalName, frame->isVertical);
+	pFrameNode->addField(frameExtentXName, frame->extent.x);
+	pFrameNode->addField(frameExtentYName, frame->extent.y);
+	pFrameNode->addField(frameIsAnchoredName, frame->isAnchored);
+
+	if (frame->control)
+	{
+		U32 childMap = 0;
+		for (SimSet::iterator itr = begin(); itr != end(); itr++, childMap++)
+		{
+			GuiControl* ctrl = dynamic_cast<GuiControl*>(*itr);
+			if (ctrl && ctrl == frame->control)
+			{
+				break;
+			}
+		}
+		pFrameNode->addField(frameChildMapName, childMap);
+	}
+
+	if (frame->child1)
+	{
+		writeFrameCustomTaml(pFrameNode, frame->child1);
+	}
+
+	if (frame->child2)
+	{
+		writeFrameCustomTaml(pFrameNode, frame->child2);
+	}
+}
+
+void GuiFrameSetCtrl::onTamlCustomRead(const TamlCustomNodes& customNodes)
+{
+	// Debug Profiling.
+	PROFILE_SCOPE(GuiFrameSetCtrl_OnTamlCustomRead);
+
+	// Call parent.
+	Parent::onTamlCustomRead(customNodes);
+
+	// Load the frames
+	loadTamlFrames(customNodes);
+}
+
+void GuiFrameSetCtrl::loadTamlFrames(const TamlCustomNodes& customNodes)
+{
+	const TamlCustomNode* pCustomFrameSection = customNodes.findNode(frameNodeSectionName);
+
+	if (pCustomFrameSection != NULL)
+	{
+		const TamlCustomNodeVector& childList = pCustomFrameSection->getChildren();
+
+		if (childList.size() == 0)
+		{
+			//not really an error so let's move on.
+			return;
+		}
+		else if (childList.size() != 1)
+		{
+			Con::warnf("GuiFrameSetCtrl::loadTamlFrames() - Only a single root frame should be defined.");
+			return;
+		}
+
+		TamlCustomNode* rootNode = *childList.begin();
+		Frame* frame = &mRootFrame;
+		loadTamlFrame(*rootNode, frame);
+		mRootFrame.resize(getPosition(), getExtent());
+	}
+}
+
+void GuiFrameSetCtrl::loadTamlFrame(const TamlCustomNode& node, GuiFrameSetCtrl::Frame* frame)
+{
+	StringTableEntry frameName = node.getNodeName();
+
+	if (frameName != frameNodeName)
+	{
+		Con::warnf("GuiFrameSetCtrl::loadTamlFrame() - Unknown tag name of '%s'. Only '%s' is valid.", frameName, frameNodeName);
+		return;
+	}
+
+	U32 child1ID = 0;
+	U32 child2ID = 0;
+	U32 childMap = 0;
+
+	const TamlCustomFieldVector& fields = node.getFields();
+	for (TamlCustomFieldVector::const_iterator fieldItr = fields.begin(); fieldItr != fields.end(); ++fieldItr)
+	{
+		const TamlCustomField* pField = *fieldItr;
+		StringTableEntry fieldName = pField->getFieldName();
+
+		if (fieldName == frameIDName)
+		{
+			pField->getFieldValue(frame->id);
+		}
+		else if (fieldName == frameChild1Name)
+		{
+			pField->getFieldValue(child1ID);
+		}
+		else if (fieldName == frameChild2Name)
+		{
+			pField->getFieldValue(child2ID);
+		}
+		else if (fieldName == frameIsVerticalName)
+		{
+			pField->getFieldValue(frame->isVertical);
+		}
+		else if (fieldName == frameExtentXName)
+		{
+			pField->getFieldValue(frame->extent.x);
+		}
+		else if (fieldName == frameExtentYName)
+		{
+			pField->getFieldValue(frame->extent.y);
+		}
+		else if (fieldName == frameIsAnchoredName)
+		{
+			pField->getFieldValue(frame->isAnchored);
+		}
+		else if (fieldName == frameChildMapName)
+		{
+			pField->getFieldValue(childMap);
+		}
+		else
+		{
+			Con::warnf("GuiFrameSetCtrl::loadTamlFrame() - Encountered an unknown field name of '%s'.", fieldName);
+			continue;
+		}
+	}
+
+	if (frame->extent.x <= 0 || frame->extent.y <= 0)
+	{
+		Con::warnf("GuiFrameSetCtrl::loadTamlFrame() - Frame extent of '(%d,%d)' is invalid or was not set.", frame->extent.x, frame->extent.y);
+		frame->extent.set(1, 1);
+	}
+
+	const TamlCustomNodeVector& childList = node.getChildren();
+
+	if ((child1ID != 0 || child2ID != 0) && childList.size() < 2)
+	{
+		Con::warnf("GuiFrameSetCtrl::loadTamlFrame() - Frame %d shows child IDs but child nodes don't exist. Frames may have no children or exactly 2.", frame->id);
+		return;
+	}
+	else if (childList.size() != 0 && childList.size() != 2)
+	{
+		Con::warnf("GuiFrameSetCtrl::loadTamlFrame() - Frame %d has %d child nodes. Frames may have no children or exactly 2.", frame->id, childList.size());
+		return;
+	}
+
+	if (childList.size() == 2 && child1ID && child2ID)
+	{
+		splitFrame(frame, frame->isVertical ? GuiDirection::Up : GuiDirection::Left);
+
+		TamlCustomNode* child1Node = *childList.begin();
+		loadTamlFrame(*child1Node, frame->child1);
+
+		TamlCustomNode* child2Node = *(childList.begin() + 1);
+		loadTamlFrame(*child2Node, frame->child2);
+	}
+	else
+	{
+		GuiControl* child = dynamic_cast<GuiControl*>(at(childMap));
+		frame->control = child;
+	}
 }

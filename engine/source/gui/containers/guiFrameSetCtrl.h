@@ -89,7 +89,13 @@ public:
 	GuiControlProfile* mTabPageProfile;
 
 
-private:
+protected:
+	void onTamlCustomWrite(TamlCustomNodes& customNodes);
+	void writeFrameCustomTaml(TamlCustomNode* pParentNode, Frame* frame);
+
+	void onTamlCustomRead(const TamlCustomNodes& customNodes);
+	void loadTamlFrames(const TamlCustomNodes& customNodes);
+	void loadTamlFrame(const TamlCustomNode& node, Frame* frame);
 
 public:
 	GuiFrameSetCtrl();
@@ -104,6 +110,7 @@ public:
 	bool onWake();
 	void onSleep();
 	void onChildAdded(GuiControl* child);
+	void assignChildToFrame(GuiControl* child);
 	void onChildRemoved(GuiControl* child);
 	void childResized(GuiControl* child);
 	void childMoved(GuiControl* child);
