@@ -947,7 +947,14 @@ void GuiFrameSetCtrl::renderDropOptions(GuiWindowCtrl* window)
 
 bool GuiFrameSetCtrl::hasCenterButton(GuiFrameSetCtrl::Frame* frame)
 {
-	return (frame != &mRootFrame && (frame->isAnchored || (!frame->control && !frame->child1 && !frame->child2)));
+	if (!frame->control)
+	{
+		return false;
+	}
+
+	GuiWindowCtrl* window = dynamic_cast<GuiWindowCtrl*>(frame->control);
+	GuiTabBookCtrl* book = dynamic_cast<GuiTabBookCtrl*>(frame->control);
+	return frame != &mRootFrame && (window || book);
 }
 
 void GuiFrameSetCtrl::renderDropButton(const GuiFrameSetCtrl::Frame* frame, const RectI& buttonRect, const Point2I& cursorPt, const Point2I& fillPos, const Point2I& fillExt, GuiDirection direction)
@@ -1077,6 +1084,7 @@ void GuiFrameSetCtrl::handleDropButtons(GuiWindowCtrl* window)
 		if (hitButton)
 		{
 			addObject(window);
+			resize(mBounds.point, mBounds.extent);
 		}
 	}
 }
