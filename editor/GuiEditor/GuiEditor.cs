@@ -31,6 +31,7 @@ function GuiEditor::create( %this )
     exec("./scripts/GuiEditorExplorerTree.cs");
     exec("./scripts/GuiEditorSaveGuiDialog.cs");
     exec("./scripts/GuiEditorGridSizeDialog.cs");
+    exec("./scripts/GuiEditorColorWindow.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Gui Editor", %this);
 
@@ -182,6 +183,29 @@ function GuiEditor::create( %this )
     %this.brain.setRoot(%this.rootGui);
     %this.brain.root = %this.rootGui;
     %this.explorerWindow.inspect(%this.rootGui);
+
+    /* %this.colorWindow = new GuiWindowCtrl()
+    {
+        Class = "GuiEditorColorWindow";
+        HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "610 0";
+        Extent = "400  380";
+        MinExtent = "100 100";
+        text = "Color Test";
+        canMove = true;
+        canClose = false;
+        canMinimize = true;
+        canMaximize = false;
+        resizeWidth = true;
+        resizeHeight = true;
+    };
+    ThemeManager.setProfile(%this.colorWindow, "windowProfile");
+    ThemeManager.setProfile(%this.colorWindow, "windowContentProfile", "ContentProfile");
+    ThemeManager.setProfile(%this.colorWindow, "windowButtonProfile", "CloseButtonProfile");
+    ThemeManager.setProfile(%this.colorWindow, "windowButtonProfile", "MinButtonProfile");
+    ThemeManager.setProfile(%this.colorWindow, "windowButtonProfile", "MaxButtonProfile");
+    %this.guiPage.add(%this.colorWindow); */
 
     EditorCore.FinishRegistration(%this.guiPage);
 }

@@ -165,11 +165,8 @@ void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlSta
 	}
 }
 
-void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profile, GuiControlState state)
+void renderBorderedCircle(Point2I& center, S32 radius, GuiControlProfile* profile, GuiControlState state = NormalState)
 {
-	//Get the border profiles
-	GuiBorderProfile *borderProfile = profile->mBorderDefault;
-
 	//Get the colors
 	ColorI fillColor = profile->getFillColor(state);
 	ColorI borderColor = (profile->mBorderDefault) ? profile->mBorderDefault->getBorderColor(state) : ColorI();
@@ -180,11 +177,47 @@ void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profil
 	dglDrawCircleFill(center, (F32)fillRadius, fillColor);
 
 	//Draw the border
-	dglDrawCircle(center, (F32)radius, borderColor, (F32)borderSize);
+	renderRing(center, (F32)radius, borderColor, (F32)borderSize);
 
 	if (state > 3 && radius >= 8)
 	{
 		dglDrawCircleFill(center, radius - 6, profile->getFillColor(GuiControlState::SelectedState));
+	}
+}
+
+void renderBorderedRing(Point2I& center, S32 outerRadius, S32 innerRadius, GuiControlProfile* profile, GuiControlState state = NormalState)
+{
+	if (innerRadius <= 0)
+	{
+		renderBorderedCircle(center, outerRadius, profile, state);
+		return;
+	}
+	
+	//Get the colors
+	ColorI fillColor = profile->getFillColor(state);
+	ColorI borderColor = (profile->mBorderDefault) ? profile->mBorderDefault->getBorderColor(state) : ColorI();
+	S32 borderSize = (profile->mBorderDefault) ? profile->mBorderDefault->getBorder(state) : 0;
+
+	//Draw the fill
+	S32 fillRadius = (profile->mBorderDefault && profile->mBorderDefault->mUnderfill) ? outerRadius : outerRadius - borderSize;
+	renderRing(center, (F32)fillRadius, fillColor, (F32)(outerRadius - innerRadius));
+
+	//Draw the border
+	renderRing(center, (F32)outerRadius, borderColor, (F32)borderSize);
+}
+
+void renderRing(const Point2I& center, const F32 radius, const ColorI& color, F32 borderSize)
+{
+	for (S32 i = 0; i < borderSize; i++)
+	{
+		if(i < (borderSize - 1))
+		{
+			dglDrawCircle(center, radius - i, color, 2);
+		}
+		else
+		{
+			dglDrawCircle(center, radius - i, color, 1);
+		}
 	}
 }
 

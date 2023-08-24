@@ -69,6 +69,7 @@ function BaseTheme::onAdd(%this)
 	%this.makeSubListProfile();
 	%this.makeGuiEditorProfile();
 	%this.makeFrameSetProfile();
+	%this.makeColorPickerProfile();
 }
 
 function BaseTheme::init(%this)
@@ -2179,6 +2180,70 @@ function BaseTheme::makeFrameSetProfile(%this)
 
 		tab = false;
 		canKeyFocus = true;
+	};
+}
+
+function BaseTheme::makeColorPickerProfile(%this)
+{
+	%border = new GuiBorderProfile()
+	{
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.color1;
+		borderColorHL = %this.color2;
+		borderColorSL = %this.color4;
+		borderColorNA = %this.color1;
+
+		padding = 1;
+		paddingHL = 1;
+		paddingSL = 1;
+		paddingNA = 1;
+
+		margin = 1;
+		marginHL = 1;
+		marginSL = 1;
+		marginNA = 1;
+	};
+
+	%this.colorPickerProfile = new GuiControlProfile()
+	{
+		fillColor = "0 0 0 0";
+		fillColorHL = "0 0 0 0";
+		fillColorSL = "0 0 0 0";
+		fillColorNA = "0 0 0 0";
+		
+		borderDefault = %border;
+
+		tab = false;
+		canKeyFocus = true;
+		underfill = true;
+	};
+
+	%selBorder = new GuiBorderProfile()
+	{
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+
+		borderColor = "0 0 0 180";
+		borderColorHL = "0 0 0 190";
+		borderColorSL = "0 0 0 220";
+
+		//Margin and padding are used to determine the size of the selector ring in the normal state.
+		padding = 3;//Radius of the outer circle minus the inner circle. The meat of the donut.
+		margin = 1; //Radius of the inner circle plus 1. This is different from the normal use of the margin. 
+	};
+
+	%this.colorPickerSelectorProfile = new GuiControlProfile()
+	{
+		fillColor = "240 240 240 255";
+		fillColorHL = "250 250 250 255";
+		fillColorSL = %this.color5;
+		
+		borderDefault = %selBorder;
 	};
 }
 

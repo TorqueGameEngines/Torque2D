@@ -1179,6 +1179,11 @@ void dglSolidCube(const Point3F & extent, const Point3F & center)
 //http://slabode.exofire.net/circle_draw.shtml
 void dglDrawCircle(const Point2I &center, const F32 radius, const ColorI &color, const F32 &lineWidth)
 {
+	if(lineWidth <= 0)
+	{
+		return;
+	}
+
 	F32 adjustedRadius = radius - (lineWidth/2);
 	const S32 num_segments = (const S32)round(10 * sqrtf(adjustedRadius));
 	F32 theta = 2 * 3.1415926f / F32(num_segments);
@@ -1594,3 +1599,249 @@ bool dglCheckState(const S32 mvDepth, const S32 pDepth,
 GLfloat gVertexFloats[8];
 GLfloat gTextureVerts[8];
 #endif
+
+//--------------------------------------------------------------------------
+// Function to draw a box which can have 4 different colors in each corner blended together
+#if defined(TORQUE_OS_IOS) || defined(TORQUE_OS_ANDROID) || defined(TORQUE_OS_EMSCRIPTEN)
+void dglDrawBlendBox(RectI& bounds, ColorF& c1, ColorF& c2, ColorF& c3, ColorF& c4)
+{
+	GLfloat left = bounds.point.x, right = bounds.point.x + bounds.extent.x - 1;
+	GLfloat top = bounds.point.y, bottom = bounds.point.y + bounds.extent.y - 1;
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	const GLfloat verts[] = {
+		left, top,
+		right,  top,
+		left,  bottom,
+		right,   bottom,
+	};
+	const GLubyte squareColors[] = {
+		static_cast<GLubyte>(255 * c1.red),  static_cast<GLubyte>(255 * c1.green),  static_cast<GLubyte>(255 * c1.blue),  static_cast<GLubyte>(255 * c1.alpha),
+		static_cast<GLubyte>(255 * c2.red),  static_cast<GLubyte>(255 * c2.green),  static_cast<GLubyte>(255 * c2.blue),  static_cast<GLubyte>(255 * c2.alpha),
+		static_cast<GLubyte>(255 * c3.red),  static_cast<GLubyte>(255 * c3.green),  static_cast<GLubyte>(255 * c3.blue),  static_cast<GLubyte>(255 * c3.alpha),
+		static_cast<GLubyte>(255 * c4.red),  static_cast<GLubyte>(255 * c4.green),  static_cast<GLubyte>(255 * c4.blue),  static_cast<GLubyte>(255 * c4.alpha),
+	};
+	glVertexPointer(2, GL_FLOAT, 0, verts);
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glColorPointer(4, GL_UNSIGNED_BYTE, 0, squareColors);
+	glEnableClientState(GL_COLOR_ARRAY);
+
+	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+}
+
+//--------------------------------------------------------------------------
+/// Function to draw a set of boxes blending throughout an array of colors
+void dglDrawBlendRangeBox(RectI& bounds, bool vertical, U8 numColors, ColorI* colors)
+{
+	S32 left = bounds.point.x, right = bounds.point.x + bounds.extent.x - 1;
+	S32 top = bounds.point.y, bottom = bounds.point.y + bounds.extent.y - 1;
+
+	// Calculate increment value
+	S32 x_inc = S32(mFloor((right - left) / (numColors - 1)));
+	S32 y_inc = S32(mFloor((bottom - top) / (numColors - 1)));
+
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	GLfloat verts[] = {
+		0.0f,	0.0f,	0.0f,	0.0f,
+		0.0f,	0.0f,	0.0f,	0.0f,
+	};
+
+	glVertexPointer(2, GL_FLOAT, 0, verts);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	for (U16 i = 0; i < numColors - 1; i++)
+	{
+		// If we are at the end, x_inc and y_inc need to go to the end (otherwise there is a rendering bug)
+		if (i == numColors - 2)
+		{
+			x_inc += right - left - 1;
+			y_inc += bottom - top - 1;
+		}
+
+		if (vertical)  // Vertical (+y)		colors go up and down
+		{
+			// First color
+			glColor4ub(colors[i].red, colors[i].green, colors[i].blue, colors[i].alpha);
+			verts[0] = (F32)left;
+			verts[1] = (F32)top;
+			verts[2] = (F32)(left + x_inc);
+			verts[3] = (F32)top;
+			// Second color
+			glColor4ub(colors[i + 1].red, colors[i + 1].green, colors[i + 1].blue, colors[i + 1].alpha);
+
+			verts[4] = (F32)left;
+			verts[5] = (F32)bottom;
+			verts[6] = (F32)(left + x_inc);
+			verts[7] = (F32)bottom;
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			left += x_inc;
+		}
+		else  // Horizontal (+x)	colors go lateral
+		{
+			// First color
+			glColor4ub(colors[i].red, colors[i].green, colors[i].blue, colors[i].alpha);
+			verts[0] = (F32)left;
+			verts[1] = (F32)(top + y_inc);
+			verts[2] = (F32)right;
+			verts[3] = (F32)(top + y_inc);
+
+			// Second color
+			glColor4ub(colors[i + 1].red, colors[i + 1].green, colors[i + 1].blue, colors[i + 1].alpha);
+			verts[4] = (F32)left;
+			verts[5] = (F32)top;
+			verts[6] = (F32)right;
+			verts[7] = (F32)top;
+			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+			top += y_inc;
+		}
+	}
+}
+
+#else
+
+void dglDrawBlendBox(const RectI& bounds, ColorF& c1, ColorF& c2, ColorF& c3, ColorF& c4)
+{
+	F32 l = (F32)bounds.point.x;
+	F32 r = (F32)(bounds.point.x + bounds.extent.x);
+	F32 t = (F32)bounds.point.y;
+	F32 b = (F32)(bounds.point.y + bounds.extent.y);
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+
+	// Color
+	glColor4fv(c1.address());
+	glVertex2f(l, t);
+	glColor4fv(c4.address());
+	glVertex2f(l, b);
+	glColor4fv(c3.address());
+	glVertex2f(r, b);
+	glColor4fv(c2.address());
+	glVertex2f(r, t);
+
+	glEnd();
+}
+
+//--------------------------------------------------------------------------
+/// Function to draw a set of boxes blending throughout an array of colors
+void dglDrawBlendRangeBox(const RectI& bounds, bool vertical, U8 numColors, ColorI* colors)
+{
+	F32 l = (F32)bounds.point.x;
+	F32 r = (F32)(bounds.point.x + bounds.extent.x);
+	F32 t = (F32)bounds.point.y;
+	F32 b = (F32)(bounds.point.y + bounds.extent.y);
+
+	// Calculate increment value
+	F32 x_inc = F32((r - l) / (numColors - 1));
+	F32 y_inc = F32((b - t) / (numColors - 1));
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glDisable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	if (!vertical)  // Horizontal (+x)
+	{
+		glColor4ub(colors[0].red, colors[0].green, colors[0].blue, colors[0].alpha);
+		glVertex2f(l, t);
+		glVertex2f(l, b);
+		glVertex2f(l - 1, b);
+		glVertex2f(l - 1, t);
+		glVertex2f(r, t);
+		glVertex2f(r, b);
+		glVertex2f(r + 1, b);
+		glVertex2f(r + 1, t);
+	}
+	else   // Vertical (+y)
+	{
+		glColor4ub(colors[0].red, colors[0].green, colors[0].blue, colors[0].alpha);
+		glVertex2f(l, t);
+		glVertex2f(r, t);
+		glVertex2f(r, t - 1);
+		glVertex2f(l, t - 1);
+		glVertex2f(l, b);
+		glVertex2f(r, b);
+		glVertex2f(r, b + 1);
+		glVertex2f(l, b + 1);
+	}
+
+	for (U16 i = 0; i < numColors - 1; i++)
+	{
+		if (!vertical)  // Horizontal (+x)
+		{
+			// First color
+			glColor4ub(colors[i].red, colors[i].green, colors[i].blue, colors[i].alpha);
+			glVertex2f(l, t);
+			glVertex2f(l, b);
+			// Second color
+			glColor4ub(colors[i + 1].red, colors[i + 1].green, colors[i + 1].blue, colors[i + 1].alpha);
+			glVertex2f(l + x_inc, b);
+			glVertex2f(l + x_inc, t);
+			l += x_inc;
+		}
+		else  // Vertical (+y)
+		{
+			// First color
+			glColor4ub(colors[i].red, colors[i].green, colors[i].blue, colors[i].alpha);
+			glVertex2f(l, t);
+			glVertex2f(r, t);
+			// Second color
+			glColor4ub(colors[i + 1].red, colors[i + 1].green, colors[i + 1].blue, colors[i + 1].alpha);
+			glVertex2f(r, t + y_inc);
+			glVertex2f(l, t + y_inc);
+			t += y_inc;
+		}
+	}
+	glEnd();
+}
+
+#endif
+
+void dglRenderCheckers(const RectI& bounds, const U8 size, const ColorF& c1, const ColorF& c2)
+{
+	F32 l = (F32)bounds.point.x;
+	F32 r = (F32)(bounds.point.x + bounds.extent.x);
+	F32 t = (F32)bounds.point.y;
+	F32 b = (F32)(bounds.point.y + bounds.extent.y);
+
+	glDisable(GL_BLEND);
+	glDisable(GL_TEXTURE_2D);
+
+	glBegin(GL_QUADS);
+	glColor4fv(c2.address());
+	glVertex2f(l, t);
+	glColor4fv(c2.address());
+	glVertex2f(l, b);
+	glColor4fv(c2.address());
+	glVertex2f(r, b);
+	glColor4fv(c2.address());
+	glVertex2f(r, t);
+	glEnd();
+
+	for (U32 y = 0; y < bounds.extent.y; y += size)
+	{
+		for (U32 x = ((y / size) % 2 == 0 ? 0 : size); x < bounds.extent.x; x += (size * 2))
+		{
+			glBegin(GL_QUADS);
+			glColor4fv(c1.address());
+			glVertex2f(l + x, t + y);
+			glColor4fv(c1.address());
+			glVertex2f(l + x, getMin(b, t + y + size));
+			glColor4fv(c1.address());
+			glVertex2f(getMin(r, l + x + size), getMin(b, t + y + size));
+			glColor4fv(c1.address());
+			glVertex2f(getMin(r, l + x + size), t + y);
+			glEnd();
+		}
+	}
+}

@@ -367,3 +367,7 @@ glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 
 
 #endif // _H_DGL
+
+void dglDrawBlendBox(const RectI& bounds, ColorF& c1, ColorF& c2, ColorF& c3, ColorF& c4);
+void dglDrawBlendRangeBox(const RectI& bounds, bool vertical, U8 numColors, ColorI* colors);
+void dglRenderCheckers(const RectI& bounds, const U8 size, const ColorF& c1, const ColorF& c2);

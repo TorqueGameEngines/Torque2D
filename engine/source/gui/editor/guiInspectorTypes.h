@@ -68,7 +68,7 @@
 #endif
 
 #ifndef _GUICOLORPICKERCTRL_H_
-#include "gui/guiColorPicker.h"
+#include "gui/guiColorPickerCtrl.h"
 #endif // !_GUICOLORPICKERCTRL_H_
 
 

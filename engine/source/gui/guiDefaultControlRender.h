@@ -33,6 +33,8 @@ void renderUniversalRect(RectI &bounds, GuiControlProfile *profile, GuiControlSt
 void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state);
 void renderBorderedRect(RectI &bounds, GuiControlProfile *profile, GuiControlState state, const ColorI &fillColor);
 void renderBorderedCircle(Point2I &center, S32 radius, GuiControlProfile *profile, GuiControlState state);
+void renderBorderedRing(Point2I& center, S32 outerRadius, S32 innerRadius, GuiControlProfile* profile, GuiControlState state);
+void renderRing(const Point2I& center, const F32 radius, const ColorI& color, F32 borderSize);
 void renderSizableBorderedImageAsset(RectI &bounds, U8 frame, ImageAsset *mImageAsset, S32 frameCount);
 void renderSizableBorderedBitmap(RectI &bounds, U8 frame, TextureHandle &texture, RectI *bitmapBounds, S32 frameCount);
 void renderSizableBorderedTexture(RectI &bounds, TextureHandle &texture, RectI &TopLeft, RectI &Top, RectI &TopRight, RectI &Left, RectI &Fill, RectI &Right, RectI &BottomLeft, RectI &Bottom, RectI &BottomRight);
