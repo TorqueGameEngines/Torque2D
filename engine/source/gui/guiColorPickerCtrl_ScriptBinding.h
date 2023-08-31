@@ -97,7 +97,7 @@ ConsoleMethodWithDocs(GuiColorPickerCtrl, getSelectorPosForColor, ConsoleString,
 
 	char* temp = Con::getReturnBuffer(256);
 	Point2I pos;
-	pos = object->getSelectorPositionForColor(object->mBounds, ColorF(red, green, blue, alpha));
+	pos = object->getSelectorPositionForColor(ColorF(red, green, blue, alpha));
 	dSprintf(temp, 256, "%d %d", pos.x, pos.y);
 	return temp;
 }

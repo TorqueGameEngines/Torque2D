@@ -37,8 +37,6 @@ ColorF colorWhiteBlend(1., 1., 1., .75);
 ColorF colorBlack(0.0f, 0.0f, 0.0f);
 ColorF colorAlpha(0.0f, 0.0f, 0.0f, 0.0f);
 ColorF colorAlphaW(1.0f, 1.0f, 1.0f, 0.0f);
-ColorF colorGray1(0.5f, 0.5f, 0.5f, 1.0f);
-ColorF colorGray2(0.63f, 0.63f, 0.63f, 1.0f);
 
 ColorI GuiColorPickerCtrl::mColorRange[9] = {
    ColorI(255,255,255), // White
@@ -167,15 +165,19 @@ void GuiColorPickerCtrl::renderColorBox(const RectI& pickerBounds)
 		dglDrawBlendBox(pickerBounds, colorAlpha, colorBlack, colorBlack, colorAlpha);
 		break;
 	case pHorizAlphaRange:
-		dglRenderCheckers(pickerBounds, 12, colorGray1, colorGray2);
+		dglRenderCheckers(pickerBounds);
 		dglDrawBlendBox(pickerBounds, baseAlpha, mBaseColor, mBaseColor, baseAlpha);
 		break;
 	case pVertAlphaRange:
-		dglRenderCheckers(pickerBounds, 12, colorGray1, colorGray2);
+		dglRenderCheckers(pickerBounds);
 		dglDrawBlendBox(pickerBounds, baseAlpha, baseAlpha, mBaseColor, mBaseColor);
 		break;
 	case pBlendColorRange:
-		dglDrawBlendBox(pickerBounds, colorWhite, mBaseColor, colorBlack, colorBlack);
+		dglDrawBlendBox(pickerBounds, colorWhite, mBaseColor, mBaseColor, colorWhite);
+		blendRect = pickerBounds;
+		blendRect.point.y++;
+		blendRect.extent.y--;
+		dglDrawBlendBox(blendRect, colorAlpha, colorAlpha, colorBlack, colorBlack);
 		break;
 	case pDropperBackground:
 		break;
@@ -314,8 +316,7 @@ void GuiColorPickerCtrl::updatePickColor(const Point2I& offset,  const RectI& co
 		else if ((mDisplayMode == pHorizColorRange && (varX == 1.0f || varX == 0.0f)) ||
 			(mDisplayMode == pVertColorRange && (varY == 1.0f || varY == 0.0f)) ||
 			(mDisplayMode == pHorizColorBrightnessRange && varY == 0.0f && (varX == 1.0f || varX == 0.0f)) ||
-			(mDisplayMode == pVertColorBrightnessRange && varX == 0.0f && (varY == 1.0f || varY == 0.0f)) ||
-			(mDisplayMode == pBlendColorRange && varX == 1.0f && varY == 0.0f))
+			(mDisplayMode == pVertColorBrightnessRange && varX == 0.0f && (varY == 1.0f || varY == 0.0f)))
 		{
 			mPickColor = mColorRange[1];
 		}
@@ -338,7 +339,11 @@ void GuiColorPickerCtrl::updatePickColor(const Point2I& offset,  const RectI& co
 			{
 				mPickColor = colorWhite;
 			}
-			else if(varX < 1.0f)
+			else if (varX == 1.0f)
+			{
+				mPickColor = mBaseColor;
+			}
+			else
 			{
 				mPickColor.red = 1.0f - ((1.0f - mBaseColor.red) * varX);
 				mPickColor.green = 1.0f - ((1.0f - mBaseColor.green) * varX);
@@ -411,28 +416,11 @@ void GuiColorPickerCtrl::setSelectorPos(const Point2I& pos)
 	setUpdate();
 }
 
-//--------------------------------------------------------------------------
-F32 colorHue(ColorF color)
-{
-	F32 b = mSqrt(3) * (color.green - color.blue);
-	F32 a = (2 * color.red) - color.green - color.blue;
-	F32 hue;
-
-	if (b == 0 && a == 0)
-		hue = 0;
-	else
-		hue = mRadToDeg(atan2(b, a));
-
-	while (hue < 0)
-		hue += 360;
-
-	return hue;
-}
-
-Point2I GuiColorPickerCtrl::getRangeBoxColorPos(RectI& bounds, bool vertical, ColorF targetColor)
+Point2I GuiColorPickerCtrl::getRangeBoxColorPos(bool vertical, const ColorF& targetColor)
 {
 	// Calculate hue
-	F32 hue = colorHue(targetColor);
+	F32 hue = targetColor.getHue();
+	RectI contentRect = getInnerRect();
 
 	// Transform the hue value to [0-1].
 	F32 hueFraction = hue / 360;
@@ -441,23 +429,23 @@ Point2I GuiColorPickerCtrl::getRangeBoxColorPos(RectI& bounds, bool vertical, Co
 	Point2I position;
 	if (vertical)
 	{
-		position.x = (S32)(0.5f * (bounds.extent.x));
-		position.y = (S32)((1.0f - hueFraction) * (bounds.extent.y));
+		position.x = (S32)(0.5f * (contentRect.extent.x));
+		position.y = (S32)(hueFraction * (contentRect.extent.y));
 	}
 	else
 	{
-		position.x = (S32)((1.0f - hueFraction) * (bounds.extent.x));
-		position.y = (S32)(0.5f * (bounds.extent.y));
+		position.x = (S32)(hueFraction * (contentRect.extent.x));
+		position.y = (S32)(0.5f * (contentRect.extent.y));
 	}
 
 	return position;
 }
 
-Point2I GuiColorPickerCtrl::getBlendBoxColorPos(RectI& bounds, ColorF targetColor)
+Point2I GuiColorPickerCtrl::getBlendBoxColorPos(const ColorF& targetColor)
 {
 	// Calculate hue
-	F32 hue = colorHue(targetColor);
-
+	F32 hue = targetColor.getHue();
+	RectI contentRect = getInnerRect();
 
 	// Calculate the largest, smallest RGB components of the hue
 	F32 largest, smallest, baseLargest, baseSmallest;
@@ -516,27 +504,53 @@ Point2I GuiColorPickerCtrl::getBlendBoxColorPos(RectI& bounds, ColorF targetColo
 	F32 h = 1.0f - (smallest / largest);
 	F32 v = 1.0f - largest;
 
-	position.x = (S32)(h * (bounds.extent.x - 1));
-	position.y = (S32)(v * (bounds.extent.y - 1));
+	position.x = (S32)(h * (contentRect.extent.x - 1));
+	position.y = (S32)(v * (contentRect.extent.y - 1));
 
 	return position;
 }
 
-Point2I GuiColorPickerCtrl::getSelectorPositionForColor(RectI& bounds, ColorF targetColor)
+Point2I GuiColorPickerCtrl::getAlphaBoxColorPos(bool vertical, const ColorF& targetColor)
+{
+	RectI contentRect = getInnerRect();
+	Point2I position;
+
+	if (vertical)
+	{
+		position.x = contentRect.centre().x;
+		position.y = (S32)(targetColor.alpha * (contentRect.extent.y - 1));
+	}
+	else
+	{
+		position.x = (S32)(targetColor.alpha * (contentRect.extent.x - 1));
+		position.y = contentRect.centre().y;
+	}
+
+	return position;
+}
+
+Point2I GuiColorPickerCtrl::getSelectorPositionForColor(const ColorF& targetColor)
 {
 	Point2I position(0, 0);
 
 	switch (mDisplayMode)
 	{
 	case pHorizColorRange:
-		position = getRangeBoxColorPos(bounds, false, targetColor);
+		position = getRangeBoxColorPos(false, targetColor);
 		break;
 	case pVertColorRange:
-		position = getRangeBoxColorPos(bounds, true, targetColor);
+		position = getRangeBoxColorPos(true, targetColor);
 		break;
 
 	case pBlendColorRange:
-		position = getBlendBoxColorPos(bounds, targetColor);
+		position = getBlendBoxColorPos(targetColor);
+		break;
+
+	case pHorizAlphaRange:
+		position = getAlphaBoxColorPos(false, targetColor);
+		break;
+	case pVertAlphaRange:
+		position = getAlphaBoxColorPos(true, targetColor);
 		break;
 
 	default:
@@ -564,11 +578,14 @@ void GuiColorPickerCtrl::onTouchDown(const GuiEvent& event)
 
 	// Update the picker cross position
 	if (mDisplayMode != pPallet)
+	{
 		setSelectorPos(globalToLocalCoord(event.mousePoint));
+		Canvas->showCursor(false);
+	}
 
 	mMouseDown = true;
 
-	Con::executef(this, 1, "onTouchDown");
+	Parent::onTouchDown(event);
 }
 
 //--------------------------------------------------------------------------
@@ -584,7 +601,7 @@ void GuiColorPickerCtrl::onTouchDragged(const GuiEvent& event)
 	if (!mActionOnMove && mAltConsoleCommand[0])
 		Con::evaluate(mAltConsoleCommand, false);
 
-	Con::executef(this, 1, "onTouchDragged");
+	Parent::onTouchDragged(event);
 }
 
 //--------------------------------------------------------------------------
@@ -594,7 +611,7 @@ void GuiColorPickerCtrl::onTouchMove(const GuiEvent& event)
 	if (mActive && (mDisplayMode == pDropperBackground))
 		setSelectorPos(globalToLocalCoord(event.mousePoint));
 
-	Con::executef(this, 1, "onTouchMove");
+	Parent::onTouchMove(event);
 }
 
 //--------------------------------------------------------------------------
@@ -602,20 +619,20 @@ void GuiColorPickerCtrl::onTouchEnter(const GuiEvent& event)
 {
 	mMouseOver = true;
 
-	Con::executef(this, 1, "onTouchEnter");
+	Parent::onTouchEnter(event);
 }
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onTouchLeave(const GuiEvent&)
+void GuiColorPickerCtrl::onTouchLeave(const GuiEvent& event)
 {
 	// Reset state
 	mMouseOver = false;
 
-	Con::executef(this, 1, "onTouchLeave");
+	Parent::onTouchLeave(event);
 }
 
 //--------------------------------------------------------------------------
-void GuiColorPickerCtrl::onTouchUp(const GuiEvent&)
+void GuiColorPickerCtrl::onTouchUp(const GuiEvent& event)
 {
 	//if we released the mouse within this control, perform the action
 	if (mActive && mMouseDown && (mDisplayMode != pDropperBackground))
@@ -631,8 +648,9 @@ void GuiColorPickerCtrl::onTouchUp(const GuiEvent&)
 	}
 
 	mouseUnlock();
+	Canvas->showCursor(true);
 
-	Con::executef(this, 1, "onTouchUp");
+	Parent::onTouchUp(event);
 }
 
 //--------------------------------------------------------------------------
@@ -650,5 +668,17 @@ void GuiColorPickerCtrl::setScriptValue(const char* value)
 	ColorF newValue;
 	dSscanf(value, "%g %g %g %g", &newValue.red, &newValue.green, &newValue.blue, &newValue.alpha);
 	setValue(newValue);
+}
+
+void GuiColorPickerCtrl::setControlSelectorProfile(GuiControlProfile* prof)
+{
+	AssertFatal(prof, "GuiColorPickerCtrl::setControlSelectorProfile: invalid selector profile");
+	if (prof == mSelectorProfile)
+		return;
+	if (mAwake)
+		mSelectorProfile->decRefCount();
+	mSelectorProfile = prof;
+	if (mAwake)
+		mSelectorProfile->incRefCount();
 }
 

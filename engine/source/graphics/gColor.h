@@ -111,6 +111,8 @@ class ColorF
                                       (blue  >= 0.0f && blue  <= 1.0f) &&
                                       (alpha >= 0.0f && alpha <= 1.0f); }
    void clamp();
+   F32 getHue() const; //Returns the hue as a value between [0, 360). With zero as red, 120 as green, and 240 as blue.
+   ColorF getHueColor() const; //Returns a color based on the hue where at least one value is a 1.
 
    inline StringTableEntry stringThis(void) const   { char buffer[64]; dSprintf(buffer, 64, "%f %f %f %f", red, green, blue, alpha ); return StringTable->insert(buffer); }
    inline const char* scriptThis(void) const        { char* pBuffer = Con::getReturnBuffer(64); dSprintf(pBuffer, 32, "%.5f %.5f %.5f %.5f", red, green, blue, alpha ); return pBuffer; }
@@ -469,6 +471,72 @@ inline void ColorF::clamp()
       alpha = 1.0f;
    else if (alpha < 0.0f)
       alpha = 0.0f;
+}
+
+//-----------------------------------------------------------------------------
+
+inline F32 ColorF::getHue() const
+{
+	F32 b = mSqrt(3) * (green - blue);
+	F32 a = (2 * red) - green - blue;
+	F32 hue;
+
+	if (b == 0 && a == 0)
+		hue = 0;
+	else
+		hue = mRadToDeg(atan2(b, a));
+
+	while (hue < 0)
+		hue += 360;
+
+	return hue;
+}
+
+//-----------------------------------------------------------------------------
+
+inline ColorF ColorF::getHueColor() const
+{
+	F32 hue = getHue(); //hue is [0, 360)
+
+	F32 r, g, b;
+	if (hue >= 0 && hue < 60)
+	{
+		r = 1.0f;
+		g = hue / 60.0f;
+		b = 0.0f;
+	}
+	else if (hue >= 60 && hue < 120)
+	{
+		r = 1.0f - ((hue - 60.0f) / 60.0f);
+		g = 1.0f;
+		b = 0.0f;
+	}
+	else if (hue >= 120 && hue < 180)
+	{
+		r = 0.0f;
+		g = 1.0f;
+		b = (hue - 120.0f) / 60.0f;
+	}
+	else if (hue >= 180 && hue < 240)
+	{
+		r = 0.0f;
+		g = 1.0f - ((hue - 180.0f) / 60.0f);
+		b = 1.0f;
+	}
+	else if (hue >= 240 && hue < 300)
+	{
+		r = (hue - 240.0f) / 60.0f;
+		g = 0.0f;
+		b = 1.0f;
+	}
+	else //if (hue >= 300 && hue < 360)
+	{
+		r = 1.0f;
+		g = 0.0f;
+		b = 1.0f - ((hue - 300.0f) / 60.0f);
+	}
+
+	return ColorF(r, g, b, 1.0f);
 }
 
 //-----------------------------------------------------------------------------

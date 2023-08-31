@@ -633,6 +633,7 @@
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiCanvas.cc" />
     <ClCompile Include="..\..\source\gui\guiColorPickerCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\guiColorPopupCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiConsole.cc" />
     <ClCompile Include="..\..\source\gui\guiConsoleEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiControl.cc" />
@@ -1132,6 +1133,8 @@
     <ClInclude Include="..\..\source\gui\guiCanvas_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiColorPickerCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiColorPickerCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\guiColorPopupCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiColorPopupCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiConsole.h" />
     <ClInclude Include="..\..\source\gui\guiConsoleEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiControl.h" />

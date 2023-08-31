@@ -76,6 +76,9 @@ class GuiColorPickerCtrl : public GuiControl
      sVertical,			///< Vertical selector with small gap
 	 sCircle			///< Doughnut shaped circle using the selector profile
    };
+
+   GuiControlProfile* mSelectorProfile; //Used to render the selector.
+   void setControlSelectorProfile(GuiControlProfile* prof);
   
   protected:
    
@@ -84,8 +87,9 @@ class GuiColorPickerCtrl : public GuiControl
    void renderColorBox(const RectI& bounds);			///< Function that draws the actual color box
    void renderSelector(const RectI& pickerBounds);
    void drawSelector(const RectI& bounds, Point2I &selectorPos, SelectorMode mode);	///< Function that draws the selection indicator
-   Point2I getRangeBoxColorPos(RectI &bounds, bool vertical, ColorF targetColor);
-   Point2I getBlendBoxColorPos(RectI &bounds, ColorF targetColor);
+   Point2I getRangeBoxColorPos(bool vertical, const ColorF& targetColor);
+   Point2I getBlendBoxColorPos(const ColorF& targetColor);
+   Point2I getAlphaBoxColorPos(bool vertical, const ColorF& targetColor);
    /// @}
 
    /// @name Core Variables
@@ -101,8 +105,6 @@ class GuiColorPickerCtrl : public GuiControl
    bool mActionOnMove;		///< Perform onAction() when position has changed?
    bool mShowSelector; ///< Display the selector lines on the control?
 
-   GuiControlProfile* mSelectorProfile; //Used to render the selector.
-
    static ColorI mColorRange[9]; ///< Color range for pHorizColorRange and pVertColorRange
    /// @}
 
@@ -114,8 +116,10 @@ class GuiColorPickerCtrl : public GuiControl
    bool onWake();
    void onSleep();
    void onRender(Point2I offset, const RectI &updateRect);
-   void updatePickColor(const Point2I& offset, const RectI& contentRect);
+   virtual void updatePickColor(const Point2I& offset, const RectI& contentRect);
    void resize(const Point2I& newPosition, const Point2I& newExtent);
+   void showSelector() { mShowSelector = true; }
+   void hideSelector() { mShowSelector = false; }
    
    /// @name Color Value Functions
    /// @{
@@ -132,7 +136,7 @@ class GuiColorPickerCtrl : public GuiControl
    /// @{
    void setSelectorPos(const Point2I &pos); ///< Set new pos (in local coords)
    Point2I getSelectorPos() {return mSelectorPos;}
-   Point2I getSelectorPositionForColor(RectI &bounds, ColorF color);
+   Point2I getSelectorPositionForColor(const ColorF& color);
    /// @}
    
    /// @name Input Events

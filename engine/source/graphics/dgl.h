@@ -30,12 +30,12 @@
 #include "platform/platformGL.h"
 #endif
 
+#include "graphics/gColor.h"
+
 class TextureObject;
 class GFont;
 class MatrixF;
 class RectI;
-class ColorI;
-class ColorF;
 class Point2I;
 class Point2F;
 class Point3F;
@@ -366,8 +366,8 @@ glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 #endif
 
 
-#endif // _H_DGL
-
 void dglDrawBlendBox(const RectI& bounds, ColorF& c1, ColorF& c2, ColorF& c3, ColorF& c4);
 void dglDrawBlendRangeBox(const RectI& bounds, bool vertical, U8 numColors, ColorI* colors);
-void dglRenderCheckers(const RectI& bounds, const U8 size, const ColorF& c1, const ColorF& c2);
+void dglRenderCheckers(const RectI& bounds, const U8 size = 12, const ColorF& c1 = ColorF(0.5f, 0.5f, 0.5f, 1.0f), const ColorF& c2 = ColorF(0.63f, 0.63f, 0.63f, 1.0f));
+
+#endif // _H_DGL

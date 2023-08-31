@@ -2245,6 +2245,34 @@ function BaseTheme::makeColorPickerProfile(%this)
 		
 		borderDefault = %selBorder;
 	};
+
+	%colorPopupBorder = new GuiBorderProfile()
+	{
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.adjustValue(%this.color1, -5);
+		borderColorHL = %this.adjustValue(%this.color1, -5);
+		borderColorSL = %this.adjustValue(%this.color1, -5);
+		borderColorNA = %this.adjustValue(%this.color1, -5);
+
+		padding = 3;
+		paddingHL = 3;
+		paddingSL = 3;
+		paddingNA = 3;
+	};
+
+	%this.colorPopupProfile = new GuiControlProfile()
+	{
+		fillColor = %this.color1;
+		fillColorHL = %this.color1;
+		fillColorSL = %this.color1;
+		fillColorNA = %this.color1;
+
+		borderDefault = %colorPopupBorder;
+	};
 }
 
 //Positive values are brighter, negative are darker

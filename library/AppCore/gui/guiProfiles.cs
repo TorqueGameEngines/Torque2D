@@ -995,4 +995,161 @@ function AppCore::createGuiProfiles(%this)
 		borderTop = GuiMenuItemBorderTopProfile;
 		borderBottom = GuiMenuItemBorderBottomProfile;
 	});
+
+	%this.SafeCreateNamedObject("GuiTextEditProfile", new GuiControlProfile()
+	{
+		fillColor = %this.color4;
+		fillColorHL = %this.AdjustColorValue(%this.color4, 10);
+		fillColorSL = %this.color4;
+		fillColorNA = %this.AdjustColorValue(%this.color4, 80);
+		fillColorTextSL = %this.color5;
+
+		fontColor = %this.SetColorAlpha(%this.color1, 220);
+		fontColorHL = %this.AdjustColorValue(%this.color1, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.SetColorAlpha(%this.color1, 100);
+		fontColorTextSL = %this.color1;
+		align = left;
+		vAlign = middle;
+		cursorColor = %this.color2;
+
+		tab = true;
+		canKeyFocus = true;
+		returnTab = true;
+	});
+
+	%this.SafeCreateNamedObject("GuiButtonProfile", new GuiControlProfile()
+	{
+		fillColor = %this.color4;
+		fillColorHL = %this.AdjustColorValue(%this.color4, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.SetColorAlpha(%this.color4, 80);
+
+		fontColor = %this.color1;
+		fontColorHL = %this.AdjustColorValue(%this.color1, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.SetColorAlpha(%this.color1, 100);
+		align = center;
+		vAlign = middle;
+
+		borderLeft = GuiBrightBorderProfile;
+		borderRight = GuiDarkBorderProfile;
+		borderTop = GuiBrightBorderProfile;
+		borderBottom = GuiDarkBorderProfile;
+
+		canKeyFocus = true;
+		tab = true;
+	});
+
+	%this.SafeCreateNamedObject("GuiCheckboxProfile", new GuiControlProfile()
+	{
+		fillColor = %this.color4;
+		fillColorHL = %this.AdjustColorValue(%this.color4, 10);
+		fillColorSL = %this.color5;
+		fillColorNA = %this.SetColorAlpha(%this.color4, 80);
+
+		fontColor = %this.color1;
+		fontColorHL = %this.AdjustColorValue(%this.color1, 10);
+		fontColorSL = %this.color1;
+		fontColorNA = %this.SetColorAlpha(%this.color1, 100);
+		align = center;
+		vAlign = middle;
+
+		borderLeft = GuiBrightBorderProfile;
+		borderRight = GuiDarkBorderProfile;
+		borderTop = GuiBrightBorderProfile;
+		borderBottom = GuiDarkBorderProfile;
+
+		canKeyFocus = true;
+		tab = true;
+	});
+
+	%this.SafeCreateNamedObject("GuiColorPopupBorderProfile", new GuiBorderProfile()
+	{
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.AdjustColorValue(%this.color1, -5);
+		borderColorHL = %this.AdjustColorValue(%this.color1, -5);
+		borderColorSL = %this.AdjustColorValue(%this.color1, -5);
+		borderColorNA = %this.AdjustColorValue(%this.color1, -5);
+
+		padding = 3;
+		paddingHL = 3;
+		paddingSL = 3;
+		paddingNA = 3;
+	});
+
+	%this.SafeCreateNamedObject("GuiColorPopupProfile", new GuiControlProfile()
+	{
+		fillColor = %this.color1;
+		fillColorHL = %this.color1;
+		fillColorSL = %this.color1;
+		fillColorNA = %this.color1;
+
+		borderDefault = GuiColorPopupBorderProfile;
+	});
+
+	%this.SafeCreateNamedObject("GuiColorPickerBorderProfile", new GuiBorderProfile()
+	{
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+		borderNA = 1;
+
+		borderColor = %this.color1;
+		borderColorHL = %this.color2;
+		borderColorSL = %this.color4;
+		borderColorNA = %this.color1;
+
+		padding = 1;
+		paddingHL = 1;
+		paddingSL = 1;
+		paddingNA = 1;
+
+		margin = 1;
+		marginHL = 1;
+		marginSL = 1;
+		marginNA = 1;
+	});
+
+	%this.SafeCreateNamedObject("GuiColorPickerProfile", new GuiControlProfile()
+	{
+		fillColor = "0 0 0 0";
+		fillColorHL = "0 0 0 0";
+		fillColorSL = "0 0 0 0";
+		fillColorNA = "0 0 0 0";
+		
+		borderDefault = GuiColorPickerBorderProfile;
+
+		tab = false;
+		canKeyFocus = true;
+		underfill = true;
+	});
+
+	%this.SafeCreateNamedObject("GuiColorSelectorBorderProfile", new GuiBorderProfile()
+	{
+		border = 1;
+		borderHL = 1;
+		borderSL = 1;
+
+		borderColor = "0 0 0 180";
+		borderColorHL = "0 0 0 190";
+		borderColorSL = "0 0 0 220";
+
+		//Margin and padding are used to determine the size of the selector ring in the normal state.
+		padding = 2;//Radius of the outer circle minus the inner circle. The meat of the donut.
+		margin = 1;//Radius of the inner circle plus 1. This is different from the normal use of the margin.
+	});
+
+	%this.SafeCreateNamedObject("GuiColorSelectorProfile", new GuiControlProfile()
+	{
+		fillColor = "240 240 240 255";
+		fillColorHL = "250 250 250 255";
+		fillColorSL = %this.color5;
+		
+		borderDefault = GuiColorSelectorBorderProfile;
+	});
 }

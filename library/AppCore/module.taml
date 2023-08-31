@@ -1,7 +1,7 @@
 <ModuleDefinition
 	ModuleId="AppCore"
 	VersionId="1"
-	BuildID="1"
+	BuildID="2"
 	Description="Provides critical initialization and functionality needed for every project."
 	ScriptFile="appCore.cs"
 	CreateFunction="create"

@@ -1917,16 +1917,18 @@ bool GuiControl::onKeyUp(const GuiEvent &event)
 
 void GuiControl::onAction()
 {
-   if (! mActive)
-      return;
+	if (! mActive)
+		return;
 
-   //execute the console command
-   if (mConsoleCommand && mConsoleCommand[0])
-   {
-      execConsoleCallback();
-   }
-   else
-      Con::executef(this, 1, "onAction");
+	//execute the console command
+	if (mConsoleCommand && mConsoleCommand[0])
+	{
+		execConsoleCallback();
+	}
+	else if(isMethod("onAction"))
+	{
+		Con::executef(this, 1, "onAction");
+	}
 }
 
 void GuiControl::onMessage(GuiControl *sender, S32 msg)
