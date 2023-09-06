@@ -110,7 +110,6 @@ public:
 
 	bool onKeyDown(const GuiEvent& event);
 	virtual void onAction();
-	void itemSelected();
 	void openColorPopup();
 	void closeColorPopup();
 
@@ -125,6 +124,8 @@ public:
 	void setAlpha(const F32 alpha) { mBaseColor.alpha = alpha; }
 	void setValue(ColorF& value) { mBaseColor = value; }
 	ColorF getValue() { return mBaseColor; }
+	const char* getScriptValue();
+	void setScriptValue(const char* value);
 
 	DECLARE_CONOBJECT(GuiColorPopupCtrl);
 };

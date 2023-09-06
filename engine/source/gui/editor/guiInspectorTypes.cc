@@ -343,7 +343,7 @@ IMPLEMENT_CONOBJECT(GuiInspectorTypeColor);
 
 GuiControl* GuiInspectorTypeColor::constructEditControl(S32 width)
 {
-	GuiColorPickerCtrl* retCtrl = new GuiColorPickerCtrl();
+	GuiColorPopupCtrl* retCtrl = new GuiColorPopupCtrl();
 
    // If we couldn't construct the control, bail!
    if( retCtrl == NULL )
@@ -355,16 +355,16 @@ GuiControl* GuiInspectorTypeColor::constructEditControl(S32 width)
    const char* mCol = getData();
    retCtrl->setField("BaseColor", mCol);
    char szBuffer[512];
-   dSprintf(szBuffer, 512, "%s(\"%s\", \"%d.apply\");", mColorFunction, getData(), getId());
+   dSprintf(szBuffer, 512, "%d.apply(%d.%s());", getId(), retCtrl->getId(), mColorFunction);
    retCtrl->setField("Command", szBuffer);
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 24));
+   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(32, 32));
 
    return retCtrl;
 }
 
 void GuiInspectorTypeColor::updateValue(StringTableEntry newValue)
 {
-   GuiColorPickerCtrl *ctrl = dynamic_cast<GuiColorPickerCtrl*>(mEdit);
+	GuiColorPopupCtrl*ctrl = dynamic_cast<GuiColorPopupCtrl*>(mEdit);
    if (ctrl != NULL)
       ctrl->setField("BaseColor", newValue);
 }

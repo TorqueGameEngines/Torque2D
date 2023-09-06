@@ -71,6 +71,8 @@
 #include "gui/guiColorPickerCtrl.h"
 #endif // !_GUICOLORPICKERCTRL_H_
 
+#include "gui/guiColorPopupCtrl.h"
+
 
 
 //////////////////////////////////////////////////////////////////////////

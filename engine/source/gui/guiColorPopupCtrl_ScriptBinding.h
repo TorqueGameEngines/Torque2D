@@ -86,4 +86,30 @@ ConsoleMethodWithDocs(GuiColorPopupCtrl, setSelectorProfile, ConsoleVoid, 3, 3, 
 		object->setControlSelectorProfile(profile);
 }
 
+/*! Gets the selected color as floating point values.
+	@return The selected color as four floating point values between 0 and 1.
+*/
+ConsoleMethodWithDocs(GuiColorPopupCtrl, getColorF, ConsoleString, 2, 2, ())
+{
+	ColorF color = object->getValue();
+
+	// Format stock color.
+	char* returnBuffer = Con::getReturnBuffer(256);
+	dSprintf(returnBuffer, 256, "%g %g %g %g", color.red, color.green, color.blue, color.alpha);
+	return(returnBuffer);
+}
+
+/*! Gets the selected color as integer values.
+	@return The selected color as four integer values between 0 and 255.
+*/
+ConsoleMethodWithDocs(GuiColorPopupCtrl, getColorI, ConsoleString, 2, 2, ())
+{
+	const ColorI& color = object->getValue();
+
+	// Format stock color.
+	char* returnBuffer = Con::getReturnBuffer(256);
+	dSprintf(returnBuffer, 256, "%d %d %d %d", color.red, color.green, color.blue, color.alpha);
+	return(returnBuffer);
+}
+
 ConsoleMethodGroupEndWithDocs(GuiColorPopupCtrl)

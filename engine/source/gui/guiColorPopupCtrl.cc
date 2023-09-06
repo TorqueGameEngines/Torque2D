@@ -283,12 +283,6 @@ void GuiColorPopupCtrl::onAction() //called when the button is clicked.
 	setUpdate();
 }
 
-void GuiColorPopupCtrl::itemSelected()
-{
-	if (mConsoleCommand[0])
-		Con::evaluate(mConsoleCommand, false);
-}
-
 void GuiColorPopupCtrl::openColorPopup()
 {
 	if (mIsOpen)
@@ -390,6 +384,9 @@ void GuiColorPopupCtrl::closeColorPopup()
 
 	if (isMethod("onClose"))
 		Con::executef(this, 1, "onClose");
+
+	if (mConsoleCommand[0])
+		Con::evaluate(mConsoleCommand, false);
 }
 
 bool GuiColorPopupCtrl::onWake()
@@ -482,4 +479,19 @@ void GuiColorPopupCtrl::setColor(const ColorF& theColor)
 	mBaseColor.red = theColor.red;
 	mBaseColor.green = theColor.green;
 	mBaseColor.blue = theColor.blue;
+}
+
+const char* GuiColorPopupCtrl::getScriptValue()
+{
+	static char temp[256];
+	ColorF color = getValue();
+	dSprintf(temp, 256, "%g %g %g %g", color.red, color.green, color.blue, color.alpha);
+	return temp;
+}
+  
+void GuiColorPopupCtrl::setScriptValue(const char* value)
+{
+	ColorF newValue;
+	dSscanf(value, "%g %g %g %g", &newValue.red, &newValue.green, &newValue.blue, &newValue.alpha);
+	setValue(newValue);
 }
