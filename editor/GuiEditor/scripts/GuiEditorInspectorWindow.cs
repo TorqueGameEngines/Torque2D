@@ -48,6 +48,10 @@ function GuiEditorInspectorWindow::onAdd(%this)
 	ThemeManager.setProfile(%this.inspector, "checkboxProfile", "checkboxProfile");
 	ThemeManager.setProfile(%this.inspector, "buttonProfile", "buttonProfile");
 	ThemeManager.setProfile(%this.inspector, "tipProfile", "tooltipProfile");
+	ThemeManager.setProfile(%this.inspector, "colorPickerProfile", "colorPopupProfile");
+	ThemeManager.setProfile(%this.inspector, "colorPopupProfile", "colorPopupPanelProfile");
+	ThemeManager.setProfile(%this.inspector, "emptyProfile", "colorPopupPickerProfile");
+	ThemeManager.setProfile(%this.inspector, "colorPickerSelectorProfile", "colorPopupSelectorProfile");
 	%this.scroller.add(%this.inspector);
 
     %this.inspectList = new SimSet();

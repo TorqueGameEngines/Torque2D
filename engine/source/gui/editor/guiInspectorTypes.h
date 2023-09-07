@@ -176,16 +176,24 @@ class GuiInspectorTypeColor : public GuiInspectorField
 {
 private:
    typedef GuiInspectorField Parent;
-public:
-   DECLARE_CONOBJECT(GuiInspectorTypeColor);
+protected:
+	GuiColorPopupCtrl* mColorPopup;
+	GuiTextEditCtrl* mRedEdit;
+	GuiTextEditCtrl* mGreenEdit;
+	GuiTextEditCtrl* mBlueEdit;
+	GuiTextEditCtrl* mAlphaEdit;
 
+	void constructColorPopup(GuiControl* retCtrl);
+	void constructColorEditBoxes(GuiControl* retCtrl, S32 width);
+	GuiTextEditCtrl* constructColorEditBox(GuiControl* retCtrl, S32 posX, S32 width, StringTableEntry text);
+public:
    StringTableEntry  mColorFunction;
 
    //////////////////////////////////////////////////////////////////////////
    // Override able methods for custom edit fields
    //////////////////////////////////////////////////////////////////////////
    virtual GuiControl*        constructEditControl(S32 width);
-   virtual void               updateValue(StringTableEntry newValue);
+   virtual void               finishControlConstruction() = 0;
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -200,6 +208,8 @@ public:
 
    DECLARE_CONOBJECT(GuiInspectorTypeColorI);
    static void consoleInit();
+   void updateValue(StringTableEntry newValue);
+   void finishControlConstruction();
 };
 
 //////////////////////////////////////////////////////////////////////////
@@ -214,6 +224,8 @@ public:
 
    DECLARE_CONOBJECT(GuiInspectorTypeColorF);
    static void consoleInit();
+   void updateValue(StringTableEntry newValue);
+   void finishControlConstruction();
 };
 
 //////////////////////////////////////////////////////////////////////////

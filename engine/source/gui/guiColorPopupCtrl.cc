@@ -129,7 +129,7 @@ GuiColorPopupCtrl::GuiColorPopupCtrl()
 
 	mContent = new GuiColorPopupContentCtrl();
 	AssertFatal(mContent, "GuiColorPopupCtrl: Failed to initialize GuiControl!");
-	mContent->setField("profile", "GuiDefaultProfile");
+	mContent->setField("profile", "GuiPanelProfile");
 	mPopupProfile = mContent->mProfile;
 	mPopupProfile->incRefCount();
 	mContent->setExtent(mPopupSize);
@@ -479,6 +479,7 @@ void GuiColorPopupCtrl::setColor(const ColorF& theColor)
 	mBaseColor.red = theColor.red;
 	mBaseColor.green = theColor.green;
 	mBaseColor.blue = theColor.blue;
+	mBaseColor.alpha = theColor.alpha;
 }
 
 const char* GuiColorPopupCtrl::getScriptValue()

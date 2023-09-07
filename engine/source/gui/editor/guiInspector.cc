@@ -103,6 +103,10 @@ void GuiInspector::initPersistFields()
 	addField("arrowProfile", TypeGuiProfile, Offset(mArrowProfile, GuiInspector));
 	addField("CheckboxProfile", TypeGuiProfile, Offset(mCheckboxProfile, GuiInspector));
 	addField("ButtonProfile", TypeGuiProfile, Offset(mButtonProfile, GuiInspector));
+	addField("ColorPopupProfile", TypeGuiProfile, Offset(mColorPopupProfile, GuiInspector));
+	addField("ColorPopupPanelProfile", TypeGuiProfile, Offset(mColorPopupPanelProfile, GuiInspector));
+	addField("ColorPopupPickerProfile", TypeGuiProfile, Offset(mColorPopupPickerProfile, GuiInspector));
+	addField("ColorPopupSelectorProfile", TypeGuiProfile, Offset(mColorPopupSelectorProfile, GuiInspector));
 
 	addField("constantThumbHeight", TypeBool, Offset(mUseConstantHeightThumb, GuiInspector));
 	addField("scrollBarThickness", TypeS32, Offset(mScrollBarThickness, GuiInspector));
@@ -156,6 +160,18 @@ bool GuiInspector::onWake()
 	if (mButtonProfile != NULL)
 		mButtonProfile->incRefCount();
 
+	if (mColorPopupProfile != NULL)
+		mColorPopupProfile->incRefCount();
+
+	if (mColorPopupPanelProfile != NULL)
+		mColorPopupPanelProfile->incRefCount();
+
+	if (mColorPopupPickerProfile != NULL)
+		mColorPopupPickerProfile->incRefCount();
+
+	if (mColorPopupSelectorProfile != NULL)
+		mColorPopupSelectorProfile->incRefCount();
+
 	return true;
 }
 
@@ -201,6 +217,18 @@ void GuiInspector::onSleep()
 
 	if (mButtonProfile != NULL)
 		mButtonProfile->decRefCount();
+
+	if (mColorPopupProfile != NULL)
+		mColorPopupProfile->decRefCount();
+
+	if (mColorPopupPanelProfile != NULL)
+		mColorPopupPanelProfile->decRefCount();
+
+	if (mColorPopupPickerProfile != NULL)
+		mColorPopupPickerProfile->decRefCount();
+
+	if (mColorPopupSelectorProfile != NULL)
+		mColorPopupSelectorProfile->decRefCount();
 }
 
 void GuiInspector::inspectPostApply()

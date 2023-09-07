@@ -187,6 +187,10 @@ function AssetInspector::createInspector(%this)
 	ThemeManager.setProfile(%inspector, "checkboxProfile", "checkboxProfile");
 	ThemeManager.setProfile(%inspector, "buttonProfile", "buttonProfile");
 	ThemeManager.setProfile(%inspector, "tipProfile", "tooltipProfile");
+	ThemeManager.setProfile(%inspector, "colorPickerProfile", "colorPopupProfile");
+	ThemeManager.setProfile(%inspector, "colorPopupProfile", "colorPopupPanelProfile");
+	ThemeManager.setProfile(%inspector, "emptyProfile", "colorPopupPickerProfile");
+	ThemeManager.setProfile(%inspector, "colorPickerSelectorProfile", "colorPopupSelectorProfile");
 
 	return %inspector;
 }

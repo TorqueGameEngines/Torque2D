@@ -339,34 +339,96 @@ void GuiInspectorTypeFileName::resize( const Point2I &newPosition, const Point2I
 //////////////////////////////////////////////////////////////////////////
 // GuiInspectorTypeColor (Base for ColorI/ColorF) 
 //////////////////////////////////////////////////////////////////////////
-IMPLEMENT_CONOBJECT(GuiInspectorTypeColor);
-
 GuiControl* GuiInspectorTypeColor::constructEditControl(S32 width)
 {
-	GuiColorPopupCtrl* retCtrl = new GuiColorPopupCtrl();
+	GuiControl* retCtrl = new GuiControl();
 
-   // If we couldn't construct the control, bail!
-   if( retCtrl == NULL )
-      return retCtrl;
+	// If we couldn't construct the control, bail!
+	if (retCtrl == NULL)
+		return retCtrl;
 
-   // Don't forget to register ourselves
-   registerEditControl( retCtrl );
+	// Let's make it look pretty.
+	retCtrl->setControlProfile(mGroup->mInspector->mBackgroundProfile);
+	retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 52));
 
-   const char* mCol = getData();
-   retCtrl->setField("BaseColor", mCol);
-   char szBuffer[512];
-   dSprintf(szBuffer, 512, "%d.apply(%d.%s());", getId(), retCtrl->getId(), mColorFunction);
-   retCtrl->setField("Command", szBuffer);
-   retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(32, 32));
+	// Don't forget to register ourselves
+	registerEditControl(retCtrl);
 
-   return retCtrl;
+	constructColorPopup(retCtrl);
+	constructColorEditBoxes(retCtrl, (width - 32) - mGroup->mInspector->mControlOffset.x);
+	finishControlConstruction();
+
+	const char* color = getData();
+	updateValue(color);
+
+	return retCtrl;
 }
 
-void GuiInspectorTypeColor::updateValue(StringTableEntry newValue)
+void GuiInspectorTypeColor::constructColorPopup(GuiControl* retCtrl)
 {
-	GuiColorPopupCtrl*ctrl = dynamic_cast<GuiColorPopupCtrl*>(mEdit);
-   if (ctrl != NULL)
-      ctrl->setField("BaseColor", newValue);
+	mColorPopup = new GuiColorPopupCtrl();
+	if (mColorPopup == NULL)
+		return;
+
+	mColorPopup->setControlProfile(mGroup->mInspector->mColorPopupProfile);
+	mColorPopup->setControlBackgroundProfile(mGroup->mInspector->mBackgroundProfile);
+	mColorPopup->setControlPopupProfile(mGroup->mInspector->mColorPopupPanelProfile);
+	mColorPopup->setControlPickerProfile(mGroup->mInspector->mColorPopupPickerProfile);
+	mColorPopup->setControlSelectorProfile(mGroup->mInspector->mColorPopupSelectorProfile);
+	registerEditControl(mColorPopup);
+
+	const char* mCol = getData();
+	mColorPopup->setField("BaseColor", mCol);
+	char szBuffer[512];
+	dSprintf(szBuffer, 512, "%d.apply(%d.%s());", getId(), mColorPopup->getId(), mColorFunction);
+	mColorPopup->setField("Command", szBuffer);
+	mColorPopup->mBounds.set(Point2I(0, 0), Point2I(32, 32));
+
+	retCtrl->addObject(mColorPopup);
+}
+
+void GuiInspectorTypeColor::constructColorEditBoxes(GuiControl* retCtrl, S32 width)
+{
+	const S32 w = mFloor(width / 4);
+	const S32 x = 32;
+	mRedEdit = constructColorEditBox(retCtrl, x, w, StringTable->insert("R", true));
+	mGreenEdit = constructColorEditBox(retCtrl, x + w, w, StringTable->insert("G", true));
+	mBlueEdit = constructColorEditBox(retCtrl, x + (2 * w), w, StringTable->insert("B", true));
+	mAlphaEdit = constructColorEditBox(retCtrl, x + (3 * w), w, StringTable->insert("A", true));
+
+	char szCommand[512];
+	dSprintf(szCommand, 512, "%d.apply(%d.getText() SPC %d.getText() SPC %d.getText() SPC %d.getText());",
+		getId(), mRedEdit->getId(), mGreenEdit->getId(), mBlueEdit->getId(), mAlphaEdit->getId());
+	mRedEdit->setField("AltCommand", szCommand);
+	mGreenEdit->setField("AltCommand", szCommand);
+	mBlueEdit->setField("AltCommand", szCommand);
+	mAlphaEdit->setField("AltCommand", szCommand);
+}
+
+GuiTextEditCtrl* GuiInspectorTypeColor::constructColorEditBox(GuiControl* retCtrl, S32 posX, S32 width, StringTableEntry text)
+{
+	GuiTextEditCtrl* textEdit = new GuiTextEditCtrl();
+	registerEditControl(textEdit);
+
+	GuiControl* label = new GuiControl();
+	registerEditControl(label);
+
+	textEdit->setControlProfile(mGroup->mInspector->mTextEditProfile);
+	label->setControlProfile(mGroup->mInspector->mLabelProfile);
+
+	label->resize(Point2I(posX, 32), Point2I(width, 20));
+	label->setField("text", text);
+	label->setField("align", "center");
+	label->setField("fontSizeAdjust", "0.8");
+
+	textEdit->resize(Point2I(posX, 0), Point2I(width, 30));
+	textEdit->setInputMode(GuiTextEditCtrl::InputMode::Number);
+	textEdit->setField("align", "center");
+
+	retCtrl->addObject(label);
+	retCtrl->addObject(textEdit);
+
+	return textEdit;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -386,6 +448,31 @@ GuiInspectorTypeColorI::GuiInspectorTypeColorI()
    mColorFunction = StringTable->insert("getColorI");
 }
 
+void GuiInspectorTypeColorI::updateValue(StringTableEntry newValue)
+{
+	if (Utility::mGetStringElementCount(newValue) != 4)
+	{
+		return;
+	}
+
+	S32 red = dAtoi(Utility::mGetStringElement(newValue, 0));
+	S32 green = dAtoi(Utility::mGetStringElement(newValue, 1));
+	S32 blue = dAtoi(Utility::mGetStringElement(newValue, 2));
+	S32 alpha = dAtoi(Utility::mGetStringElement(newValue, 3));
+
+	ColorF color = ColorI(red, green, blue, alpha);
+	mColorPopup->setColor(color);
+
+	mRedEdit->setText(Utility::mGetStringElement(newValue, 0));
+	mGreenEdit->setText(Utility::mGetStringElement(newValue, 1));
+	mBlueEdit->setText(Utility::mGetStringElement(newValue, 2));
+	mAlphaEdit->setText(Utility::mGetStringElement(newValue, 3));
+}
+
+void GuiInspectorTypeColorI::finishControlConstruction()
+{
+}
+
 //////////////////////////////////////////////////////////////////////////
 // GuiInspectorTypeColorF
 //////////////////////////////////////////////////////////////////////////
@@ -401,6 +488,46 @@ void GuiInspectorTypeColorF::consoleInit()
 GuiInspectorTypeColorF::GuiInspectorTypeColorF()
 {
    mColorFunction = StringTable->insert("getColorF");
+}
+
+void GuiInspectorTypeColorF::updateValue(StringTableEntry newValue)
+{
+	if (Utility::mGetStringElementCount(newValue) != 4)
+	{
+		return;
+	}
+
+	F32 red = mFabs(mRound(100 * dAtof(Utility::mGetStringElement(newValue, 0))) / 100.0f);
+	F32 green = mFabs(mRound(100 * dAtof(Utility::mGetStringElement(newValue, 1))) / 100.0f);
+	F32 blue = mFabs(mRound(100 * dAtof(Utility::mGetStringElement(newValue, 2))) / 100.0f);
+	F32 alpha = mFabs(mRound(100 * dAtof(Utility::mGetStringElement(newValue, 3))) / 100.0f);
+
+	ColorF color = ColorF(red, green, blue, alpha);
+	mColorPopup->setColor(color);
+
+	char redText[10];
+	dSprintf(redText, 10, "%.2f", red);
+	mRedEdit->setText(redText);
+
+	char greenText[10];
+	dSprintf(greenText, 10, "%.2f", green);
+	mGreenEdit->setText(greenText);
+
+	char blueText[10];
+	dSprintf(blueText, 10, "%.2f", blue);
+	mBlueEdit->setText(blueText);
+
+	char alphaText[10];
+	dSprintf(alphaText, 10, "%.2f", alpha);
+	mAlphaEdit->setText(alphaText);
+}
+
+void GuiInspectorTypeColorF::finishControlConstruction()
+{
+	mRedEdit->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
+	mGreenEdit->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
+	mBlueEdit->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
+	mAlphaEdit->setInputMode(GuiTextEditCtrl::InputMode::Decimal);
 }
 
 
@@ -596,6 +723,10 @@ void GuiInspectorTypeDualValue::constructEditControlChildren(GuiControl* retCtrl
 	S32 labelWidth = 20;
 	mLabelX->setExtent(Point2I(labelWidth, 30));
 	mLabelY->setExtent(Point2I(labelWidth, 30));
+	mLabelX->setField("align", "center");
+	mLabelX->setField("vAlign", "middle");
+	mLabelY->setField("align", "center");
+	mLabelY->setField("vAlign", "middle");
 	mLabelX->setField("text", "X");
 	mLabelY->setField("text", "Y");
 

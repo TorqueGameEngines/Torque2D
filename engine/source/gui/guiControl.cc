@@ -250,8 +250,8 @@ void GuiControl::initPersistFields()
    addField("align", TypeEnum, Offset(mAlignment, GuiControl), 1, &gAlignCtrlTable);
    addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControl), 1, &gVAlignCtrlTable);
    addField("fontSizeAdjust", TypeF32, Offset(mFontSizeAdjust, GuiControl), "A decimal value that is multiplied with the profile's fontSize to determine the control's actual font size.");
-   addField("fontColor", TypeColorI, Offset(mFontColor, GuiControl), "A color to override the font color of the control's profile. OverrideFontColor must be set to true for this to work.");
    addField("overrideFontColor", TypeBool, Offset(mOverrideFontColor, GuiControl), "If true, the control's fontColor will override the profile's font color.");
+   addField("fontColor", TypeColorI, Offset(mFontColor, GuiControl), "A color to override the font color of the control's profile. OverrideFontColor must be set to true for this to work.");
    endGroup("Text");
 }
 
