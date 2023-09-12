@@ -30,9 +30,9 @@ class GuiEditCtrl : public GuiControl
 {
    typedef GuiControl Parent;
 
-   Vector<GuiControl *> mSelectedControls;
-   GuiControl*          mCurrentAddSet;
-   GuiControl*          mContentControl;
+   Vector<GuiControl *> mSelectedControls; //A list of selected controls.
+   GuiControl*          mCurrentAddSet; //The curent container (sim set) that is being worked in (controls are added to). Changed by right clicking.
+   GuiControl*          mEditorRoot; //The editor root which attempts to simulate the canvas. This can be the add set, but should never be selected.
    Point2I              mLastMousePos;
    Point2I              mSelectionAnchor;
    Point2I              mGridSnap;
@@ -72,7 +72,7 @@ class GuiEditCtrl : public GuiControl
 
    void select(GuiControl *ctrl);
    void setRoot(GuiControl *ctrl);
-   GuiControl* getRoot() { return mContentControl; }
+   GuiControl* getRoot() { return mEditorRoot; }
    void setEditMode(bool value);
    S32 getSizingHitKnobs(const Point2I &pt, const RectI &box);
    void getDragRect(RectI &b);

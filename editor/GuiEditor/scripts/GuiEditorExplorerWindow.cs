@@ -38,18 +38,6 @@ function GuiEditorExplorerWindow::inspect(%this, %object)
     %this.tree.inspect(%object);
 }
 
-function GuiEditorExplorerWindow::onInspect(%this, %ctrl)
-{
-	%this.tree.startRadioSilence();
-	%index = %this.tree.findItemID(%ctrl.getID());
-	if(%index != -1)
-	{
-		%this.tree.clearSelection();
-		%this.tree.setSelected(%index, true);
-	}
-	%this.tree.endRadioSilence();
-}
-
 function GuiEditorExplorerWindow::onAlsoInspect(%this, %ctrl)
 {
 	%this.tree.startRadioSilence();

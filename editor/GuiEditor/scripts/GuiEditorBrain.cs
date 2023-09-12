@@ -53,12 +53,9 @@ function GuiEditorBrain::endRadioSilence(%this)
 }
 
 //Source callbacks - Events that happened with this control and need to be relayed to other controls.
-function GuiEditorBrain::onSelect(%this, %ctrl)
+function GuiEditorBrain::onEdit(%this, %ctrl)
 {
-	%this.clearSelection();
-	%this.select(%ctrl);
-    %this.postEvent("Inspect", %ctrl);
-    %this.toggleMenuItems();
+    %this.postEvent("Edit", %ctrl);
 }
 
 function GuiEditorBrain::onRemoveSelected(%this,%ctrl)

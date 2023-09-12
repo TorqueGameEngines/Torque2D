@@ -69,10 +69,8 @@ function GuiEditorInspectorWindow::onRemove(%this)
     }
 }
 
-function GuiEditorInspectorWindow::onInspect(%this, %object)
+function GuiEditorInspectorWindow::onEdit(%this, %object)
 {
-    %this.inspectList.clear();
-    %this.inspectList.add(%object);
     %this.inspector.inspect(%object);
 }
 
