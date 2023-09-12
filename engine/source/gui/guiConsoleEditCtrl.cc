@@ -183,6 +183,8 @@ void GuiConsoleEditCtrl::onLoseFirstResponder()
 
     if (isMethod("onLoseFirstResponder"))
         Con::executef(this, 2, "onLoseFirstResponder");
+	if (isMethod("onBlur"))
+		Con::executef(this, 2, "onBlur");
 
     mSelector.setFirstResponder(false);
     mTextOffsetY = 0;

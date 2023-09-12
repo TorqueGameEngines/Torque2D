@@ -629,7 +629,7 @@ void GuiCanvas::rootMouseDown(const GuiEvent &event)
              GuiControl* controlHit = ctrl->findHitControl(event.mousePoint);
 
              //Regardless of what the control does, it has the user's focus.
-             controlHit->onFocus();
+             controlHit->onFocus(false);
 
              if (controlHit->mUseInput)
              {
@@ -733,7 +733,7 @@ void GuiCanvas::rootScreenTouchDown(const GuiEvent &event)
                 }
 
                 //Regardless of what the control does, it has the user's focus.
-                controlHit->onFocus();
+                controlHit->onFocus(false);
 
                 if (controlHit->mUseInput)
                 {
@@ -1519,6 +1519,15 @@ void GuiCanvas::resetUpdateRegions()
    mOldUpdateRects[0].set(mBounds.point, mBounds.extent);
    mOldUpdateRects[1] = mOldUpdateRects[0];
    mCurUpdateRect = mOldUpdateRects[0];
+}
+
+void GuiCanvas::onFocus(bool foundFirstResponder)
+{
+	if (!foundFirstResponder && mFirstResponder)
+	{
+		mFirstResponder->onLoseFirstResponder();
+		mFirstResponder = NULL;
+	}
 }
 
 void GuiCanvas::setFirstResponder( GuiControl* newResponder )

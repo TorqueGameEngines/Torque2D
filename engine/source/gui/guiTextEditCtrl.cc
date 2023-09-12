@@ -647,16 +647,16 @@ void GuiTextEditCtrl::onTouchDown( const GuiEvent &event )
     if (!mVisible || !mAwake)
         return;
 
+   mouseLock();
+   setFirstResponder();
+   mSelector.resetCursorBlink();
+
     mSelector.setTextLength(mTextBuffer.length());
-   if(event.mouseClickCount > 2)
-   {
-        selectAllText();
-   } 
-   else if(event.mouseClickCount > 1)
+   if(event.mouseClickCount == 2)
    {
        mSelector.selectWholeWord(mTextBuffer);
    }
-   else 
+   else if (event.mouseClickCount < 2)
    {
        S32 newCursorPos = calculateIbeamPosition(event.mousePoint);
        if (event.modifier & SI_SHIFT)
@@ -668,10 +668,6 @@ void GuiTextEditCtrl::onTouchDown( const GuiEvent &event )
            mSelector.setCursorPosition(newCursorPos);
        }
    }
-
-   mouseLock();
-   setFirstResponder();
-   mSelector.resetCursorBlink();
     if( isMethod("onTouchDown") )
     {
         char buf[3][32];
@@ -946,6 +942,11 @@ bool GuiTextEditCtrl::tabPrev()
 
 void GuiTextEditCtrl::setFirstResponder()
 {
+	selectAllText();
+	if(mTextBuffer.length() == 0)
+	{
+		mSelector.selectTo(mTextBuffer.length());
+	}
     mSelector.setFirstResponder(true);
    Parent::setFirstResponder();
    
@@ -968,6 +969,8 @@ void GuiTextEditCtrl::onLoseFirstResponder()
 
    if( isMethod( "onLoseFirstResponder" ) )
       Con::executef( this, 2, "onLoseFirstResponder", valid);
+   if (isMethod("onBlur"))
+	   Con::executef(this, 2, "onBlur", valid);
 
     mSelector.setFirstResponder(false);
     mTextOffsetY = 0;
@@ -1635,12 +1638,20 @@ bool GuiTextEditCtrl::handleShiftArrowKey(GuiDirection direction)
     else if (direction == GuiDirection::Up)
     {
         S32 newCursorPos = getLineAdjustedIbeamPosition(-mProfile->getFont(mFontSizeAdjust)->getHeight());
-        modifySelectBlock(newCursorPos);
+		if (newCursorPos == mSelector.getCursorPos())
+		{
+			newCursorPos = 0;
+		}
+		modifySelectBlock(newCursorPos);
     }
     else if (direction == GuiDirection::Down)
     {
         S32 newCursorPos = getLineAdjustedIbeamPosition(mProfile->getFont(mFontSizeAdjust)->getHeight());
-        modifySelectBlock(newCursorPos);
+		if (newCursorPos == mSelector.getCursorPos())
+		{
+			newCursorPos = mTextBuffer.length();
+		}
+		modifySelectBlock(newCursorPos);
     }
     setUpdate();
     mSelector.resetCursorBlink();

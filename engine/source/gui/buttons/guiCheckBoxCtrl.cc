@@ -73,7 +73,7 @@ void GuiCheckBoxCtrl::onRender(Point2I offset, const RectI &updateRect)
 	{
 		currentState = mStateOn ? GuiControlState::SelectedStateOn : GuiControlState::SelectedState;
 	}
-	else if (mMouseOver)
+	else if (mMouseOver || isFirstResponder())
 	{
 		currentState = mStateOn ? GuiControlState::HighlightStateOn : GuiControlState::HighlightState;
 	}
@@ -119,6 +119,11 @@ void GuiCheckBoxCtrl::onRender(Point2I offset, const RectI &updateRect)
 void GuiCheckBoxCtrl::renderInnerControl(RectI &boxRect, const GuiControlState currentState)
 {
 	renderUniversalRect(boxRect, mProfile, currentState);
+
+	if(isFirstResponder())
+	{
+		dglDrawRect(boxRect, mProfile->mCursorColor);
+	}
 }
 
 void GuiCheckBoxCtrl::onAction()

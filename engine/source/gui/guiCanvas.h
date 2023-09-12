@@ -397,6 +397,8 @@ public:
    /// @param   modifier   Shift, ctrl, etc.
    virtual void addAcceleratorKey(GuiControl *ctrl, U32 index, U32 keyCode, U32 modifier);
 
+   virtual void onFocus(bool foundFirstResponder);
+
    /// Sets the first responder.
    /// @param   firstResponder    Control to designate as first responder
    virtual void setFirstResponder(GuiControl *firstResponder);

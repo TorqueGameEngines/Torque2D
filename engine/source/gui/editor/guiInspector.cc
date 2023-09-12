@@ -237,9 +237,7 @@ void GuiInspector::inspectPostApply()
 
 	if (mTarget)
 	{
-		SimObjectPtr<SimObject> oldTarget = mTarget;
-		mTarget = NULL;
-		inspectObject(oldTarget);
+		inspectObject(mTarget);
 	}
 }
 

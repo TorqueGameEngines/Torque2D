@@ -598,8 +598,9 @@ public:
     /// @}
 
 	//Called just before onTouch down for the hit control. The focus should then bubble up through the 
-	//controls allowing windows to move to the front.
-	virtual void onFocus();
+	//controls allowing windows to move to the front. If the focus arrives at the canvas and the first responder
+	//wasn't found, then the first responder loses the focus.
+	virtual void onFocus(bool foundFirstResponder);
     
     /// @name Editor Mouse Events
     ///

@@ -830,6 +830,7 @@ function BaseTheme::makeCheckboxProfile(%this)
 		fontColorNA = %this.setAlpha(%this.color4, 100);
 		align = left;
 		vAlign = middle;
+		cursorColor = %this.color5;
 
 		borderLeft = %borderLight;
 		borderRight = %borderDark;
@@ -1175,10 +1176,10 @@ function BaseTheme::makeTextEditProfile(%this)
 
 	%textBorderH = new GuiBorderProfile()
 	{
-		padding = 10;
-		paddingHL = 10;
-		paddingSL = 10;
-		paddingNA = 10;
+		padding = 5;
+		paddingHL = 5;
+		paddingSL = 5;
+		paddingNA = 5;
 
 		border = %this.borderSize;
 		borderHL = %this.borderSize;
@@ -1637,6 +1638,7 @@ function BaseTheme::makeDropDownProfile(%this)
 		fontColorNA = %this.setAlpha(%this.color1, 100);
 		align = left;
 		vAlign = middle;
+		cursorColor = %this.color5;
 
 		borderLeft = %borderLightH;
 		borderRight = %borderDarkH;

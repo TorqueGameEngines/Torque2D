@@ -1657,16 +1657,19 @@ void GuiControl::onMiddleMouseDragged(const GuiEvent &event)
 GuiControl* GuiControl::findFirstTabable()
 {
    GuiControl *tabCtrl = NULL;
-   iterator i;
-   for (i = begin(); i != end(); i++)
+   if(mVisible && mAwake)
    {
-      GuiControl *ctrl = static_cast<GuiControl *>(*i);
-      tabCtrl = ctrl->findFirstTabable();
-      if (tabCtrl)
-      {
-         mFirstResponder = tabCtrl;
-         return tabCtrl;
-      }
+	   iterator i;
+	   for (i = begin(); i != end(); i++)
+	   {
+		  GuiControl *ctrl = static_cast<GuiControl *>(*i);
+		  tabCtrl = ctrl->findFirstTabable();
+		  if (tabCtrl)
+		  {
+			 mFirstResponder = tabCtrl;
+			 return tabCtrl;
+		  }
+	   }
    }
 
    //nothing was found, therefore, see if this ctrl is tabable
@@ -1683,11 +1686,14 @@ GuiControl* GuiControl::findLastTabable(bool firstCall)
    if (mProfile->mTabable)
       smPrevResponder = this;
 
-   iterator i;
-   for (i = begin(); i != end(); i++)
-   {
-      GuiControl *ctrl = static_cast<GuiControl *>(*i);
-      ctrl->findLastTabable(false);
+	if(mVisible && mAwake)
+	{
+	   iterator i;
+	   for (i = begin(); i != end(); i++)
+	   {
+		  GuiControl *ctrl = static_cast<GuiControl *>(*i);
+		  ctrl->findLastTabable(false);
+	   }
    }
 
    //after the entire tree has been traversed, return the last responder found
@@ -1711,12 +1717,16 @@ GuiControl *GuiControl::findNextTabable(GuiControl *curResponder, bool firstCall
 
    //loop through, checking each child to see if it is the one that follows the firstResponder
    GuiControl *tabCtrl = NULL;
-   iterator i;
-   for (i = begin(); i != end(); i++)
+
+   if (mVisible && mAwake)
    {
-      GuiControl *ctrl = static_cast<GuiControl *>(*i);
-      tabCtrl = ctrl->findNextTabable(curResponder, false);
-      if (tabCtrl) break;
+	   iterator i;
+	   for (i = begin(); i != end(); i++)
+	   {
+		  GuiControl *ctrl = static_cast<GuiControl *>(*i);
+		  tabCtrl = ctrl->findNextTabable(curResponder, false);
+		  if (tabCtrl) break;
+	   }
    }
    mFirstResponder = tabCtrl;
    return tabCtrl;
@@ -1737,12 +1747,16 @@ GuiControl *GuiControl::findPrevTabable(GuiControl *curResponder, bool firstCall
 
    //loop through, checking each child to see if it is the one that follows the firstResponder
    GuiControl *tabCtrl = NULL;
-   iterator i;
-   for (i = begin(); i != end(); i++)
+
+   if (mVisible && mAwake)
    {
-      GuiControl *ctrl = static_cast<GuiControl *>(*i);
-      tabCtrl = ctrl->findPrevTabable(curResponder, false);
-      if (tabCtrl) break;
+	   iterator i;
+	   for (i = begin(); i != end(); i++)
+	   {
+		  GuiControl *ctrl = static_cast<GuiControl *>(*i);
+		  tabCtrl = ctrl->findPrevTabable(curResponder, false);
+		  if (tabCtrl) break;
+	   }
    }
    mFirstResponder = tabCtrl;
    return tabCtrl;
@@ -1781,12 +1795,17 @@ bool GuiControl::ControlIsChild(GuiControl *child)
    return false;
 }
 
-void GuiControl::onFocus()
+void GuiControl::onFocus(bool foundFirstResponder)
 {
+	if (!foundFirstResponder && isFirstResponder())
+	{
+		foundFirstResponder = true;
+	}
+
 	//bubble the focus up
 	GuiControl *parent = getParent();
 	if (parent)
-		parent->onFocus();
+		parent->onFocus(foundFirstResponder);
 }
 
 bool GuiControl::isFirstResponder()
@@ -1810,7 +1829,7 @@ void GuiControl::setFirstResponder()
     if ( mAwake && mVisible )
     {
 		GuiControl *parent = getParent();
-		if (mProfile->mCanKeyFocus == true && parent != NULL )
+		if (mProfile->mCanKeyFocus && parent )
 		{
 			parent->setFirstResponder(this);
 

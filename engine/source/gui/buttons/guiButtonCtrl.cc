@@ -208,6 +208,7 @@ bool GuiButtonCtrl::onKeyDown(const GuiEvent &event)
 			AUDIOHANDLE handle = alxCreateSource(mProfile->mSoundButtonDown);
 			alxPlay(handle);
 		}
+		mDepressed = true;
 		return true;
 	}
 	//otherwise, pass the event to it's parent
@@ -224,6 +225,7 @@ bool GuiButtonCtrl::onKeyUp(const GuiEvent &event)
 		(event.keyCode == KEY_RETURN || event.keyCode == KEY_SPACE) &&
 		event.modifier == 0)
 	{
+		mDepressed = false;
 		onAction();
 		return true;
 	}

@@ -162,7 +162,7 @@ GuiControlState GuiDropDownCtrl::getCurrentState()
 		return GuiControlState::DisabledState;
 	else if (mDepressed || mIsOpen)
 		return GuiControlState::SelectedState;
-	else if (mMouseOver)
+	else if (mMouseOver || isFirstResponder())
 		return GuiControlState::HighlightState;
 	else
 		return GuiControlState::NormalState;
@@ -205,6 +205,11 @@ void GuiDropDownCtrl::onRender(Point2I offset, const RectI& updateRect)
 			contentRect.extent.x -= contentRect.extent.y;
 		}
 		renderText(contentRect.point, contentRect.extent, mListBox->getItemText(index), mProfile);
+	}
+
+	if (isFirstResponder())
+	{
+		dglDrawRect(ctrlRect, mProfile->mCursorColor);
 	}
 }
 

@@ -251,7 +251,7 @@ void GuiWindowCtrl::onTouchDown(const GuiEvent &event)
    curHitRegion = findHitRegion(localPoint);
    mDepressed = true;
 
-   //select this window - move it to the front, and set the first responder
+   //select this window - move it to the front
    selectWindow();
 
    //if we clicked within the title bar
@@ -669,30 +669,25 @@ bool GuiWindowCtrl::onKeyDown(const GuiEvent &event)
    return Parent::onKeyDown(event);
 }
 
-void GuiWindowCtrl::onFocus()
+void GuiWindowCtrl::onFocus(bool foundFirstResponder)
 {
 	//bubble the focus up
 	GuiControl *parent = getParent();
 	if (parent)
 	{
 		parent->pushObjectToBack(this);
-		parent->onFocus();
+		parent->onFocus(foundFirstResponder);
 	}
-
-	setFirstResponder(mFirstResponder);
 }
 
 void GuiWindowCtrl::selectWindow(void)
 {
-   //first make sure this window is the front most of its siblings
+   //make sure this window is the front most of its siblings
    GuiControl *parent = getParent();
    if (parent)
    {
       parent->pushObjectToBack(this);
    }
-
-   //also set the first responder to be the one within this window
-   setFirstResponder(mFirstResponder);
 }
 
 void GuiWindowCtrl::ResizeComplete()

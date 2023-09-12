@@ -373,7 +373,7 @@ function TorqueSuitTheme::makeTextEditProfile(%this)
 		borderRight = %textBorderRight;
 		borderLeft = %textBorderLeft;
 
-		tab = false;
+		tab = true;
 		canKeyFocus = true;
 		returnTab = true;
 	};

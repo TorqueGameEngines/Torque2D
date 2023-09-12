@@ -132,7 +132,7 @@ class GuiWindowCtrl : public GuiControl
       void onTouchUp(const GuiEvent &event);
 	  void onTouchLeave(const GuiEvent &event);
 
-	  virtual void onFocus();
+	  virtual void onFocus(bool foundFirstResponder);
 
       //only cycle tabs through the current window, so overwrite the method
       GuiControl* findNextTabable(GuiControl *curResponder, bool firstCall = true);
