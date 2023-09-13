@@ -13,7 +13,7 @@ function EditorIconButton::onAdd(%this)
 		constrainProportions = "1";
 		fullSize = "0";
 		Image = "EditorCore:EditorIcons16";
-		ImageSize = "18 18";
+		ImageSize = "16 16";
 		ImageColor = ThemeManager.activeTheme.iconButtonProfile.FontColor;
 		Frame = %this.frame;
 		Tooltip = %this.Tooltip;
@@ -32,13 +32,13 @@ function EditorIconButton::onAdd(%this)
 function EditorIconButton::onTouchEnter(%this)
 {
 	%this.icon.fadeTo(ThemeManager.activeTheme.iconButtonProfile.fontColorHL, 200, "EaseInOut");
-	%this.icon.growTo("20 20", 200, "EaseInOut");
+	%this.icon.growTo("18 18", 200, "EaseInOut");
 }
 
 function EditorIconButton::onTouchLeave(%this)
 {
 	%this.icon.fadeTo(ThemeManager.activeTheme.iconButtonProfile.fontColor, 200, "EaseInOut");
-	%this.icon.growTo("18 18", 200, "EaseInOut");
+	%this.icon.growTo("16 16", 200, "EaseInOut");
 }
 
 function EditorIconButton::onTouchDown(%this)

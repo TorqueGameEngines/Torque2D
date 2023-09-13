@@ -35,35 +35,7 @@ function GuiEditor::create( %this )
 
 	%this.guiPage = EditorCore.RegisterEditor("Gui Editor", %this);
 
-    %this.content = new GuiFrameSetCtrl() {
-		HorizSizing = "width";
-        VertSizing = "height";
-        Position = "0 0";
-        Extent = %this.guiPage.getExtent();
-        DividerThickness = 6;
-	};
-    ThemeManager.setProfile(%this.content, "frameSetProfile");
-    ThemeManager.setProfile(%this.content, "dropButtonProfile", "dropButtonProfile");
-    ThemeManager.setProfile(%this.content, "frameSetTabBookProfile", "tabBookProfile");
-    ThemeManager.setProfile(%this.content, "frameSetTabProfile", "tabProfile");
-    ThemeManager.setProfile(%this.content, "frameSetTabPageProfile", "tabPageProfile");
-    %this.guiPage.add(%this.content);
-
-    %idList = %this.content.createHorizontalSplit(1);
-    %leftID = getWord(%idList, 0);
-    %rightID = getWord(%idList, 1);
-    %this.content.anchorFrame(%rightID);
-    %this.content.setFrameSize(%rightID, 300);
-    
-    %ids = %this.content.createHorizontalSplit(%leftID);
-    %inspectorFrameID = getWord(%ids, 0);
-    %centerFrameID = getWord(%ids, 1);
-    %this.content.setFrameSize(%inspectorFrameID, 360);
-    
-    %ids = %this.content.createVerticalSplit(%rightID);
-    %toolFrameID = getWord(%ids, 0);
-    %explorerFrameID = getWord(%ids, 1);
-    %this.content.setFrameSize(%toolFrameID, 380);
+    %this.content = %this.createFrameSet();
 
     %this.brain = new GuiEditCtrl()
     {
@@ -105,7 +77,7 @@ function GuiEditor::create( %this )
         Position = "0 0";
         Extent = "100 100";
 		imageColor = "255 255 255 255";
-        bitmap = "./images/gridTiny2";
+        Image = "EditorCore:editorGrid";
 		singleFrameBitmap = "1";
 		tileImage = "1";
 		positionOffset = "0 0";
@@ -208,6 +180,43 @@ function GuiEditor::create( %this )
     %this.guiPage.add(%this.colorWindow); */
 
     EditorCore.FinishRegistration(%this.guiPage);
+}
+
+
+
+function GuiEditor::createFrameSet(%this)
+{
+	%content = new GuiFrameSetCtrl() {
+		HorizSizing = "width";
+        VertSizing = "height";
+        Position = "0 0";
+        Extent = %this.guiPage.getExtent();
+        DividerThickness = 6;
+	};
+    ThemeManager.setProfile(%content, "frameSetProfile");
+    ThemeManager.setProfile(%content, "dropButtonProfile", "dropButtonProfile");
+    ThemeManager.setProfile(%content, "frameSetTabBookProfile", "tabBookProfile");
+    ThemeManager.setProfile(%content, "frameSetTabProfile", "tabProfile");
+    ThemeManager.setProfile(%content, "frameSetTabPageProfile", "tabPageProfile");
+    %this.guiPage.add(%content);
+
+    %idList = %content.createHorizontalSplit(1);
+    %leftID = getWord(%idList, 0);
+    %rightID = getWord(%idList, 1);
+    %content.anchorFrame(%rightID);
+    %content.setFrameSize(%rightID, 300);
+    
+    %ids = %content.createHorizontalSplit(%leftID);
+    %inspectorFrameID = getWord(%ids, 0);
+    %centerFrameID = getWord(%ids, 1);
+    %content.setFrameSize(%inspectorFrameID, 360);
+    
+    %ids = %content.createVerticalSplit(%rightID);
+    %toolFrameID = getWord(%ids, 0);
+    %explorerFrameID = getWord(%ids, 1);
+    %content.setFrameSize(%toolFrameID, 380);
+
+    return %content;
 }
 
 //-----------------------------------------------------------------------------

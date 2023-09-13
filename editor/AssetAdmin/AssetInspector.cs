@@ -25,10 +25,10 @@ function AssetInspector::onAdd(%this)
 	%this.titlebar = new GuiControl()
 	{
 		HorizSizing="width";
-		VertSizing="top";
+		VertSizing="bottom";
 		Position="0 0";
 		Extent="700 34";
-		MinExtent="350 34";
+		MinExtent="0 34";
 		Text = "";
 	};
 	ThemeManager.setProfile(%this.titlebar, "panelProfile");
@@ -88,8 +88,7 @@ function AssetInspector::onAdd(%this)
 		HorizSizing = width;
 		VertSizing = height;
 		Position = "0 34";
-		Extent = "700 290";
-		MinExtent="350 290";
+		Extent = "700 320";
 		TabPosition = top;
 		Visible = false;
 	};
@@ -128,7 +127,7 @@ function AssetInspector::createTabPage(%this, %name, %class, %superClass)
 		HorizSizing = width;
 		VertSizing = height;
 		Position = "0 0";
-		Extent = "700 290";
+		Extent = "700 320";
 		Text = %name;
 	};
 	ThemeManager.setProfile(%page, "tabPageProfile");
@@ -143,7 +142,7 @@ function AssetInspector::createScroller(%this)
 		HorizSizing="width";
 		VertSizing="height";
 		Position="0 0";
-		Extent="700 290";
+		Extent="700 320";
 		hScrollBar="alwaysOff";
 		vScrollBar="alwaysOn";
 		constantThumbHeight="0";
@@ -165,7 +164,7 @@ function AssetInspector::createInspector(%this)
 		HorizSizing="width";
 		VertSizing="height";
 		Position="0 0";
-		Extent="686 290";
+		Extent="686 320";
 		FieldCellSize="300 40";
 		ControlOffset="10 18";
 		ConstantThumbHeight=false;

@@ -27,6 +27,8 @@ function AssetDictionary::onAdd(%this)
 		class = "NewAssetButton";
 		Position = "5 27";
 		Extent = "300 30";
+		HorizSizing = "width";
+		VertSizing = "height";
 		Text = "New";
 	};
 	ThemeManager.setProfile(%this.newButton, "buttonProfile");
@@ -36,6 +38,8 @@ function AssetDictionary::onAdd(%this)
 	{
 		Position="0 62";
 		Extent = "310 50";
+		HorizSizing = "width";
+		VertSizing = "height";
 		CellSizeX = 60;
 		CellSizeY = 60;
 		CellModeX = variable;

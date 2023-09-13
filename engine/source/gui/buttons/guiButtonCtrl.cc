@@ -40,6 +40,9 @@ GuiButtonCtrl::GuiButtonCtrl()
 	mBounds.extent.set(140, 30);
 	mText = StringTable->insert("Button");
 	mTextID = StringTable->EmptyString;
+	mProfile = NULL;
+
+	setField("profile", "GuiButtonProfile");
 }
 
 void GuiButtonCtrl::initPersistFields()
@@ -285,7 +288,8 @@ void GuiButtonCtrl::onRender(Point2I offset, const RectI& updateRect)
 	renderText(contentRect.point, contentRect.extent, mText, mProfile);
 
 	//Render the childen
-	renderChildControls(offset, contentRect, updateRect);
+	if(size() > 0)
+		renderChildControls(offset, contentRect, updateRect);
 }
 
 void GuiButtonCtrl::setScriptValue(const char *value)

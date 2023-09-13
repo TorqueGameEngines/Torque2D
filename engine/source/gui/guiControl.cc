@@ -416,15 +416,16 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 	Point2I oldPosition = mBounds.point;
     Point2I actualNewPosition = Point2I(newPosition);
     GuiControl* parent = getParent();
-    if (parent)
+    if (parent && parent->mProfile)
     {
+		Point2I parentInnerExtent = parent->getInnerRect().extent;
         if (mHorizSizing == horizResizeCenter)
         {
-            actualNewPosition.x = (parent->mBounds.extent.x - actualNewExtent.x) / 2;
+            actualNewPosition.x = (parentInnerExtent.x - actualNewExtent.x) / 2;
         }
         if (mVertSizing == vertResizeCenter)
         {
-            actualNewPosition.y = (parent->mBounds.extent.y - actualNewExtent.y) / 2;
+            actualNewPosition.y = (parentInnerExtent.y - actualNewExtent.y) / 2;
         }
     }
 
@@ -736,6 +737,10 @@ RectI GuiControl::getInnerRect(Point2I& offset, GuiControlState currentState)
 
 RectI GuiControl::getInnerRect(Point2I &offset, Point2I &extent, GuiControlState currentState, GuiControlProfile *profile)
 {
+	if (!profile)
+	{
+		return mBounds;
+	}
 	//Get the border profiles
 	GuiBorderProfile *leftProfile = profile->getLeftBorder();
 	GuiBorderProfile *rightProfile = profile->getRightBorder();

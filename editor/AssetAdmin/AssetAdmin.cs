@@ -38,25 +38,79 @@ function AssetAdmin::create(%this)
 	exec("./ImageEditor/exec.cs");
 
 	%this.guiPage = EditorCore.RegisterEditor("Asset Manager", %this);
-	%this.guiPage.add(%this.buildAssetWindow());
-	%this.guiPage.add(%this.buildAudioPlayButton());
-	%this.guiPage.add(%this.buildLibrary());
-	%this.guiPage.add(%this.buildInspector());
+	%this.content = %this.createFrameSet();
+	%this.buildAssetWindow();
+	%this.buildAudioPlayButton();
+	%this.buildInspector();
+	%this.buildLibrary();
 
 	EditorCore.FinishRegistration(%this.guiPage);
 
 	%this.isOpen = false;
 }
 
+function AssetAdmin::createFrameSet(%this)
+{
+	%content = new GuiFrameSetCtrl() {
+		HorizSizing = "width";
+        VertSizing = "height";
+        Position = "0 0";
+        Extent = %this.guiPage.getExtent();
+        DividerThickness = 6;
+	};
+    ThemeManager.setProfile(%content, "frameSetProfile");
+    ThemeManager.setProfile(%content, "dropButtonProfile", "dropButtonProfile");
+    ThemeManager.setProfile(%content, "frameSetTabBookProfile", "tabBookProfile");
+    ThemeManager.setProfile(%content, "frameSetTabProfile", "tabProfile");
+    ThemeManager.setProfile(%content, "frameSetTabPageProfile", "tabPageProfile");
+    %this.guiPage.add(%content);
+
+    %idList = %content.createHorizontalSplit(1);
+    %leftID = getWord(%idList, 0);
+    %rightID = getWord(%idList, 1);
+    %content.anchorFrame(%rightID);
+    %content.setFrameSize(%rightID, 324);
+    
+    %ids = %content.createVerticalSplit(%leftID);
+    %centerFrameID = getWord(%ids, 0);
+    %inspectorFrameID = getWord(%ids, 1);
+	%content.anchorFrame(%inspectorFrameID);
+    %content.setFrameSize(%inspectorFrameID, 360);
+
+	return %content;
+}
+
 function AssetAdmin::buildLibrary(%this)
 {
+	%this.libWindow = new GuiWindowCtrl()
+    {
+        HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "0 0";
+        Extent = "330 380";
+        MinExtent = "100 100";
+        text = "Asset Library";
+        canMove = true;
+        canClose = false;
+        canMinimize = true;
+        canMaximize = false;
+        resizeWidth = true;
+        resizeHeight = true;
+    };
+    ThemeManager.setProfile(%this.libWindow, "windowProfile");
+    ThemeManager.setProfile(%this.libWindow, "windowContentProfile", "ContentProfile");
+    ThemeManager.setProfile(%this.libWindow, "windowButtonProfile", "CloseButtonProfile");
+    ThemeManager.setProfile(%this.libWindow, "windowButtonProfile", "MinButtonProfile");
+    ThemeManager.setProfile(%this.libWindow, "windowButtonProfile", "MaxButtonProfile");
+    %this.content.add(%this.libWindow);
+
 	%this.libScroller = new GuiScrollCtrl()
 	{
-		HorizSizing="left";
-		VertSizing="height";
-		Position="700 0";
-		Extent="324 768";
-		MinExtent="162 384";
+        HorizSizing = "width";
+        VertSizing = "height";
+		Position="0 0";
+		Extent="324 356";
+		MinExtent="0 0";
 		hScrollBar="dynamic";
 		vScrollBar="alwaysOn";
 		constantThumbHeight="0";
@@ -67,11 +121,12 @@ function AssetAdmin::buildLibrary(%this)
 	ThemeManager.setProfile(%this.libScroller, "scrollingPanelThumbProfile", ThumbProfile);
 	ThemeManager.setProfile(%this.libScroller, "scrollingPanelTrackProfile", TrackProfile);
 	ThemeManager.setProfile(%this.libScroller, "scrollingPanelArrowProfile", ArrowProfile);
+	%this.libWindow.add(%this.libScroller);
 
 	%this.dictionaryList = new GuiChainCtrl()
 	{
-		HorizSizing="right";
-		VertSizing="bottom";
+		HorizSizing="width";
+		VertSizing="height";
 		Position="0 0";
 		Extent="310 768";
 		MinExtent="220 200";
@@ -85,8 +140,6 @@ function AssetAdmin::buildLibrary(%this)
 	%this.dictionaryList.add(%this.buildDictionary("Fonts", "FontAsset"));
 	%this.dictionaryList.add(%this.buildDictionary("Audio", "AudioAsset"));
 	//%this.dictionaryList.add(%this.buildDictionary("Spines", "SpineAsset"));
-
-	return %this.libScroller;
 }
 
 function AssetAdmin::buildDictionary(%this, %title, %type)
@@ -96,10 +149,10 @@ function AssetAdmin::buildDictionary(%this, %title, %type)
 		Class = AssetDictionary;
 		Text=%title;
 		command="";
-		HorizSizing="right";
+		HorizSizing="width";
 		VertSizing="bottom";
 		Position="0 0";
-		Extent="310 22";
+		Extent="306 22";
 		MinExtent="80 22";
 		Type = %type;
 	};
@@ -111,22 +164,61 @@ function AssetAdmin::buildDictionary(%this, %title, %type)
 
 function AssetAdmin::buildInspector(%this)
 {
+	%this.inspectorWindow = new GuiWindowCtrl()
+    {
+        HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "0 0";
+        Extent = "706 380";
+        MinExtent = "100 100";
+        text = "Asset Inspector";
+        canMove = true;
+        canClose = false;
+        canMinimize = true;
+        canMaximize = false;
+        resizeWidth = true;
+        resizeHeight = true;
+    };
+    ThemeManager.setProfile(%this.inspectorWindow, "windowProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowContentProfile", "ContentProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "CloseButtonProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "MinButtonProfile");
+    ThemeManager.setProfile(%this.inspectorWindow, "windowButtonProfile", "MaxButtonProfile");
+    %this.content.add(%this.inspectorWindow);
+
 	%this.inspector = new GuiControl()
 	{
 		class = "AssetInspector";
-		HorizSizing="width";
-		VertSizing="top";
-		Position="0 444";
-		Extent="700 324";
+        HorizSizing = "width";
+        VertSizing = "height";
+		Position="0 0";
+		Extent="700 370";
 		MinExtent="350 222";
 	};
 	ThemeManager.setProfile(%this.inspector, "overlayProfile");
 
-	return %this.inspector;
+	%this.inspectorWindow.add(%this.inspector);
 }
 
 function AssetAdmin::buildAssetWindow(%this)
 {
+	%this.background = new GuiSpriteCtrl() {
+		HorizSizing = "right";
+        VertSizing = "bottom";
+        Position = "0 0";
+        Extent = "100 100";
+		imageColor = "255 255 255 255";
+        Image = "EditorCore:editorGrid";
+		singleFrameBitmap = "1";
+		tileImage = "1";
+		positionOffset = "0 0";
+		imageSize = "128 128";
+		fullSize = "0";
+		constrainProportions = "1";
+	};
+    ThemeManager.setProfile(%this.background, "emptyProfile");
+    %this.content.add(%this.background);
+
 	%this.assetScene = new Scene();
 	%this.assetScene.setScenePause(true);
 
@@ -135,9 +227,9 @@ function AssetAdmin::buildAssetWindow(%this)
 		class = AssetWindow;
 		profile = ThemeManager.activeTheme.overlayProfile;
 		position = "0 0";
-		extent = "700 444";
-		HorizSizing="width";
-		VertSizing="height";
+		extent = %this.background.extent;
+        HorizSizing = "width";
+        VertSizing = "height";
 		minExtent = "0 0";
 		cameraPosition = "0 0";
 		cameraSize = "175 111";
@@ -156,7 +248,7 @@ function AssetAdmin::buildAssetWindow(%this)
 	%this.assetWindow.setShowScrollBar(true);
 	%this.assetWindow.setMouseWheelScrolls(false);
 
-	return %this.assetWindow;
+    %this.background.add(%this.assetWindow);
 }
 
 function AssetAdmin::buildAudioPlayButton(%this)
@@ -164,7 +256,7 @@ function AssetAdmin::buildAudioPlayButton(%this)
 	%this.audioPlayButtonContainer = new GuiControl()
 	{
 		position = "0 0";
-		extent = "700 444";
+		extent = %this.background.extent;
 		HorizSizing="width";
 		VertSizing="height";
 		Visible="0";
@@ -182,7 +274,7 @@ function AssetAdmin::buildAudioPlayButton(%this)
 	ThemeManager.setProfile(%this.audioPlayButton, "buttonProfile");
 	%this.audioPlayButtonContainer.add(%this.audioPlayButton);
 
-	return %this.audioPlayButtonContainer;
+	%this.background.add(%this.audioPlayButtonContainer);
 }
 
 function AssetAdmin::destroy(%this)
