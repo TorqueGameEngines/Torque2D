@@ -234,7 +234,6 @@ function AssetInspector::loadImageAsset(%this, %imageAsset, %assetID)
 	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.addHiddenField("ExplicitMode");
 	%this.inspector.inspect(%imageAsset);
-	%this.inspector.openGroupByIndex(0);
 
 	%this.imageFrameEditPage.inspect(%imageAsset);
 	%this.imageLayersEditPage.inspect(%imageAsset);
@@ -251,7 +250,6 @@ function AssetInspector::loadAnimationAsset(%this, %animationAsset, %assetID)
 	%this.inspector.addHiddenField("AssetInternal");
 	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%animationAsset);
-	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadParticleAsset(%this, %particleAsset, %assetID)
@@ -306,7 +304,6 @@ function AssetInspector::onChooseParticleAsset(%this, %particleAsset)
 		%this.emitterGraphPage.inspect(%particleAsset, %index - 1);
 	}
 	%this.tabBook.selectPage(%curSel);
-	%this.inspector.openGroupByIndex(0);
 
 	%this.emitterButtonBar.visible = true;
 	%this.emitterButtonBar.refreshEnabled();
@@ -323,7 +320,6 @@ function AssetInspector::loadFontAsset(%this, %fontAsset, %assetID)
 	%this.inspector.addHiddenField("AssetInternal");
 	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%fontAsset);
-	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadAudioAsset(%this, %audioAsset, %assetID)
@@ -337,7 +333,6 @@ function AssetInspector::loadAudioAsset(%this, %audioAsset, %assetID)
 	%this.inspector.addHiddenField("AssetInternal");
 	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%audioAsset);
-	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::loadSpineAsset(%this, %spineAsset, %assetID)
@@ -351,7 +346,6 @@ function AssetInspector::loadSpineAsset(%this, %spineAsset, %assetID)
 	%this.inspector.addHiddenField("AssetInternal");
 	%this.inspector.addHiddenField("AssetPrivate");
 	%this.inspector.inspect(%spineAsset);
-	%this.inspector.openGroupByIndex(0);
 }
 
 function AssetInspector::deleteAsset(%this)

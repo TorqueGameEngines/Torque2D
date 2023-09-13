@@ -33,6 +33,7 @@ GuiInspector::GuiInspector()
 {
    mGroups.clear();
    mTarget = NULL;
+   mOpenGroupList.clear();
 
    mGroupPanelProfile = NULL;
    setField("GroupPanelProfile", "GuiPanelProfile");
@@ -278,12 +279,23 @@ void GuiInspector::clearGroups()
    if( mGroups.empty() )
       return;
 
-   // Attempt to find it in the group list
-   Vector<GuiInspectorGroup*>::iterator i = mGroups.begin();
+	mOpenGroupList.clear();
 
-   for( ; i != mGroups.end(); i++ )
-      if( (*i)->isProperlyAdded() )
-         (*i)->deleteObject();
+	for(Vector<GuiInspectorGroup*>::iterator i = mGroups.begin(); i != mGroups.end(); i++ )
+	{
+		if ((*i)->isProperlyAdded())
+		{
+			GuiInspectorGroup* group = static_cast<GuiInspectorGroup*>(*i);
+
+			//First, save which groups are open by name
+			if (group->getExpanded())
+			{
+				mOpenGroupList.push_back(group->getGroupName());
+			}
+
+			group->deleteObject();
+		}
+	}
 
    mGroups.clear();
 
@@ -326,6 +338,7 @@ void GuiInspector::inspectObject( SimObject *object )
       general->registerObject();
       mGroups.push_back( general );
       addObject( general );
+	  checkOpenGroupList(general);
    }
 
    // Grab this objects field list
@@ -343,6 +356,7 @@ void GuiInspector::inspectObject( SimObject *object )
             group->registerObject();
             mGroups.push_back( group );
             addObject( group );
+			checkOpenGroupList(group);
          }            
       }
    }
@@ -371,6 +385,18 @@ void GuiInspector::inspectObject( SimObject *object )
    // Don't steal first responder
    if( !currResponder.isNull() )
       guiCanvas->setFirstResponder( currResponder );
+}
+
+void GuiInspector::checkOpenGroupList(GuiInspectorGroup* group)
+{
+	for (Vector<StringTableEntry>::iterator i = mOpenGroupList.begin(); i != mOpenGroupList.end(); i++)
+	{
+		StringTableEntry text = static_cast<StringTableEntry>(*i);
+		if (dStrcmp(text, group->getGroupName()) == 0)
+		{
+			group->setExpandedInstant(true);
+		}
+	}
 }
 
 ConsoleMethod( GuiInspector, inspect, void, 3, 3, "(obj) Goes through the object's fields and autogenerates editor boxes\n"

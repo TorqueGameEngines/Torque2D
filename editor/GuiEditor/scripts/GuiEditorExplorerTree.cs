@@ -19,7 +19,8 @@ function GuiEditorExplorerTree::onSelect(%this, %index, %text, %item)
 {
     if(%this.getSelCount() == 1)
     {
-        %this.postEvent("Inspect", %item);
+        %this.postEvent("ClearInspectAll");
+        %this.postEvent("AlsoInspect", %item);
     }
     else 
     {

@@ -86,6 +86,7 @@ private:
 public:
    // Members
    Vector<GuiInspectorGroup*>    mGroups;
+   Vector<StringTableEntry>      mOpenGroupList;
    SimObjectPtr<SimObject>       mTarget;
 
    GuiInspector();
@@ -104,6 +105,7 @@ public:
    inline bool hideField(const char* fieldName) { return std::find(mHiddenFieldList.begin(), mHiddenFieldList.end(), fieldName) != mHiddenFieldList.end(); };
    inline void clearHiddenField() { mHiddenFieldList.clear(); };
    inline void addHiddenField(const char* fieldName) { mHiddenFieldList.push_back(fieldName); };
+   void checkOpenGroupList(GuiInspectorGroup* group);
 
    GuiControlProfile* mGroupPanelProfile;
    GuiControlProfile* mGroupGridProfile;

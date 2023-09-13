@@ -183,6 +183,21 @@ void GuiExpandCtrl::setExpanded(bool isExpanded)
 	}
 }
 
+void GuiExpandCtrl::setExpandedInstant(bool isExpanded)
+{
+	mExpanded = isExpanded;
+
+	if (mExpanded)
+	{
+		mBounds.extent.set(mExpandedExtent.x, mExpandedExtent.y);
+	}
+	else
+	{
+		mBounds.extent.set(mCollapsedExtent.x, mCollapsedExtent.y);
+	}
+	toggleHiddenChildren();
+}
+
 bool GuiExpandCtrl::processExpansion()
 {
 	F32 progress = getProgress(32.0f);

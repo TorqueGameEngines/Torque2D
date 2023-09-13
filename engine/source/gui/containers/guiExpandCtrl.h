@@ -66,6 +66,7 @@ public:
 
 	inline bool getExpanded() { return mExpanded; };
 	void setExpanded(bool isExpanded);
+	void setExpandedInstant(bool isExpanded);
 	void startExpand();
 	void startCollapse();
 	void expandComplete();
