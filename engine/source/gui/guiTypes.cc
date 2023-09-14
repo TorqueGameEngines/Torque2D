@@ -305,7 +305,6 @@ GuiControlProfile::GuiControlProfile(void) :
 {
 	mRefCount = 0;
 	mBitmapArrayRects.clear();
-	mMouseOverSelected = false;
 	
 	mTabable       = false;
 	mCanKeyFocus   = false;
@@ -337,8 +336,6 @@ GuiControlProfile::GuiControlProfile(void) :
 	
 	mAlignment     = AlignmentType::LeftAlign;
 	mVAlignment    = VertAlignmentType::MiddleVAlign;
-   mProfileForChildrenName = NULL;
-	mProfileForChildren = NULL;
 
 	//fill color
 	mFillColor.set(0, 0, 0, 0);
@@ -382,10 +379,6 @@ GuiControlProfile::GuiControlProfile(void) :
       mAlignment = def->mAlignment;
 	  mVAlignment = def->mVAlignment;
       mCursorColor = def->mCursorColor;
-
-      // Child profile
-      mProfileForChildrenName = def->mProfileForChildrenName;
-      setChildrenProfile(def->mProfileForChildren);
    }
 }
 
@@ -400,7 +393,6 @@ void GuiControlProfile::initPersistFields()
    addGroup("Behavior");
       addField("tab",           TypeBool,       Offset(mTabable, GuiControlProfile));
       addField("canKeyFocus",   TypeBool,       Offset(mCanKeyFocus, GuiControlProfile));
-      addField("mouseOverSelected", TypeBool,   Offset(mMouseOverSelected, GuiControlProfile));
    endGroup("Behavior");
 
    addGroup("FillColor");
@@ -442,10 +434,6 @@ void GuiControlProfile::initPersistFields()
    addField("bitmap",        TypeFilename,   Offset(mBitmapName, GuiControlProfile));
    addProtectedField("imageAsset", TypeAssetId, Offset(mImageAssetID, GuiControlProfile), &setImageAsset, &getImageAsset, "The image asset ID used to render the control");
 
-   addField("soundButtonDown", TypeAudioAssetPtr,  Offset(mSoundButtonDown, GuiControlProfile));
-   addField("soundButtonOver", TypeAudioAssetPtr,  Offset(mSoundButtonOver, GuiControlProfile));
-   addField("profileForChildren", TypeString,      Offset(mProfileForChildrenName, GuiControlProfile));
-
    addField("category", TypeString, Offset(mCategory, GuiControlProfile));
 }
 
@@ -460,8 +448,6 @@ bool GuiControlProfile::onAdd()
    getRightProfile();
    getTopProfile();
    getBottomProfile();
-
-   getChildrenProfile();
 
    return true;
 }
@@ -626,40 +612,6 @@ void GuiControlProfile::setBottomProfile(GuiBorderProfile * prof)
       deleteNotify(mBorderBottom);
 }
 
-GuiControlProfile* GuiControlProfile::getChildrenProfile()
-{
-   // We can early out if we still have a valid profile
-   if (mProfileForChildren)
-      return mProfileForChildren;
-
-   // Attempt to find the profile specified
-   if (mProfileForChildrenName)
-   {
-      GuiControlProfile *profile = dynamic_cast<GuiControlProfile*> (Sim::findObject(mProfileForChildrenName));
-
-      if (profile)
-         setChildrenProfile(profile);
-   }
-
-   return mProfileForChildren;
-}
-
-void GuiControlProfile::setChildrenProfile(GuiControlProfile *prof)
-{
-   if (prof == mProfileForChildren)
-      return;
-
-   // Clear the delete notification we previously set up
-   if (mProfileForChildren)
-      clearNotify(mProfileForChildren);
-
-   mProfileForChildren = prof;
-
-   // Make sure that the new profile will notify us when it is deleted
-   if (mProfileForChildren)
-      deleteNotify(mProfileForChildren);
-}
-
 S32 GuiControlProfile::constructBitmapArray()
 {
    if(mBitmapArrayRects.size())
@@ -762,9 +714,6 @@ void GuiControlProfile::incRefCount(F32 fontAdjust)
 	}
 
    mRefCount++;
-
-   getChildrenProfile();
-
 }
 
 void GuiControlProfile::decRefCount()

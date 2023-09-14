@@ -167,12 +167,6 @@ void GuiSliderCtrl::onTouchEnter(const GuiEvent &event)
     }
     else
     {
-        if (mActive && mProfile->mSoundButtonOver)
-        {
-            //F32 pan = (F32(event.mousePoint.x)/F32(Canvas->mBounds.extent.x)*2.0f-1.0f)*0.8f;
-            AUDIOHANDLE handle = alxCreateSource(mProfile->mSoundButtonOver);
-            alxPlay(handle);
-        }
         mMouseOver = true;
     }
 }

@@ -186,7 +186,6 @@ private:
 public:
    S32  mRefCount;                                 ///< Used to determine if any controls are using this profile
    bool mTabable;                                  ///< True if this object is accessable from using the tab key
-
    bool mCanKeyFocus;                              ///< True if the object can be given keyboard focus (in other words, made a first responder @see GuiControl)
 
    ColorI mFillColor; //Normal fill color used to fill the control area inside (and possibly under) the border.
@@ -240,7 +239,6 @@ public:
    AlignmentType mAlignment;                       ///< Horizontal text alignment
    VertAlignmentType mVAlignment;				   ///< Vertical text alignment
                              
-   bool mMouseOverSelected;                        ///< True if this object should be "selected" while the mouse is over it
    ColorI mCursorColor;                            ///< Color for the blinking cursor in text fields (for example)
 
    Point2I mTextOffset;                            ///< Text offset for the control
@@ -267,12 +265,6 @@ public:
    TextureHandle mTextureHandle;                   ///< Texture handle for the control
    Vector<RectI> mBitmapArrayRects;                ///< Used for controls which use an array of bitmaps such as checkboxes
 
-   // sound members
-   AssetPtr<AudioAsset> mSoundButtonDown;                 ///< Sound played when the object is "down" ie a button is pushed
-   AssetPtr<AudioAsset> mSoundButtonOver;                 ///< Sound played when the mouse is over the object
-   StringTableEntry mProfileForChildrenName;
-   GuiControlProfile* mProfileForChildren;         ///< Profile used with children controls (such as the scroll bar on a popup menu) when defined.
-public:
    DECLARE_CONOBJECT(GuiControlProfile);
    GuiControlProfile();
    ~GuiControlProfile();
@@ -291,10 +283,6 @@ public:
 
    GuiBorderProfile* getBottomProfile();
    void setBottomProfile(GuiBorderProfile* prof);
-
-   // Get and Set child profile
-   GuiControlProfile * getChildrenProfile();
-   void setChildrenProfile(GuiControlProfile * prof);
 
    /// This method creates an array of bitmaps from one single bitmap with
    /// seperator color. The seperator color is whatever color is in pixel 0,0

@@ -104,11 +104,6 @@ void GuiButtonCtrl::onTouchEnter(const GuiEvent &event)
 	{
 		mDepressed = true;
 	}
-	else if (mActive && mProfile->mSoundButtonOver)
-	{
-		AUDIOHANDLE handle = alxCreateSource(mProfile->mSoundButtonOver);
-		alxPlay(handle);
-	}
 
 	Con::executef(this, 1, "onTouchEnter");
 
@@ -142,12 +137,6 @@ void GuiButtonCtrl::onTouchDown(const GuiEvent &event)
 
 	if (mProfile->mCanKeyFocus)
 		setFirstResponder();
-
-	if (mProfile->mSoundButtonDown)
-	{
-		AUDIOHANDLE handle = alxCreateSource(mProfile->mSoundButtonDown);
-		alxPlay(handle);
-	}
 
 	//lock the mouse
 	mouseLock();
@@ -206,11 +195,6 @@ bool GuiButtonCtrl::onKeyDown(const GuiEvent &event)
 	if ((event.keyCode == KEY_RETURN || event.keyCode == KEY_SPACE)
 		&& event.modifier == 0)
 	{
-		if (mProfile->mSoundButtonDown)
-		{
-			AUDIOHANDLE handle = alxCreateSource(mProfile->mSoundButtonDown);
-			alxPlay(handle);
-		}
 		mDepressed = true;
 		return true;
 	}
