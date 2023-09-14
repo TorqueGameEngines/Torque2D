@@ -88,7 +88,7 @@ function AssetAdmin::buildLibrary(%this)
         VertSizing = "bottom";
         Position = "0 0";
         Extent = "330 380";
-        MinExtent = "100 100";
+        MinExtent = "200 100";
         text = "Asset Library";
         canMove = true;
         canClose = false;
@@ -168,10 +168,9 @@ function AssetAdmin::buildInspector(%this)
     {
         HorizSizing = "right";
         VertSizing = "bottom";
-        Position = "0 0";
-        Extent = "706 380";
-        MinExtent = "100 100";
         text = "Asset Inspector";
+		Extent = "706 380";
+		MinExtent = "500 250";
         canMove = true;
         canClose = false;
         canMinimize = true;
@@ -189,11 +188,9 @@ function AssetAdmin::buildInspector(%this)
 	%this.inspector = new GuiControl()
 	{
 		class = "AssetInspector";
-        HorizSizing = "width";
-        VertSizing = "height";
-		Position="0 0";
 		Extent="700 370";
-		MinExtent="350 222";
+        HorizSizing = "fill";
+        VertSizing = "fill";
 	};
 	ThemeManager.setProfile(%this.inspector, "overlayProfile");
 

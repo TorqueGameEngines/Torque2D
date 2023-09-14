@@ -88,7 +88,7 @@ function AssetInspector::onAdd(%this)
 		HorizSizing = width;
 		VertSizing = height;
 		Position = "0 34";
-		Extent = "700 320";
+		Extent = "700 336";
 		TabPosition = top;
 		Visible = false;
 	};

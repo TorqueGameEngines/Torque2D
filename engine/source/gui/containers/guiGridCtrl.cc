@@ -333,14 +333,8 @@ Point2F GuiGridCtrl::GetGridItemHeight(const S32 totalArea, const S32 maxChainLe
 void GuiGridCtrl::onChildAdded(GuiControl* child)
 {
 	//Ensure the child isn't positioned to the center
-	if (child->getHorizSizing() == horizResizeCenter)
-	{
-		child->setHorizSizing(horizResizeLeft);
-	}
-	if (child->getVertSizing() == vertResizeCenter)
-	{
-		child->setVertSizing(vertResizeTop);
-	}
+	child->preventResizeModeCenter();
+	child->preventResizeModeFill();
 	resize(getPosition(), getExtent());
 
 	Parent::onChildAdded(child);

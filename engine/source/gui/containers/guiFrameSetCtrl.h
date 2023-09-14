@@ -120,6 +120,8 @@ public:
 	void renderDropButton(const GuiFrameSetCtrl::Frame* frame, const RectI& buttonRect, const Point2I& cursorPt, const Point2I& fillPos, const Point2I& fillExt, GuiDirection direction);
 	void handleDropButtons(GuiWindowCtrl* window);
 	void undockWindowFromBook(GuiWindowCtrl* window, GuiTabBookCtrl* book, GuiTabPageCtrl* page);
+	void renderChild(GuiControl* ctrl, const Point2I& offset, const RectI& content, const RectI& clipRect);
+	GuiControl* findHitControl(const Point2I& pt, S32 initialLayer = -1);
 
 	Point2I splitFrame(S32 frameID, bool isVertical);
 	void splitFrame(GuiFrameSetCtrl::Frame* frame, GuiDirection direction);

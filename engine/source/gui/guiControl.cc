@@ -185,20 +185,22 @@ static EnumTable::Enums horzEnums[] =
     { GuiControl::horizResizeRight,      "right"     },
     { GuiControl::horizResizeWidth,      "width"     },
     { GuiControl::horizResizeLeft,       "left"      },
-   { GuiControl::horizResizeCenter,     "center"    },
-   { GuiControl::horizResizeRelative,   "relative"  }
+    { GuiControl::horizResizeCenter,      "center"   },
+    { GuiControl::horizResizeRelative,    "relative" },
+    { GuiControl::horizResizeFill,        "fill"     }
 };
-static EnumTable gHorizSizingTable(5, &horzEnums[0]);
+static EnumTable gHorizSizingTable(6, &horzEnums[0]);
 
 static EnumTable::Enums vertEnums[] =
 {
     { GuiControl::vertResizeBottom,      "bottom"     },
     { GuiControl::vertResizeHeight,      "height"     },
     { GuiControl::vertResizeTop,         "top"        },
-   { GuiControl::vertResizeCenter,      "center"     },
-   { GuiControl::vertResizeRelative,    "relative"   }
+    { GuiControl::vertResizeCenter,       "center"    },
+    { GuiControl::vertResizeRelative,     "relative"  },
+    { GuiControl::vertResizeFill,         "fill"      }
 };
-static EnumTable gVertSizingTable(5, &vertEnums[0]);
+static EnumTable gVertSizingTable(6, &vertEnums[0]);
 
 void GuiControl::initPersistFields()
 {
@@ -423,10 +425,20 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
         {
             actualNewPosition.x = (parentInnerExtent.x - actualNewExtent.x) / 2;
         }
+		else if (mHorizSizing == horizResizeFill)
+		{
+			actualNewPosition.x = 0;
+			actualNewExtent.x = parentInnerExtent.x;
+		}
         if (mVertSizing == vertResizeCenter)
         {
             actualNewPosition.y = (parentInnerExtent.y - actualNewExtent.y) / 2;
         }
+		else if (mVertSizing == vertResizeFill)
+		{
+			actualNewPosition.y = 0;
+			actualNewExtent.y = parentInnerExtent.y;
+		}
     }
 
    // only do the child control resizing stuff if you really need to.
@@ -541,7 +553,8 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
 	//In the case of centering, we want to make doubly sure we are using the inner rect.
 	GuiControl* parent = getParent();
 	Point2I parentInnerExt = Point2I(newParentExtent);
-	if(mHorizSizing == horizResizeCenter || mVertSizing == vertResizeCenter)
+	if(mHorizSizing == horizResizeCenter || mVertSizing == vertResizeCenter ||
+		mHorizSizing == horizResizeFill || mVertSizing == vertResizeFill)
 	{
 		//This is based on the "new" outer extent of the parent.
 		parentInnerExt = parent->getInnerRect().extent;
@@ -553,6 +566,11 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
         newExtent.x += deltaX;
     else if (mHorizSizing == horizResizeLeft)
       newPosition.x += deltaX;
+	else if (mHorizSizing == horizResizeFill)
+	{
+		newPosition.x = 0;
+		newExtent.x = parentInnerExt.x;
+	}
     else if (mHorizSizing == horizResizeRelative && oldParentExtent.x != 0)
     {
         Point2F percent = relPosBatteryH(newPosition.x, newExtent.x, oldParentExtent.x);
@@ -569,6 +587,11 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
         newExtent.y += deltaY;
     else if (mVertSizing == vertResizeTop)
       newPosition.y += deltaY;
+	else if (mVertSizing == vertResizeFill)
+	{
+		newPosition.y = 0;
+		newExtent.y = parentInnerExt.y;
+	}
     else if(mVertSizing == vertResizeRelative && oldParentExtent.y != 0)
     {
         Point2F percent = relPosBatteryV(newPosition.y, newExtent.y, oldParentExtent.y);
@@ -582,6 +605,30 @@ void GuiControl::parentResized(const Point2I &oldParentExtent, const Point2I &ne
    newExtent = extentBattery(newExtent);
 
    resize(newPosition, newExtent);
+}
+
+void GuiControl::preventResizeModeFill()
+{
+	if (getHorizSizing() == horizResizeFill)
+	{
+		setHorizSizing(horizResizeRight);
+	}
+	if (getVertSizing() == vertResizeFill)
+	{
+		setVertSizing(vertResizeBottom);
+	}
+}
+
+void GuiControl::preventResizeModeCenter()
+{
+	if (getHorizSizing() == horizResizeCenter)
+	{
+		setHorizSizing(horizResizeRight);
+	}
+	if (getVertSizing() == vertResizeCenter)
+	{
+		setVertSizing(vertResizeBottom);
+	}
 }
 
 Point2I GuiControl::extentBattery(Point2I &newExtent)
@@ -936,7 +983,7 @@ bool GuiControl::renderTooltip(Point2I &cursorPos, const char* tipText )
     return true;
 }
 
-void GuiControl::renderChildControls(Point2I offset, RectI content, const RectI &updateRect)
+void GuiControl::renderChildControls(const Point2I& offset, const RectI& content, const RectI& updateRect)
 {
    // offset is the upper-left corner of this control in screen coordinates. It should almost always be the same offset passed into the onRender method.
    // updateRect is the area that this control was allowed to draw in. It should almost always be the same as the value in onRender.
@@ -957,19 +1004,7 @@ void GuiControl::renderChildControls(Point2I offset, RectI content, const RectI 
 		  }
 		  if (ctrl->mVisible)
 		  {
-			 ctrl->mRenderInsetLT = content.point - offset;
-			 ctrl->mRenderInsetRB = mBounds.extent - (ctrl->mRenderInsetLT + content.extent);
-			 Point2I childPosition = content.point + ctrl->getPosition();
-			 RectI childClip(childPosition, ctrl->getExtent());
-
-			 if (childClip.intersect(clipRect))
-			 {
-				RectI old = dglGetClipRect();
-				dglSetClipRect(clipRect);
-				glDisable(GL_CULL_FACE);
-				ctrl->onRender(childPosition, RectI(childPosition, ctrl->getExtent()));
-				dglSetClipRect(old);
-			 }
+			 renderChild(ctrl, offset, content, clipRect);
 		  }
 		  size_cpy = objectList.size(); //	CHRIS: i know its wierd but the size of the list changes sometimes during execution of this loop
 		  if(size != size_cpy)
@@ -979,6 +1014,23 @@ void GuiControl::renderChildControls(Point2I offset, RectI content, const RectI 
 		  }
 	   }
    }
+}
+
+void GuiControl::renderChild(GuiControl* ctrl, const Point2I& offset, const RectI& content, const RectI& clipRect)
+{
+	ctrl->mRenderInsetLT = content.point - offset;
+	ctrl->mRenderInsetRB = mBounds.extent - (ctrl->mRenderInsetLT + content.extent);
+	Point2I childPosition = content.point + ctrl->getPosition();
+	RectI childClip(childPosition, ctrl->getExtent());
+
+	if (childClip.intersect(clipRect))
+	{
+		RectI old = dglGetClipRect();
+		dglSetClipRect(clipRect);
+		glDisable(GL_CULL_FACE);
+		ctrl->onRender(childPosition, RectI(childPosition, ctrl->getExtent()));
+		dglSetClipRect(old);
+	}
 }
 
 void GuiControl::setUpdateRegion(Point2I pos, Point2I ext)

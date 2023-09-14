@@ -52,6 +52,8 @@ function EditorProjectCard::onAdd(%this)
 		Extent="200 120";
 		hScrollBar="alwaysOff";
 		vScrollBar="alwaysOn";
+		HorizSizing = "right";
+		VertSizing = "bottom";
 		constantThumbHeight="0";
 		showArrowButtons="0";
 		scrollBarThickness="6";

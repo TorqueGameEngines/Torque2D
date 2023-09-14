@@ -49,7 +49,7 @@ IMPLEMENT_CONOBJECT(GuiScrollCtrl);
 GuiScrollCtrl::GuiScrollCtrl()
 {
    mBounds.extent.set(200,200);
-   mScrollBarThickness = 16;
+   mScrollBarThickness = 14;
    mScrollBarDragTolerance = 130;
    mDepressed = false;
    curHitRegion = Content;
@@ -69,6 +69,9 @@ GuiScrollCtrl::GuiScrollCtrl()
 
    mScrollOffset.set(0, 0);
    mContentExt.set(200,200);
+
+   mHorizSizing = horizResizeFill;
+   mVertSizing = vertResizeFill;
 
    setField("thumbProfile", "GuiScrollThumbProfile");
    setField("arrowProfile", "GuiScrollArrowProfile");
@@ -117,10 +120,14 @@ void GuiScrollCtrl::resize(const Point2I &newPos, const Point2I &newExt)
 			{
 				GuiControl* ctrl = static_cast<GuiControl*>(*i);
 				ctrl->mRenderInsetRB = Point2I(ctrl->mRenderInsetRB.x + deltaX, ctrl->mRenderInsetRB.y + deltaY);
+				ctrl->preventResizeModeFill();
+				ctrl->preventResizeModeCenter();
 				ctrl->parentResized(mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB), mBounds.extent - (ctrl->mRenderInsetLT + ctrl->mRenderInsetRB));
 			}
 
+			mCalcGuard = true;
 			Parent::resize(newPos, newExt);
+			mCalcGuard = false;
 			computeSizes();
 		}
 		mResizeGuard = false;
@@ -135,6 +142,13 @@ void GuiScrollCtrl::childResized(GuiControl *child)
 
 void GuiScrollCtrl::addObject(SimObject* object)
 {
+	//Fill is not supported inside a scroll control
+	GuiControl* child = dynamic_cast<GuiControl*>(object);
+	if (child)
+	{
+		child->preventResizeModeFill();
+		child->preventResizeModeCenter();
+	}
 	Parent::addObject(object);
 	computeSizes();
 }
@@ -1088,7 +1102,7 @@ void GuiScrollCtrl::renderHScrollBar(const Point2I& offset)
 	}
 }
 
-void GuiScrollCtrl::renderChildControls(Point2I offset, RectI content, const RectI& updateRect)
+void GuiScrollCtrl::renderChildControls(const Point2I& offset, const RectI& content, const RectI& updateRect)
 {
 	// offset is the upper-left corner of this control in screen coordinates. It should almost always be the same offset passed into the onRender method.
 	// updateRect is the area that this control was allowed to draw in. It should almost always be the same as the value in onRender.

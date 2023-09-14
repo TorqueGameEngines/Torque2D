@@ -56,10 +56,6 @@ void GuiFrameSetCtrl::Frame::resize(const Point2I& newPosition, const Point2I& n
 	sizeInsertButtons(newPosition, newExtent);
 	if (control)
 	{
-		if (control->mMinExtent.x > minSize || control->mMinExtent.y > minSize)
-		{
-			control->mMinExtent.set(minSize, minSize);
-		}
 		control->resize(newPosition, newExtent);
 	}
 	if (!child1 && !child2 && owner->isEditMode())
@@ -1131,6 +1127,52 @@ void GuiFrameSetCtrl::undockWindowFromBook(GuiWindowCtrl* window, GuiTabBookCtrl
 			lastWindow->undockFromPage();
 		}
 	}
+}
+
+void GuiFrameSetCtrl::renderChild(GuiControl* ctrl, const Point2I& offset, const RectI& content, const RectI& clipRect)
+{
+	RectI clip = RectI(clipRect);
+	Frame* frame = mRootFrame.findFrameWithCtrl(ctrl);
+	if (frame)
+	{
+		Point2I framePos = localToGlobalCoord(frame->localPosition);
+		RectI area(framePos, frame->extent);
+		clip.intersect(area);
+	}
+
+	Parent::renderChild(ctrl, offset, content, clip);
+}
+
+GuiControl* GuiFrameSetCtrl::findHitControl(const Point2I& pt, S32 initialLayer)
+{
+	iterator i = end(); // find in z order (last to first)
+	while (i != begin())
+	{
+		i--;
+		GuiControl* ctrl = static_cast<GuiControl*>(*i);
+		RectI ctrlRect = RectI(localToGlobalCoord(ctrl->getPosition()), ctrl->getExtent());
+		Frame* frame = mRootFrame.findFrameWithCtrl(ctrl);
+		if (frame)
+		{
+			Point2I framePos = localToGlobalCoord(frame->localPosition);
+			RectI area(framePos, frame->extent);
+			ctrlRect.intersect(area);
+		}
+		Point2I globalPoint = localToGlobalCoord(pt);
+		if (initialLayer >= 0 && ctrl->mLayer > initialLayer)
+		{
+			continue;
+		}
+		else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mUseInput && ctrlRect.pointInRect(globalPoint))
+		{
+			Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
+			GuiControl* hitCtrl = ctrl->findHitControl(ptemp);
+
+			if (hitCtrl->mUseInput)
+				return hitCtrl;
+		}
+	}
+	return this;
 }
 
 void GuiFrameSetCtrl::setDropButtonProfile(GuiControlProfile* prof)

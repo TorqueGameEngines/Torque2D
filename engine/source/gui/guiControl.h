@@ -175,7 +175,8 @@ public:
         horizResizeWidth,       ///< fixed on the left and right
         horizResizeLeft,        ///< fixed on the right and width
         horizResizeCenter,
-        horizResizeRelative     ///< resize relative
+        horizResizeRelative,    ///< resize relative
+		horizResizeFill         ///< fill the entire content area of the parent
     };
     enum vertSizingOptions
     {
@@ -183,7 +184,8 @@ public:
         vertResizeHeight,       ///< fixed on the top and bottom
         vertResizeTop,          ///< fixed in height and on the bottom
         vertResizeCenter,
-        vertResizeRelative      ///< resize relative
+        vertResizeRelative,     ///< resize relative
+		vertResizeFill          ///< fill the entire content area of the parent
     };
 	enum TextRotationOptions
 	{
@@ -459,7 +461,13 @@ public:
     /// @param   oldParentExtent   The old size of the parent object
     /// @param   newParentExtent   The new size of the parent object
     virtual void parentResized(const Point2I &oldParentExtent, const Point2I &newParentExtent);
-    /// @}
+    
+	/// Removes the resize mode of fill and changes it to right or bottom
+	void preventResizeModeFill();
+
+	/// Removes the resize mode of center and changes it to right or bottom
+	void preventResizeModeCenter();
+	/// @}
 
     /// @name Rendering
     /// @{
@@ -478,7 +486,10 @@ public:
     /// @param   offset   The top left of the parent control
     /// @param   contentOffset   The top left of the parent's content
     /// @param   updateRect   The screen area this control has drawing access to
-    virtual void renderChildControls(Point2I offset, RectI content, const RectI &updateRect);
+    virtual void renderChildControls(const Point2I& offset, const RectI& content, const RectI& updateRect);
+
+	/// Renders a single child control
+	virtual void renderChild(GuiControl* ctrl, const Point2I& offset, const RectI& content, const RectI& clipRect);
 
     /// Sets the area (local coordinates) this control wants refreshed each frame
     /// @param   pos   UpperLeft point on rectangle of refresh area

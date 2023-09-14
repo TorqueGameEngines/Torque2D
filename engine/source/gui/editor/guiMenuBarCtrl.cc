@@ -718,6 +718,8 @@ void GuiMenuItemCtrl::onChildAdded(GuiControl *child)
 		if(mScroll == NULL)
 		{
 			mScroll = new GuiScrollCtrl();
+			mScroll->setField("horizSizing","right");
+			mScroll->setField("vertSizing","bottom");
 			AssertFatal(mScroll, "GuiMenuItemCtrl::onChildAdded Failed to initialize GuiScrollCtrl!");
 		}
 

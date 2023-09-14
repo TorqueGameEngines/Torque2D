@@ -178,7 +178,7 @@ public:
    virtual void renderVScrollBar(const Point2I& offset);
    virtual void renderHScrollBar(const Point2I& offset);
    virtual GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1);
-   virtual void renderChildControls(Point2I offset, RectI content, const RectI& updateRect);
+   virtual void renderChildControls(const Point2I& offset, const RectI& content, const RectI& updateRect);
 };
 
 #endif //_GUI_SCROLL_CTRL_H

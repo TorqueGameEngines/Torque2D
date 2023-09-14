@@ -94,6 +94,8 @@ GuiDropDownCtrl::GuiDropDownCtrl()
 	mScroll = new GuiScrollCtrl();
 	AssertFatal(mScroll, "GuiDropDownCtrl: Failed to initialize GuiScrollCtrl!");
 	mScroll->setField("profile", "GuiScrollProfile");
+	mScroll->setField("horizSizing","right");
+	mScroll->setField("vertSizing","bottom");
 	mScrollProfile = mScroll->mProfile;
 	mScrollProfile->incRefCount();
 
