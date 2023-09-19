@@ -740,7 +740,7 @@ void GuiControlProfile::setImageAsset(const char* pImageAssetID)
 	AssertFatal(pImageAssetID != NULL, "Cannot use a NULL asset ID.");
 
 	// Fetch the asset ID
-	mImageAsset = StringTable->insert(pImageAssetID);
+	mImageAssetID = StringTable->insert(pImageAssetID);
 
 	// Assign asset if this profile is being used.
 	if (mRefCount != 0)
