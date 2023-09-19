@@ -229,7 +229,7 @@ function GuiEditor::destroy( %this )
 function GuiEditor::open(%this, %content)
 {
     EditorCore.menuBar.setMenuActive("File", true);
-    EditorCore.menuBar.setMenuActive("Edit", true);
+    //EditorCore.menuBar.setMenuActive("Edit", true); //These features still need development
     EditorCore.menuBar.setMenuActive("Layout", true);
     EditorCore.menuBar.setMenuActive("Select", true);
 }
