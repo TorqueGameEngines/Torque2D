@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['deprecated_20list',['Deprecated List',['../deprecated.html',1,'']]]
+  ['console_20auto_20documentation_0',['Console Auto-Documentation',['../console_autodoc.html',1,'']]]
 ];

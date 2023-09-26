@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['using_20system_20dialogs',['Using System Dialogs',['../group___system_dialogs.html',1,'']]],
-  ['utility_20macros',['Utility Macros',['../group__utility__macros.html',1,'']]]
+  ['opengl_20support_0',['Cross-Platform OpenGL Support',['../group__dgl.html',1,'']]],
+  ['operation_20overloads_1',['Primitive Type Stream Operation Overloads',['../group__stream__overload.html',1,'']]],
+  ['overloads_2',['Primitive Type Stream Operation Overloads',['../group__stream__overload.html',1,'']]]
 ];

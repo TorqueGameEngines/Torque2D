@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['dispatcher',['Dispatcher',['../namespace_dispatcher.html',1,'']]]
+  ['dispatcher_0',['Dispatcher',['../namespace_dispatcher.html',1,'']]]
 ];

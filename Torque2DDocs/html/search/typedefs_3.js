@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['extrafieldcreatefn',['ExtraFieldCreateFn',['../group__zipint__group.html#ga375e28d8876f8f2981626f237721796f',1,'Zip']]]
+  ['extrafieldcreatefn_0',['ExtraFieldCreateFn',['../namespace_zip.html#a28efa583d7477fe091d36886048c6ab2',1,'Zip']]]
 ];
