@@ -61,6 +61,8 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a1ae599ad807bf666a5ef8c965fcb79aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a165f19c3669e970a1c9eecb73da8a5f2"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSimSet.html#a165f19c3669e970a1c9eecb73da8a5f2">callOnChildren</a> (string method, [string args] *)</td></tr>
 <tr class="separator:a165f19c3669e970a1c9eecb73da8a5f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aacfc055ec034ede4b7cc3872ef7c0026"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSimSet.html#aacfc055ec034ede4b7cc3872ef7c0026">callOnChildrenNoRecurse</a> (string method, [string args] *)</td></tr>
+<tr class="separator:aacfc055ec034ede4b7cc3872ef7c0026"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac8bb3912a3ce86b15842e79d0b421204"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSimSet.html#ac8bb3912a3ce86b15842e79d0b421204">clear</a> ()</td></tr>
 <tr class="separator:ac8bb3912a3ce86b15842e79d0b421204"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a54ccf7d816af85ee00644518f0e46f2b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSimSet.html#a54ccf7d816af85ee00644518f0e46f2b">deleteObjects</a> ()</td></tr>
@@ -370,7 +372,44 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section note"><dt>Note</dt><dd>This method recurses into all SimSets that are children to the set. </dd></dl>
-<dl class="section see"><dt>See also</dt><dd>callOnChildrenNoRecurse" ) </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSimSet.html#aacfc055ec034ede4b7cc3872ef7c0026">callOnChildrenNoRecurse</a>" ) </dd></dl>
+
+</div>
+</div>
+<a id="aacfc055ec034ede4b7cc3872ef7c0026" name="aacfc055ec034ede4b7cc3872ef7c0026"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aacfc055ec034ede4b7cc3872ef7c0026">&#9670;&nbsp;</a></span>callOnChildrenNoRecurse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void callOnChildrenNoRecurse </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>method</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[string args] *&#160;</td>
+          <td class="paramname">&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p >Call a method on all objects contained in the set. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">method</td><td>The name of the method to call. </td></tr>
+    <tr><td class="paramname">args</td><td>The arguments to the method. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section note"><dt>Note</dt><dd>This method does not recursively call into all SimSets that are children to the set. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="classSimSet.html#a165f19c3669e970a1c9eecb73da8a5f2">callOnChildren</a>" ) </dd></dl>
 
 </div>
 </div>
