@@ -1,4 +1,4 @@
-# Documenting TorqueScript
+# Documenting TorqueScript {#DocumentingTorqueScript}
 
 ## Introduction
 
