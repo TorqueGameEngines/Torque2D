@@ -43,17 +43,16 @@ $(function() {
   <div class="headertitle"><div class="title">Documenting TorqueScript</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p><a class="anchor" id="autotoc_md0"></a> </p>
-<h1><a class="anchor" id="autotoc_md1"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md0"></a>
 Introduction</h1>
 <p>This references describes how the TorqueScript manual is created. It covers the tool used, the location of the documentation text, and the process of adding or editing all the documentation types. The end result is a single manual that can be referenced on-line or downloaded, and that contains information about classes, functions, operators, sub-systems, general information, etc.</p>
 <p>As a bit of background, TorqueScript is a scripting language written specifically for Torque. The compiling and running of the script code is a part of the engine itself. Our goal here is to extract just the internal documentation that refers to TorqueScript.</p>
 <p>The manual is created using <a href="doxygen.org">Doxygen</a>, so its helpful to get some experience with that tool and also to refer to its manual for documenting features. This reference only covers Doxygen lightly but probably enough to get started. It also covers our use of its high-level features to get what we want. For now, we'll just say that Doxygen is a feature-rich tool to extract documents out of a code base. A C++ comment can be laced with special commands which Doxygen recognizes. These sections are explicity about return types from functions, code examples, and other features. The end result is an organized "manual" of pages, with the code explained and with cross-referenced links between the concepts. The docs can be output in many formats including HTML, pdf, and chm.</p>
-<h1><a class="anchor" id="autotoc_md2"></a>
+<h1><a class="anchor" id="autotoc_md1"></a>
 Documentation As an Ongoing Project</h1>
 <p>First, thanks in advance for any contribution to our collective knowledge to the TorqueScript documention! There are also fertile bits of information over at the <a href="http://tdn.garagegames.com/wiki/TDN_Home">Torque Developer Network</a> (free login required) that could be yanked over. For instance, there are TDN sections for each <a href="http://tdn.garagegames.com/wiki/TGB/Reference">class</a>, and each <a href="http://docs.garagegames.com/tge/official/content/documentation/Reference/Console%20Functions/TorqueScript_Console_Functions_21.html">global function</a>, at least.</p>
 <p>While many of the basics are done, there is always more to cover. Whether you know of tricks for creating better game loops, gotchas to watch for, a bit of architecture that has gone undocumented, or anything else really, we could use your help. The goal of this project is to collect great information about Torque2D and get it into the source itself, where it will live with the code.</p>
-<h1><a class="anchor" id="autotoc_md3"></a>
+<h1><a class="anchor" id="autotoc_md2"></a>
 How to "Compile" the Torque2D Manual</h1>
 <p>If we want to see our docs as we go, the first thing we'll need is the ability to see the output from Doxygen as we make edits. Once we know how, this can be done in less than 5 seconds. Here are the steps:</p>
 <ol type="1">
@@ -68,7 +67,7 @@ How to "Compile" the Torque2D Manual</h1>
 </div><!-- fragment --></li>
 <li>Afterwards, the directory <code>output/torqueScriptDocs</code> should have been produced, and inside of it, you should have both <code>html</code> and <code>xml</code> output. To see the results, click <code>html/index.html</code> to open it in a browser. Click around and get accustomed to the manual if you haven't already. As you make changes, "recompile" the manual and simply refresh in your browser to see the results.</li>
 </ol>
-<h1><a class="anchor" id="autotoc_md4"></a>
+<h1><a class="anchor" id="autotoc_md3"></a>
 About ScriptBinding and ScriptPage Files</h1>
 <p>We create two manuals with one Torque2D code base &ndash; one is an engine reference and the other is this TorqueScript language reference. This is unusual for Doxygen, and in order to have it create both, some cleverness was required. However, we were able to achieve a pretty strong manual just by using a few techniques.</p>
 <p>First, know that a file should be suffixed with <code>ScriptBinding.*</code> or <code>ScriptPage.*</code> to be included. We tell Doxygen to only read these files while creating the scripting manual (and vice-versa when creating the engine manual). As you may expect then, these specially-named files contain the TorqueScript-related functions and not the engine code. When Doxygen sees a file of code, it will add them to the doc, so it is important to not have Doxygen run on any file that you don't want documented at the time.</p>
@@ -76,7 +75,7 @@ About ScriptBinding and ScriptPage Files</h1>
 <blockquote class="doxtable">
 <p>&zwj;You may notice a few binding functions (ConsoleMethod(), ConsoleFunction(), etc.) not in the ScriptBinding files. You may also notice that these don't produce docs. These are older bindings, which work but have not been updated to the new format. (For what it's worth, migrating them to ScriptBinding files isn't just for documentation purposes.) </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md5"></a>
+<h1><a class="anchor" id="autotoc_md4"></a>
 Documenting Classes, Methods, and Global Functions</h1>
 <p>Documenting code "symbols" is by far the bulk of the good documentation. Each class, method, or function can have a description as complex as you want. For methods and functions, you can (and hopefully will) explicitly state the parameters and return type. You can put example code with each symbol if it helps. <br  />
  Finally, we should probably keep a "see also" section for related methods and functions.</p>
@@ -132,7 +131,7 @@ ConsoleMethodWithDocs(SimObject, getId, ConsoleInt, 2, 2, ())
 <li>Note that I'm using <code>+</code> to start a list. You can use <code>*</code> or <code>-</code> just like in markdown. However, because some people like to have a <code>*</code> at the beginning of every line of comments, Doxygen likes to eat those up, so it's best to just avoid them.</li>
 <li>Obvious function names and class names will be automatically cross-referenced. They are "obvious" when they have a camel case letter in them somewhere. If your function does not, try putting "::" in front of it or "()" after it. To reference something in another class, you have to use className::methodName. Doxygen explains all this in its docs. One last point though: let's suppose you want to avoid a link. Use "%" in front of the camel cased word that happens to be another class or function.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md6"></a>
+<h1><a class="anchor" id="autotoc_md5"></a>
 Documenting Global Function Groups</h1>
 <p>All of the global functions in TorqueScript are documented individually as described above. However, it is best to keep related functions clustered together. Doxygen provides the idea of a "group" (which is sometimes called a "module") to cluster things, so we use it to group global function categories. See the <a href="modules.html">modules</a> page for what we mean.</p>
 <p>We also take advantage of Doxygen's ability to have groups within groups to keep better organized. All of the categories groups are a subgroup of the <code>TorqueScriptFunctions</code> main group, as you might have noticed if you clicked the modules link above.</p>
@@ -146,7 +145,7 @@ Documenting Global Function Groups</h1>
 <pre class="fragment">/*! @} */ // group ConsoleOutputFunctions
 </pre><p>This line ends the group with "@}". The comment after that is just to be friendly.</p>
 <p>This should effectively put all the documented functions between "@{" and "@}" into a group together.</p>
-<h1><a class="anchor" id="autotoc_md7"></a>
+<h1><a class="anchor" id="autotoc_md6"></a>
 Documenting Sub-Systems</h1>
 <p>A Sub-system is a collection of components, such as classes and functions, that work together to form a bigger whole. An example is the Taml module or the Module Manager. This is another great use of the "group" concept (see above for another example). This time, however, we want to write a description of the sub-system itself. Doxygen supports this by letting you document the group, as if it were a code symbol itself. These docs then become the "detailed description" portion of the group page.</p>
 <p>The question is where should all this text be placed? It isn't related directly to one class. The solution is to make a special file for the sub-system documentaion and place it near the other code to which it relates. Typically, the files (classes) that make up a sub-system are placed in a directory together, so this is often a great place for the sub-system "group" file.</p>
@@ -160,21 +159,21 @@ Documenting Sub-Systems</h1>
 <div class="fragment"><div class="line">/// @ingroup tamlGroup</div>
 <div class="line">/// @see tamlGroup</div>
 </div><!-- fragment --><p>Again, this was done for an engine subsytem, but the same <em>could</em> be done for TorqueScript systems or modules.</p>
-<h1><a class="anchor" id="autotoc_md8"></a>
+<h1><a class="anchor" id="autotoc_md7"></a>
 Documenting General Information</h1>
 <p>Sometimes your docs are not really related to any one class, or even one sub-system. This page on creating documents is one example. The TorqueScript Syntax page is another.</p>
 <p>Doxygen provides one last concept we will talk about, called a "page." The way we keep pages is the most markdown-like and the least like Doxygen comments yet. To create these, simply create a markdown file (extension .md). The top header of the file (the section header that starts with a single hash #), will be the name of the page in the final document.</p>
 <p>As usual, this markdown file should be suffixed with <code>_ScriptPage.*</code>, for instance "syntax_ScriptPage.md"</p>
 <p>We try to keep the pages close to the code it relates to, but rememer "pages" tend to be unrelated to particular classes, modules, etc. Therefore the pages have been kept in the <code>Torque2D\engine\source\console</code> directory since it most represents the entire TorqueScript interpreter in general. For example this document is <code>documenting_ScriptPage.md</code> within the <code>console</code> directory.</p>
 <p>The content of the file requires no doxygen commands such as @defgroup or @param (although @code has come in useful as will be described in the appendix). It is read as pure markdown (with a few exceptions). Doxygen will successfully create links for any symbols is recongizes however. (To force the link off, put a percent % in front of the text.</p>
-<h1><a class="anchor" id="autotoc_md9"></a>
+<h1><a class="anchor" id="autotoc_md8"></a>
 Documenting Operations, Types, etc.</h1>
 <p><em>This topic is more advanced. You can possibly skip it.</em></p>
 <p>Another type of module documentation is for non-functions. This includes TorqueScript types (String, Boolean, etc.) and operators (SPC, new, etc.).</p>
 <p>To do this, we are playing a bit of a trick. Remember that Doxygen was not created to document your language that you created (such as TorqueScript). What we will do is make a psuedo-code file full of pretend C++ constructs, called <code>Torque2D\engine\source\console\core_ScriptBinding.dox</code> The C++ compiler won't be interested, but when Doxygen sees the file it will parse it as real code.</p>
 <p>The solution we have employed is to have one special file located in the same directory as the TorqueScript interpreter code. C++ compilers will not bother to compile a .dox file but doxygen will read it. For all practical purposes, though, this is a C++ file in form.</p>
 <p>We will not go into the details here, but read that file and add to it to create lists of operators or types in groups.</p>
-<h1><a class="anchor" id="autotoc_md10"></a>
+<h1><a class="anchor" id="autotoc_md9"></a>
 Converting "Old" Documents to "New"</h1>
 <p><em>If you read the appendix on how documenting TorqueScript is done with Doxygen, this may make more sense to you.</em></p>
 <p>You may find, from time to time, snippets of an older form of documentation for TorqueScript in the code base. One of the Appendices explains in more detail, but basically, documents used to be a "usage" string as part of a macro call like this:</p>
@@ -187,7 +186,7 @@ Converting "Old" Documents to "New"</h1>
 <div class="line">*/</div>
 <div class="line">ConsoleFunctionWithDocs(myFunction, void, 3, 3, (id))</div>
 </div><!-- fragment --><p>Ultimately, when all the functions and methods are complete, the macro name may change back to not include the "WithDocs" ending. For now, this is what you are seeing!</p>
-<h1><a class="anchor" id="autotoc_md11"></a>
+<h1><a class="anchor" id="autotoc_md10"></a>
 Appendix A: Doxygen Command and Markup Caveats</h1>
 <p>It will probably be necessary to limit yourself some when trying to grab a markdown page and move it to the source base for Doxygen's use. While Doxygen claims to handle markdown, including GitHub flavored markdown, in practice we have run into a few edge cases. Below are a few of them.</p>
 <ul>
@@ -197,7 +196,7 @@ Appendix A: Doxygen Command and Markup Caveats</h1>
 <li>GitHub flavored markdown provides for easier numbered lists. Simply start each item with <code>1.</code> and they will be re-numbered. However this does not work in Doxygen. Number each item correctly.</li>
 <li><b>Blockquotes</b> markdown lets you put a <code>&gt;</code> at the beginning of a paragraph. All the following lines will be part of one section of blockquotes. However, in Doxygen, you appears to need a <code>&gt;</code> after every new line.</li>
 </ul>
-<h1><a class="anchor" id="autotoc_md12"></a>
+<h1><a class="anchor" id="autotoc_md11"></a>
 Appendix B.  How Documenting TorqueScript Works</h1>
 <p>For several years, Torque2D produced a TorqueScript manual in a different way than described in this reference.</p>
 <p>As a bit of back story, don't forget that we want to be able to produce a manual for Torque2D's C++ engine as well as produce a manual for TorqueScript. So running Doxygen on the code produced only the Torque2D manual. This is "as it should be."</p>
@@ -209,7 +208,7 @@ Appendix B.  How Documenting TorqueScript Works</h1>
 <blockquote class="doxtable">
 <p>&zwj;Normally, Doxygen is used to create a cross-referenced document for a C++ code base. Note that our desire here is to document a class and function binding library, along with the syntax, operators, types, etc. of TorqueScript. But Doxygen is so useful and capable that it was worth working out a way to use it for our purposes. As a matter of fact, we can also produce a Torque2D engine document from the same code base! </p>
 </blockquote>
-<h1><a class="anchor" id="autotoc_md13"></a>
+<h1><a class="anchor" id="autotoc_md12"></a>
 Appendix C.  Some Unusual Doxygen Facts</h1>
 <p>Doxygen tries to be a lot of things in a lot of formats, and this has sometimes caused odd edge-case bugs. This is a quick list of a few quirks I wanted to save somewhere:</p>
 <p>Of course, normally Doxygen data is saved in comments and the <code>@</code> commands are how you tell it about constructs from parameter lists to what group to put things in. But you can use markdown for many formatting commands like bold, lists, blockquotes, etc. (I don't think Doxygen has any other kind of formatting, except that you can use direct html apparently).</p>

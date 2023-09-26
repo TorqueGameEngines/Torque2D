@@ -43,7 +43,7 @@ $(function() {
   <div class="headertitle"><div class="title">TorqueScript Syntax</div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h1><a class="anchor" id="autotoc_md14"></a>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md13"></a>
 Main Rules</h1>
 <p>Like other languages, TorqueScript has certain syntactical rules you need to follow. The language is very forgiving, easy to debug, and is not as strict as a low level language like C++. Observe the following line in a script:</p>
 <div class="fragment"><div class="line"><span class="comment">// Create test variable with a temporary variable</span></div>
@@ -70,7 +70,7 @@ Main Rules</h1>
 <div class="fragment"><div class="line">%testVariable=3;</div>
 </div><!-- fragment --><p>The above code works just as well, even without the spaces between the variable, the equal sign, and the 3. The whitespace rule makes a lot more sense when combined with the semi-colon rule and multiple lines of code working together. The following will compile and run without error:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span>(%testVariable == 4) <a class="code hl_function" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>(<span class="stringliteral">&quot;Variable equals 4&quot;</span>);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md15"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md14"></a>
 Comments</h1>
 <p>The last rule is optional, but should be used as often as possible if you want to create clean code. Whenever you write code, you should try to use comments. Comments are a way for you to leave notes in code which are not compiled into the game. The compiler will essentially skip over these lines.</p>
 <p>There are two different comment syntax styles. The first one uses the two slashes, <code>//</code>. This is used for single line comments:</p>
@@ -106,9 +106,9 @@ Comments</h1>
 <div class="line"><span class="comment">if(%testVariable == &quot;Nikki&quot;)</span></div>
 <div class="line"><span class="comment">  echo(&quot;User Name: &quot;, %testVariable);</span></div>
 <div class="line"><span class="comment">*/</span></div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md16"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md15"></a>
 Variables</h1>
-<h2><a class="anchor" id="autotoc_md17"></a>
+<h2><a class="anchor" id="autotoc_md16"></a>
 Usage</h2>
 <p>Now that you know the two most basic rules of writing code in TorqueScript, this is the best time to learn about variables. A variable is a letter, word, or phrase linked to a value stored in your game's memory and used during operations. Creating a variable is a one line process. The following code creates a variable by naming it and assigning a value:</p>
 <div class="fragment"><div class="line">%localVariable = 3;</div>
@@ -126,7 +126,7 @@ Usage</h2>
 <div class="fragment"><div class="line">%userName = <span class="stringliteral">&quot;Heather&quot;</span>;</div>
 <div class="line"><a class="code hl_function" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>(%Username);</div>
 </div><!-- fragment --><p>In the above code, <code>%userName</code> and <code>%Username</code> are the same variable, even though they are using different capitalization. You should still try to remain consistent in your variable naming and usage, but you will not be punished if you slip up occasionally.</p>
-<h2><a class="anchor" id="autotoc_md18"></a>
+<h2><a class="anchor" id="autotoc_md17"></a>
 Variable Types</h2>
 <p>There are two types of variables you can declare and use in TorqueScript: local and global. Both are created and referenced similarly:</p>
 <div class="fragment"><div class="line">%localVariable = 1;</div>
@@ -152,7 +152,7 @@ Variable Types</h2>
 <div class="line">   $PlayerName = <span class="stringliteral">&quot;Nikki&quot;</span>;</div>
 <div class="line">}</div>
 </div><!-- fragment --><p>The above code makes full use of a global variable that holds a player's name. The first declaration of the variable happens outside of the functions, written anywhere in your script. Because it is global, you can reference it in other locations, including separate script files. Once declared, your game will hold on to the variable until shutdown.</p>
-<h2><a class="anchor" id="autotoc_md19"></a>
+<h2><a class="anchor" id="autotoc_md18"></a>
 Data Types</h2>
 <p>TorqueScript implicitly supports several variable data-types: numbers, strings, booleans, and arrays and vectors. If you wish to test the various data types, you can use the echo(...) command. For example:</p>
 <div class="fragment"><div class="line">%meaningOfLife = 42;</div>
@@ -161,7 +161,7 @@ Data Types</h2>
 <div class="line">$name = <span class="stringliteral">&quot;Heather&quot;</span>;</div>
 <div class="line"><a class="code hl_function" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>($name);</div>
 </div><!-- fragment --><p>The echo will post the results in the console, which can be accessed by pressing the ctrl+tilde key (<code>~</code>) while in game.</p>
-<h2><a class="anchor" id="autotoc_md20"></a>
+<h2><a class="anchor" id="autotoc_md19"></a>
 Numbers</h2>
 <p>TorqueScript handles standard numeric types</p>
 <div class="fragment"><div class="line">123     (<a class="code hl_typedef" href="group__TorqueScriptTypes.html#ga85be84504cf913ad90b8ee4f264195d3">Integer</a>)</div>
@@ -169,7 +169,7 @@ Numbers</h2>
 <div class="line">1234e-3 (scientific notation)</div>
 <div class="line">0xc001  (hexadecimal)</div>
 <div class="ttc" id="agroup__TorqueScriptTypes_html_ga85be84504cf913ad90b8ee4f264195d3"><div class="ttname"><a href="group__TorqueScriptTypes.html#ga85be84504cf913ad90b8ee4f264195d3">Integer</a></div><div class="ttdeci">type Integer</div><div class="ttdef"><b>Definition</b> core_ScriptBinding.dox:83</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md21"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md20"></a>
 Strings</h2>
 <p>Text, such as names or phrases, are supported as strings. Numbers can also be stored in string format. Standard strings are stored in double-quotes.</p>
 <div class="fragment"><div class="line"><span class="stringliteral">&quot;abcd&quot;</span></div>
@@ -188,7 +188,7 @@ Strings</h2>
 <div class="fragment"><div class="line">24</div>
 <div class="line">___</div>
 </div><!-- fragment --><p>The second echo will be blank unless the string has been passed to you over a network.</p>
-<h2><a class="anchor" id="autotoc_md22"></a>
+<h2><a class="anchor" id="autotoc_md21"></a>
 String Operators</h2>
 <p>There are special values you can use to concatenate strings and variables. Concatenation refers to the joining of multiple values into a single variable. The following is the basic syntax:</p>
 <div class="fragment"><div class="line"><span class="stringliteral">&quot;string 1&quot;</span> operation <span class="stringliteral">&quot;string 2&quot;</span></div>
@@ -239,7 +239,7 @@ String Operators</h2>
 <div class="ttc" id="agroup__StringOperators_html_ga84608e15108e0361ce63b906480a8181"><div class="ttname"><a href="group__StringOperators.html#ga84608e15108e0361ce63b906480a8181">NL</a></div><div class="ttdeci">type NL</div><div class="ttdef"><b>Definition</b> core_ScriptBinding.dox:262</div></div>
 <div class="ttc" id="agroup__StringOperators_html_gab83c1b39c9138720059c3f543a18cd55"><div class="ttname"><a href="group__StringOperators.html#gab83c1b39c9138720059c3f543a18cd55">TAB</a></div><div class="ttdeci">type TAB</div><div class="ttdef"><b>Definition</b> core_ScriptBinding.dox:235</div></div>
 <div class="ttc" id="agroup__StringOperators_html_gabf1384363ad54002ac32ee03855e9b39"><div class="ttname"><a href="group__StringOperators.html#gabf1384363ad54002ac32ee03855e9b39">SPC</a></div><div class="ttdeci">type SPC</div><div class="ttdef"><b>Definition</b> core_ScriptBinding.dox:220</div></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md22"></a>
 Booleans</h2>
 <p>Like most programming languages, TorqueScript also supports Booleans. Boolean numbers have only two values- true or false.</p>
 <pre>
@@ -250,7 +250,7 @@ false   (0)
 <div class="line"> </div>
 <div class="line"><span class="keywordflow">if</span>($lightsOn)</div>
 <div class="line">  <a class="code hl_function" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>(<span class="stringliteral">&quot;Lights are turned on&quot;</span>);</div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md24"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md23"></a>
 Arrays</h2>
 <p>Arrays are data structures used to store consecutive values of the same data type.</p>
 <div class="fragment"><div class="line">$TestArray[n]   (Single-dimension)</div>
@@ -312,7 +312,7 @@ Arrays</h2>
 <div class="line">[d] [e] [f]</div>
 <div class="line">[g] [h] [i]</div>
 </div><!-- fragment --><p>The first element <code>[0,0]</code> points to the letter 'a'. The last element <code>[2,2]</code> points to the letter 'i'.</p>
-<h2><a class="anchor" id="autotoc_md25"></a>
+<h2><a class="anchor" id="autotoc_md24"></a>
 Vectors</h2>
 <p>"Vectors" are a helpful data-type which are used throughout Torque 2D. For example, many fields on SceneObjects take numeric values in sets of 2 or 3. These are stored as strings and interpreted as "vectors".</p>
 <div class="fragment"><div class="line"><span class="stringliteral">&quot;1.0 1.0&quot;</span>  (2 element vector)</div>
@@ -329,7 +329,7 @@ Vectors</h2>
 <div class="line"> </div>
 <div class="line">%secondColor = %red <a class="code hl_typedef" href="group__StringOperators.html#gabf1384363ad54002ac32ee03855e9b39">SPC</a> %blue <a class="code hl_typedef" href="group__StringOperators.html#gabf1384363ad54002ac32ee03855e9b39">SPC</a> %green <a class="code hl_typedef" href="group__StringOperators.html#gabf1384363ad54002ac32ee03855e9b39">SPC</a> %alpha;</div>
 <div class="line"><a class="code hl_function" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>(%secondColor);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md26"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md25"></a>
 Operators</h1>
 <p>Operators in TorqueScript behave very similarly to operators in real world math and other programming languages. You should recognize quite a few of these from math classes you took in school, but with small syntactical changes. The rest of this section will explain the syntax and show a brief example, but we will cover these in depth in later guides.</p>
 <p><b>Arithmetic Operators</b></p>
@@ -409,10 +409,10 @@ Operators</h1>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyCenter">op=   </td><td class="markdownTableBodyCenter">Assignment Operators   </td><td class="markdownTableBodyCenter">$a op= $b;   </td><td class="markdownTableBodyNone">Equivalent to $a = $a op $b, where op can be any of: <code>*</code> <code>/</code> <code>%</code> <code>+</code> <code>-</code> <code>&amp;</code> <code>^</code> <code>&lt;&lt;</code> <code>&gt;&gt;</code> |   </td></tr>
 </table>
-<h1><a class="anchor" id="autotoc_md27"></a>
+<h1><a class="anchor" id="autotoc_md26"></a>
 Control Statements</h1>
 <p>TorqueScript provides basic branching structures that will be familiar to programmers that have used other languages. If you are completely new to programming, you use branching structures to control your game's flow and logic. This section builds on everything you have learned about TorqueScript so far.</p>
-<h2><a class="anchor" id="autotoc_md28"></a>
+<h2><a class="anchor" id="autotoc_md27"></a>
 if, then, else</h2>
 <p>This type of structure is used to test a condition, then perform certain actions if the condition passes or fails. You do not always have to use the full structure, but the following syntax shows the extent of the conditional:</p>
 <div class="fragment"><div class="line"><span class="keywordflow">if</span>(&lt;<span class="keywordtype">boolean</span> expression&gt;) </div>
@@ -451,7 +451,7 @@ if, then, else</h2>
 <div class="line">  turnOnLights();   <span class="comment">// True. Call turn on lights function</span></div>
 <div class="line"><span class="keywordflow">else</span></div>
 <div class="line">  turnOffLights(); <span class="comment">// False. Turn off the lights</span></div>
-</div><!-- fragment --><h2><a class="anchor" id="autotoc_md29"></a>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md28"></a>
 switch and switch$</h2>
 <p>If your code is using several cascading if-then-else statements based on a single value, you might want to use a switch statement instead. Switch statements are easier to manage and read. There are two types of switch statements, based on data type: numeric (<code>switch</code>) and string (<code>switch$</code>).</p>
 <p>Switch Syntax: </p><div class="fragment"><div class="line"><span class="keywordflow">switch</span>(&lt;numeric expression&gt;) </div>
@@ -508,10 +508,10 @@ switch and switch$</h2>
 <div class="line">   <span class="keywordflow">default</span>:</div>
 <div class="line">      <a class="code hl_function" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>(<span class="stringliteral">&quot;Unknown user&quot;</span>);</div>
 <div class="line">}</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md30"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md29"></a>
 Loops</h1>
 <p>As the name implies, this structure type is used to repeat logic in a loop based on an expression. The expression is usually a set of variables that increase by count, or a constant variable changed once a loop has hit a specific point.</p>
-<h2><a class="anchor" id="autotoc_md31"></a>
+<h2><a class="anchor" id="autotoc_md30"></a>
 For Loop</h2>
 <div class="fragment"><div class="line"><span class="keywordflow">for</span>(expression0; expression1; expression2) </div>
 <div class="line">{</div>
@@ -528,7 +528,7 @@ For Loop</h2>
 <div class="line">1</div>
 <div class="line">2</div>
 </div><!-- fragment --><p>The first expression creates the local variable <code>count</code> and initializing it to 0. In the second expression determines when to stop looping, which is when the <code>count</code> is no longer less than 3. Finally, the third expression increases the count the loop relies on.</p>
-<h2><a class="anchor" id="autotoc_md32"></a>
+<h2><a class="anchor" id="autotoc_md31"></a>
 While Loop</h2>
 <p>A while loop is a much simpler looping structure compared to a for loop.</p>
 <div class="fragment"><div class="line"><span class="keywordflow">while</span>(expression) </div>
@@ -544,7 +544,7 @@ While Loop</h2>
 <div class="line">   %count++;</div>
 <div class="line">}</div>
 <div class="line"><a class="code hl_function" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>(<span class="stringliteral">&quot;Loop was terminated&quot;</span>);</div>
-</div><!-- fragment --><h1><a class="anchor" id="autotoc_md33"></a>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md32"></a>
 Functions</h1>
 <p>Much of your TorqueScript experience will come down to calling existing functions and writing your own. Functions are a blocks of code that only execute when you call them by name. Basic functions in TorqueScript are defined as follows:</p>
 <div class="fragment"><div class="line"><span class="comment">// function - Is a keyword telling TorqueScript we are defining a new function.</span></div>
@@ -676,7 +676,7 @@ Functions</h1>
 <div class="line"> </div>
 <div class="line">OUTPUT: <span class="stringliteral">&quot;Katana sheathed&quot;</span></div>
 </div><!-- fragment --><p>Notice that no parameters were passed into the function. The <code>this</code> parameter is inherent, and the original function did not require any other parameters.</p>
-<h1><a class="anchor" id="autotoc_md34"></a>
+<h1><a class="anchor" id="autotoc_md33"></a>
 Conclusion</h1>
 <p>This guide covered the basics of TorqueScript syntax. Compared to other languages, such as C++, it is easier to learn and work with. However, no one is expected to become a TorqueScript master over night, or even in a week. You will most likely need to refer back to this documentation several times for reminders. </p>
 </div></div><!-- contents -->
