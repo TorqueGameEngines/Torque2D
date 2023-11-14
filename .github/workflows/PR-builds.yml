@@ -62,6 +62,10 @@ jobs:
         with:
           vs-version: '[17.0, 18.0)'
           msbuild-architecture: x64
+      - uses: ChristopheLav/windows-sdk-install@v1
+        with:
+          version-sdk: 22621
+          features: 'OptionId.UWPCPP,OptionId.DesktopCPParm64'
       - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Debug /p:Platform=x64
       - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Release /p:Platform=x64
       - uses: actions/upload-artifact@v2

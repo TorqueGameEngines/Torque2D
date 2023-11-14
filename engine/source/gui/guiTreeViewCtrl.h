@@ -32,7 +32,6 @@ class GuiTreeViewCtrl : public GuiListBoxCtrl
 {
 private:
 	typedef GuiListBoxCtrl Parent;
-	class TreeItem;
 
 	enum class ReorderMethod { Above, Below, Insert };
 	S32 mFocusLevel;
