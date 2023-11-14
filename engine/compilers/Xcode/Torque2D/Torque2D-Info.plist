@@ -24,7 +24,7 @@
 	<key>CFBundleIconFile</key>
 	<string>torque2d</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.garagegames.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
@@ -32,7 +32,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>4.0.0 ea3</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
@@ -42,7 +42,7 @@
 	<key>NSHighResolutionCapable</key>
 	<false/>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2012 GarageGames, LLC. All rights reserved.</string>
+	<string>Copyright © 2023 Torque Game Engines and Garage Games, LLC. Available to use under the MIT License.</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>

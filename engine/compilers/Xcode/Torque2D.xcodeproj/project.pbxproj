@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 55;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -318,7 +318,6 @@
 		86D77002165687060046D71F /* guiCheckBoxCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FE016518D4600D96ADF /* guiCheckBoxCtrl.cc */; };
 		86D77004165687060046D71F /* guiRadioCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FE416518D4600D96ADF /* guiRadioCtrl.cc */; };
 		86D77008165687060046D71F /* guiDragAndDropCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FED16518D4600D96ADF /* guiDragAndDropCtrl.cc */; };
-		86D7700B165687060046D71F /* guiFrameCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FF316518D4600D96ADF /* guiFrameCtrl.cc */; };
 		86D7700E165687060046D71F /* guiScrollCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FF916518D4600D96ADF /* guiScrollCtrl.cc */; };
 		86D77010165687060046D71F /* guiTabBookCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FFD16518D4600D96ADF /* guiTabBookCtrl.cc */; };
 		86D77011165687060046D71F /* guiWindowCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC7FFF16518D4600D96ADF /* guiWindowCtrl.cc */; };
@@ -329,7 +328,6 @@
 		86D77019165687060046D71F /* guiInspectorTypes.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC800F16518D4600D96ADF /* guiInspectorTypes.cc */; };
 		86D7701C165687060046D71F /* guiArrayCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC801516518D4600D96ADF /* guiArrayCtrl.cc */; };
 		86D77021165687060046D71F /* guiCanvas.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC801E16518D4600D96ADF /* guiCanvas.cc */; };
-		86D77022165687060046D71F /* guiColorPicker.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC802016518D4600D96ADF /* guiColorPicker.cc */; };
 		86D77023165687060046D71F /* guiConsole.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC802216518D4600D96ADF /* guiConsole.cc */; };
 		86D77024165687060046D71F /* guiConsoleEditCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC802416518D4600D96ADF /* guiConsoleEditCtrl.cc */; };
 		86D77026165687060046D71F /* guiControl.cc in Sources */ = {isa = PBXBuildFile; fileRef = 86BC802816518D4600D96ADF /* guiControl.cc */; };
@@ -459,6 +457,13 @@
 		D000F97C1CB0D16A00C4D097 /* BitmapFontCharacter.cc in Sources */ = {isa = PBXBuildFile; fileRef = D000F9771CB0D16A00C4D097 /* BitmapFontCharacter.cc */; };
 		D000F9801CB0D1B300C4D097 /* FontAsset.cc in Sources */ = {isa = PBXBuildFile; fileRef = D000F97E1CB0D1B300C4D097 /* FontAsset.cc */; };
 		D000F9841CB0D25A00C4D097 /* TextSprite.cc in Sources */ = {isa = PBXBuildFile; fileRef = D000F9821CB0D25A00C4D097 /* TextSprite.cc */; };
+		D078022D2AFED59E00EAA843 /* guiColorPopupCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = D07802272AFED59E00EAA843 /* guiColorPopupCtrl.cc */; };
+		D078022E2AFED59E00EAA843 /* guiColorPickerCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = D078022C2AFED59E00EAA843 /* guiColorPickerCtrl.cc */; };
+		D07802322AFED5FF00EAA843 /* guiFrameSetCtrl.cc in Sources */ = {isa = PBXBuildFile; fileRef = D07802312AFED5FF00EAA843 /* guiFrameSetCtrl.cc */; };
+		D07802372B02C32800EAA843 /* pcg_basic.c in Sources */ = {isa = PBXBuildFile; fileRef = D07802362B02C32800EAA843 /* pcg_basic.c */; };
+		D078023B2B02C34C00EAA843 /* Perlin.cc in Sources */ = {isa = PBXBuildFile; fileRef = D07802392B02C34C00EAA843 /* Perlin.cc */; };
+		D07802422B02C39500EAA843 /* RandomNumberGenerator.cc in Sources */ = {isa = PBXBuildFile; fileRef = D078023D2B02C39500EAA843 /* RandomNumberGenerator.cc */; };
+		D07802432B02C39500EAA843 /* NoiseGenerator.cc in Sources */ = {isa = PBXBuildFile; fileRef = D078023E2B02C39500EAA843 /* NoiseGenerator.cc */; };
 		D0D55C571EAAA5A500B2C750 /* AUTHORS in Resources */ = {isa = PBXBuildFile; fileRef = D0D55C4B1EAAA5A500B2C750 /* AUTHORS */; };
 		D0D55C581EAAA5A500B2C750 /* CHANGES in Resources */ = {isa = PBXBuildFile; fileRef = D0D55C4C1EAAA5A500B2C750 /* CHANGES */; };
 		D0D55C591EAAA5A500B2C750 /* COPYING in Resources */ = {isa = PBXBuildFile; fileRef = D0D55C4D1EAAA5A500B2C750 /* COPYING */; };
@@ -1097,8 +1102,6 @@
 		86BC7FE516518D4600D96ADF /* guiRadioCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiRadioCtrl.h; sourceTree = "<group>"; };
 		86BC7FED16518D4600D96ADF /* guiDragAndDropCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiDragAndDropCtrl.cc; sourceTree = "<group>"; };
 		86BC7FEE16518D4600D96ADF /* guiDragAndDropCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiDragAndDropCtrl.h; sourceTree = "<group>"; };
-		86BC7FF316518D4600D96ADF /* guiFrameCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiFrameCtrl.cc; sourceTree = "<group>"; };
-		86BC7FF416518D4600D96ADF /* guiFrameCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiFrameCtrl.h; sourceTree = "<group>"; };
 		86BC7FF916518D4600D96ADF /* guiScrollCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiScrollCtrl.cc; sourceTree = "<group>"; };
 		86BC7FFA16518D4600D96ADF /* guiScrollCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiScrollCtrl.h; sourceTree = "<group>"; };
 		86BC7FFD16518D4600D96ADF /* guiTabBookCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiTabBookCtrl.cc; sourceTree = "<group>"; };
@@ -1119,8 +1122,6 @@
 		86BC801616518D4600D96ADF /* guiArrayCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiArrayCtrl.h; sourceTree = "<group>"; };
 		86BC801E16518D4600D96ADF /* guiCanvas.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiCanvas.cc; sourceTree = "<group>"; };
 		86BC801F16518D4600D96ADF /* guiCanvas.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiCanvas.h; sourceTree = "<group>"; };
-		86BC802016518D4600D96ADF /* guiColorPicker.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiColorPicker.cc; sourceTree = "<group>"; };
-		86BC802116518D4600D96ADF /* guiColorPicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiColorPicker.h; sourceTree = "<group>"; };
 		86BC802216518D4600D96ADF /* guiConsole.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiConsole.cc; sourceTree = "<group>"; };
 		86BC802316518D4600D96ADF /* guiConsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiConsole.h; sourceTree = "<group>"; };
 		86BC802416518D4600D96ADF /* guiConsoleEditCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiConsoleEditCtrl.cc; sourceTree = "<group>"; };
@@ -1413,7 +1414,6 @@
 		86BC836416518FE800D96ADF /* types.ppc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = types.ppc.h; sourceTree = "<group>"; };
 		86C281C716A4306900F030F4 /* Torque2D-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Torque2D-Info.plist"; path = "Torque2D/Torque2D-Info.plist"; sourceTree = SOURCE_ROOT; };
 		86C281C916A4307300F030F4 /* Torque2DGame-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "Torque2DGame-Info.plist"; path = "Torque2D/Torque2DGame-Info.plist"; sourceTree = SOURCE_ROOT; };
-		86C281CC16A4307E00F030F4 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = en; path = Torque2D/en.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		86C281CF16A4309800F030F4 /* Torque2D-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "Torque2D-Prefix.pch"; path = "Torque2D/Torque2D-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		86CEFC76166FE17500DAF75D /* platformInput_ScriptBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platformInput_ScriptBinding.h; sourceTree = "<group>"; };
 		86D76F74165682BF0046D71F /* platformGL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = platformGL.h; sourceTree = "<group>"; };
@@ -1506,6 +1506,26 @@
 		D000F9811CB0D25A00C4D097 /* TextSprite_ScriptBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextSprite_ScriptBinding.h; sourceTree = "<group>"; };
 		D000F9821CB0D25A00C4D097 /* TextSprite.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextSprite.cc; sourceTree = "<group>"; };
 		D000F9831CB0D25A00C4D097 /* TextSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextSprite.h; sourceTree = "<group>"; };
+		D07802272AFED59E00EAA843 /* guiColorPopupCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiColorPopupCtrl.cc; sourceTree = "<group>"; };
+		D07802282AFED59E00EAA843 /* guiColorPickerCtrl_ScriptBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiColorPickerCtrl_ScriptBinding.h; sourceTree = "<group>"; };
+		D07802292AFED59E00EAA843 /* guiColorPopupCtrl_ScriptBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiColorPopupCtrl_ScriptBinding.h; sourceTree = "<group>"; };
+		D078022A2AFED59E00EAA843 /* guiColorPopupCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiColorPopupCtrl.h; sourceTree = "<group>"; };
+		D078022B2AFED59E00EAA843 /* guiColorPickerCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiColorPickerCtrl.h; sourceTree = "<group>"; };
+		D078022C2AFED59E00EAA843 /* guiColorPickerCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiColorPickerCtrl.cc; sourceTree = "<group>"; };
+		D078022F2AFED5FF00EAA843 /* guiFrameSetCtrl_ScriptBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiFrameSetCtrl_ScriptBinding.h; sourceTree = "<group>"; };
+		D07802302AFED5FF00EAA843 /* guiFrameSetCtrl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = guiFrameSetCtrl.h; sourceTree = "<group>"; };
+		D07802312AFED5FF00EAA843 /* guiFrameSetCtrl.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = guiFrameSetCtrl.cc; sourceTree = "<group>"; };
+		D07802332AFF2F0D00EAA843 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		D07802362B02C32800EAA843 /* pcg_basic.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = pcg_basic.c; sourceTree = "<group>"; };
+		D07802382B02C34C00EAA843 /* pcg_basic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pcg_basic.h; sourceTree = "<group>"; };
+		D07802392B02C34C00EAA843 /* Perlin.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Perlin.cc; sourceTree = "<group>"; };
+		D078023A2B02C34C00EAA843 /* Perlin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Perlin.h; sourceTree = "<group>"; };
+		D078023C2B02C39500EAA843 /* RandomNumberGenerator_ScriptBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RandomNumberGenerator_ScriptBinding.h; path = noise/RandomNumberGenerator_ScriptBinding.h; sourceTree = "<group>"; };
+		D078023D2B02C39500EAA843 /* RandomNumberGenerator.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = RandomNumberGenerator.cc; path = noise/RandomNumberGenerator.cc; sourceTree = "<group>"; };
+		D078023E2B02C39500EAA843 /* NoiseGenerator.cc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NoiseGenerator.cc; path = noise/NoiseGenerator.cc; sourceTree = "<group>"; };
+		D078023F2B02C39500EAA843 /* RandomNumberGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RandomNumberGenerator.h; path = noise/RandomNumberGenerator.h; sourceTree = "<group>"; };
+		D07802402B02C39500EAA843 /* NoiseGenerator_ScriptBinding.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoiseGenerator_ScriptBinding.h; path = noise/NoiseGenerator_ScriptBinding.h; sourceTree = "<group>"; };
+		D07802412B02C39500EAA843 /* NoiseGenerator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NoiseGenerator.h; path = noise/NoiseGenerator.h; sourceTree = "<group>"; };
 		D0D55C4B1EAAA5A500B2C750 /* AUTHORS */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = AUTHORS; sourceTree = "<group>"; };
 		D0D55C4C1EAAA5A500B2C750 /* CHANGES */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CHANGES; sourceTree = "<group>"; };
 		D0D55C4D1EAAA5A500B2C750 /* COPYING */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = COPYING; sourceTree = "<group>"; };
@@ -2127,6 +2147,7 @@
 				8652F29F16C146CF00639EFE /* torque2d.icns */,
 			);
 			sourceTree = "<group>";
+			usesTabs = 1;
 		};
 		869FF8B91651518C002FE082 /* Products */ = {
 			isa = PBXGroup;
@@ -2195,7 +2216,7 @@
 				86C281C916A4307300F030F4 /* Torque2DGame-Info.plist */,
 			);
 			name = "Supporting Files";
-			path = ../../compilers/New_Xcode/Torque2D;
+			path = ../../compilers/Xcode/Torque2D;
 			sourceTree = "<group>";
 		};
 		86BC7E7516518D4600D96ADF /* 2d */ = {
@@ -2366,6 +2387,10 @@
 		86BC7EE016518D4600D96ADF /* algorithm */ = {
 			isa = PBXGroup;
 			children = (
+				D07802382B02C34C00EAA843 /* pcg_basic.h */,
+				D07802392B02C34C00EAA843 /* Perlin.cc */,
+				D078023A2B02C34C00EAA843 /* Perlin.h */,
+				D07802362B02C32800EAA843 /* pcg_basic.c */,
 				86BC7EE116518D4600D96ADF /* crc.cc */,
 				86BC7EE216518D4600D96ADF /* crc.h */,
 				86BC7EE316518D4600D96ADF /* crctab.h */,
@@ -2661,6 +2686,12 @@
 		86BC7FD716518D4600D96ADF /* gui */ = {
 			isa = PBXGroup;
 			children = (
+				D07802282AFED59E00EAA843 /* guiColorPickerCtrl_ScriptBinding.h */,
+				D078022C2AFED59E00EAA843 /* guiColorPickerCtrl.cc */,
+				D078022B2AFED59E00EAA843 /* guiColorPickerCtrl.h */,
+				D07802292AFED59E00EAA843 /* guiColorPopupCtrl_ScriptBinding.h */,
+				D07802272AFED59E00EAA843 /* guiColorPopupCtrl.cc */,
+				D078022A2AFED59E00EAA843 /* guiColorPopupCtrl.h */,
 				86BC7FD816518D4600D96ADF /* buttons */,
 				86BC7FE816518D4600D96ADF /* containers */,
 				86BC800116518D4600D96ADF /* editor */,
@@ -2669,8 +2700,6 @@
 				B350D16F174EF89600033EBB /* guiCanvas_ScriptBinding.h */,
 				86BC801E16518D4600D96ADF /* guiCanvas.cc */,
 				86BC801F16518D4600D96ADF /* guiCanvas.h */,
-				86BC802016518D4600D96ADF /* guiColorPicker.cc */,
-				86BC802116518D4600D96ADF /* guiColorPicker.h */,
 				86BC802216518D4600D96ADF /* guiConsole.cc */,
 				86BC802316518D4600D96ADF /* guiConsole.h */,
 				86BC802416518D4600D96ADF /* guiConsoleEditCtrl.cc */,
@@ -2730,6 +2759,9 @@
 		86BC7FE816518D4600D96ADF /* containers */ = {
 			isa = PBXGroup;
 			children = (
+				D078022F2AFED5FF00EAA843 /* guiFrameSetCtrl_ScriptBinding.h */,
+				D07802312AFED5FF00EAA843 /* guiFrameSetCtrl.cc */,
+				D07802302AFED5FF00EAA843 /* guiFrameSetCtrl.h */,
 				07F98839274F1C21009ECC0D /* guiChainCtrl_ScriptBinding.h */,
 				07F98835274F1C21009ECC0D /* guiChainCtrl.cc */,
 				07F98838274F1C21009ECC0D /* guiChainCtrl.h */,
@@ -2739,8 +2771,6 @@
 				07F98834274F1C21009ECC0D /* guiExpandCtrl_ScriptBinding.h */,
 				07F9882D274F1C20009ECC0D /* guiExpandCtrl.cc */,
 				07F98832274F1C21009ECC0D /* guiExpandCtrl.h */,
-				86BC7FF316518D4600D96ADF /* guiFrameCtrl.cc */,
-				86BC7FF416518D4600D96ADF /* guiFrameCtrl.h */,
 				07F9882F274F1C20009ECC0D /* guiGridCtrl_ScriptBinding.h */,
 				86DE5686171F05F60054CB83 /* guiGridCtrl.cc */,
 				86DE5687171F05F60054CB83 /* guiGridCtrl.h */,
@@ -2886,6 +2916,12 @@
 		86BC809116518D4600D96ADF /* math */ = {
 			isa = PBXGroup;
 			children = (
+				D07802402B02C39500EAA843 /* NoiseGenerator_ScriptBinding.h */,
+				D078023E2B02C39500EAA843 /* NoiseGenerator.cc */,
+				D07802412B02C39500EAA843 /* NoiseGenerator.h */,
+				D078023C2B02C39500EAA843 /* RandomNumberGenerator_ScriptBinding.h */,
+				D078023D2B02C39500EAA843 /* RandomNumberGenerator.cc */,
+				D078023F2B02C39500EAA843 /* RandomNumberGenerator.h */,
 				07738F0327EA9E08009B4B15 /* mFluid.cpp */,
 				07738F0227EA9E08009B4B15 /* mFluid.h */,
 				D0D55CC51EAAD65800B2C750 /* mNormalDistribution.h */,
@@ -3458,16 +3494,17 @@
 		869FF8AF1651518C002FE082 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0510;
-				ORGANIZATIONNAME = "Michael Perry";
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1500;
+				ORGANIZATIONNAME = "Torque Game Engines";
 			};
 			buildConfigurationList = 869FF8B21651518C002FE082 /* Build configuration list for PBXProject "Torque2D" */;
-			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
-				English,
 				en,
+				Base,
 			);
 			mainGroup = 869FF8AD1651518C002FE082;
 			productRefGroup = 869FF8B91651518C002FE082 /* Products */;
@@ -3501,11 +3538,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D07802372B02C32800EAA843 /* pcg_basic.c in Sources */,
+				D078022D2AFED59E00EAA843 /* guiColorPopupCtrl.cc in Sources */,
 				06D1686A1C1F949D009A1AD1 /* vorbisStreamSource.cc in Sources */,
 				06D1686B1C1F949D009A1AD1 /* vorbisStreamSource.h in Sources */,
 				86D770C3165687450046D71F /* osxFileDialogs.mm in Sources */,
 				86D770571656873C0046D71F /* mathTypes.cc in Sources */,
+				D07802422B02C39500EAA843 /* RandomNumberGenerator.cc in Sources */,
 				86D770581656873C0046D71F /* mathUtils.cc in Sources */,
+				D078023B2B02C34C00EAA843 /* Perlin.cc in Sources */,
 				86D770591656873C0046D71F /* mBox.cc in Sources */,
 				86D7705B1656873C0046D71F /* mMath_C.cc in Sources */,
 				D0D55CBF1EAAA5BB00B2C750 /* smallft.c in Sources */,
@@ -3698,9 +3739,10 @@
 				86D77002165687060046D71F /* guiCheckBoxCtrl.cc in Sources */,
 				86D77004165687060046D71F /* guiRadioCtrl.cc in Sources */,
 				32F6F55624A5E111008E28D2 /* b2RopeJoint.cpp in Sources */,
+				D07802322AFED5FF00EAA843 /* guiFrameSetCtrl.cc in Sources */,
 				86D77008165687060046D71F /* guiDragAndDropCtrl.cc in Sources */,
-				86D7700B165687060046D71F /* guiFrameCtrl.cc in Sources */,
 				86D7700E165687060046D71F /* guiScrollCtrl.cc in Sources */,
+				D078022E2AFED59E00EAA843 /* guiColorPickerCtrl.cc in Sources */,
 				86D77010165687060046D71F /* guiTabBookCtrl.cc in Sources */,
 				86D77011165687060046D71F /* guiWindowCtrl.cc in Sources */,
 				86D77013165687060046D71F /* guiDebugger.cc in Sources */,
@@ -3715,7 +3757,6 @@
 				86D7701C165687060046D71F /* guiArrayCtrl.cc in Sources */,
 				32F6F53824A5E110008E28D2 /* b2Math.cpp in Sources */,
 				86D77021165687060046D71F /* guiCanvas.cc in Sources */,
-				86D77022165687060046D71F /* guiColorPicker.cc in Sources */,
 				86D77023165687060046D71F /* guiConsole.cc in Sources */,
 				0787E04D27EBC869001EAA71 /* zutil.c in Sources */,
 				86D77024165687060046D71F /* guiConsoleEditCtrl.cc in Sources */,
@@ -3917,6 +3958,7 @@
 				86EC5AC7165C1E0100757872 /* osxTorqueView.mm in Sources */,
 				2A03300D165D1D2100E9CD70 /* unitTesting.cc in Sources */,
 				2A033011165D1D4100E9CD70 /* platformFileIoTests.cc in Sources */,
+				D07802432B02C39500EAA843 /* NoiseGenerator.cc in Sources */,
 				86854E341663AAE6009FAFB2 /* osxOpenGLDevice.mm in Sources */,
 				2AC5C7E81667C85700A0D046 /* platformStringTests.cc in Sources */,
 				2ACFC0A8166CE1AB00FE7370 /* platformMemoryTests.cc in Sources */,
@@ -3977,7 +4019,7 @@
 		86C281CB16A4307E00F030F4 /* MainMenu.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				86C281CC16A4307E00F030F4 /* en */,
+				D07802332AFF2F0D00EAA843 /* Base */,
 			);
 			name = MainMenu.xib;
 			sourceTree = "<group>";
@@ -3989,24 +4031,47 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = TORQUE_SHIPPING;
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				SDKROOT = macosx;
 				VALID_ARCHS = i386;
 			};
@@ -4016,8 +4081,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = ../../..;
+				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Torque2D/Torque2D-Prefix.pch";
@@ -4042,9 +4109,13 @@
 					../../lib/zlib,
 				);
 				INFOPLIST_FILE = "Torque2D/Torque2D-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Torque2D;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MARKETING_VERSION = "4.0.0 ea3";
 				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.garagegames.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = app;
@@ -4055,15 +4126,37 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					TORQUE_DEBUG,
@@ -4074,11 +4167,13 @@
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 				VALID_ARCHS = i386;
@@ -4089,15 +4184,36 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = YES;
+				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
 				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = YES;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				"FRAMEWORK_SEARCH_PATHS[arch=*]" = "";
 				GCC_C_LANGUAGE_STANDARD = gnu89;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					TORQUE_RELEASE,
 					GTEST_OS_MAC,
@@ -4106,11 +4222,13 @@
 				GCC_VERSION = "";
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = "";
 				LD_RUNPATH_SEARCH_PATHS = "@loader_path/../Frameworks";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				SDKROOT = macosx;
 				VALID_ARCHS = i386;
 			};
@@ -4120,8 +4238,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = ../../..;
+				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Torque2D/Torque2D-Prefix.pch";
@@ -4146,9 +4266,13 @@
 					../../lib/zlib,
 				);
 				INFOPLIST_FILE = "Torque2D/Torque2D-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Torque2D;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MARKETING_VERSION = "4.0.0 ea3";
 				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.garagegames.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)_DEBUG";
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = app;
@@ -4159,8 +4283,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_WEAK = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				CONFIGURATION_BUILD_DIR = ../../..;
+				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Torque2D/Torque2D-Prefix.pch";
@@ -4186,9 +4312,13 @@
 					../../lib/zlib,
 				);
 				INFOPLIST_FILE = "Torque2D/Torque2D-Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = Torque2D;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MACOSX_DEPLOYMENT_TARGET = 10.9;
+				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
+				MARKETING_VERSION = "4.0.0 ea3";
 				OTHER_LDFLAGS = "";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.garagegames.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = "i386 x86_64";
 				WRAPPER_EXTENSION = app;
