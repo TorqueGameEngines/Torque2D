@@ -40,7 +40,7 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v142</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
@@ -154,6 +154,10 @@
       <ObjectFileName>.\../../Link/Release/libvorbis/</ObjectFileName>
       <ProgramDataBaseFileName>.\../../Link/Release/libvorbis/</ProgramDataBaseFileName>
     </ClCompile>
+    <Lib>
+      <LinkTimeCodeGeneration>
+      </LinkTimeCodeGeneration>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -179,6 +183,9 @@
       <DisableSpecificWarnings>4244;4100;4267;4189;4305;4127;4706;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <CallingConvention>Cdecl</CallingConvention>
     </ClCompile>
+    <Lib>
+      <LinkTimeCodeGeneration>true</LinkTimeCodeGeneration>
+    </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Lib\libvorbis\analysis.c" />
@@ -247,6 +254,11 @@
     <ClInclude Include="..\..\Lib\libvorbis\include\vorbis\vorbisenc.h" />
     <ClInclude Include="..\..\Lib\libvorbis\include\vorbis\vorbisfile.h" />
     <ClInclude Include="..\..\Lib\libvorbis\window.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="libogg.vcxproj">
+      <Project>{15cbfeff-7965-41f5-b4e2-21e8795c9159}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
