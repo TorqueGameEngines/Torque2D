@@ -729,9 +729,6 @@
     <ClCompile Include="..\..\source\gui\guiCanvas.cc">
       <Filter>gui</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\guiColorPicker.cc">
-      <Filter>gui</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\guiConsole.cc">
       <Filter>gui</Filter>
     </ClCompile>
@@ -1315,9 +1312,6 @@
     <ClCompile Include="..\..\source\2d\editorToy\EditorToyTool.cc">
       <Filter>2d\editorToy</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc">
-      <Filter>gui\containers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc">
       <Filter>gui\buttons</Filter>
     </ClCompile>
@@ -1341,6 +1335,15 @@
     </ClCompile>
     <ClCompile Include="..\..\source\math\noise\RandomNumberGenerator.cc">
       <Filter>math\noise</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\guiColorPickerCtrl.cc">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\guiColorPopupCtrl.cc">
+      <Filter>gui</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\gui\containers\guiFrameSetCtrl.cc">
+      <Filter>gui\containers</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -1930,9 +1933,6 @@
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiCanvas.h">
-      <Filter>gui</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\source\gui\guiColorPicker.h">
       <Filter>gui</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\gui\guiConsole.h">
@@ -3019,9 +3019,6 @@
     <ClInclude Include="..\..\source\2d\editorToy\EditorToyTool.h">
       <Filter>2d\editorToy</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h">
-      <Filter>gui\containers</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\gui\guiListBoxCtrl_ScriptBinding.h">
       <Filter>gui</Filter>
     </ClInclude>
@@ -3072,6 +3069,27 @@
     </ClInclude>
     <ClInclude Include="..\..\source\math\noise\RandomNumberGenerator_ScriptBinding.h">
       <Filter>math\noise</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiColorPickerCtrl.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiColorPickerCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiColorPopupCtrl.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiColorPopupCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\guiTreeViewCtrl_ScriptBinding.h">
+      <Filter>gui</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiFrameSetCtrl.h">
+      <Filter>gui\containers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\gui\containers\guiFrameSetCtrl_ScriptBinding.h">
+      <Filter>gui\containers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

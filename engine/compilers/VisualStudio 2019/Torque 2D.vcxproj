@@ -624,7 +624,7 @@
     <ClCompile Include="..\..\source\gui\buttons\guiDropDownCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiChainCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiExpandCtrl.cc" />
-    <ClCompile Include="..\..\source\gui\containers\guiFrameCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\containers\guiFrameSetCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiGridCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiSceneScrollCtrl.cc" />
     <ClCompile Include="..\..\source\gui\containers\guiTabPageCtrl.cc" />
@@ -632,7 +632,8 @@
     <ClCompile Include="..\..\source\gui\editor\guiParticleGraphInspector.cc" />
     <ClCompile Include="..\..\source\gui\guiArrayCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiCanvas.cc" />
-    <ClCompile Include="..\..\source\gui\guiColorPicker.cc" />
+    <ClCompile Include="..\..\source\gui\guiColorPickerCtrl.cc" />
+    <ClCompile Include="..\..\source\gui\guiColorPopupCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiConsole.cc" />
     <ClCompile Include="..\..\source\gui\guiConsoleEditCtrl.cc" />
     <ClCompile Include="..\..\source\gui\guiControl.cc" />
@@ -1113,7 +1114,8 @@
     <ClInclude Include="..\..\source\gui\containers\guiDragAndDropCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiExpandCtrl_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\gui\containers\guiFrameCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiFrameSetCtrl.h" />
+    <ClInclude Include="..\..\source\gui\containers\guiFrameSetCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl.h" />
     <ClInclude Include="..\..\source\gui\containers\guiGridCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\containers\guiPanelCtrl_ScriptBinding.h" />
@@ -1129,7 +1131,10 @@
     <ClInclude Include="..\..\source\gui\guiArrayCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas.h" />
     <ClInclude Include="..\..\source\gui\guiCanvas_ScriptBinding.h" />
-    <ClInclude Include="..\..\source\gui\guiColorPicker.h" />
+    <ClInclude Include="..\..\source\gui\guiColorPickerCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiColorPickerCtrl_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\gui\guiColorPopupCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiColorPopupCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiConsole.h" />
     <ClInclude Include="..\..\source\gui\guiConsoleEditCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiControl.h" />
@@ -1146,6 +1151,7 @@
     <ClInclude Include="..\..\source\gui\guiTextEditCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiTextEditSliderCtrl.h" />
     <ClInclude Include="..\..\source\gui\guiTreeViewCtrl.h" />
+    <ClInclude Include="..\..\source\gui\guiTreeViewCtrl_ScriptBinding.h" />
     <ClInclude Include="..\..\source\gui\guiTypes.h" />
     <ClInclude Include="..\..\source\gui\language\lang.h" />
     <ClInclude Include="..\..\source\gui\messageVector.h" />
