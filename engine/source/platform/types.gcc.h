@@ -99,6 +99,7 @@ typedef unsigned long long  U64;
 #elif defined(TORQUE_OS_IOS)
 	#ifndef TORQUE_OS_IOS
 		#define TORQUE_OS_IOS
+		#define GLES_SILENCE_DEPRECATION
 	#endif
 #  include "platform/types.arm.h"
 

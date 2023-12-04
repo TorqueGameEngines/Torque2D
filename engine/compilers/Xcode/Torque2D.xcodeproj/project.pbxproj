@@ -1699,13 +1699,13 @@
 				2AB4C1A016DE9F1100B02479 /* AmbientForceController_ScriptBinding.h */,
 				2AB4C1A116DE9F1100B02479 /* AmbientForceController.cc */,
 				2AB4C1A216DE9F1100B02479 /* AmbientForceController.h */,
+				2AE2F55A16D6B08800B6A058 /* BuoyancyController_ScriptBinding.h */,
+				2AE2F55B16D6B08800B6A058 /* BuoyancyController.cc */,
+				2AE2F55C16D6B08800B6A058 /* BuoyancyController.h */,
 				2AB4C19616DE9EEA00B02479 /* core */,
 				2AB14A0216D7CDC200EABBF2 /* PointForceController_ScriptBinding.h */,
 				2AB14A0316D7CDC200EABBF2 /* PointForceController.cc */,
 				2AB14A0416D7CDC300EABBF2 /* PointForceController.h */,
-				2AE2F55A16D6B08800B6A058 /* BuoyancyController_ScriptBinding.h */,
-				2AE2F55B16D6B08800B6A058 /* BuoyancyController.cc */,
-				2AE2F55C16D6B08800B6A058 /* BuoyancyController.h */,
 			);
 			name = controllers;
 			sourceTree = "<group>";
@@ -2263,35 +2263,35 @@
 		86BC7E8016518D4600D96ADF /* core */ = {
 			isa = PBXGroup;
 			children = (
-				B350D174174EFA6100033EBB /* Utility_ScriptBinding.h */,
-				2AA3655516F3552200E7A900 /* ImageFrameProvider.cc */,
-				2AA3655616F3552200E7A900 /* ImageFrameProvider.h */,
-				2AA3655716F3552200E7A900 /* ImageFrameProviderCore.cc */,
-				2AA3655816F3552200E7A900 /* ImageFrameProviderCore.h */,
-				2ACF5A2516E52D4B00F838D9 /* SpriteBatchQuery.cc */,
-				2ACF5A2616E52D4B00F838D9 /* SpriteBatchQuery.h */,
-				2ACF5A2716E52D4B00F838D9 /* SpriteBatchQueryResult.h */,
-				2AF3633716A9BBE0004ED7AA /* ParticleSystem.cc */,
-				2AF3633816A9BBE0004ED7AA /* ParticleSystem.h */,
 				86BC7E8116518D4600D96ADF /* BatchRender.cc */,
 				86BC7E8216518D4600D96ADF /* BatchRender.h */,
 				86BC7E8316518D4600D96ADF /* CoreMath.cc */,
 				86BC7E8416518D4600D96ADF /* CoreMath.h */,
+				2AA3655516F3552200E7A900 /* ImageFrameProvider.cc */,
+				2AA3655616F3552200E7A900 /* ImageFrameProvider.h */,
+				2AA3655716F3552200E7A900 /* ImageFrameProviderCore.cc */,
+				2AA3655816F3552200E7A900 /* ImageFrameProviderCore.h */,
+				2AF3633716A9BBE0004ED7AA /* ParticleSystem.cc */,
+				2AF3633816A9BBE0004ED7AA /* ParticleSystem.h */,
+				86BC7E8716518D4600D96ADF /* RenderProxy_ScriptBinding.h */,
 				86BC7E8516518D4600D96ADF /* RenderProxy.cc */,
 				86BC7E8616518D4600D96ADF /* RenderProxy.h */,
-				86BC7E8716518D4600D96ADF /* RenderProxy_ScriptBinding.h */,
+				86BC7E8A16518D4600D96ADF /* SpriteBase_ScriptBinding.h */,
 				86BC7E8816518D4600D96ADF /* SpriteBase.cc */,
 				86BC7E8916518D4600D96ADF /* SpriteBase.h */,
-				86BC7E8A16518D4600D96ADF /* SpriteBase_ScriptBinding.h */,
 				86BC7E8B16518D4600D96ADF /* SpriteBatch.cc */,
 				86BC7E8C16518D4600D96ADF /* SpriteBatch.h */,
 				86BC7E8D16518D4600D96ADF /* SpriteBatchItem.cc */,
 				86BC7E8E16518D4600D96ADF /* SpriteBatchItem.h */,
+				2ACF5A2516E52D4B00F838D9 /* SpriteBatchQuery.cc */,
+				2ACF5A2616E52D4B00F838D9 /* SpriteBatchQuery.h */,
+				2ACF5A2716E52D4B00F838D9 /* SpriteBatchQueryResult.h */,
+				B350D174174EFA6100033EBB /* Utility_ScriptBinding.h */,
 				86BC7E9116518D4600D96ADF /* Utility.cc */,
 				86BC7E9216518D4600D96ADF /* Utility.h */,
+				86BC7E9516518D4600D96ADF /* Vector2_ScriptBinding.h */,
 				86BC7E9316518D4600D96ADF /* Vector2.cc */,
 				86BC7E9416518D4600D96ADF /* Vector2.h */,
-				86BC7E9516518D4600D96ADF /* Vector2_ScriptBinding.h */,
 			);
 			path = core;
 			sourceTree = "<group>";
@@ -2387,16 +2387,16 @@
 		86BC7EE016518D4600D96ADF /* algorithm */ = {
 			isa = PBXGroup;
 			children = (
-				D07802382B02C34C00EAA843 /* pcg_basic.h */,
-				D07802392B02C34C00EAA843 /* Perlin.cc */,
-				D078023A2B02C34C00EAA843 /* Perlin.h */,
-				D07802362B02C32800EAA843 /* pcg_basic.c */,
 				86BC7EE116518D4600D96ADF /* crc.cc */,
 				86BC7EE216518D4600D96ADF /* crc.h */,
 				86BC7EE316518D4600D96ADF /* crctab.h */,
 				86BC7EE416518D4600D96ADF /* hashFunction.cc */,
 				86BC7EE516518D4600D96ADF /* hashFunction.h */,
 				86BC7EE616518D4600D96ADF /* md5.h */,
+				D07802362B02C32800EAA843 /* pcg_basic.c */,
+				D07802382B02C34C00EAA843 /* pcg_basic.h */,
+				D07802392B02C34C00EAA843 /* Perlin.cc */,
+				D078023A2B02C34C00EAA843 /* Perlin.h */,
 			);
 			name = algorithm;
 			path = ../../../source/algorithm;
@@ -2463,7 +2463,6 @@
 		86BC7F0F16518D4600D96ADF /* collection */ = {
 			isa = PBXGroup;
 			children = (
-				B350D173174EF93900033EBB /* undo_ScriptBinding.h */,
 				86BC7F1016518D4600D96ADF /* bitMatrix.h */,
 				86BC7F1116518D4600D96ADF /* bitSet.h */,
 				86BC7F1216518D4600D96ADF /* bitTables.cc */,
@@ -2474,11 +2473,12 @@
 				86BC7F1716518D4600D96ADF /* hashTable.cc */,
 				86BC7F1816518D4600D96ADF /* hashTable.h */,
 				86BC7F1916518D4600D96ADF /* linkedList.h */,
+				86BC7F1C16518D4600D96ADF /* nameTags_ScriptBinding.h */,
 				86BC7F1A16518D4600D96ADF /* nameTags.cpp */,
 				86BC7F1B16518D4600D96ADF /* nameTags.h */,
-				86BC7F1C16518D4600D96ADF /* nameTags_ScriptBinding.h */,
 				86BC7F1D16518D4600D96ADF /* simpleHashTable.h */,
 				86BC7F1E16518D4600D96ADF /* sparseArray.h */,
+				B350D173174EF93900033EBB /* undo_ScriptBinding.h */,
 				86BC7F1F16518D4600D96ADF /* undo.cc */,
 				86BC7F2016518D4600D96ADF /* undo.h */,
 				86BC7F2116518D4600D96ADF /* vector.cc */,
@@ -2686,12 +2686,6 @@
 		86BC7FD716518D4600D96ADF /* gui */ = {
 			isa = PBXGroup;
 			children = (
-				D07802282AFED59E00EAA843 /* guiColorPickerCtrl_ScriptBinding.h */,
-				D078022C2AFED59E00EAA843 /* guiColorPickerCtrl.cc */,
-				D078022B2AFED59E00EAA843 /* guiColorPickerCtrl.h */,
-				D07802292AFED59E00EAA843 /* guiColorPopupCtrl_ScriptBinding.h */,
-				D07802272AFED59E00EAA843 /* guiColorPopupCtrl.cc */,
-				D078022A2AFED59E00EAA843 /* guiColorPopupCtrl.h */,
 				86BC7FD816518D4600D96ADF /* buttons */,
 				86BC7FE816518D4600D96ADF /* containers */,
 				86BC800116518D4600D96ADF /* editor */,
@@ -2700,6 +2694,12 @@
 				B350D16F174EF89600033EBB /* guiCanvas_ScriptBinding.h */,
 				86BC801E16518D4600D96ADF /* guiCanvas.cc */,
 				86BC801F16518D4600D96ADF /* guiCanvas.h */,
+				D07802282AFED59E00EAA843 /* guiColorPickerCtrl_ScriptBinding.h */,
+				D078022C2AFED59E00EAA843 /* guiColorPickerCtrl.cc */,
+				D078022B2AFED59E00EAA843 /* guiColorPickerCtrl.h */,
+				D07802292AFED59E00EAA843 /* guiColorPopupCtrl_ScriptBinding.h */,
+				D07802272AFED59E00EAA843 /* guiColorPopupCtrl.cc */,
+				D078022A2AFED59E00EAA843 /* guiColorPopupCtrl.h */,
 				86BC802216518D4600D96ADF /* guiConsole.cc */,
 				86BC802316518D4600D96ADF /* guiConsole.h */,
 				86BC802416518D4600D96ADF /* guiConsoleEditCtrl.cc */,
@@ -2759,9 +2759,6 @@
 		86BC7FE816518D4600D96ADF /* containers */ = {
 			isa = PBXGroup;
 			children = (
-				D078022F2AFED5FF00EAA843 /* guiFrameSetCtrl_ScriptBinding.h */,
-				D07802312AFED5FF00EAA843 /* guiFrameSetCtrl.cc */,
-				D07802302AFED5FF00EAA843 /* guiFrameSetCtrl.h */,
 				07F98839274F1C21009ECC0D /* guiChainCtrl_ScriptBinding.h */,
 				07F98835274F1C21009ECC0D /* guiChainCtrl.cc */,
 				07F98838274F1C21009ECC0D /* guiChainCtrl.h */,
@@ -2771,6 +2768,9 @@
 				07F98834274F1C21009ECC0D /* guiExpandCtrl_ScriptBinding.h */,
 				07F9882D274F1C20009ECC0D /* guiExpandCtrl.cc */,
 				07F98832274F1C21009ECC0D /* guiExpandCtrl.h */,
+				D078022F2AFED5FF00EAA843 /* guiFrameSetCtrl_ScriptBinding.h */,
+				D07802312AFED5FF00EAA843 /* guiFrameSetCtrl.cc */,
+				D07802302AFED5FF00EAA843 /* guiFrameSetCtrl.h */,
 				07F9882F274F1C20009ECC0D /* guiGridCtrl_ScriptBinding.h */,
 				86DE5686171F05F60054CB83 /* guiGridCtrl.cc */,
 				86DE5687171F05F60054CB83 /* guiGridCtrl.h */,
@@ -2916,39 +2916,31 @@
 		86BC809116518D4600D96ADF /* math */ = {
 			isa = PBXGroup;
 			children = (
-				D07802402B02C39500EAA843 /* NoiseGenerator_ScriptBinding.h */,
-				D078023E2B02C39500EAA843 /* NoiseGenerator.cc */,
-				D07802412B02C39500EAA843 /* NoiseGenerator.h */,
-				D078023C2B02C39500EAA843 /* RandomNumberGenerator_ScriptBinding.h */,
-				D078023D2B02C39500EAA843 /* RandomNumberGenerator.cc */,
-				D078023F2B02C39500EAA843 /* RandomNumberGenerator.h */,
-				07738F0327EA9E08009B4B15 /* mFluid.cpp */,
-				07738F0227EA9E08009B4B15 /* mFluid.h */,
-				D0D55CC51EAAD65800B2C750 /* mNormalDistribution.h */,
-				8645C96B1887231C004ED987 /* mPoint.cpp */,
 				B350D12B174ED1FE00033EBB /* box_ScriptBinding.h */,
 				B350D12C174ED1FE00033EBB /* math_ScriptBinding.cc */,
-				B350D12D174ED1FE00033EBB /* matrix_ScriptBinding.h */,
-				B350D12E174ED1FE00033EBB /* random_ScriptBinding.h */,
-				B350D129174ED16800033EBB /* vector_ScriptBinding.h */,
 				86BC809216518D4600D96ADF /* mathIO.h */,
 				86BC809316518D4600D96ADF /* mathTypes.cc */,
 				86BC809416518D4600D96ADF /* mathTypes.h */,
 				86BC809516518D4600D96ADF /* mathUtils.cc */,
 				86BC809616518D4600D96ADF /* mathUtils.h */,
+				B350D12D174ED1FE00033EBB /* matrix_ScriptBinding.h */,
 				86BC809716518D4600D96ADF /* mBox.cc */,
 				86BC809816518D4600D96ADF /* mBox.h */,
 				86BC809A16518D4600D96ADF /* mConstants.h */,
-				86BC809B16518D4600D96ADF /* mMath.h */,
+				07738F0327EA9E08009B4B15 /* mFluid.cpp */,
+				07738F0227EA9E08009B4B15 /* mFluid.h */,
 				86BC809D16518D4600D96ADF /* mMath_C.cc */,
+				86BC809B16518D4600D96ADF /* mMath.h */,
 				86BC809E16518D4600D96ADF /* mMathAltivec.cc */,
 				86BC80A116518D4600D96ADF /* mMathFn.cc */,
 				86BC80A216518D4600D96ADF /* mMathFn.h */,
 				86BC80A516518D4600D96ADF /* mMatrix.cc */,
 				86BC80A616518D4600D96ADF /* mMatrix.h */,
+				D0D55CC51EAAD65800B2C750 /* mNormalDistribution.h */,
 				86BC80A716518D4600D96ADF /* mPlane.h */,
 				86BC80A816518D4600D96ADF /* mPlaneTransformer.cc */,
 				86BC80A916518D4600D96ADF /* mPlaneTransformer.h */,
+				8645C96B1887231C004ED987 /* mPoint.cpp */,
 				86BC80AA16518D4600D96ADF /* mPoint.h */,
 				86BC80AB16518D4600D96ADF /* mQuadPatch.cc */,
 				86BC80AC16518D4600D96ADF /* mQuadPatch.h */,
@@ -2961,8 +2953,16 @@
 				86BC80B316518D4600D96ADF /* mSphere.h */,
 				86BC80B416518D4600D96ADF /* mSplinePatch.cc */,
 				86BC80B516518D4600D96ADF /* mSplinePatch.h */,
+				D07802402B02C39500EAA843 /* NoiseGenerator_ScriptBinding.h */,
+				D078023E2B02C39500EAA843 /* NoiseGenerator.cc */,
+				D07802412B02C39500EAA843 /* NoiseGenerator.h */,
+				B350D12E174ED1FE00033EBB /* random_ScriptBinding.h */,
+				D078023C2B02C39500EAA843 /* RandomNumberGenerator_ScriptBinding.h */,
+				D078023D2B02C39500EAA843 /* RandomNumberGenerator.cc */,
+				D078023F2B02C39500EAA843 /* RandomNumberGenerator.h */,
 				86BC80B616518D4600D96ADF /* rectClipper.cpp */,
 				86BC80B716518D4600D96ADF /* rectClipper.h */,
+				B350D129174ED16800033EBB /* vector_ScriptBinding.h */,
 			);
 			name = math;
 			path = ../../../source/math;
@@ -4110,7 +4110,7 @@
 				);
 				INFOPLIST_FILE = "Torque2D/Torque2D-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Torque2D;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = "4.0.0 ea3";
@@ -4267,7 +4267,7 @@
 				);
 				INFOPLIST_FILE = "Torque2D/Torque2D-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Torque2D;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = "4.0.0 ea3";
@@ -4313,7 +4313,7 @@
 				);
 				INFOPLIST_FILE = "Torque2D/Torque2D-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = Torque2D;
-				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.developer-tools";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.games";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				MACOSX_DEPLOYMENT_TARGET = "$(RECOMMENDED_MACOSX_DEPLOYMENT_TARGET)";
 				MARKETING_VERSION = "4.0.0 ea3";

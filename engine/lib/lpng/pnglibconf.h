@@ -185,5 +185,6 @@
 #define PNG_WEIGHT_SHIFT 8
 #define PNG_ZBUF_SIZE 8192
 #define PNG_sCAL_PRECISION 5
+#define PNG_ARM_NEON_OPT 0
 /* end of settings */
 #endif /* PNGLCONF_H */

@@ -6,6 +6,7 @@
 //--------------------------------------
 
 #include "audio/vorbisStreamSource.h"
+#include "ogg/os_types.h"
 
 #define BUFFERSIZE 32768
 #define CHUNKSIZE 4096

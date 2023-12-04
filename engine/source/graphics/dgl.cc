@@ -1603,10 +1603,10 @@ GLfloat gTextureVerts[8];
 //--------------------------------------------------------------------------
 // Function to draw a box which can have 4 different colors in each corner blended together
 #if defined(TORQUE_OS_IOS) || defined(TORQUE_OS_ANDROID) || defined(TORQUE_OS_EMSCRIPTEN)
-void dglDrawBlendBox(RectI& bounds, ColorF& c1, ColorF& c2, ColorF& c3, ColorF& c4)
+void dglDrawBlendBox(const RectI& bounds, ColorF& c1, ColorF& c2, ColorF& c3, ColorF& c4)
 {
-	GLfloat left = bounds.point.x, right = bounds.point.x + bounds.extent.x - 1;
-	GLfloat top = bounds.point.y, bottom = bounds.point.y + bounds.extent.y - 1;
+	GLfloat left = bounds.point.x, right = bounds.point.x + bounds.extent.x;
+	GLfloat top = bounds.point.y, bottom = bounds.point.y + bounds.extent.y;
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -1634,10 +1634,10 @@ void dglDrawBlendBox(RectI& bounds, ColorF& c1, ColorF& c2, ColorF& c3, ColorF& 
 
 //--------------------------------------------------------------------------
 /// Function to draw a set of boxes blending throughout an array of colors
-void dglDrawBlendRangeBox(RectI& bounds, bool vertical, U8 numColors, ColorI* colors)
+void dglDrawBlendRangeBox(const RectI& bounds, bool vertical, U8 numColors, ColorI* colors)
 {
-	S32 left = bounds.point.x, right = bounds.point.x + bounds.extent.x - 1;
-	S32 top = bounds.point.y, bottom = bounds.point.y + bounds.extent.y - 1;
+	S32 left = bounds.point.x, right = bounds.point.x + bounds.extent.x;
+	S32 top = bounds.point.y, bottom = bounds.point.y + bounds.extent.y;
 
 	// Calculate increment value
 	S32 x_inc = S32(mFloor((right - left) / (numColors - 1)));

@@ -202,7 +202,7 @@ extern "C"
    void SSE_MatrixF_x_MatrixF_Aligned(const F32 *matA, const F32 *matB, F32 *result);
 }
 
-#elif defined( TORQUE_COMPILER_GCC ) && (defined( TORQUE_CPU_X86 ) || defined( TORQUE_CPU_X64 ))
+#elif defined( TORQUE_COMPILER_GCC ) && (defined( TORQUE_CPU_X86 ) || defined( TORQUE_CPU_X64 ) && !defined(TORQUE_OS_IOS))
 #define ADD_SSE_FN
 
 void SSE_MatrixF_x_MatrixF(const F32 *matA, const F32 *matB, F32 *result)
