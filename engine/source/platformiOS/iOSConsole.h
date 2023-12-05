@@ -27,7 +27,7 @@
 #include "console/console.h"
 #endif
 #ifndef _EVENT_H_
-#include "Platform/event.h"
+#include "platform/event.h"
 #endif
 
 

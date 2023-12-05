@@ -31,6 +31,7 @@
 #include "console/console.h"
 #include "platformiOS/iOSEvents.h"
 #include "platform/threads/thread.h"
+#include "platformiOS/iOSOutlineGL.h"
 
 #include "platformiOS/iOSWindow.h"
 #import <OpenGLES/EAGLDrawable.h>
@@ -134,7 +135,7 @@ void Platform::init()
     
     // Set RetinaEnabled and the Scale
     // NOTE: I think we could get rid of RetinaEnabled through out and just multiply directly by the scale or use RetinaScale > 1 when needed because with iPhone 6 Plus the screenScale is 3.
-    Con::setBoolVariable("$pref::iOS::RetinaEnabled", gOutlineEnabled);
+    Con::setBoolVariable("$pref::iOS::RetinaEnabled", false);
     Con::setBoolVariable("$pref::iOS::RetinaScale", screenScale);
     
     // Determine the Aspect Ratio and set the device type from that
