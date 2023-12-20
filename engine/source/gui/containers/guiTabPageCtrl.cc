@@ -37,20 +37,6 @@ GuiTabPageCtrl::GuiTabPageCtrl(void)
    mIsContainer = true;
 }
 
-bool GuiTabPageCtrl::onMouseDownEditor(const GuiEvent &event, const Point2I& offset )
-{
-   // This shouldn't be called if it's not design time, but check just incase
-   if ( GuiControl::smDesignTime )
-   {
-      GuiEditCtrl* edit = GuiControl::smEditorHandle;
-      if( edit )
-         edit->select( this );
-   }
-
-   return Parent::onMouseDownEditor( event, offset );
-}
-
-
 GuiControl *GuiTabPageCtrl::findNextTabable(GuiControl *curResponder, bool firstCall)
 {
    //set the global if this is the first call (directly from the canvas)

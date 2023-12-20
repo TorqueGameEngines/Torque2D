@@ -33,7 +33,6 @@ class GuiTabPageCtrl : public GuiControl
    public:
       GuiTabPageCtrl();
       DECLARE_CONOBJECT(GuiTabPageCtrl);
-      bool onMouseDownEditor(const GuiEvent &event, const Point2I& offset );   ///< Called when a mouseDown event occurs and the GUI editor is active
 
       S32 getTabIndex(void) { return mTabIndex; }  ///< Get the tab index of this control
 

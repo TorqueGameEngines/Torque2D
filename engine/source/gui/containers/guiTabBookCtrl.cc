@@ -361,8 +361,11 @@ bool GuiTabBookCtrl::onMouseDownEditor(const GuiEvent &event, const Point2I& off
          edit->select( mActivePage );
    }
 
-   // Return whether we handled this or not.
-   return handled;
+   if (!handled)
+   {
+	   return Parent::onMouseDownEditor(event, offset);
+   }
+   return true;
 
 }
 
