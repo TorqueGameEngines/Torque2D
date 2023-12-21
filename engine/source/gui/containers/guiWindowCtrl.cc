@@ -87,6 +87,7 @@ void GuiWindowCtrl::initPersistFields()
 {
    Parent::initPersistFields();
 
+   addGroup("GuiWindowCtrl");
    addField("resizeWidth",       TypeBool,         Offset(mResizeWidth, GuiWindowCtrl));
    addField("resizeHeight",      TypeBool,         Offset(mResizeHeight, GuiWindowCtrl));
    addField("canMove",           TypeBool,         Offset(mCanMove, GuiWindowCtrl));
@@ -103,6 +104,7 @@ void GuiWindowCtrl::initPersistFields()
    addField("leftRightCursor", TypeGuiCursor, Offset(mLeftRightCursor, GuiWindowCtrl));
    addField("upDownCursor", TypeGuiCursor, Offset(mUpDownCursor, GuiWindowCtrl));
    addField("nWSECursor", TypeGuiCursor, Offset(mNWSECursor, GuiWindowCtrl));
+   endGroup("GuiWindowCtrl");
 }
 
 bool GuiWindowCtrl::isMinimized(S32 &index)

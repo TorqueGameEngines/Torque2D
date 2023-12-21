@@ -66,6 +66,7 @@ ExprEvalState::ExprEvalState()
    globalVars.setState(this);
    thisObject = NULL;
    traceOn = false;
+   editorModeOn = false;
 }
 
 ExprEvalState::~ExprEvalState()

@@ -39,6 +39,7 @@ public:
     SimObject *thisObject;
     Dictionary::Entry *currentVariable;
     bool traceOn;
+	bool editorModeOn;
 
     ExprEvalState();
     ~ExprEvalState();

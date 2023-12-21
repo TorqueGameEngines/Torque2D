@@ -232,10 +232,12 @@ function GuiEditor::open(%this, %content)
     //EditorCore.menuBar.setMenuActive("Edit", true); //These features still need development
     EditorCore.menuBar.setMenuActive("Layout", true);
     EditorCore.menuBar.setMenuActive("Select", true);
+    editorMode(true);
 }
 
 function GuiEditor::close(%this)
 {
+    editorMode(false);
     EditorCore.menuBar.setMenuActive("File", false);
     EditorCore.menuBar.setMenuActive("Edit", false);
     EditorCore.menuBar.setMenuActive("Layout", false);

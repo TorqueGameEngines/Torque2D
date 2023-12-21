@@ -743,6 +743,18 @@ ConsoleFunctionWithDocs(trace, ConsoleVoid, 2, 2, ( enable ))
 
 //----------------------------------------------------------------
 
+/*! Use the trace function to enable (or disable) function call tracing. If enabled, tracing will print a message every time a function is entered, showing what arguments it received, and it will print a message every time a function is exited, showing the return value (or last value of last statement) for that function.
+	@param enable A boolean value. If set to true, tracing is enabled, otherwise it is disabled.
+	@return No return value
+*/
+ConsoleFunctionWithDocs(editorMode, ConsoleVoid, 2, 2, (enable))
+{
+	TORQUE_UNUSED(argc);
+	gEvalState.editorModeOn = dAtob(argv[1]);
+}
+
+//----------------------------------------------------------------
+
 #if defined(TORQUE_DEBUG) || defined(INTERNAL_RELEASE)
 /*! Use the debug function to cause the engine to issue a debug break and to break into an active debugger.
     For this to work, the engine must have been compiled with either TORQUE_DEBUG, or INTERNAL_RELEASE defined
