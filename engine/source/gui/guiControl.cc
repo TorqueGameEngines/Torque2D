@@ -1425,7 +1425,7 @@ bool GuiControl::pointInControl(const Point2I& parentCoordPoint)
 }
 
 
-GuiControl* GuiControl::findHitControl(const Point2I &pt, S32 initialLayer)
+GuiControl* GuiControl::findHitControl(const Point2I &pt, S32 initialLayer, const bool ignoreUseInput, const bool ignoreEditSelected)
 {
    iterator i = end(); // find in z order (last to first)
    while (i != begin())
@@ -1436,12 +1436,15 @@ GuiControl* GuiControl::findHitControl(const Point2I &pt, S32 initialLayer)
       {
          continue;
       }
-      else if (ctrl->mVisible && ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mUseInput)
+      else if (ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && 
+		ctrl->mVisible && 
+		(ignoreUseInput || ctrl->mUseInput) && 
+		(ignoreEditSelected || (isEditMode() && !ctrl->isEditSelected())))
       {
          Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
-         GuiControl *hitCtrl = ctrl->findHitControl(ptemp);
+         GuiControl *hitCtrl = ctrl->findHitControl(ptemp, -1, ignoreUseInput, ignoreEditSelected);
 
-         if(hitCtrl->mUseInput)
+         if(ignoreUseInput || hitCtrl->mUseInput)
             return hitCtrl;
       }
    }

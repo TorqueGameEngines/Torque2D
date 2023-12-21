@@ -561,7 +561,7 @@ public:
     /// Returns the control which the provided point is under, with layering
     /// @param   pt   Point to test
     /// @param   initialLayer  Layer of gui objects to begin the search
-    virtual GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1);
+    virtual GuiControl* findHitControl(const Point2I &pt, S32 initialLayer = -1, const bool ignoreUseInput = false, const bool ignoreEditSelected = true);
 
     /// Lock the mouse within the provided control
     /// @param   lockingControl   Control to lock the mouse within

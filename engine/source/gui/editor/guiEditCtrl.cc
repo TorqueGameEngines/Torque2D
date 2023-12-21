@@ -594,7 +594,7 @@ void GuiEditCtrl::onRightMouseDown(const GuiEvent& event)
 	setFirstResponder();
 
 	//search for the control hit in any layer below the edit layer
-	GuiControl* hitCtrl = mEditorRoot->findHitControl(globalToLocalCoord(event.mousePoint), mLayer - 1);
+	GuiControl* hitCtrl = mEditorRoot->findHitControl(globalToLocalCoord(event.mousePoint), mLayer - 1, true, true);
 	if (hitCtrl != mCurrentAddSet)
 	{
 		Con::executef(this, 1, "onClearSelected");
@@ -733,7 +733,7 @@ void GuiEditCtrl::onTouchDown(const GuiEvent& event)
 	else
 	{
 		//find the control we clicked
-		ctrl = mEditorRoot->findHitControl(mLastMousePos, mCurrentAddSet->mLayer);
+		ctrl = mEditorRoot->findHitControl(mLastMousePos, mCurrentAddSet->mLayer, true, true);
 		handledEvent = ctrl->onMouseDownEditor(event, editorOffset);
 	}
 	if (handledEvent)
@@ -854,7 +854,7 @@ void GuiEditCtrl::onTouchUp(const GuiEvent& event)
 	}
 
 	//find the control we clicked
-	GuiControl* ctrl = mEditorRoot->findHitControl(mLastMousePos, mCurrentAddSet->mLayer);
+	GuiControl* ctrl = mEditorRoot->findHitControl(mLastMousePos, mCurrentAddSet->mLayer, true, true);
 
 	Point2I localOffset = localToGlobalCoord(Point2I(0, 0));
 	bool handledEvent = false;
@@ -938,7 +938,7 @@ void GuiEditCtrl::onTouchDragged(const GuiEvent& event)
 	}
 	else
 	{
-		GuiControl* ctrl = mEditorRoot->findHitControl(mousePoint, mCurrentAddSet->mLayer);
+		GuiControl* ctrl = mEditorRoot->findHitControl(mousePoint, mCurrentAddSet->mLayer, true, true);
 		handledEvent = ctrl->onMouseDraggedEditor(event, localOffset);
 	}
 
@@ -1091,12 +1091,7 @@ void GuiEditCtrl::onTouchDragged(const GuiEvent& event)
 		moveSelection(delta);
 
 		// find the current control under the mouse but not in the selected set.
-		// setting a control invisible makes sure it wont be seen by findHitControl()
-		for (int i = 0; i < mSelectedControls.size(); i++)
-			mSelectedControls[i]->setVisible(false);
-		GuiControl* inCtrl = mEditorRoot->findHitControl(mousePoint, mCurrentAddSet->mLayer);
-		for (int i = 0; i < mSelectedControls.size(); i++)
-			mSelectedControls[i]->setVisible(true);
+		GuiControl* inCtrl = mEditorRoot->findHitControl(mousePoint, mCurrentAddSet->mLayer, true, false);
 
 		// find the nearest control up the heirarchy from the control the mouse is in
 		// that is flagged as a container.
