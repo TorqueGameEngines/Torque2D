@@ -205,7 +205,6 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl(S32 width)
       }
    }
 
-   retCtrl->getList()->sortByText();
    for(U32 j = 0; j < (U32)entries.size(); j++)
    {
 		if(entries[j] != NULL)
@@ -213,6 +212,7 @@ GuiControl* GuiInspectorTypeGuiProfile::constructEditControl(S32 width)
 			retCtrl->getList()->addItem(entries[j]);
 		}
    }
+   retCtrl->getList()->sortByText();
    retCtrl->setField("text", getData());
 
    return retCtrl;
