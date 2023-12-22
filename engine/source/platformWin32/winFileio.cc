@@ -754,6 +754,21 @@ StringTableEntry Platform::getCurrentDirectory()
 {
    char cwd_buf[2048];
    GetCurrentDirectoryA(2047, cwd_buf);
+
+#ifdef UNICODE   
+   int codePage = GetACP();
+   if (codePage != CP_UTF8)
+   {
+       UTF16 b[2048];
+       int size_w = MultiByteToWideChar(codePage, 0, cwd_buf, dStrlen(cwd_buf), nullptr, 0); // get the required buffer size for wchars
+       MultiByteToWideChar(codePage, 0, cwd_buf, dStrlen(cwd_buf), b, size_w);
+
+       int size_mb = WideCharToMultiByte(CP_UTF8, 0, b, size_w, nullptr, 0, NULL, NULL); // get the required buffer size for chars
+       WideCharToMultiByte(CP_UTF8, 0, b, dStrlen(b), cwd_buf, size_mb, NULL, NULL);
+       cwd_buf[size_mb] = '\0';
+   }
+#endif
+
    forwardslash(cwd_buf);
    return StringTable->insert(cwd_buf);
 }
@@ -1037,6 +1052,14 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
    //-----------------------------------------------------------------------------
    // See if we get any hits
    //-----------------------------------------------------------------------------
+
+#ifdef UNICODE
+   UTF16 b[1024];
+   convertUTF8toUTF16((UTF8*)search, b, sizeof(b));
+   int nCodePage = GetACP();
+   WideCharToMultiByte(nCodePage, 0, b, sizeof(b), search, sizeof(search), 0, 0);
+#endif
+
    WIN32_FIND_DATAA findData;
    HANDLE handle = FindFirstFileA(search, &findData);
    if (handle == INVALID_HANDLE_VALUE)
