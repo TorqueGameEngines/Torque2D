@@ -274,11 +274,86 @@ GuiControl* GuiInspectorTypeGuiBorderProfile::constructEditControl(S32 width)
 	  }
    }
 
-   retCtrl->getList()->sortByText();
    for (U32 j = 0; j < (U32)entries.size(); j++)
-	   retCtrl->getList()->addItem(entries[j]);
+   {
+	   if (entries[j] != NULL)
+	   {
+		   retCtrl->getList()->addItem(entries[j]);
+	   }
+   }
+   retCtrl->getList()->sortByText();
+   retCtrl->setField("text", getData());
 
    return retCtrl;
+}
+
+//////////////////////////////////////////////////////////////////////////
+// GuiInspectorTypeGuiCursor
+//////////////////////////////////////////////////////////////////////////
+IMPLEMENT_CONOBJECT(GuiInspectorTypeGuiCursor);
+
+void GuiInspectorTypeGuiCursor::consoleInit()
+{
+	Parent::consoleInit();
+
+	ConsoleBaseType::getType(TypeGuiCursor)->setInspectorFieldType("GuiInspectorTypeGuiCursor");
+}
+
+GuiControl* GuiInspectorTypeGuiCursor::constructEditControl(S32 width)
+{
+	GuiDropDownCtrl* retCtrl = new GuiDropDownCtrl();
+
+	// If we couldn't construct the control, bail!
+	if (retCtrl == NULL)
+		return retCtrl;
+
+	// Let's make it look pretty.
+	retCtrl->setControlProfile(mGroup->mInspector->mDropDownProfile);
+	retCtrl->setControlListBoxProfile(mGroup->mInspector->mDropDownItemProfile);
+	retCtrl->setControlScrollProfile(mGroup->mInspector->mScrollProfile);
+	retCtrl->setControlThumbProfile(mGroup->mInspector->mThumbProfile);
+	retCtrl->setControlArrowProfile(mGroup->mInspector->mArrowProfile);
+	retCtrl->setControlTrackProfile(mGroup->mInspector->mTrackProfile);
+	retCtrl->setControlBackgroundProfile(mGroup->mInspector->mBackgroundProfile);
+	retCtrl->setConstantThumbHeight(mGroup->mInspector->mUseConstantHeightThumb);
+	retCtrl->setShowArrowButtons(mGroup->mInspector->mShowArrowButtons);
+	retCtrl->setScrollBarThickness(mGroup->mInspector->mScrollBarThickness);
+
+	registerEditControl(retCtrl);
+
+	// Configure it to update our value when the popup is closed
+	char szBuffer[512];
+	dSprintf(szBuffer, 512, "%d.apply(%d.getText());", getId(), retCtrl->getId());
+	retCtrl->setField("Command", szBuffer);
+	retCtrl->mBounds.set(mGroup->mInspector->mControlOffset, Point2I(width - mGroup->mInspector->mControlOffset.x, 28));
+
+	Vector<StringTableEntry> entries;
+
+	SimGroup* grp = Sim::getGuiDataGroup();
+	for (SimGroup::iterator i = grp->begin(); i != grp->end(); i++)
+	{
+		GuiCursor* profile = dynamic_cast<GuiCursor*>(*i);
+		if (profile && profile->getName())
+		{
+			StringTableEntry name = StringTable->insert(profile->getName());
+			if (name != StringTable->EmptyString)
+			{
+				entries.push_back(name);
+			}
+		}
+	}
+
+	for (U32 j = 0; j < (U32)entries.size(); j++)
+	{
+		if (entries[j] != NULL)
+		{
+			retCtrl->getList()->addItem(entries[j]);
+		}
+	}
+	retCtrl->getList()->sortByText();
+	retCtrl->setField("text", getData());
+
+	return retCtrl;
 }
 
 
