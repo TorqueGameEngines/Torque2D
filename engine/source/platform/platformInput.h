@@ -147,6 +147,7 @@ protected:
     static U8 smModifierKeys; ///< Current Modifier Keys Pressed
     static bool smLastMouseActivated;
     static bool smLastJoystickActivated;
+	static bool smCursorGuard; ///< Used by Mac to prevent over hiding the cursor
 
 public:
     static void init();

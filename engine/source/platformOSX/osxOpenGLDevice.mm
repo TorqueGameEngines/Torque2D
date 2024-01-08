@@ -298,7 +298,7 @@ bool osxOpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp, bool fullSc
         // Send message to the window to resize/relocate
         [[platState window] setFrame:newFrame display:YES animate:NO];
 #else
-        [[platState window] setStyleMask:NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask];
+		[[platState window] setStyleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable];
 #endif
     }
 

@@ -132,29 +132,14 @@ static osxPlatState * tempSharedPlatState = nil;
     // Get the window's current frame
     NSRect frame = NSMakeRect([_window frame].origin.x, [_window frame].origin.y, width, height);
     
-    // Get the starting position of the bar height
-    F32 barOffset = frame.size.height;
-    
     // If we are not going to full screen mode, get a new frame offset that accounts
     // for the title bar height
     if (!_fullscreen)
     {
-        frame = [NSWindow frameRectForContentRect:frame styleMask:NSTitledWindowMask];
+		frame = [NSWindow frameRectForContentRect:frame styleMask:NSWindowStyleMaskTitled];
         
         // Set the new window frame
         [_window setFrame:frame display:YES];
-        
-        // Get the new position of the title bar
-        barOffset -= frame.size.height;
-        
-#if __MAC_OS_X_VERSION_MAX_ALLOWED < 1070
-        
-        // Update the frame of the torqueView to match the window
-        frame = NSMakeRect([_window frame].origin.x, [_window frame].origin.y, width, height);
-        NSRect viewFrame = NSMakeRect(0, 0, frame.size.width, frame.size.height);
-        [_torqueView setFrame:viewFrame];
-        [_torqueView updateContext];
-#endif
     }
     else
     {
@@ -176,16 +161,13 @@ static osxPlatState * tempSharedPlatState = nil;
     }
     
     // Update the frame of the torqueView to match the window
-    frame = NSMakeRect([_window frame].origin.x, [_window frame].origin.y, width, height);
-    NSRect viewFrame = NSMakeRect(0, 0, frame.size.width, frame.size.height);
-    
+    NSRect viewFrame = NSMakeRect(0, 0, width, height);
     [_torqueView setFrame:viewFrame];
     
     [_torqueView updateContext];
     
     [_window makeKeyAndOrderFront:NSApp];
     [_window makeFirstResponder:_torqueView];
-    
 }
 
 //-----------------------------------------------------------------------------

@@ -28,6 +28,8 @@
 #include "math/mPoint.h"
 #include "math/mRandom.h"
 
+#define GL_SILENCE_DEPRECATION
+
 @interface osxPlatState : NSObject
 {
     // Main application Window

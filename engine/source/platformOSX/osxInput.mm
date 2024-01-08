@@ -28,6 +28,7 @@
 InputManager *Input::smManager = 0;
 CursorManager *Input::smCursorManager = 0;
 bool Input::smActive;
+bool Input::smCursorGuard;
 
 #pragma mark ---- Input Namespace Functions ----
 
@@ -42,6 +43,7 @@ void Input::init()
 
     smManager = NULL;
     smActive = false;
+	smCursorGuard = true; //cursor starts visible
 
     if (!smManager)
         smManager = new osxInputManager();
@@ -349,7 +351,18 @@ void Input::setCursorPos(S32 x, S32 y)
 // Not yet implemented. Will resolve in the next platform update
 void Input::setCursorState(bool on)
 {
-    on ? [NSCursor unhide] : [NSCursor hide];
+	if(!smCursorGuard && on)
+	{
+		//We are turning on the native cursor
+		[NSCursor unhide];
+	}
+	else if(smCursorGuard && !on)
+	{
+		//We are turning off the native cursor
+		[NSCursor hide];
+	}
+
+	smCursorGuard = on;
 }
 
 

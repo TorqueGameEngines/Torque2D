@@ -97,18 +97,14 @@
 // Called whent the parent finishes its live resizing
 - (void)windowFinishedLiveResize:(NSNotification *)notification
 {
-    NSSize size = [[self window] frame].size;
-
-    [[osxPlatState sharedPlatState] setWindowSize:(S32)size.width height:(S32)size.height];
-    
-    NSRect frame = NSMakeRect(0, 0, size.width, size.height);
-    
-    S32 barHeight = frame.size.height;
-    frame = [NSWindow frameRectForContentRect:frame styleMask:NSTitledWindowMask];
-    barHeight -= frame.size.height;
-    
-    NSRect viewFrame = NSMakeRect(0, barHeight, frame.size.width, frame.size.height);
-    
+	NSSize actualWindowSize = [[self window] frame].size;
+	NSRect frame = NSMakeRect(0, 0, actualWindowSize.width, actualWindowSize.height);
+	frame = [NSWindow frameRectForContentRect:frame styleMask:NSWindowStyleMaskTitled];
+	S32 barHeight = frame.size.height - actualWindowSize.height;
+	S32 heightWithoutTitle = actualWindowSize.height - barHeight;
+	[[osxPlatState sharedPlatState] setWindowSize:(S32)actualWindowSize.width height:heightWithoutTitle];
+	
+	NSRect viewFrame = NSMakeRect(0, 0, frame.size.width, heightWithoutTitle);
     [self setFrame:viewFrame];
     [self updateContext];
 }
@@ -210,16 +206,16 @@
     
     U32 keyMods = (U32)[event modifierFlags];
     
-    if (keyMods & NSShiftKeyMask)
+	if (keyMods & NSEventModifierFlagShift)
         modifiers |= SI_SHIFT;
     
-    if (keyMods & NSCommandKeyMask)
+	if (keyMods & NSEventModifierFlagCommand)
         modifiers |= SI_ALT;
     
-    if (keyMods & NSAlternateKeyMask)
+	if (keyMods & NSEventModifierFlagOption)
         modifiers |= SI_MAC_OPT;
     
-    if (keyMods & NSControlKeyMask)
+	if (keyMods & NSEventModifierFlagControl)
         modifiers |= SI_CTRL;
 }
 
@@ -374,13 +370,13 @@
 {
     if (!Canvas->getUseNativeCursor())
     {
-        [NSCursor hide];
+		Input::setCursorState(false);
     }
 }
 
 -(void)mouseExited:(NSEvent *)event
 {
-    [NSCursor unhide];
+	Input::setCursorState(true);
 }
 // Default otherMouseDown override
 - (void)mouseMoved:(NSEvent *)event

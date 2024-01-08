@@ -92,7 +92,7 @@ void Platform::initWindow(const Point2I &initialSize, const char *name)
     NSRect frame = NSMakeRect(0, 0, [platState windowWidth], [platState windowHeight]);
     
     NSWindow *tempWindow = [[[NSWindow alloc] initWithContentRect:frame
-                                              styleMask:NSTitledWindowMask | NSClosableWindowMask | NSResizableWindowMask
+														styleMask:NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskResizable
                                               backing:NSBackingStoreBuffered
                                               defer:NO] autorelease];
     
@@ -100,7 +100,7 @@ void Platform::initWindow(const Point2I &initialSize, const char *name)
 
     // The full frame for a window must consider the title bar height as well
     // Thus, our NSWindow must be larger than the passed width and height
-    frame = [NSWindow frameRectForContentRect:frame styleMask:NSTitledWindowMask];
+	frame = [NSWindow frameRectForContentRect:frame styleMask:NSWindowStyleMaskTitled];
     [tempWindow setFrame:frame display:YES];
 
     [platState setWindow:tempWindow];
