@@ -291,8 +291,8 @@ if (APPLE)
 	addFramework("AppKit")
 	addFramework("AVFoundation")
 	#set a few arch defaults
-	set(CMAKE_OSX_ARCHITECTURES "x86_64" CACHE STRING "OSX Architecture" FORCE)
-	set(CMAKE_OSX_DEPLOYMENT_TARGET "10.9" CACHE STRING "OSX Deployment target" FORCE)
+	set(CMAKE_OSX_ARCHITECTURES "${CMAKE_HOST_SYSTEM_PROCESSOR}" CACHE STRING "OSX Architecture" FORCE)
+	set(CMAKE_OSX_DEPLOYMENT_TARGET "13.0" CACHE STRING "OSX Deployment target" FORCE)
 endif()
 
 if(WIN32)
