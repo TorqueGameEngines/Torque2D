@@ -82,7 +82,6 @@ private:
 	ColorF mBaseColor;
 	bool mIsOpen;
 	Point2I mPopupSize;
-	S32 mBlendHeight;
 	S32 mBarHeight;
 	bool mShowAlphaBar;
 

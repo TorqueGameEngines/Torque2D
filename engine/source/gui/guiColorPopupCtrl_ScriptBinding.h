@@ -112,4 +112,66 @@ ConsoleMethodWithDocs(GuiColorPopupCtrl, getColorI, ConsoleString, 2, 2, ())
 	return(returnBuffer);
 }
 
+/*! Sets the base color displayed using floating point values.
+	@param color The color to display as values between 0 and 1.0.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiColorPopupCtrl, setColorF, ConsoleVoid, 3, 3, "(color red / green / blue / [alpha])")
+{
+	if (argc == 3)
+	{
+		const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
+		if (colorCount != 4 && colorCount != 3)
+		{
+			Con::warnf("GuiColorPopupCtrl::setColorF() - Invalid color! Colors require three or four values (red / green / blue / [alpha])!");
+			return;
+		}
+
+		F32 red, green, blue, alpha;
+
+		red = dAtof(Utility::mGetStringElement(argv[2], 0));
+		green = dAtof(Utility::mGetStringElement(argv[2], 1));
+		blue = dAtof(Utility::mGetStringElement(argv[2], 2));
+		alpha = colorCount > 3 ? dAtof(Utility::mGetStringElement(argv[2], 3)) : 1.0;
+
+		ColorF color = ColorF(red, green, blue, alpha);
+		object->setColor(color);
+	}
+	else
+	{
+		Con::warnf("GuiColorPopupCtrl::setColorF() - Invalid number of parameters!");
+	}
+}
+
+/*! Sets the base color displayed using integer values.
+	@param color The color to display as values between 0 and 255.
+	@return No return value.
+*/
+ConsoleMethodWithDocs(GuiColorPopupCtrl, setColorI, ConsoleVoid, 3, 3, "(color red / green / blue / [alpha])")
+{
+	if (argc == 3)
+	{
+		const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
+		if (colorCount != 4 && colorCount != 3)
+		{
+			Con::warnf("GuiColorPopupCtrl::setColorI() - Invalid color! Colors require three or four values (red / green / blue / [alpha])!");
+			return;
+		}
+
+		S32 red, green, blue, alpha;
+
+		red = dAtoi(Utility::mGetStringElement(argv[2], 0));
+		green = dAtoi(Utility::mGetStringElement(argv[2], 1));
+		blue = dAtoi(Utility::mGetStringElement(argv[2], 2));
+		alpha = colorCount > 3 ? dAtoi(Utility::mGetStringElement(argv[2], 3)) : 255;
+
+		ColorF color = ColorI(red, green, blue, alpha);
+		object->setColor(color);
+	}
+	else
+	{
+		Con::warnf("GuiColorPopupCtrl::setColorI() - Invalid number of parameters!");
+	}
+}
+
 ConsoleMethodGroupEndWithDocs(GuiColorPopupCtrl)

@@ -115,7 +115,6 @@ GuiColorPopupCtrl::GuiColorPopupCtrl()
 	mIsContainer = false;
 	mBaseColor = ColorF(0.5f, 0.5f, 0.5f);
 	mPopupSize = Point2I(240, 208);
-	mBlendHeight = 150;
 	mBarHeight = 20;
 	mShowAlphaBar = true;
 	mBounds.extent.set(40, 40);
@@ -152,7 +151,7 @@ GuiColorPopupCtrl::GuiColorPopupCtrl()
 	AssertFatal(mColorBlendPicker, "GuiColorPopupCtrl: Failed to initialize GuiColorPopupBlendCtrl!");
 	mColorBlendPicker->setField("profile", "GuiColorPickerProfile");
 	mColorBlendPicker->setField("displayMode", "blendColor");
-	mColorBlendPicker->setExtent(Point2I(contentRect.extent.x, mBlendHeight));
+	mColorBlendPicker->setExtent(Point2I(contentRect.extent.x, 100));
 	mColorBlendPicker->showSelector();
 	mPickerProfile = mColorBlendPicker->mProfile;
 	mPickerProfile->incRefCount();
@@ -305,21 +304,21 @@ void GuiColorPopupCtrl::openColorPopup()
 	mContent->setExtent(mPopupSize);
 	RectI contentRect = mContent->getInnerRect();
 	mColorBlendPicker->setWidth(contentRect.extent.x);
-	S32 blendHeight = getMin(contentRect.extent.y, mBlendHeight);
-	mColorBlendPicker->setHeight(blendHeight);
-	S32 remainingHeight = contentRect.extent.y - blendHeight;
 
-	U8 barCount = mShowAlphaBar ? 2 : 1;
-	S32 barSpace = remainingHeight / barCount;
-	mColorHuePicker->resize(Point2I(0, blendHeight + barSpace - mBarHeight), Point2I(contentRect.extent.x, mBarHeight));
 	if (mShowAlphaBar)
 	{
 		mColorAlphaPicker->setActive(true);
-		mColorAlphaPicker->resize(Point2I(0, blendHeight + (barSpace * 2) - mBarHeight), Point2I(contentRect.extent.x, mBarHeight));
+		mColorAlphaPicker->setVisible(true);
+		mColorAlphaPicker->resize(Point2I(0, contentRect.extent.y - mBarHeight), Point2I(contentRect.extent.x, mBarHeight));
+		mColorHuePicker->resize(Point2I(0, contentRect.extent.y - (2 * mBarHeight)), Point2I(contentRect.extent.x, mBarHeight));
+		mColorBlendPicker->setHeight(contentRect.extent.y - (2 * mBarHeight));
 	}
 	else
 	{
 		mColorAlphaPicker->setActive(false);
+		mColorAlphaPicker->setVisible(false);
+		mColorHuePicker->resize(Point2I(0, contentRect.extent.y - mBarHeight), Point2I(contentRect.extent.x, mBarHeight));
+		mColorBlendPicker->setHeight(contentRect.extent.y - mBarHeight);
 	}
 
 	Point2I huePos = mColorHuePicker->getSelectorPositionForColor(mBaseColor);
