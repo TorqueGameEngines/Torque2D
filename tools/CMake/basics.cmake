@@ -317,7 +317,7 @@ macro(finishExecutable)
     endif()
 
     if (APPLE)
-      set(ICON_FILE "${projectSrcDir}/torque.icns")
+      #set(ICON_FILE "${projectSrcDir}/torque.icns")
         set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
         add_executable("${PROJECT_NAME}" MACOSX_BUNDLE ${ICON_FILE} ${${PROJECT_NAME}_files})
     else()

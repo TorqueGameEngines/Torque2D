@@ -20,7 +20,7 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #import "platformOSX/platformOSX.h"
-#import "fileDialog.h"
+#import "platform/nativeDialogs/fileDialog.h"
 #import "osxCocoaUtilities.h"
 
 @implementation NSSavePanel (TorqueFileDialogs)

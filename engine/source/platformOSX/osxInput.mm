@@ -22,6 +22,7 @@
 #import "platform/platform.h"
 #import "platform/platformInput.h"
 #import "platformOSX/osxInputManager.h"
+#import "platformOSX/platformOSX.h"
 #import "platform/event.h"
 
 #pragma mark ---- Static Variables ----
