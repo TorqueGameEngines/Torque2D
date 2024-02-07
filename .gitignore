@@ -90,3 +90,4 @@ engine/compilers/Make-32bit/Debug/
 engine/compilers/Make-32bit/Release/
 engine/compilers/Make-64bit/Debug/
 engine/compilers/Make-64bit/Release/
+*build*/

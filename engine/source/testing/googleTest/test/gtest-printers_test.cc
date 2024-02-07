@@ -208,8 +208,8 @@ using ::testing::internal::kReference;
 using ::testing::internal::string;
 
 #if GTEST_HAS_TR1_TUPLE
-using ::std::tr1::make_tuple;
-using ::std::tr1::tuple;
+using ::std::make_tuple;
+using ::std::tuple;
 #endif
 
 #if _MSC_VER

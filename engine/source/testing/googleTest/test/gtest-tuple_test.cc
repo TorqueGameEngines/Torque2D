@@ -35,11 +35,11 @@
 
 namespace {
 
-using ::std::tr1::get;
-using ::std::tr1::make_tuple;
-using ::std::tr1::tuple;
-using ::std::tr1::tuple_element;
-using ::std::tr1::tuple_size;
+using ::std::get;
+using ::std::make_tuple;
+using ::std::tuple;
+using ::std::tuple_element;
+using ::std::tuple_size;
 using ::testing::StaticAssertTypeEq;
 
 // Tests that tuple_element<K, tuple<T0, T1, ..., TN> >::type returns TK.

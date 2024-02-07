@@ -21,6 +21,7 @@
 //-----------------------------------------------------------------------------
 #import "platform/platform.h"
 #import "platform/platformInput.h"
+#import "platformOSX/platformOSX.h"
 #import "platformOSX/osxInputManager.h"
 #import "platform/event.h"
 

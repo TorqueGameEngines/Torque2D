@@ -19,8 +19,12 @@
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
+#import <Cocoa/Cocoa.h>
+#import "AppDelegate.h"
 
 int main(int argc, char *argv[])
 {
+    [NSApplication sharedApplication];
+    [NSApp setDelegate: [AppDelegate new]];
     return NSApplicationMain(argc, (const char **)argv);
 }

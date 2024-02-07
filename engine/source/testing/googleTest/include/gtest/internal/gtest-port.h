@@ -59,7 +59,7 @@
 //   GTEST_HAS_STD_WSTRING    - Define it to 1/0 to indicate that
 //                              std::wstring does/doesn't work (Google Test can
 //                              be used where std::wstring is unavailable).
-//   GTEST_HAS_TR1_TUPLE      - Define it to 1/0 to indicate tr1::tuple
+//   GTEST_HAS_TR1_TUPLE      - Define it to 1/0 to indicate tuple
 //                              is/isn't available.
 //   GTEST_HAS_SEH            - Define it to 1/0 to indicate whether the
 //                              compiler supports Microsoft's "Structured
@@ -496,7 +496,7 @@
 #   undef _TR1_FUNCTIONAL  // Allows the user to #include
                         // <tr1/functional> if he chooses to.
 #  else
-#   include <tr1/tuple>  // NOLINT
+#   include <tuple>  // NOLINT
 #  endif  // !GTEST_HAS_RTTI && GTEST_GCC_VER_ < 40302
 
 # else
@@ -1454,7 +1454,7 @@ GTEST_API_ size_t GetThreadCount();
 // The Nokia Symbian and IBM XL C/C++ compilers cannot decide between
 // const T& and const T* in a function template.  These compilers
 // _can_ decide between class template specializations for T and T*,
-// so a tr1::type_traits-like is_pointer works.
+// so a type_traits-like is_pointer works.
 #if defined(__SYMBIAN32__) || defined(__IBMCPP__)
 # define GTEST_NEEDS_IS_POINTER_ 1
 #endif
