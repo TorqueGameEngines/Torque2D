@@ -25,7 +25,7 @@
 // which contains the workaround.
 #include <OpenGL/OpenGL.h>
 #include "platformOSX/platformOSX.h"
-#include "platformOSX/platformGL.h"
+#include "platformGL.h"
 #include "console/console.h"
 #include "graphics/dgl.h"
 

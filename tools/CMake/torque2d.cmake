@@ -251,7 +251,7 @@ if(WIN32)
 endif()
 
 if(APPLE)
-    addPath("${srcDir}/platformOSX")
+    addPathRec("${srcDir}/platformOSX")
 endif()
 
 if(UNIX AND NOT APPLE)

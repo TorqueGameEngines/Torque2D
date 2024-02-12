@@ -20,8 +20,8 @@
 // IN THE SOFTWARE.
 //-----------------------------------------------------------------------------
 #import "platformOSX/platformOSX.h"
-#import "platformOSX/osxOpenGLDevice.h"
-#import "platformOSX/platformGL.h"
+#import "osxOpenGLDevice.h"
+#import "platformGL.h"
 #include "console/console.h"
 #include "game/gameInterface.h"
 #include "graphics/dgl.h"
