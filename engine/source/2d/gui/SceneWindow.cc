@@ -601,18 +601,6 @@ void SceneWindow::setProcessAudioListener(bool mval)
 
 void SceneWindow::startCameraMove( const F32 interpolationTime )
 {
-    // Are we mounted to an object and trying to move?
-    if ( isCameraMounted() )
-    {
-        if ( ( mCameraCurrent.mSourceArea.point  != mCameraTarget.mSourceArea.point ) ||
-             ( mCameraCurrent.mSourceArea.extent != mCameraTarget.mSourceArea.extent ) )
-        {
-           // Yes, so cannot use this command.
-           Con::warnf("SceneWindow::startCameraMove - Cannot use this command when camera is mounted!");
-           return;
-        }
-    }
-
     // Stop move if we're at target already.
     if (    mCameraCurrent.mSourceArea.point  == mCameraTarget.mSourceArea.point &&
             mCameraCurrent.mSourceArea.extent == mCameraTarget.mSourceArea.extent &&
@@ -753,13 +741,18 @@ void SceneWindow::updateCamera( void )
         return;
     }
 
-    // Interpolate Camera Window/Zoom.
-    mCameraCurrent.mSourceArea.point.x    = interpolate( mCameraSource.mSourceArea.point.x, mCameraTarget.mSourceArea.point.x, normCameraTime );
-    mCameraCurrent.mSourceArea.point.y    = interpolate( mCameraSource.mSourceArea.point.y, mCameraTarget.mSourceArea.point.y, normCameraTime );
-    mCameraCurrent.mSourceArea.extent.x   = interpolate( mCameraSource.mSourceArea.extent.x, mCameraTarget.mSourceArea.extent.x, normCameraTime );
-    mCameraCurrent.mSourceArea.extent.y   = interpolate( mCameraSource.mSourceArea.extent.y, mCameraTarget.mSourceArea.extent.y, normCameraTime );
-    mCameraCurrent.mCameraZoom            = interpolate( mCameraSource.mCameraZoom, mCameraTarget.mCameraZoom, normCameraTime );
-    mCameraCurrent.mCameraAngle           = interpolate( mCameraSource.mCameraAngle, mCameraTarget.mCameraAngle, normCameraTime );
+	if(!mCameraMounted)
+	{
+		// Interpolate Camera Window/Zoom.
+		mCameraCurrent.mSourceArea.point.x    = interpolate( mCameraSource.mSourceArea.point.x, mCameraTarget.mSourceArea.point.x, normCameraTime );
+		mCameraCurrent.mSourceArea.point.y    = interpolate( mCameraSource.mSourceArea.point.y, mCameraTarget.mSourceArea.point.y, normCameraTime );
+		mCameraCurrent.mSourceArea.extent.x   = interpolate( mCameraSource.mSourceArea.extent.x, mCameraTarget.mSourceArea.extent.x, normCameraTime );
+		mCameraCurrent.mSourceArea.extent.y   = interpolate( mCameraSource.mSourceArea.extent.y, mCameraTarget.mSourceArea.extent.y, normCameraTime );
+		mCameraCurrent.mCameraAngle           = interpolate( mCameraSource.mCameraAngle, mCameraTarget.mCameraAngle, normCameraTime );
+	}
+
+	//Do the zoom regardless of the mount state.
+	mCameraCurrent.mCameraZoom = interpolate(mCameraSource.mCameraZoom, mCameraTarget.mCameraZoom, normCameraTime);
 
 	//Update the Scroll Bar
 	updateScrollBar();
@@ -858,11 +851,6 @@ void SceneWindow::mount( SceneObject* pSceneObject, const Vector2& mountOffset, 
     {
         // Yes, so dismount object.
         dismount();
-    }
-    else
-    {
-        // No, so stop any Camera Move.
-        if ( mMovingCamera ) stopCameraMove();
     }
 
 	//Are we using scroll bars? If so that's done now.
