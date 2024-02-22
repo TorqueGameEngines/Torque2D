@@ -123,6 +123,7 @@ GuiControl::GuiControl()
    mTipHoverTime        = 1000;
    mTooltipWidth		= 250;
    mIsContainer         = true;
+   mAllowEventPassThru  = false;
    mTextWrap			= false;
    mTextExtend          = false;
    mUseInput            = true;
@@ -1451,7 +1452,101 @@ GuiControl* GuiControl::findHitControl(const Point2I &pt, S32 initialLayer, cons
    return this;
 }
 
-// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- //
+bool GuiControl::handleTouchDown(const GuiEvent& event, const Point2I& pt, S32 initialLayer)
+{
+	bool keepGoing = true;
+	iterator i = end(); // find in z order (last to first)
+	while (i != begin())
+	{
+		i--;
+		GuiControl* ctrl = static_cast<GuiControl*>(*i);
+		if (initialLayer >= 0 && ctrl->mLayer > initialLayer)
+		{
+			continue;
+		}
+		else if (ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mVisible && ctrl->mUseInput)
+		{
+			Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
+			keepGoing = ctrl->handleTouchDown(event, ptemp) && ctrl->mAllowEventPassThru;
+		}
+
+		if (!keepGoing)
+		{
+			break;
+		}
+	}
+	if (keepGoing)
+	{
+		mPassEventThru = false;
+		onTouchDown(event);
+		keepGoing = mPassEventThru;
+	}
+	return keepGoing;
+}
+
+bool GuiControl::handleTouchUp(const GuiEvent& event, const Point2I& pt, S32 initialLayer)
+{
+	bool keepGoing = true;
+	iterator i = end(); // find in z order (last to first)
+	while (i != begin())
+	{
+		i--;
+		GuiControl* ctrl = static_cast<GuiControl*>(*i);
+		if (initialLayer >= 0 && ctrl->mLayer > initialLayer)
+		{
+			continue;
+		}
+		else if (ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mVisible && ctrl->mUseInput)
+		{
+			Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
+			keepGoing = ctrl->handleTouchUp(event, ptemp) && ctrl->mAllowEventPassThru;
+		}
+
+		if (!keepGoing)
+		{
+			break;
+		}
+	}
+	if (keepGoing)
+	{
+		mPassEventThru = false;
+		onTouchUp(event);
+		keepGoing = mPassEventThru;
+	}
+	return keepGoing;
+}
+
+bool GuiControl::handleTouchMove(const GuiEvent& event, const Point2I& pt, S32 initialLayer)
+{
+	bool keepGoing = true;
+	iterator i = end(); // find in z order (last to first)
+	while (i != begin())
+	{
+		i--;
+		GuiControl* ctrl = static_cast<GuiControl*>(*i);
+		if (initialLayer >= 0 && ctrl->mLayer > initialLayer)
+		{
+			continue;
+		}
+		else if (ctrl->pointInControl(pt - ctrl->mRenderInsetLT) && ctrl->mVisible && ctrl->mUseInput)
+		{
+			Point2I ptemp = pt - (ctrl->mBounds.point + ctrl->mRenderInsetLT);
+			keepGoing = ctrl->handleTouchMove(event, ptemp) && ctrl->mAllowEventPassThru;
+		}
+
+		if (!keepGoing)
+		{
+			break;
+		}
+	}
+	if (keepGoing)
+	{
+		mPassEventThru = false;
+		onTouchMove(event);
+		keepGoing = mPassEventThru;
+	}
+	return keepGoing;
+}
 
 bool GuiControl::isMouseLocked()
 {

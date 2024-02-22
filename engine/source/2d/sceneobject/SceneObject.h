@@ -550,7 +550,7 @@ public:
     /// Input events.
     inline void             setUseInputEvents( bool mouseStatus )       { mUseInputEvents = mouseStatus; }
     inline bool             getUseInputEvents( void ) const             { return mUseInputEvents; }
-    virtual void            onInputEvent( StringTableEntry name, const GuiEvent& event, const Vector2& worldMousePoint );
+    virtual bool            onInputEvent( StringTableEntry name, const GuiEvent& event, const Vector2& worldMousePoint );
 
     // Script callbacks.
     inline void             setUpdateCallback( bool status )            { mUpdateCallback = status; }

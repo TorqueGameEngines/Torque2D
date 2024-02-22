@@ -194,6 +194,8 @@ public:
 		tRotateRight
 	};
 
+	bool mPassEventThru = false;
+
 protected:
     /// @name Control State
     /// @{
@@ -576,6 +578,11 @@ public:
     /// Returns true if the mouse is locked
     virtual bool isMouseLocked();
     /// @}
+
+	bool mAllowEventPassThru;
+	bool handleTouchDown(const GuiEvent& event, const Point2I& pt, S32 initialLayer = -1);
+	bool handleTouchUp(const GuiEvent& event, const Point2I& pt, S32 initialLayer = -1);
+	bool handleTouchMove(const GuiEvent& event, const Point2I& pt, S32 initialLayer = -1);
 
     //Sends a script event with modifier and mouse position if the script method exists. Returns true if the event is consumed.
     bool sendScriptMouseEvent(const char* name, const GuiEvent& event);

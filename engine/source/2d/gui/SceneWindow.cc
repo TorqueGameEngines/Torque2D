@@ -1163,27 +1163,32 @@ void SceneWindow::sceneToWindowPoint( const Vector2& srcPoint, Vector2& dstPoint
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::dispatchInputEvent( StringTableEntry name, const GuiEvent& event )
+bool SceneWindow::dispatchInputEvent( StringTableEntry name, const GuiEvent& event )
 {
     // Debug Profiling.
     PROFILE_SCOPE(SceneWindow_DispatchInputEvent);
 
     // Dispatch input event to window if appropriate.
+	bool windowConsumedEvent = false;
     if ( getUseWindowInputEvents() )
-        sendWindowInputEvent( name, event );
+		windowConsumedEvent = sendWindowInputEvent( name, event );
 
     // Dispatch input event to scene objects if appropriate.
+	bool objectConsumedEvent = false;
     if ( getUseObjectInputEvents() )
-        sendObjectInputEvent( name, event );
+		objectConsumedEvent = sendObjectInputEvent( name, event );
+
+	return !(windowConsumedEvent || objectConsumedEvent);
 }
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::sendWindowInputEvent( StringTableEntry name, const GuiEvent& event )
+bool SceneWindow::sendWindowInputEvent( StringTableEntry name, const GuiEvent& event )
 {       
     // Debug Profiling.
     PROFILE_SCOPE(SceneWindow_SendWindowInputEvent);
 
+	bool consumed = false;
     Vector2   worldMousePoint;
 
     // Calculate Current Camera View.
@@ -1218,7 +1223,7 @@ void SceneWindow::sendWindowInputEvent( StringTableEntry name, const GuiEvent& e
     dSprintf(argBuffer[2], 64, "%d", event.mouseClickCount);
 
     // Call Scripts.
-    Con::executef(this, 4, name, argBuffer[0], argBuffer[1], argBuffer[2]);
+    consumed = Con::executef(this, 4, name, argBuffer[0], argBuffer[1], argBuffer[2]);
 
     // Iterate listeners.
     for( SimSet::iterator listenerItr = mInputListeners.begin(); listenerItr != mInputListeners.end(); ++listenerItr )
@@ -1226,24 +1231,28 @@ void SceneWindow::sendWindowInputEvent( StringTableEntry name, const GuiEvent& e
         // Call scripts on listener.
         Con::executef( *listenerItr, 4, name, argBuffer[0], argBuffer[1], argBuffer[2] );
     }
+
+	return consumed;
 }
 
 //-----------------------------------------------------------------------------
 
-void SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& event )
+bool SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& event )
 {
     // Debug Profiling.
     PROFILE_SCOPE(SceneWindow_SendObjectInputEvent);
 
+	bool consumed = false;
+
     // Finish if we're not bound to a scene?
-    if ( !getScene() ) return;
+    if ( !getScene() ) return consumed;
 
     // Only process appropriate input events.
     if ( !( name == inputEventDownName ||
             name == inputEventUpName ||
             name == inputEventMovedName ||
             name == inputEventDraggedName ) )
-        return;
+        return consumed;
 
     // Convert Event-Position into scene coordinates.
     Vector2 worldMousePoint;
@@ -1264,7 +1273,7 @@ void SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& e
 
     // Early-out if nothing to do.
     if ( newPickCount == 0 && oldPickCount == 0 )
-        return;
+        return consumed;
 
     // Fetch results.
     mInputEventQuery = pWorldQuery->getQueryResults();
@@ -1338,7 +1347,7 @@ void SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& e
             continue;
 
         // Emit event.
-        pSceneObject->onInputEvent( name, event, worldMousePoint );
+		consumed = pSceneObject->onInputEvent( name, event, worldMousePoint );
     }
 
     // Process "leave" events.
@@ -1365,7 +1374,7 @@ void SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& e
 
         // Process "moved" or "dragged" events.
         if ( name == inputEventMovedName || name == inputEventDraggedName )
-            pSceneObject->onInputEvent( name, event, worldMousePoint );
+			consumed = pSceneObject->onInputEvent( name, event, worldMousePoint );
 
         // Add scene object.
         mInputEventWatching.addObject( pSceneObject );
@@ -1375,6 +1384,8 @@ void SceneWindow::sendObjectInputEvent( StringTableEntry name, const GuiEvent& e
     mInputEventQuery.clear();
     mInputEventEntering.clear();
     mInputEventLeaving.clear();
+
+	return consumed;
 }
 
 //-----------------------------------------------------------------------------
@@ -1418,7 +1429,7 @@ void SceneWindow::onTouchDown( const GuiEvent& event )
         mouseLock();
 
     // Dispatch input event.
-    dispatchInputEvent( inputEventDownName, event);
+    mPassEventThru = dispatchInputEvent( inputEventDownName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1430,7 +1441,7 @@ void SceneWindow::onTouchUp( const GuiEvent& event )
         mouseUnlock();
 
     // Dispatch input event.
-    dispatchInputEvent(inputEventUpName, event);
+	mPassEventThru = dispatchInputEvent(inputEventUpName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1443,7 +1454,7 @@ void SceneWindow::onTouchMove( const GuiEvent& event )
 	}
 
     // Dispatch input event.
-    dispatchInputEvent(inputEventMovedName, event);
+	mPassEventThru = dispatchInputEvent(inputEventMovedName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1451,7 +1462,7 @@ void SceneWindow::onTouchMove( const GuiEvent& event )
 void SceneWindow::onTouchDragged( const GuiEvent& event )
 {
     // Dispatch input event.
-    dispatchInputEvent(inputEventDraggedName, event);
+	mPassEventThru = dispatchInputEvent(inputEventDraggedName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1463,7 +1474,7 @@ void SceneWindow::onMiddleMouseDown( const GuiEvent& event )
         mouseLock();
 
     // Dispatch input event.
-    dispatchInputEvent(mouseEventMiddleMouseDownName, event);
+	mPassEventThru = dispatchInputEvent(mouseEventMiddleMouseDownName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1475,7 +1486,7 @@ void SceneWindow::onMiddleMouseUp( const GuiEvent& event )
         mouseUnlock();
 
     // Dispatch input event.
-    dispatchInputEvent(mouseEventMiddleMouseUpName, event);
+	mPassEventThru = dispatchInputEvent(mouseEventMiddleMouseUpName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1483,7 +1494,7 @@ void SceneWindow::onMiddleMouseUp( const GuiEvent& event )
 void SceneWindow::onMiddleMouseDragged( const GuiEvent& event )
 {
     // Dispatch input event.
-    dispatchInputEvent(mouseEventMiddleMouseDraggedName, event);
+	mPassEventThru = dispatchInputEvent(mouseEventMiddleMouseDraggedName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1495,7 +1506,7 @@ void SceneWindow::onRightMouseDown( const GuiEvent& event )
         mouseLock();
 
     // Dispatch input event.
-    dispatchInputEvent(mouseEventRightMouseDownName, event);
+	mPassEventThru = dispatchInputEvent(mouseEventRightMouseDownName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1507,7 +1518,7 @@ void SceneWindow::onRightMouseUp( const GuiEvent& event )
         mouseUnlock();
 
     // Dispatch input event.
-    dispatchInputEvent(mouseEventRightMouseUpName, event);
+	mPassEventThru = dispatchInputEvent(mouseEventRightMouseUpName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1515,7 +1526,7 @@ void SceneWindow::onRightMouseUp( const GuiEvent& event )
 void SceneWindow::onRightMouseDragged( const GuiEvent& event )
 {
     // Dispatch input event.
-    dispatchInputEvent(mouseEventRightMouseDraggedName, event);
+	mPassEventThru = dispatchInputEvent(mouseEventRightMouseDraggedName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1532,7 +1543,7 @@ void SceneWindow::onMouseWheelUp( const GuiEvent& event )
    Parent::onMouseWheelUp( event );
 
    // Dispatch input event.
-   dispatchInputEvent(mouseEventWheelUpName, event);
+   mPassEventThru = dispatchInputEvent(mouseEventWheelUpName, event);
 }
 
 //-----------------------------------------------------------------------------
@@ -1549,7 +1560,7 @@ void SceneWindow::onMouseWheelDown( const GuiEvent& event )
    Parent::onMouseWheelDown( event );
 
    // Dispatch input event.
-   dispatchInputEvent(mouseEventWheelDownName, event);
+   mPassEventThru = dispatchInputEvent(mouseEventWheelDownName, event);
 }
 
 //-----------------------------------------------------------------------------

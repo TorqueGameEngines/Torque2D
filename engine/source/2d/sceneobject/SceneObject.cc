@@ -2793,7 +2793,7 @@ void SceneObject::resetBlendOptions( void )
 
 //---------------------------------------------------------------------------------------------
 
-void SceneObject::onInputEvent( StringTableEntry name, const GuiEvent& event, const Vector2& worldMousePosition )
+bool SceneObject::onInputEvent( StringTableEntry name, const GuiEvent& event, const Vector2& worldMousePosition )
 {
     // Debug Profiling.
     PROFILE_SCOPE(SceneObject_OnInputEvent);
@@ -2811,7 +2811,7 @@ void SceneObject::onInputEvent( StringTableEntry name, const GuiEvent& event, co
     dSprintf(argBuffer[2], 32, "%d", event.mouseClickCount);
 
     // Call Scripts.
-    Con::executef(this, 4, name, argBuffer[0], argBuffer[1], argBuffer[2]);
+    return dAtob(Con::executef(this, 4, name, argBuffer[0], argBuffer[1], argBuffer[2]));
 }
 
 //-----------------------------------------------------------------------------
