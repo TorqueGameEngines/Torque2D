@@ -1223,7 +1223,7 @@ bool SceneWindow::sendWindowInputEvent( StringTableEntry name, const GuiEvent& e
     dSprintf(argBuffer[2], 64, "%d", event.mouseClickCount);
 
     // Call Scripts.
-    consumed = Con::executef(this, 4, name, argBuffer[0], argBuffer[1], argBuffer[2]);
+    consumed = dAtob(Con::executef(this, 4, name, argBuffer[0], argBuffer[1], argBuffer[2]));
 
     // Iterate listeners.
     for( SimSet::iterator listenerItr = mInputListeners.begin(); listenerItr != mInputListeners.end(); ++listenerItr )

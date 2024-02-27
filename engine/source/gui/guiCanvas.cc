@@ -796,7 +796,11 @@ void GuiCanvas::rootMouseUp(const GuiEvent &event)
       mMouseCapturedControl->onTouchUp(event);
    else
    {
-      handleTouchUp(event, event.mousePoint);
+		findMouseControl(event);
+		if (bool(mMouseControl))
+		{
+			handleTouchUp(event, event.mousePoint);
+		}
    }
 }
 
@@ -850,7 +854,11 @@ void GuiCanvas::rootMouseMove(const GuiEvent &event)
    }
    else
    {
-	   handleTouchMove(event, event.mousePoint);
+		findMouseControl(event);
+		if (bool(mMouseControl))
+		{
+			handleTouchMove(event, event.mousePoint);
+		}
    }
 }
 
