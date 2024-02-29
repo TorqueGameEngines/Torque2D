@@ -1,0 +1,10 @@
+<ImageAsset
+    AssetName="town"
+    ImageFile="town.png" 
+	CellWidth ="32"
+	CellHeight = "32"
+	CellCountX = "19"
+	CellCountY = "11"
+	CellStrideX = "32"
+	CellStrideY = "32"
+	/>
