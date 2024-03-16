@@ -1602,4 +1602,13 @@ ConsoleMethodWithDocs(SceneWindow, setArrowProfile, ConsoleVoid, 3, 3, (GuiContr
 		object->setControlArrowProfile(profile);
 }
 
+/*! Sets if events (touch down, up and move) should be allowed to pass through the control. When true, event callbacks will return true if they consume an event and false if they don't. Unconsumed events will be passed to controls behind the scene window.
+	@param isPassThru True to allow touch down, up and move to pass through the scene window when they are not consumed.
+	@return No return value
+*/
+ConsoleMethodWithDocs(GuiControl, setAllowEventPassThru, ConsoleVoid, 3, 3, (isPassThru))
+{
+	object->mAllowEventPassThru = (dAtob(argv[2]));
+}
+
 ConsoleMethodGroupEndWithDocs(SceneWindow)

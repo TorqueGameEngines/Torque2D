@@ -158,9 +158,9 @@ private:
     char                mDebugText[256];
 
     /// Handling Input Events.
-    void dispatchInputEvent( StringTableEntry name, const GuiEvent& event );
-    void sendWindowInputEvent( StringTableEntry name, const GuiEvent& event );
-    void sendObjectInputEvent( StringTableEntry, const GuiEvent& event );
+    bool dispatchInputEvent( StringTableEntry name, const GuiEvent& event );
+    bool sendWindowInputEvent( StringTableEntry name, const GuiEvent& event );
+    bool sendObjectInputEvent( StringTableEntry, const GuiEvent& event );
 
     void calculateCameraView( CameraView* pCameraView );
 
