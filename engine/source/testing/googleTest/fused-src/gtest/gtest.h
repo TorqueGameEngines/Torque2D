@@ -154,7 +154,7 @@
 //   GTEST_HAS_STD_WSTRING    - Define it to 1/0 to indicate that
 //                              std::wstring does/doesn't work (Google Test can
 //                              be used where std::wstring is unavailable).
-//   GTEST_HAS_TR1_TUPLE      - Define it to 1/0 to indicate tr1::tuple
+//   GTEST_HAS_TR1_TUPLE      - Define it to 1/0 to indicate tuple
 //                              is/isn't available.
 //   GTEST_HAS_SEH            - Define it to 1/0 to indicate whether the
 //                              compiler supports Microsoft's "Structured
@@ -680,17 +680,17 @@ template <typename T>
 struct ByRef<T&> { typedef T& type; };  // NOLINT
 
 // A handy wrapper for ByRef.
-#define GTEST_BY_REF_(T) typename ::std::tr1::gtest_internal::ByRef<T>::type
+#define GTEST_BY_REF_(T) typename ::std::gtest_internal::ByRef<T>::type
 
 // AddRef<T>::type is T if T is a reference; otherwise it's T&.  This
-// is the same as tr1::add_reference<T>::type.
+// is the same as add_reference<T>::type.
 template <typename T>
 struct AddRef { typedef T& type; };  // NOLINT
 template <typename T>
 struct AddRef<T&> { typedef T& type; };  // NOLINT
 
 // A handy wrapper for AddRef.
-#define GTEST_ADD_REF_(T) typename ::std::tr1::gtest_internal::AddRef<T>::type
+#define GTEST_ADD_REF_(T) typename ::std::gtest_internal::AddRef<T>::type
 
 // A helper for implementing get<k>().
 template <int k> class Get;
@@ -1200,7 +1200,7 @@ class tuple {
 // 6.1.3.2 Tuple creation functions.
 
 // Known limitations: we don't support passing an
-// std::tr1::reference_wrapper<T> to make_tuple().  And we don't
+// std::reference_wrapper<T> to make_tuple().  And we don't
 // implement tie().
 
 inline tuple<> make_tuple() { return tuple<>(); }
@@ -1473,7 +1473,7 @@ struct SameSizeTuplePrefixComparator<k, k> {
   template <class Tuple1, class Tuple2>
   static bool Eq(const Tuple1& t1, const Tuple2& t2) {
     return SameSizeTuplePrefixComparator<k - 1, k - 1>::Eq(t1, t2) &&
-        ::std::tr1::get<k - 1>(t1) == ::std::tr1::get<k - 1>(t2);
+        ::std::get<k - 1>(t1) == ::std::get<k - 1>(t2);
   }
 };
 
@@ -2516,7 +2516,7 @@ GTEST_API_ size_t GetThreadCount();
 // The Nokia Symbian and IBM XL C/C++ compilers cannot decide between
 // const T& and const T* in a function template.  These compilers
 // _can_ decide between class template specializations for T and T*,
-// so a tr1::type_traits-like is_pointer works.
+// so a type_traits-like is_pointer works.
 #if defined(__SYMBIAN32__) || defined(__IBMCPP__)
 # define GTEST_NEEDS_IS_POINTER_ 1
 #endif
@@ -7455,7 +7455,7 @@ struct CompileAssertTypesEqual<T, T> {
 
 // Removes the reference from a type if it is a reference type,
 // otherwise leaves it unchanged.  This is the same as
-// tr1::remove_reference, which is not widely available yet.
+// remove_reference, which is not widely available yet.
 template <typename T>
 struct RemoveReference { typedef T type; };  // NOLINT
 template <typename T>
@@ -7467,7 +7467,7 @@ struct RemoveReference<T&> { typedef T type; };  // NOLINT
     typename ::testing::internal::RemoveReference<T>::type
 
 // Removes const from a type if it is a const type, otherwise leaves
-// it unchanged.  This is the same as tr1::remove_const, which is not
+// it unchanged.  This is the same as remove_const, which is not
 // widely available yet.
 template <typename T>
 struct RemoveConst { typedef T type; };  // NOLINT
@@ -7497,7 +7497,7 @@ struct RemoveConst<const T[N]> {
 
 // Adds reference to a type if it is not a reference type,
 // otherwise leaves it unchanged.  This is the same as
-// tr1::add_reference, which is not widely available yet.
+// add_reference, which is not widely available yet.
 template <typename T>
 struct AddReference { typedef T& type; };  // NOLINT
 template <typename T>
@@ -8690,7 +8690,7 @@ class GTEST_API_ Message {
   // These are needed as the Nokia Symbian Compiler cannot decide between
   // const T& and const T* in a function template. The Nokia compiler _can_
   // decide between class template specializations for T and T*, so a
-  // tr1::type_traits-like is_pointer works, and we can overload on that.
+  // type_traits-like is_pointer works, and we can overload on that.
   template <typename T>
   inline void StreamHelper(internal::true_type /*dummy*/, T* pointer) {
     if (pointer == NULL) {
@@ -9666,7 +9666,7 @@ inline void PrintTo(const ::std::wstring& s, ::std::ostream* os) {
 #endif  // GTEST_HAS_STD_WSTRING
 
 #if GTEST_HAS_TR1_TUPLE
-// Overload for ::std::tr1::tuple.  Needed for printing function arguments,
+// Overload for ::std::tuple.  Needed for printing function arguments,
 // which are packed as tuples.
 
 // Helper function for printing a tuple.  T must be instantiated with
@@ -9676,63 +9676,63 @@ void PrintTupleTo(const T& t, ::std::ostream* os);
 
 // Overloaded PrintTo() for tuples of various arities.  We support
 // tuples of up-to 10 fields.  The following implementation works
-// regardless of whether tr1::tuple is implemented using the
+// regardless of whether tuple is implemented using the
 // non-standard variadic template feature or not.
 
-inline void PrintTo(const ::std::tr1::tuple<>& t, ::std::ostream* os) {
+inline void PrintTo(const ::std::tuple<>& t, ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1>
-void PrintTo(const ::std::tr1::tuple<T1>& t, ::std::ostream* os) {
+void PrintTo(const ::std::tuple<T1>& t, ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2>
-void PrintTo(const ::std::tr1::tuple<T1, T2>& t, ::std::ostream* os) {
+void PrintTo(const ::std::tuple<T1, T2>& t, ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2, typename T3>
-void PrintTo(const ::std::tr1::tuple<T1, T2, T3>& t, ::std::ostream* os) {
+void PrintTo(const ::std::tuple<T1, T2, T3>& t, ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2, typename T3, typename T4>
-void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4>& t, ::std::ostream* os) {
+void PrintTo(const ::std::tuple<T1, T2, T3, T4>& t, ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5>
-void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5>& t,
+void PrintTo(const ::std::tuple<T1, T2, T3, T4, T5>& t,
              ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6>
-void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6>& t,
+void PrintTo(const ::std::tuple<T1, T2, T3, T4, T5, T6>& t,
              ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7>
-void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7>& t,
+void PrintTo(const ::std::tuple<T1, T2, T3, T4, T5, T6, T7>& t,
              ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8>
-void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8>& t,
+void PrintTo(const ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8>& t,
              ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8, typename T9>
-void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>& t,
+void PrintTo(const ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>& t,
              ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
@@ -9740,7 +9740,7 @@ void PrintTo(const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9>& t,
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
           typename T6, typename T7, typename T8, typename T9, typename T10>
 void PrintTo(
-    const ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>& t,
+    const ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10>& t,
     ::std::ostream* os) {
   PrintTupleTo(t, os);
 }
@@ -9900,8 +9900,8 @@ struct TuplePrefixPrinter {
   static void PrintPrefixTo(const Tuple& t, ::std::ostream* os) {
     TuplePrefixPrinter<N - 1>::PrintPrefixTo(t, os);
     *os << ", ";
-    UniversalPrinter<typename ::std::tr1::tuple_element<N - 1, Tuple>::type>
-        ::Print(::std::tr1::get<N - 1>(t), os);
+    UniversalPrinter<typename ::std::tuple_element<N - 1, Tuple>::type>
+        ::Print(::std::get<N - 1>(t), os);
   }
 
   // Tersely prints the first N fields of a tuple to a string vector,
@@ -9910,7 +9910,7 @@ struct TuplePrefixPrinter {
   static void TersePrintPrefixToStrings(const Tuple& t, Strings* strings) {
     TuplePrefixPrinter<N - 1>::TersePrintPrefixToStrings(t, strings);
     ::std::stringstream ss;
-    UniversalTersePrint(::std::tr1::get<N - 1>(t), &ss);
+    UniversalTersePrint(::std::get<N - 1>(t), &ss);
     strings->push_back(ss.str());
   }
 };
@@ -9933,14 +9933,14 @@ template <>
 struct TuplePrefixPrinter<1> {
   template <typename Tuple>
   static void PrintPrefixTo(const Tuple& t, ::std::ostream* os) {
-    UniversalPrinter<typename ::std::tr1::tuple_element<0, Tuple>::type>::
-        Print(::std::tr1::get<0>(t), os);
+    UniversalPrinter<typename ::std::tuple_element<0, Tuple>::type>::
+        Print(::std::get<0>(t), os);
   }
 
   template <typename Tuple>
   static void TersePrintPrefixToStrings(const Tuple& t, Strings* strings) {
     ::std::stringstream ss;
-    UniversalTersePrint(::std::tr1::get<0>(t), &ss);
+    UniversalTersePrint(::std::get<0>(t), &ss);
     strings->push_back(ss.str());
   }
 };
@@ -9950,7 +9950,7 @@ struct TuplePrefixPrinter<1> {
 template <typename T>
 void PrintTupleTo(const T& t, ::std::ostream* os) {
   *os << "(";
-  TuplePrefixPrinter< ::std::tr1::tuple_size<T>::value>::
+  TuplePrefixPrinter< ::std::tuple_size<T>::value>::
       PrintPrefixTo(t, os);
   *os << ")";
 }
@@ -9961,7 +9961,7 @@ void PrintTupleTo(const T& t, ::std::ostream* os) {
 template <typename Tuple>
 Strings UniversalTersePrintTupleFieldsToStrings(const Tuple& value) {
   Strings result;
-  TuplePrefixPrinter< ::std::tr1::tuple_size<Tuple>::value>::
+  TuplePrefixPrinter< ::std::tuple_size<Tuple>::value>::
       TersePrintPrefixToStrings(value, &result);
   return result;
 }
@@ -10593,7 +10593,7 @@ class ParameterizedTestCaseRegistry {
 // and at most 10 arguments in Combine. Please contact
 // googletestframework@googlegroups.com if you need more.
 // Please note that the number of arguments to Combine is limited
-// by the maximum arity of the implementation of tr1::tuple which is
+// by the maximum arity of the implementation of tuple which is
 // currently set at 10.
 
 #ifndef GTEST_INCLUDE_GTEST_INTERNAL_GTEST_PARAM_UTIL_GENERATED_H_
@@ -13387,9 +13387,9 @@ class ValueArray50 {
 //
 template <typename T1, typename T2>
 class CartesianProductGenerator2
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2> > {
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2> ParamType;
+  typedef ::std::tuple<T1, T2> ParamType;
 
   CartesianProductGenerator2(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2)
@@ -13502,9 +13502,9 @@ class CartesianProductGenerator2
 
 template <typename T1, typename T2, typename T3>
 class CartesianProductGenerator3
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3> > {
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3> ParamType;
+  typedef ::std::tuple<T1, T2, T3> ParamType;
 
   CartesianProductGenerator3(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3)
@@ -13634,9 +13634,9 @@ class CartesianProductGenerator3
 
 template <typename T1, typename T2, typename T3, typename T4>
 class CartesianProductGenerator4
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4> > {
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3, T4> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3, T4> ParamType;
+  typedef ::std::tuple<T1, T2, T3, T4> ParamType;
 
   CartesianProductGenerator4(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
@@ -13785,9 +13785,9 @@ class CartesianProductGenerator4
 
 template <typename T1, typename T2, typename T3, typename T4, typename T5>
 class CartesianProductGenerator5
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5> > {
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3, T4, T5> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3, T4, T5> ParamType;
+  typedef ::std::tuple<T1, T2, T3, T4, T5> ParamType;
 
   CartesianProductGenerator5(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
@@ -13953,10 +13953,10 @@ class CartesianProductGenerator5
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6>
 class CartesianProductGenerator6
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5,
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3, T4, T5,
         T6> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> ParamType;
+  typedef ::std::tuple<T1, T2, T3, T4, T5, T6> ParamType;
 
   CartesianProductGenerator6(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
@@ -14139,10 +14139,10 @@ class CartesianProductGenerator6
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7>
 class CartesianProductGenerator7
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3, T4, T5, T6,
         T7> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7> ParamType;
+  typedef ::std::tuple<T1, T2, T3, T4, T5, T6, T7> ParamType;
 
   CartesianProductGenerator7(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
@@ -14342,10 +14342,10 @@ class CartesianProductGenerator7
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7, typename T8>
 class CartesianProductGenerator8
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3, T4, T5, T6,
         T7, T8> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8> ParamType;
+  typedef ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8> ParamType;
 
   CartesianProductGenerator8(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
@@ -14564,10 +14564,10 @@ class CartesianProductGenerator8
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7, typename T8, typename T9>
 class CartesianProductGenerator9
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3, T4, T5, T6,
         T7, T8, T9> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> ParamType;
+  typedef ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9> ParamType;
 
   CartesianProductGenerator9(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
@@ -14803,10 +14803,10 @@ class CartesianProductGenerator9
 template <typename T1, typename T2, typename T3, typename T4, typename T5,
     typename T6, typename T7, typename T8, typename T9, typename T10>
 class CartesianProductGenerator10
-    : public ParamGeneratorInterface< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
+    : public ParamGeneratorInterface< ::std::tuple<T1, T2, T3, T4, T5, T6,
         T7, T8, T9, T10> > {
  public:
-  typedef ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> ParamType;
+  typedef ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10> ParamType;
 
   CartesianProductGenerator10(const ParamGenerator<T1>& g1,
       const ParamGenerator<T2>& g2, const ParamGenerator<T3>& g3,
@@ -15068,8 +15068,8 @@ class CartesianProductHolder2 {
 CartesianProductHolder2(const Generator1& g1, const Generator2& g2)
       : g1_(g1), g2_(g2) {}
   template <typename T1, typename T2>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2> >(
+  operator ParamGenerator< ::std::tuple<T1, T2> >() const {
+    return ParamGenerator< ::std::tuple<T1, T2> >(
         new CartesianProductGenerator2<T1, T2>(
         static_cast<ParamGenerator<T1> >(g1_),
         static_cast<ParamGenerator<T2> >(g2_)));
@@ -15090,8 +15090,8 @@ CartesianProductHolder3(const Generator1& g1, const Generator2& g2,
     const Generator3& g3)
       : g1_(g1), g2_(g2), g3_(g3) {}
   template <typename T1, typename T2, typename T3>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3> >(
+  operator ParamGenerator< ::std::tuple<T1, T2, T3> >() const {
+    return ParamGenerator< ::std::tuple<T1, T2, T3> >(
         new CartesianProductGenerator3<T1, T2, T3>(
         static_cast<ParamGenerator<T1> >(g1_),
         static_cast<ParamGenerator<T2> >(g2_),
@@ -15115,8 +15115,8 @@ CartesianProductHolder4(const Generator1& g1, const Generator2& g2,
     const Generator3& g3, const Generator4& g4)
       : g1_(g1), g2_(g2), g3_(g3), g4_(g4) {}
   template <typename T1, typename T2, typename T3, typename T4>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4> >(
+  operator ParamGenerator< ::std::tuple<T1, T2, T3, T4> >() const {
+    return ParamGenerator< ::std::tuple<T1, T2, T3, T4> >(
         new CartesianProductGenerator4<T1, T2, T3, T4>(
         static_cast<ParamGenerator<T1> >(g1_),
         static_cast<ParamGenerator<T2> >(g2_),
@@ -15142,8 +15142,8 @@ CartesianProductHolder5(const Generator1& g1, const Generator2& g2,
     const Generator3& g3, const Generator4& g4, const Generator5& g5)
       : g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5) {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5> >(
+  operator ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5> >() const {
+    return ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5> >(
         new CartesianProductGenerator5<T1, T2, T3, T4, T5>(
         static_cast<ParamGenerator<T1> >(g1_),
         static_cast<ParamGenerator<T2> >(g2_),
@@ -15173,8 +15173,8 @@ CartesianProductHolder6(const Generator1& g1, const Generator2& g2,
       : g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6) {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5,
       typename T6>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6> >(
+  operator ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6> >() const {
+    return ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6> >(
         new CartesianProductGenerator6<T1, T2, T3, T4, T5, T6>(
         static_cast<ParamGenerator<T1> >(g1_),
         static_cast<ParamGenerator<T2> >(g2_),
@@ -15206,9 +15206,9 @@ CartesianProductHolder7(const Generator1& g1, const Generator2& g2,
       : g1_(g1), g2_(g2), g3_(g3), g4_(g4), g5_(g5), g6_(g6), g7_(g7) {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5,
       typename T6, typename T7>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6,
+  operator ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6,
       T7> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7> >(
+    return ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6, T7> >(
         new CartesianProductGenerator7<T1, T2, T3, T4, T5, T6, T7>(
         static_cast<ParamGenerator<T1> >(g1_),
         static_cast<ParamGenerator<T2> >(g2_),
@@ -15244,9 +15244,9 @@ CartesianProductHolder8(const Generator1& g1, const Generator2& g2,
           g8_(g8) {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5,
       typename T6, typename T7, typename T8>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7,
+  operator ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6, T7,
       T8> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8> >(
+    return ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8> >(
         new CartesianProductGenerator8<T1, T2, T3, T4, T5, T6, T7, T8>(
         static_cast<ParamGenerator<T1> >(g1_),
         static_cast<ParamGenerator<T2> >(g2_),
@@ -15285,9 +15285,9 @@ CartesianProductHolder9(const Generator1& g1, const Generator2& g2,
           g9_(g9) {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5,
       typename T6, typename T7, typename T8, typename T9>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+  operator ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
       T9> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+    return ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
         T9> >(
         new CartesianProductGenerator9<T1, T2, T3, T4, T5, T6, T7, T8, T9>(
         static_cast<ParamGenerator<T1> >(g1_),
@@ -15329,9 +15329,9 @@ CartesianProductHolder10(const Generator1& g1, const Generator2& g2,
           g9_(g9), g10_(g10) {}
   template <typename T1, typename T2, typename T3, typename T4, typename T5,
       typename T6, typename T7, typename T8, typename T9, typename T10>
-  operator ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+  operator ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
       T9, T10> >() const {
-    return ParamGenerator< ::std::tr1::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
+    return ParamGenerator< ::std::tuple<T1, T2, T3, T4, T5, T6, T7, T8,
         T9, T10> >(
         new CartesianProductGenerator10<T1, T2, T3, T4, T5, T6, T7, T8, T9,
             T10>(

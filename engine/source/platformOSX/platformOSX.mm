@@ -126,9 +126,8 @@ static osxPlatState * tempSharedPlatState = nil;
 - (void)setWindowSize:(int)width height:(int)height
 {
     // Store the width and height in the state
-    _windowSize.x = width;
-    _windowSize.y = height;
-    
+    _windowSize.x = width * NSScreen.mainScreen.backingScaleFactor; // TODO: See if there's a better solution than this - WageCrusader
+    _windowSize.y = height * NSScreen.mainScreen.backingScaleFactor; // TODO: See if there's a better solution than this - WageCrusader
     // Get the window's current frame
     NSRect frame = NSMakeRect([_window frame].origin.x, [_window frame].origin.y, width, height);
     

@@ -1,4 +1,7 @@
-if(CMAKE_CXX_SIZEOF_DATA_PTR EQUAL 8 )
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "arm64" OR "aarch64")
+    set( TORQUE_CPU_ARM64 ON)
+elseif(CMAKE_CXX_SIZEOF_DATA_PTR EQUAL 8 )
 	set( TORQUE_CPU_X64 ON)
 elseif( CMAKE_CXX_SIZEOF_DATA_PTR EQUAL 4 )
 	set (TORQUE_CPU_X32 ON)
@@ -317,7 +320,7 @@ macro(finishExecutable)
     endif()
 
     if (APPLE)
-      set(ICON_FILE "${projectSrcDir}/torque.icns")
+      #set(ICON_FILE "${projectSrcDir}/torque.icns")
         set_source_files_properties(${ICON_FILE} PROPERTIES MACOSX_PACKAGE_LOCATION "Resources")
         add_executable("${PROJECT_NAME}" MACOSX_BUNDLE ${ICON_FILE} ${${PROJECT_NAME}_files})
     else()

@@ -38,7 +38,7 @@
 
 /// Allows outline mode drawing via a function pointer swapping trick.
 /// Must be included AFTER all the OpenGL headers.
-#include "platformOSX/osxOutlineGL.h"
+#include "platformOSX/GL/osxOutlineGL.h"
 
 
 //------------------------------------------------------------------------------

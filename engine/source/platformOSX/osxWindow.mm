@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 #import "platformOSX/platformOSX.h"
 
-#include "platformOSX/osxOpenGLDevice.h"
+#include "platformOSX/GL/osxOpenGLDevice.h"
 
 
 //------------------------------------------------------------------------------

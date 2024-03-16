@@ -28,7 +28,7 @@
 
 #define NO_REDEFINE_GL_FUNCS
 
-#include "platformOSX/platformGL.h"
+#include "platformGL.h"
 #include "console/console.h"
 
 bool gOutlineEnabled = false;

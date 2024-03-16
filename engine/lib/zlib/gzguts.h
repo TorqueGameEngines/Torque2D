@@ -43,6 +43,10 @@
 #  define WIDECHAR
 #endif
 
+#if defined(__APPLE__)
+#   include <unistd.h>
+#endif
+
 #ifdef WINAPI_FAMILY
 #  define open _open
 #  define read _read

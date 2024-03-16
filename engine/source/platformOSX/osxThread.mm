@@ -27,6 +27,7 @@
 #import "platform/threads/thread.h"
 #import "platform/platformSemaphore.h"
 #import "platform/threads/mutex.h"
+#import "platformOSX/platformOSX.h"
 #import "console/console.h"
 
 //-----------------------------------------------------------------------------

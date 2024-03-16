@@ -775,7 +775,7 @@ struct CompileAssertTypesEqual<T, T> {
 
 // Removes the reference from a type if it is a reference type,
 // otherwise leaves it unchanged.  This is the same as
-// tr1::remove_reference, which is not widely available yet.
+// remove_reference, which is not widely available yet.
 template <typename T>
 struct RemoveReference { typedef T type; };  // NOLINT
 template <typename T>
@@ -787,7 +787,7 @@ struct RemoveReference<T&> { typedef T type; };  // NOLINT
     typename ::testing::internal::RemoveReference<T>::type
 
 // Removes const from a type if it is a const type, otherwise leaves
-// it unchanged.  This is the same as tr1::remove_const, which is not
+// it unchanged.  This is the same as remove_const, which is not
 // widely available yet.
 template <typename T>
 struct RemoveConst { typedef T type; };  // NOLINT
@@ -817,7 +817,7 @@ struct RemoveConst<const T[N]> {
 
 // Adds reference to a type if it is not a reference type,
 // otherwise leaves it unchanged.  This is the same as
-// tr1::add_reference, which is not widely available yet.
+// add_reference, which is not widely available yet.
 template <typename T>
 struct AddReference { typedef T& type; };  // NOLINT
 template <typename T>
