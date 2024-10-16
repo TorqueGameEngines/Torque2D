@@ -11,7 +11,7 @@ jobs:
           vs-version: '[16.0, 17.0)'
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Debug /p:Platform=win32
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Release /p:Platform=win32
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_Windows_x86_32bit_VS2019
           path: |
@@ -29,7 +29,7 @@ jobs:
           msbuild-architecture: x64
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Debug /p:Platform=x64
       - run: msbuild -m "engine/compilers/VisualStudio 2019/Torque 2D.sln" /p:Configuration=Release /p:Platform=x64
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_Windows_x86_64bit_VS2019
           path: |
@@ -46,7 +46,7 @@ jobs:
           vs-version: '[17.0, 18.0)'
       - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Debug /p:Platform=win32
       - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Release /p:Platform=win32
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_Windows_x86_32bit_VS2022
           path: |
@@ -68,7 +68,7 @@ jobs:
           features: 'OptionId.UWPCPP,OptionId.DesktopCPParm64'
       - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Debug /p:Platform=x64
       - run: msbuild -m "engine/compilers/VisualStudio 2022/Torque 2D.sln" /p:Configuration=Release /p:Platform=x64
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_Windows_x86_64bit_VS2022
           path: |
@@ -81,7 +81,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd engine/compilers/Make-32bit/ && make
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_Linux_x86_32bit
           path: |
@@ -94,7 +94,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd engine/compilers/Make-64bit/ && make
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_Linux_x86_64bit
           path: |
@@ -107,7 +107,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd engine/compilers/Xcode && xcodebuild -project Torque2D.xcodeproj
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_MacOS
           path: |
@@ -120,7 +120,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: cd engine/compilers/Xcode_iOS && xcodebuild CODE_SIGNING_ALLOWED=no -project Torque2D.xcodeproj
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v4
         with:
           name: Torque2D_iOS
           path: |
