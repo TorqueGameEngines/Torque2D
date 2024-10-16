@@ -1770,7 +1770,7 @@ ConsoleMethodWithDocs(SceneObject, getLinearVelocityFromWorldPoint, ConsoleStrin
     // Invalid
     else
     {
-        Con::warnf("Scene::getLinearVelocityFromWorldPoint() - Invalid number of parameters!");
+        Con::warnf("SceneObject::getLinearVelocityFromWorldPoint() - Invalid number of parameters!");
         return NULL;
     }
 
@@ -1804,7 +1804,7 @@ ConsoleMethodWithDocs(SceneObject, getLinearVelocityFromLocalPoint, ConsoleStrin
     // Invalid
     else
     {
-        Con::warnf("Scene::getLinearVelocityFromLocalPoint() - Invalid number of parameters!");
+        Con::warnf("SceneObject::getLinearVelocityFromLocalPoint() - Invalid number of parameters!");
         return NULL;
     }
 
@@ -1915,7 +1915,7 @@ ConsoleMethodWithDocs(SceneObject, moveTo, ConsoleBool, 4, 7, (worldPoint X/Y, s
     // Invalid
     else
     {
-        Con::warnf("Scene::moveTo() - Invalid number of parameters!");
+        Con::warnf("SceneObject::moveTo() - Invalid number of parameters!");
         return false;
     }
 
@@ -2001,21 +2001,21 @@ ConsoleMethodWithDocs(SceneObject, fadeTo, ConsoleBool, 4, 4, (targetColor red /
 {
 	if (argc < 3)
 	{
-		Con::warnf("Scene::fadeTo() - Invalid number of parameters!");
+		Con::warnf("SceneObject::fadeTo() - Invalid number of parameters!");
 		return false;
 	}
 
 	const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
 	if (colorCount != 4)
 	{
-		Con::warnf("Scene::fadeTo() - Invalid color! Colors require four values (red / green / blue / alpha)!");
+		Con::warnf("SceneObject::fadeTo() - Invalid color! Colors require four values (red / green / blue / alpha)!");
 		return false;
 	}
 
 	F32 rate = dAtof(argv[3]);
 	if (rate <= 0.0f)
 	{
-		Con::warnf("Scene::fadeTo() - Rate must be greater than zero!");
+		Con::warnf("SceneObject::fadeTo() - Rate must be greater than zero!");
 		return false;
 	}
 
@@ -2040,21 +2040,21 @@ ConsoleMethodWithDocs(SceneObject, fadeToTime, ConsoleBool, 4, 4, (targetColor r
 {
 	if (argc < 3)
 	{
-		Con::warnf("Scene::fadeToTime() - Invalid number of parameters!");
+		Con::warnf("SceneObject::fadeToTime() - Invalid number of parameters!");
 		return false;
 	}
 
 	const U32 colorCount = Utility::mGetStringElementCount(argv[2]);
 	if (colorCount != 4)
 	{
-		Con::warnf("Scene::fadeToTime() - Invalid color! Colors require four values (red / green / blue / alpha)!");
+		Con::warnf("SceneObject::fadeToTime() - Invalid color! Colors require four values (red / green / blue / alpha)!");
 		return false;
 	}
 
 	F32 time = dAtof(argv[3]);
 	if (time <= 0.0f)
 	{
-		Con::warnf("Scene::fadeToTime() - Time must be greater than zero!");
+		Con::warnf("SceneObject::fadeToTime() - Time must be greater than zero!");
 		return false;
 	}
 
@@ -2087,14 +2087,14 @@ ConsoleMethodWithDocs(SceneObject, growTo, ConsoleBool, 4, 4, (targetSize width 
 {
 	if (argc < 3)
 	{
-		Con::warnf("Scene::growTo() - Invalid number of parameters!");
+		Con::warnf("SceneObject::growTo() - Invalid number of parameters!");
 		return false;
 	}
 
 	const U32 targetCount = Utility::mGetStringElementCount(argv[2]);
 	if (targetCount != 2)
 	{
-		Con::warnf("Scene::growTo() - Invalid size! Target size requires two values (width / height)!");
+		Con::warnf("SceneObject::growTo() - Invalid size! Target size requires two values (width / height)!");
 		return false;
 	}
 
@@ -2112,13 +2112,13 @@ ConsoleMethodWithDocs(SceneObject, growTo, ConsoleBool, 4, 4, (targetSize width 
 	}
 	else
 	{
-		Con::warnf("Scene::growTo() - Invalid size! Target size requires two values (width / height)!");
+		Con::warnf("SceneObject::growTo() - Invalid size! Target size requires two values (width / height)!");
 		return false;
 	}
 
 	if (rate.x <= 0.0f || rate.y <= 0.0f)
 	{
-		Con::warnf("Scene::growTo() - Rate must be greater than zero!");
+		Con::warnf("SceneObject::growTo() - Rate must be greater than zero!");
 		return false;
 	}
 
@@ -2141,21 +2141,21 @@ ConsoleMethodWithDocs(SceneObject, growToTime, ConsoleBool, 4, 4, (targetSize wi
 {
 	if (argc < 3)
 	{
-		Con::warnf("Scene::growToTime() - Invalid number of parameters!");
+		Con::warnf("SceneObject::growToTime() - Invalid number of parameters!");
 		return false;
 	}
 
 	const U32 targetCount = Utility::mGetStringElementCount(argv[2]);
 	if (targetCount != 2)
 	{
-		Con::warnf("Scene::growToTime() - Invalid size! Target size requires two values (width / height)!");
+		Con::warnf("SceneObject::growToTime() - Invalid size! Target size requires two values (width / height)!");
 		return false;
 	}
 
 	F32 time = dAtof(argv[3]);
 	if (time <= 0.0f)
 	{
-		Con::warnf("Scene::growToTime() - Time must be greater than zero!");
+		Con::warnf("SceneObject::growToTime() - Time must be greater than zero!");
 		return false;
 	}
 
@@ -2297,7 +2297,7 @@ ConsoleMethodWithDocs(SceneObject, applyForce, ConsoleVoid, 4, 6, (worldForce X/
     // Invalid
     else
     {
-        Con::warnf("Scene::applyForce() - Invalid number of parameters!");
+        Con::warnf("SceneObject::applyForce() - Invalid number of parameters!");
         return;
     }
 
@@ -2325,7 +2325,7 @@ ConsoleMethodWithDocs(SceneObject, applyForce, ConsoleVoid, 4, 6, (worldForce X/
     // Invalid
     else
     {
-        Con::warnf("Scene::applyForce() - Invalid number of parameters!");
+        Con::warnf("SceneObject::applyForce() - Invalid number of parameters!");
         return;
     }
 
@@ -2377,7 +2377,7 @@ ConsoleMethodWithDocs(SceneObject, applyLinearImpulse, ConsoleVoid, 4, 6, (world
     // Invalid
     else
     {
-        Con::warnf("Scene::applyLinearImpulse() - Invalid number of parameters!");
+        Con::warnf("SceneObject::applyLinearImpulse() - Invalid number of parameters!");
         return;
     }
 
@@ -2405,7 +2405,7 @@ ConsoleMethodWithDocs(SceneObject, applyLinearImpulse, ConsoleVoid, 4, 6, (world
     // Invalid
     else
     {
-        Con::warnf("Scene::applyLinearImpulse() - Invalid number of parameters!");
+        Con::warnf("SceneObject::applyLinearImpulse() - Invalid number of parameters!");
         return;
     }
 
@@ -3967,12 +3967,13 @@ ConsoleMethodWithDocs(SceneObject, setAlphaTest, ConsoleVoid, 3, 3, (float alpha
 
 //-----------------------------------------------------------------------------
 
+
 /*! Gets the render alpha test threshold.
-    @return The render alpha test threshold in the range of 0.0f to 1.0.  Less than zero represents disabled alpha testing.
+	@return The render alpha test threshold in the range of 0.0f to 1.0.  Less than zero represents disabled alpha testing.
 */
 ConsoleMethodWithDocs(SceneObject, getAlphaTest, ConsoleFloat, 2, 2, ())
 {
-    return object->getAlphaTest();
+	return object->getAlphaTest();
 }
 
 //-----------------------------------------------------------------------------

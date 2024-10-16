@@ -102,6 +102,14 @@ enum class GuiDirection
 	Center
 };
 
+enum Corner
+{
+	TopLeft,
+	TopRight,
+	BottomLeft,
+	BottomRight
+};
+
 enum AlignmentType
 {
 	LeftAlign,

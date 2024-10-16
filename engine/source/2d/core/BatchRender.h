@@ -250,7 +250,10 @@ public:
             const Vector2& texturePos2,
             const Vector2& texturePos3,
             TextureHandle& texture,
-            const ColorF& color = ColorF(-1.0f, -1.0f, -1.0f) );
+			const ColorF& color0 = ColorF(-1.0f, -1.0f, -1.0f),
+			const ColorF& color1 = ColorF(-1.0f, -1.0f, -1.0f),
+			const ColorF& color2 = ColorF(-1.0f, -1.0f, -1.0f),
+			const ColorF& color3 = ColorF(-1.0f, -1.0f, -1.0f));
 
     /// Render a quad immediately without affecting current batch.
     /// All render state should be set beforehand directly.

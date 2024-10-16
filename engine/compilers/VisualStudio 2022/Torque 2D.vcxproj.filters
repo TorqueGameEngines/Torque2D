@@ -3091,6 +3091,9 @@
     <ClInclude Include="..\..\source\gui\guiColorPopupCtrl_ScriptBinding.h">
       <Filter>gui</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\source\graphics\FadeToColor.h">
+      <Filter>graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Torque 2D.rc" />

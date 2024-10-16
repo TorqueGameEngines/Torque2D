@@ -148,7 +148,7 @@ SceneObject::SceneObject() :
     mGatherContacts(false),
     mpCurrentContacts(NULL),
 
-    /// Render visibility.                                        
+    /// Render visibility.
     mVisible(true),
 
     /// Render blending.
@@ -160,11 +160,7 @@ SceneObject::SceneObject() :
 
 	// Fading.
 	mFadeActive(false),
-	mTargetColor(ColorF(1.0f, 1.0f, 1.0f, 1.0f)),
-	mDeltaRed(1.0f),
-	mDeltaGreen(1.0f),
-	mDeltaBlue(1.0f),
-	mDeltaAlpha(1.0f),
+	mFadeToColor(),
 
     /// Render sorting.
     mSortPoint(0.0f,0.0f),
@@ -699,13 +695,7 @@ void SceneObject::postIntegrate(const F32 totalTime, const F32 elapsedTime, Debu
     }
 
 	// Check to see if we're done fading.
-	if ( mFadeActive && mBlendColor == mTargetColor )
-	{
-		mFadeActive = false;
-
-		PROFILE_SCOPE(SceneObject_onFadeToComplete);
-		Con::executef(this, 1, "onFadeToComplete");
-	}
+	checkFadeComplete();
 
 	//Check to see if we're done growing.
 	if (mGrowActive && mSize == mTargetSize)
@@ -1790,11 +1780,7 @@ bool SceneObject::fadeTo(const ColorF& targetColor, const F32 deltaRed, const F3
 	if (targetColor != mBlendColor)
 	{
 		mFadeActive = true;
-		mTargetColor = targetColor;
-		mDeltaRed = deltaRed;
-		mDeltaGreen = deltaGreen;
-		mDeltaBlue = deltaBlue;
-		mDeltaAlpha = deltaAlpha;
+		mFadeToColor.set(targetColor, deltaRed, deltaGreen, deltaBlue, deltaAlpha);
 	}
 
 	return true;
@@ -4346,10 +4332,7 @@ const char* SceneObject::getDstBlendFactorDescription(const GLenum factor)
 void SceneObject::updateBlendColor(const F32 elapsedTime)
 {
 	// Apply the color deltas to the blendColor to move it toward the targetColor.
-	mBlendColor.red = processEffect(mBlendColor.red, mTargetColor.red, mDeltaRed * elapsedTime);
-	mBlendColor.green = processEffect(mBlendColor.green, mTargetColor.green, mDeltaGreen * elapsedTime);
-	mBlendColor.blue = processEffect(mBlendColor.blue, mTargetColor.blue, mDeltaBlue * elapsedTime);
-	mBlendColor.alpha = processEffect(mBlendColor.alpha, mTargetColor.alpha, mDeltaAlpha * elapsedTime);
+	updateFadeColor(mBlendColor, mFadeToColor, elapsedTime);
 }
 
 //-----------------------------------------------------------------------------
@@ -4461,6 +4444,29 @@ F32 SceneObject::processEffect(const F32 current, const F32 target, const F32 ra
 	else
 	{
 		return target;
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+void SceneObject::updateFadeColor(ColorF& color, FadeToColor& target, const F32 elapsedTime)
+{
+	color.red = processEffect(color.red, target.TargetColor.red, target.DeltaRed * elapsedTime);
+	color.green = processEffect(color.green, target.TargetColor.green, target.DeltaGreen * elapsedTime);
+	color.blue = processEffect(color.blue, target.TargetColor.blue, target.DeltaBlue * elapsedTime);
+	color.alpha = processEffect(color.alpha, target.TargetColor.alpha, target.DeltaAlpha * elapsedTime);
+}
+
+//-----------------------------------------------------------------------------
+
+void SceneObject::checkFadeComplete()
+{
+	if (mFadeActive && mBlendColor == mFadeToColor.TargetColor)
+	{
+		mFadeActive = false;
+
+		PROFILE_SCOPE(SceneObject_onFadeToComplete);
+		Con::executef(this, 1, "onFadeToComplete");
 	}
 }
 

@@ -27,6 +27,10 @@
 #include "2d/core/SpriteBase.h"
 #endif
 
+#ifndef _FADETOCOLOR_H_
+#include "graphics/FadeToColor.h"
+#endif
+
 //------------------------------------------------------------------------------
 
 class Sprite : public SpriteBase
@@ -37,6 +41,11 @@ private:
     /// Render flipping.
     bool mFlipX;
     bool mFlipY;
+
+	FadeToColor				mFadeToColorTL;
+	FadeToColor				mFadeToColorTR;
+	FadeToColor				mFadeToColorBL;
+	FadeToColor				mFadeToColorBR;
 
 public:
     Sprite();
@@ -54,12 +63,32 @@ public:
 
     virtual void sceneRender( const SceneRenderState* pSceneRenderState, const SceneRenderRequest* pSceneRenderRequest, BatchRender* pBatchRenderer );
 
+	// Complex Colors (Using 4 blend colors, one for each corner)
+	inline void setUseComplexColor(const bool complexColor) { mUseComplexColor = complexColor; }
+	inline bool getUseComplexColor(void) const { return mUseComplexColor; }
+	inline void setComplexColor(const ColorF& blendColor0, const ColorF& blendColor1, const ColorF& blendColor2, const ColorF& blendColor3) { mComplexColor0 = blendColor0; mComplexColor1 = blendColor1; mComplexColor2 = blendColor2; mComplexColor3 = blendColor3; }
+	const ColorF& getComplexColor(const S8 cornerID);
+	static Corner getCornerEnum(const char* label);
+
+	// FadeTo for Complex Colors
+	bool					fadeToComplex(const S8 cornerID, const ColorF& targetColor, const F32 deltaRed, const F32 deltaGreen, const F32 deltaBlue, const F32 deltaAlpha);
+	void					updateBlendColor(const F32 elapsedTime);
+	void					checkFadeComplete();
+
     /// Declare Console Object.
     DECLARE_CONOBJECT( Sprite );
 
 protected:
     static bool writeFlipX( void* obj, StringTableEntry pFieldName )        { return static_cast<Sprite*>(obj)->getFlipX() == true; }
     static bool writeFlipY( void* obj, StringTableEntry pFieldName )        { return static_cast<Sprite*>(obj)->getFlipY() == true; }
+
+	static bool writeUseComplexColor( void* obj, StringTableEntry pFieldName ) {return static_cast<Sprite*>(obj)->getUseComplexColor() == true; }
+
+	bool					mUseComplexColor;
+	ColorF					mComplexColor0;
+	ColorF					mComplexColor1;
+	ColorF					mComplexColor2;
+	ColorF					mComplexColor3;
 };
 
 #endif // _SPRITE_H_

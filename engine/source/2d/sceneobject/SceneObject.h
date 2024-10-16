@@ -67,6 +67,10 @@
 #include "component/behaviors/behaviorInstance.h"
 #endif
 
+#ifndef _FADETOCOLOR_H_
+#include "graphics/FadeToColor.h"
+#endif
+
 //-----------------------------------------------------------------------------
 
 struct tDestroyNotification
@@ -205,11 +209,7 @@ protected:
 
 	// Fading
 	bool					mFadeActive;
-	ColorF					mTargetColor;
-	F32						mDeltaRed;
-	F32						mDeltaGreen;
-	F32						mDeltaBlue;
-	F32						mDeltaAlpha;
+	FadeToColor				mFadeToColor;
 
     /// Render sorting.
     Vector2                 mSortPoint;
@@ -269,6 +269,7 @@ protected:
     virtual void            onTamlCustomRead( const TamlCustomNodes& customNodes );
 
 	// Effect Processing.
+	void				updateFadeColor(ColorF& color, FadeToColor& target, const F32 elapsedTime);
 	F32					processEffect( const F32 current, const F32 target, const F32 rate );
 
 public:
@@ -434,7 +435,8 @@ public:
 	bool					fadeTo( const ColorF& targetColor, const F32 deltaRed, const F32 deltaGreen, const F32 deltaBlue, const F32 deltaAlpha );
 	inline void				cancelFadeTo( void )						{ mFadeActive = false; }
 	inline bool				isFadeToComplete( void ) const				{ return !mFadeActive; }
-	void					updateBlendColor( const F32 elapsedTime );
+	virtual void			updateBlendColor( const F32 elapsedTime );
+	virtual void			checkFadeComplete();
 
 	// Grow to
 	bool					growTo( const Vector2& targetSize, const Vector2& deltaSize );

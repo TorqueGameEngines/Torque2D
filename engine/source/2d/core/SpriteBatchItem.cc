@@ -119,6 +119,12 @@ void SpriteBatchItem::resetState( void )
     mBlendColor = ColorF(1.0f,1.0f,1.0f,1.0f);
     mAlphaTest = -1.0f;
 
+	mUseComplexColor = false;
+	mComplexColor0 = ColorF(1.0f, 1.0f, 1.0f, 1.0f);
+	mComplexColor1 = ColorF(1.0f, 1.0f, 1.0f, 1.0f);
+	mComplexColor2 = ColorF(1.0f, 1.0f, 1.0f, 1.0f);
+	mComplexColor3 = ColorF(1.0f, 1.0f, 1.0f, 1.0f);
+
     mDataObject = NULL;
 
     mLocalTransformDirty = true;
@@ -183,6 +189,32 @@ void SpriteBatchItem::copyTo( SpriteBatchItem* pSpriteBatchItem ) const
 
 //------------------------------------------------------------------------------
 
+const ColorF& SpriteBatchItem::getComplexColor(const S8 cornerID)
+{
+	if (cornerID == 1)
+	{
+		return mComplexColor0;
+	}
+	else if (cornerID == 2)
+	{
+		return mComplexColor1;
+	}
+	else if (cornerID == 3)
+	{
+		return mComplexColor2;
+	}
+	else if (cornerID == 4)
+	{
+		return mComplexColor3;
+	}
+	else
+	{
+		return ColorF(1.0f, 1.0f, 1.0f, 1.0f);
+	}
+}
+
+//------------------------------------------------------------------------------
+
 void SpriteBatchItem::prepareRender( SceneRenderRequest* pSceneRenderRequest, const U32 batchTransformId )
 {
     // Debug Profiling.
@@ -243,6 +275,18 @@ void SpriteBatchItem::render( BatchRender* pBatchRenderer, const SceneRenderRequ
 			mExplicitUVs[2],
 			mExplicitUVs[3],
 			pBatchRenderer);
+	}
+	else if (mUseComplexColor) {
+		Parent::renderComplex(mFlipX, mFlipY,
+			mRenderOOBB[0],
+			mRenderOOBB[1],
+			mRenderOOBB[2],
+			mRenderOOBB[3],
+			pBatchRenderer,
+			mComplexColor0,
+			mComplexColor1,
+			mComplexColor2,
+			mComplexColor3);
 	}
 	else {
 		Parent::render(mFlipX, mFlipY,

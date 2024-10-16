@@ -308,6 +308,52 @@ void ImageFrameProviderCore::render(
 }
 
 //------------------------------------------------------------------------------
+
+void ImageFrameProviderCore::renderComplex(
+	const bool flipX,
+	const bool flipY,
+	const Vector2& vertexPos0,
+	const Vector2& vertexPos1,
+	const Vector2& vertexPos2,
+	const Vector2& vertexPos3,
+	BatchRender* pBatchRenderer,
+	const ColorF& colorTL,
+	const ColorF& colorTR,
+	const ColorF& colorBR,
+	const ColorF& colorBL) const
+{
+	// Finish if we can't render.
+	if (!validRender())
+		return;
+
+	// Fetch texel area.
+	ImageAsset::FrameArea::TexelArea texelArea = getProviderImageFrameArea().mTexelArea;
+
+	// Flip texture coordinates appropriately.
+	texelArea.setFlip(flipX, flipY);
+
+	// Fetch lower/upper texture coordinates.
+	const Vector2& texLower = texelArea.mTexelLower;
+	const Vector2& texUpper = texelArea.mTexelUpper;
+
+	// Submit batched quad.
+	pBatchRenderer->SubmitQuad(
+		vertexPos0,
+		vertexPos1,
+		vertexPos2,
+		vertexPos3,
+		Vector2(texLower.x, texUpper.y),
+		Vector2(texUpper.x, texUpper.y),
+		Vector2(texUpper.x, texLower.y),
+		Vector2(texLower.x, texLower.y),
+		getProviderTexture(),
+		colorBL,
+		colorBR,
+		colorTR,
+		colorTL);
+}
+
+//------------------------------------------------------------------------------
 void ImageFrameProviderCore::renderGui( GuiControl& owner, Point2I offset, const RectI &updateRect ) const
 {
     // Validate frame provider.

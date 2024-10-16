@@ -208,7 +208,10 @@ void BatchRender::SubmitQuad(
         const Vector2& texturePos2,
         const Vector2& texturePos3,
         TextureHandle& texture,
-        const ColorF& color )
+		const ColorF& color0,
+		const ColorF& color1,
+		const ColorF& color2,
+		const ColorF& color3)
 {
     // Sanity!
     AssertFatal( mpDebugStats != NULL, "Debug stats have not been configured." );
@@ -229,13 +232,13 @@ void BatchRender::SubmitQuad(
         if ( mColorCount == 0 )
         {
             // No, so flush if color is specified.
-            if ( color != NoColor  )
+            if ( color0 != NoColor  )
                 flush( mpDebugStats->batchColorStateFlush );
         }
         else
         {
             // Yes, so flush if color is not specified.
-            if ( color == NoColor  )
+            if ( color0 == NoColor  )
                 flush( mpDebugStats->batchColorStateFlush );
         }
     }
@@ -268,13 +271,26 @@ void BatchRender::SubmitQuad(
     }
 
     // Is a color specified?
-    if ( color != NoColor )
+    if ( color0 != NoColor )
     {
-        // Yes, so add colors.
-        mColorBuffer[mColorCount++] = color;
-        mColorBuffer[mColorCount++] = color;
-        mColorBuffer[mColorCount++] = color;
-        mColorBuffer[mColorCount++] = color;
+		// Yes, all or one. Do we have four colors?
+		if (color1 != NoColor && color2 != NoColor && color3 != NoColor)
+		{
+			// We have four colors!
+			// NOTE: We swap #2/#3 here.
+			mColorBuffer[mColorCount++] = color0;
+			mColorBuffer[mColorCount++] = color1;
+			mColorBuffer[mColorCount++] = color3;
+			mColorBuffer[mColorCount++] = color2;
+		}
+		else
+		{
+			// No, we only have one color.
+			mColorBuffer[mColorCount++] = color0;
+			mColorBuffer[mColorCount++] = color0;
+			mColorBuffer[mColorCount++] = color0;
+			mColorBuffer[mColorCount++] = color0;
+		}
     }
 
     // Add textured vertices.

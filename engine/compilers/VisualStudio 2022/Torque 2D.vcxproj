@@ -1087,6 +1087,7 @@
     <ClInclude Include="..\..\source\game\gameInterface.h" />
     <ClInclude Include="..\..\source\game\gameInterface_ScriptBinding.h" />
     <ClInclude Include="..\..\source\game\version_ScriptBinding.h" />
+    <ClInclude Include="..\..\source\graphics\FadeToColor.h" />
     <ClInclude Include="..\..\source\graphics\gColor.h" />
     <ClInclude Include="..\..\source\graphics\gColor_ScriptBinding.h" />
     <ClInclude Include="..\..\source\graphics\dgl.h" />

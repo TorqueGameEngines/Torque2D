@@ -176,6 +176,12 @@ public:
     const ColorF& getSpriteBlendColor( void ) const;
     void setSpriteBlendAlpha( const F32 alpha );
     F32  getSpriteBlendAlpha( void ) const;
+
+	void setSpriteUseComplexColor(const bool complexColor);
+	bool getSpriteUseComplexColor(void) const;
+
+	void setSpriteComplexColor(const ColorF& blendColor0, const ColorF& blendColor1, const ColorF& blendColor2, const ColorF& blendColor3);
+	const ColorF& getSpriteComplexColor(const S8 cornerID) const;
     
     void setSpriteAlphaTest( const F32 alphaTestMode );
     F32 getSpriteAlphaTest( void ) const;

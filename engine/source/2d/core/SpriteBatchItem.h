@@ -237,6 +237,12 @@ protected:
     ColorF              mBlendColor;
     F32                 mAlphaTest;
 
+	bool				mUseComplexColor;
+	ColorF				mComplexColor0;
+	ColorF				mComplexColor1;
+	ColorF				mComplexColor2;
+	ColorF				mComplexColor3;
+
     SimObjectPtr<SimObject> mDataObject;
 
     Vector2             mLocalOOBB[4];
@@ -313,6 +319,11 @@ public:
     inline const ColorF& getBlendColor( void ) const { return mBlendColor; }
     inline void setBlendAlpha( const F32 alpha ) { mBlendColor.alpha = alpha; }
     inline F32 getBlendAlpha( void ) const { return mBlendColor.alpha; }
+
+	inline void setUseComplexColor(const bool complexColor) { mUseComplexColor = complexColor; }
+	inline bool getUseComplexColor(void) const { return mUseComplexColor; }
+	inline void setComplexColor(const ColorF& blendColor0, const ColorF& blendColor1, const ColorF& blendColor2, const ColorF& blendColor3) { mComplexColor0 = blendColor0; mComplexColor1 = blendColor1; mComplexColor2 = blendColor2; mComplexColor3 = blendColor3; }
+	const ColorF& getComplexColor(const S8 cornerID);
 
     inline void setAlphaTest( const F32 alphaTest ) { mAlphaTest = alphaTest; }
     inline F32 getAlphaTest( void ) const { return mAlphaTest; }

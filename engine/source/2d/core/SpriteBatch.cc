@@ -1014,6 +1014,54 @@ F32 SpriteBatch::getSpriteAlphaTest( void ) const
 
 //------------------------------------------------------------------------------
 
+void SpriteBatch::setSpriteUseComplexColor(const bool complexColor)
+{
+	// Finish if a sprite is not selected.
+	if (!checkSpriteSelected())
+		return;
+
+	// Set complex color.
+	mSelectedSprite->setUseComplexColor(complexColor);
+}
+
+//------------------------------------------------------------------------------
+
+bool SpriteBatch::getSpriteUseComplexColor(void) const
+{
+	// Finish if a sprite is not selected.
+	if (!checkSpriteSelected())
+		return true;
+
+	// Get complex color.
+	return mSelectedSprite->getUseComplexColor();
+}
+
+//------------------------------------------------------------------------------
+
+void SpriteBatch::setSpriteComplexColor(const ColorF& blendColor0, const ColorF& blendColor1, const ColorF& blendColor2, const ColorF& blendColor3)
+{
+	// Finish if a sprite is not selected.
+	if (!checkSpriteSelected())
+		return;
+
+	// Set blend color.
+	mSelectedSprite->setComplexColor(blendColor0, blendColor1, blendColor2, blendColor3);
+}
+
+//------------------------------------------------------------------------------
+
+const ColorF& SpriteBatch::getSpriteComplexColor(const S8 cornerID) const
+{
+	// Finish if a sprite is not selected.
+	if (!checkSpriteSelected())
+		return ColorF::StockColor("White");
+
+	// Get blend color.
+	return mSelectedSprite->getComplexColor(cornerID);
+}
+
+//------------------------------------------------------------------------------
+
 void SpriteBatch::setSpriteDataObject( SimObject* pDataObject )
 {
     // Finish if a sprite is not selected.

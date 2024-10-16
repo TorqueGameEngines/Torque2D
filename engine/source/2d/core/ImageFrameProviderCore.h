@@ -132,6 +132,19 @@ public:
 		const ColorF *colorArray,
 		BatchRender* pBatchRenderer) const;
 
+	void renderComplex(
+		const bool flipX,
+		const bool flipY,
+		const Vector2& vertexPos0,
+		const Vector2& vertexPos1,
+		const Vector2& vertexPos2,
+		const Vector2& vertexPos3,
+		BatchRender* pBatchRenderer,
+		const ColorF& colorTL,
+		const ColorF& colorTR,
+		const ColorF& colorBR,
+		const ColorF& colorBL) const;
+
 	void renderGui( GuiControl& owner, Point2I offset, const RectI &updateRect ) const;
 
     /// Static-Image Frame.

@@ -872,6 +872,30 @@ ConsoleMethodWithDocs(CompositeSprite, getSpriteDstBlendFactor, ConsoleString, 2
 
 //-----------------------------------------------------------------------------
 
+/*! Sets whether sprite uses complex colors or not.
+	@complexColor Whether sprite complex color is on or not.
+	@return No return Value.
+*/
+ConsoleMethodWithDocs(CompositeSprite, setSpriteUseComplexColor, ConsoleVoid, 3, 3, (bool complexColor))
+{
+	// Fetch blend mode.
+	const bool complex = dAtob(argv[2]);
+
+	object->setSpriteUseComplexColor(complex);
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Gets whether sprite uses complex colors or not.
+	@return (bool complexColor) Whether sprite complex color is on or not.
+*/
+ConsoleMethodWithDocs(CompositeSprite, getSpriteUseComplexColor, ConsoleBool, 2, 2, ())
+{
+	return object->getSpriteUseComplexColor();
+}
+
+//-----------------------------------------------------------------------------
+
 /*! or ( stockColorName ) - Sets the sprite blend color.
     @param red The red value.
     @param green The green value.
@@ -975,6 +999,119 @@ ConsoleMethodWithDocs(CompositeSprite, getSpriteBlendColor, ConsoleString, 2, 3,
 
     // No, so fetch the raw color values.
     return blendColor.scriptThis();
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Sets the sprite complex color.
+	@param topLeft The topLeft color space separated.
+	@param topLeft The topRight color space separated.
+	@param topLeft The bottomRight color space separated.
+	@param topLeft The bottomLeft color space separated.
+	@return No return Value.
+*/
+ConsoleMethodWithDocs(CompositeSprite, setSpriteComplexColor, ConsoleVoid, 6, 6, (topLeft, topRight, bottomRight, bottomLeft))
+{
+	// The corners.
+	ColorF corner0;
+	ColorF corner1;
+	ColorF corner2;
+	ColorF corner3;
+
+	// Space separated.
+	if (argc == 6)
+	{
+		// Grab the element count.
+		const U32 elementCount0 = Utility::mGetStringElementCount(argv[2]);
+		if (elementCount0 == 3)
+		{
+			corner0 = ColorF(dAtof(Utility::mGetStringElement(argv[2], 0)), dAtof(Utility::mGetStringElement(argv[2], 1)), dAtof(Utility::mGetStringElement(argv[2], 2)));
+		}
+		else if (elementCount0 == 4)
+		{
+			corner0 = ColorF(dAtof(Utility::mGetStringElement(argv[2], 0)), dAtof(Utility::mGetStringElement(argv[2], 1)), dAtof(Utility::mGetStringElement(argv[2], 2)), dAtof(Utility::mGetStringElement(argv[2], 3)));
+		}
+		else
+		{
+			Con::warnf("CompositeSprite::setSpriteComplexColor() - Top Left Corner has Invalid Number of arguments!");
+			return;
+		}
+
+		// Grab the element count.
+		const U32 elementCount1 = Utility::mGetStringElementCount(argv[3]);
+		if (elementCount1 == 3)
+		{
+			corner1 = ColorF(dAtof(Utility::mGetStringElement(argv[3], 0)), dAtof(Utility::mGetStringElement(argv[3], 1)), dAtof(Utility::mGetStringElement(argv[3], 2)));
+		}
+		else if (elementCount1 == 4)
+		{
+			corner1 = ColorF(dAtof(Utility::mGetStringElement(argv[3], 0)), dAtof(Utility::mGetStringElement(argv[3], 1)), dAtof(Utility::mGetStringElement(argv[3], 2)), dAtof(Utility::mGetStringElement(argv[3], 3)));
+		}
+		else
+		{
+			Con::warnf("CompositeSprite::setSpriteComplexColor() - Top Right Corner has Invalid Number of arguments!");
+			return;
+		}
+
+		// Grab the element count.
+		const U32 elementCount2 = Utility::mGetStringElementCount(argv[4]);
+		if (elementCount2 == 3)
+		{
+			corner2 = ColorF(dAtof(Utility::mGetStringElement(argv[4], 0)), dAtof(Utility::mGetStringElement(argv[4], 1)), dAtof(Utility::mGetStringElement(argv[4], 2)));
+		}
+		else if (elementCount2 == 4)
+		{
+			corner2 = ColorF(dAtof(Utility::mGetStringElement(argv[4], 0)), dAtof(Utility::mGetStringElement(argv[4], 1)), dAtof(Utility::mGetStringElement(argv[4], 2)), dAtof(Utility::mGetStringElement(argv[4], 3)));
+		}
+		else
+		{
+			Con::warnf("CompositeSprite::setSpriteComplexColor() - Bottom Right Corner has Invalid Number of arguments!");
+			return;
+		}
+
+		// Grab the element count.
+		const U32 elementCount3 = Utility::mGetStringElementCount(argv[5]);
+		if (elementCount3 == 3)
+		{
+			corner3 = ColorF(dAtof(Utility::mGetStringElement(argv[5], 0)), dAtof(Utility::mGetStringElement(argv[5], 1)), dAtof(Utility::mGetStringElement(argv[5], 2)));
+		}
+		else if (elementCount3 == 4)
+		{
+			corner3 = ColorF(dAtof(Utility::mGetStringElement(argv[5], 0)), dAtof(Utility::mGetStringElement(argv[5], 1)), dAtof(Utility::mGetStringElement(argv[5], 2)), dAtof(Utility::mGetStringElement(argv[5], 3)));
+		}
+		else
+		{
+			Con::warnf("CompositeSprite::setSpriteComplexColor() - Bottom Left Corner has Invalid Number of arguments!");
+			return;
+		}
+
+		// Set blend color.
+		object->setSpriteComplexColor(corner0, corner1, corner2, corner3);
+	}
+
+	// Invalid.
+	else
+	{
+		Con::warnf("CompositeSprite::setSpriteComplexColor() - Invalid Number of parameters!");
+		return;
+	}
+}
+
+//-----------------------------------------------------------------------------
+
+/*! Gets the sprite complex color
+	@param cornerID The cornerID whose color will be returned (1 - 4).
+	@return (float red / float green / float blue / float alpha) The sprite corner blend color.
+*/
+ConsoleMethodWithDocs(CompositeSprite, getSpriteComplexColor, ConsoleString, 3, 3, (cornerID))
+{
+	S8 cornerID = dAtoi(argv[2]);
+
+	// Get Blend color.
+	ColorF blendColor = object->getSpriteComplexColor(cornerID);
+
+	// No, so fetch the raw color values.
+	return blendColor.scriptThis();
 }
 
 //-----------------------------------------------------------------------------
