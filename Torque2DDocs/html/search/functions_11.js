@@ -1,10 +1,10 @@
 var searchData=
 [
   ['quadpatch_0',['QuadPatch',['../class_quad_patch.html#a974bc79140f274406300fb301f6307f2',1,'QuadPatch']]],
-  ['quatf_1',['quatf',['../class_quat_f.html#a35e215dfa9be1446e7503cec04618515',1,'QuatF::QuatF()'],['../class_quat_f.html#aee930501a60387fb84210eed2ec835a1',1,'QuatF::QuatF(F32 _x, F32 _y, F32 _z, F32 w)'],['../class_quat_f.html#aaf81d16efb46eb3a598f0dda45f9793a',1,'QuatF::QuatF(const MatrixF &amp;m)'],['../class_quat_f.html#aaf1dcf858ea21fff5d1fc2c9f5f234fe',1,'QuatF::QuatF(const AngAxisF &amp;a)'],['../class_quat_f.html#a40c11899c14d15eea68cc9af30799a31',1,'QuatF::QuatF(const EulerF &amp;e)']]],
+  ['quatf_1',['QuatF',['../class_quat_f.html#a35e215dfa9be1446e7503cec04618515',1,'QuatF::QuatF()'],['../class_quat_f.html#aee930501a60387fb84210eed2ec835a1',1,'QuatF::QuatF(F32 _x, F32 _y, F32 _z, F32 w)'],['../class_quat_f.html#aaf81d16efb46eb3a598f0dda45f9793a',1,'QuatF::QuatF(const MatrixF &amp;m)'],['../class_quat_f.html#aaf1dcf858ea21fff5d1fc2c9f5f234fe',1,'QuatF::QuatF(const AngAxisF &amp;a)'],['../class_quat_f.html#a40c11899c14d15eea68cc9af30799a31',1,'QuatF::QuatF(const EulerF &amp;e)']]],
   ['queryarea_2',['queryArea',['../class_sprite_batch_query.html#ac7786440c72bb9c91f56704e847c6c00',1,'SpriteBatchQuery']]],
   ['queryboolattribute_3',['QueryBoolAttribute',['../class_ti_xml_element.html#acf835ae6d1d1cffad0e08f796789a7a5',1,'TiXmlElement']]],
-  ['querycallback_4',['querycallback',['../class_sprite_batch_query.html#a322127460c1a28c26bf9651d85748edb',1,'SpriteBatchQuery::QueryCallback()'],['../class_world_query.html#a322127460c1a28c26bf9651d85748edb',1,'WorldQuery::QueryCallback()']]],
+  ['querycallback_4',['QueryCallback',['../class_sprite_batch_query.html#a322127460c1a28c26bf9651d85748edb',1,'SpriteBatchQuery::QueryCallback()'],['../class_world_query.html#a322127460c1a28c26bf9651d85748edb',1,'WorldQuery::QueryCallback()']]],
   ['querydoubleattribute_5',['QueryDoubleAttribute',['../class_ti_xml_element.html#aedc97de117edbd77ef22d941cda69d75',1,'TiXmlElement']]],
   ['querydoublevalue_6',['QueryDoubleValue',['../class_ti_xml_attribute.html#a7053abd6469cc2c9a29f4cdd6388a1b9',1,'TiXmlAttribute']]],
   ['queryfloatattribute_7',['QueryFloatAttribute',['../class_ti_xml_element.html#a07b48451b24a3f1101f4adc262fa7ff5',1,'TiXmlElement']]],

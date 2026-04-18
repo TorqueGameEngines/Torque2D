@@ -90,7 +90,7 @@ var searchData=
   ['spritebatchitem_87',['SpriteBatchItem',['../class_sprite_batch_item.html',1,'']]],
   ['spritebatchquery_88',['SpriteBatchQuery',['../class_sprite_batch_query.html',1,'']]],
   ['spritebatchqueryresult_89',['SpriteBatchQueryResult',['../struct_sprite_batch_query_result.html',1,'']]],
-  ['stack_90',['stack',['../class_scene_object_set_iterator_1_1_stack.html',1,'SceneObjectSetIterator::Stack'],['../class_sim_set_iterator_1_1_stack.html',1,'SimSetIterator::Stack']]],
+  ['stack_90',['Stack',['../class_scene_object_set_iterator_1_1_stack.html',1,'SceneObjectSetIterator::Stack'],['../class_sim_set_iterator_1_1_stack.html',1,'SimSetIterator::Stack']]],
   ['stmtnode_91',['StmtNode',['../struct_stmt_node.html',1,'']]],
   ['stockcolor_92',['StockColor',['../class_stock_color.html',1,'']]],
   ['stockcoloritem_93',['StockColorItem',['../class_stock_color_item.html',1,'']]],

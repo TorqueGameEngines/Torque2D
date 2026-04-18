@@ -2,7 +2,7 @@ var searchData=
 [
   ['g_0',['g',['../struct_android_gamma.html#a3b0cdb8690be143a61fc01a9a2950f8a',1,'AndroidGamma']]],
   ['g_5fhuffprocessor_1',['g_huffProcessor',['../class_huffman_processor.html#aa875499242a2fc105a2a133d91f5d962',1,'HuffmanProcessor']]],
-  ['gametype_2',['gametype',['../struct_server_filter.html#a22dee68a85554e1f8ffe4480a7d43a7e',1,'ServerFilter::gameType'],['../struct_server_info.html#a22dee68a85554e1f8ffe4480a7d43a7e',1,'ServerInfo::gameType']]],
+  ['gametype_2',['gameType',['../struct_server_filter.html#a22dee68a85554e1f8ffe4480a7d43a7e',1,'ServerFilter::gameType'],['../struct_server_info.html#a22dee68a85554e1f8ffe4480a7d43a7e',1,'ServerInfo::gameType']]],
   ['gconsoleallocator_3',['gConsoleAllocator',['../namespace_compiler.html#a30b2b30d58d78f488e70b002a618bd48',1,'Compiler']]],
   ['gcurbreakblock_4',['gCurBreakBlock',['../namespace_compiler.html#a172c672efe07bd3c746659e49af4d1ad',1,'Compiler']]],
   ['gcurrentfile_5',['gCurrentFile',['../namespace_con.html#a7589f755bdcac5afcff4a6bf7fa542a2',1,'Con']]],
@@ -33,7 +33,7 @@ var searchData=
   ['gnextobjectid_30',['gNextObjectId',['../namespace_sim.html#acac518c5214620e2b7b20ec350a73b29',1,'Sim']]],
   ['goofy_31',['goofy',['../struct_ascii_data.html#a9ecff6ec9ae98be1d0fed576f3318bd9',1,'AsciiData']]],
   ['grandomgenerator_32',['gRandomGenerator',['../namespace_core_math.html#a9d365d8370ffcc1e2f20a768a2b7b7d5',1,'CoreMath']]],
-  ['green_33',['green',['../class_color_i.html#a41f7727b409337b1f9c961bb196c1995',1,'ColorI::green'],['../class_color_f.html#add044dc741b182cff96f39febde6886d',1,'ColorF::green']]],
+  ['green_33',['green',['../class_color_f.html#add044dc741b182cff96f39febde6886d',1,'ColorF::green'],['../class_color_i.html#a41f7727b409337b1f9c961bb196c1995',1,'ColorI::green']]],
   ['greenstart_34',['greenStart',['../class_fluid_color_i.html#ad549f60c54a9a43d1154d43ec5dd7d62',1,'FluidColorI']]],
   ['greentarget_35',['greenTarget',['../class_fluid_color_i.html#afe3f2b23d8d3cba31c875614ed2da3ec',1,'FluidColorI']]],
   ['grootgroup_36',['gRootGroup',['../namespace_sim.html#a7a8d8e35a8d1aee9abb2c234c267a51d',1,'Sim']]],

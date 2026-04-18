@@ -15,7 +15,7 @@ var searchData=
   ['aligntop_12',['AlignTop',['../class_gui_tab_book_ctrl.html#a308d4cc556b5f464069036637dde61c4a3bb104f1e4cf596619aca08f337e306f',1,'GuiTabBookCtrl']]],
   ['alive_13',['Alive',['../class_texture_manager.html#accf3352e7656cb155abd0b2c76d96ca3abdae347178258aedd6b22a7c83bb1978',1,'TextureManager']]],
   ['alltext_14',['AllText',['../class_gui_text_edit_ctrl.html#a4b759aa0169566a8ff6a20313da6a580ae2a243a73ef645ffabbc41c174c265e4',1,'GuiTextEditCtrl']]],
-  ['alpha_15',['alpha',['../class_g_bitmap.html#a23d1a7c7cf0f6da45ca389904e644d55ab8e4fd775ba181b65c0fb6929cc7c6b3',1,'GBitmap::Alpha'],['../class_gui_text_edit_ctrl.html#a4b759aa0169566a8ff6a20313da6a580ab8e4fd775ba181b65c0fb6929cc7c6b3',1,'GuiTextEditCtrl::Alpha']]],
+  ['alpha_15',['Alpha',['../class_g_bitmap.html#a23d1a7c7cf0f6da45ca389904e644d55ab8e4fd775ba181b65c0fb6929cc7c6b3',1,'GBitmap::Alpha'],['../class_gui_text_edit_ctrl.html#a4b759aa0169566a8ff6a20313da6a580ab8e4fd775ba181b65c0fb6929cc7c6b3',1,'GuiTextEditCtrl::Alpha']]],
   ['alphanumeric_16',['AlphaNumeric',['../class_gui_text_edit_ctrl.html#a4b759aa0169566a8ff6a20313da6a580a54ff49f9a7923ff61684513fbfaee04e',1,'GuiTextEditCtrl']]],
   ['arrowdown_17',['ArrowDown',['../class_gui_text_edit_slider_ctrl.html#addadffd2318004a2f4de50d0032fd07aa5c6a21e78bc9a2b6f3e4d529ca203a30',1,'GuiTextEditSliderCtrl']]],
   ['arrowup_18',['ArrowUp',['../class_gui_text_edit_slider_ctrl.html#addadffd2318004a2f4de50d0032fd07aaacdf844600e5cbd73a4633360241a17d',1,'GuiTextEditSliderCtrl']]],

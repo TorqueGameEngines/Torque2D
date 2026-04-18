@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['auto_20documentation_0',['Console Auto-Documentation',['../console_autodoc.html',1,'']]]
+  ['2d_0',['Trigger 2D.',['../class_trigger.html#autotoc_md0',1,'']]]
 ];

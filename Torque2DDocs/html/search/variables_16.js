@@ -8,7 +8,7 @@ var searchData=
   ['width_5',['width',['../class_g_bitmap.html#a4ee313b55f94ef3be737aeaa12d8d492',1,'GBitmap::width'],['../struct_spline_util_1_1_spline_beam_info.html#a44b783c2f6e332b7d4a00ee8e457d6db',1,'SplineUtil::SplineBeamInfo::width'],['../struct_platform_font_1_1_char_info.html#a4ee313b55f94ef3be737aeaa12d8d492',1,'PlatformFont::CharInfo::width'],['../structengine.html#a395d15e7c2b09961c1bfd1da6179b64c',1,'engine::width']]],
   ['window_6',['window',['../structandroid__app.html#a25edf3d61b06311b07de80c8b55e5af6',1,'android_app']]],
   ['windowcreated_7',['windowCreated',['../class_emscripten_plat_state.html#a760eee1694c2de0f237c9000ad6540eb',1,'EmscriptenPlatState']]],
-  ['windowsize_8',['windowsize',['../class_android_plat_state.html#ab4d26ab7ca6d282d55874c22246c3ed7',1,'AndroidPlatState::windowSize'],['../class_emscripten_plat_state.html#ab4d26ab7ca6d282d55874c22246c3ed7',1,'EmscriptenPlatState::windowSize']]],
+  ['windowsize_8',['windowSize',['../class_android_plat_state.html#ab4d26ab7ca6d282d55874c22246c3ed7',1,'AndroidPlatState::windowSize'],['../class_emscripten_plat_state.html#ab4d26ab7ca6d282d55874c22246c3ed7',1,'EmscriptenPlatState::windowSize']]],
   ['worldprofile_9',['worldProfile',['../class_debug_stats.html#a31d189b3ea3387f4f2ccbc48b6ba1c51',1,'DebugStats']]],
   ['writedatafn_10',['writeDataFn',['../struct_abstract_class_rep_1_1_field.html#abeef860289306f825b3f6a2e3db27d15',1,'AbstractClassRep::Field']]]
 ];

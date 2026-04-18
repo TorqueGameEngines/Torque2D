@@ -5,7 +5,7 @@ var searchData=
   ['yearday_2',['yearday',['../struct_platform_1_1_local_time.html#a775d6e8147b20673fe2b1c90d722b6b6',1,'Platform::LocalTime']]],
   ['yoffset_3',['yOffset',['../struct_platform_font_1_1_char_info.html#a1d029557f28f407eb1a5c0af3ddb40a4',1,'PlatformFont::CharInfo']]],
   ['yorigin_4',['yOrigin',['../struct_platform_font_1_1_char_info.html#a9d6d9f5f5376adc749c15866d0739c36',1,'PlatformFont::CharInfo']]],
-  ['ypos_5',['ypos',['../struct_mouse_move_event.html#ad38abb7b0130be8d1e202f31f0e7346a',1,'MouseMoveEvent::yPos'],['../struct_screen_touch_event.html#ad38abb7b0130be8d1e202f31f0e7346a',1,'ScreenTouchEvent::yPos']]],
+  ['ypos_5',['yPos',['../struct_mouse_move_event.html#ad38abb7b0130be8d1e202f31f0e7346a',1,'MouseMoveEvent::yPos'],['../struct_screen_touch_event.html#ad38abb7b0130be8d1e202f31f0e7346a',1,'ScreenTouchEvent::yPos']]],
   ['yy_5fat_5fbol_6',['yy_at_bol',['../structyy__buffer__state.html#a8e60af6806593faf52d1cc01148af6e3',1,'yy_buffer_state']]],
   ['yy_5fbuf_5fpos_7',['yy_buf_pos',['../structyy__buffer__state.html#ae8850ab3d90f9339c392020e7d83c4c7',1,'yy_buffer_state']]],
   ['yy_5fbuf_5fsize_8',['yy_buf_size',['../structyy__buffer__state.html#a98a79041ff2a95eaa8a5c6d1e1562306',1,'yy_buffer_state']]],

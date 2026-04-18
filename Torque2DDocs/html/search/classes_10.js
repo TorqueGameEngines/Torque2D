@@ -47,7 +47,7 @@ var searchData=
   ['popupmenu_44',['PopupMenu',['../class_popup_menu.html',1,'']]],
   ['privatebbdata_45',['PrivateBBData',['../class_torque_1_1_private_b_b_data.html',1,'Torque']]],
   ['processmasterqueryevent_46',['ProcessMasterQueryEvent',['../class_process_master_query_event.html',1,'']]],
-  ['processor_47',['processor',['../struct_processor.html',1,'Processor'],['../struct_torque_system_info_1_1_processor.html',1,'TorqueSystemInfo::Processor']]],
+  ['processor_47',['Processor',['../struct_processor.html',1,'Processor'],['../struct_torque_system_info_1_1_processor.html',1,'TorqueSystemInfo::Processor']]],
   ['processpacketevent_48',['ProcessPacketEvent',['../class_process_packet_event.html',1,'']]],
   ['processpingevent_49',['ProcessPingEvent',['../class_process_ping_event.html',1,'']]],
   ['propertystate_50',['PropertyState',['../struct_taml_visitor_1_1_property_state.html',1,'TamlVisitor']]]

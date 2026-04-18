@@ -9,5 +9,5 @@ var searchData=
   ['texturehandletype_6',['TextureHandleType',['../class_texture_handle.html#a3fe6c2b82e564608543475bfd2d34da6',1,'TextureHandle']]],
   ['textvalign_7',['TextVAlign',['../class_text_sprite.html#a3ba8a1cdd2e577efbad7c7b88e1c6175',1,'TextSprite']]],
   ['touchcodes_8',['TouchCodes',['../group__input__constants.html#ga4de77faa48be087cefd558923655d5d3',1,'event.h']]],
-  ['type_9',['type',['../struct_console_log_entry.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'ConsoleLogEntry::Type'],['../struct_server_filter.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'ServerFilter::Type'],['../class_platform_assert.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'PlatformAssert::Type'],['../struct_net_address.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'NetAddress::Type'],['../struct_sim_object_1_1_notify.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'SimObject::Notify::Type']]]
+  ['type_9',['Type',['../struct_console_log_entry.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'ConsoleLogEntry::Type'],['../struct_server_filter.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'ServerFilter::Type'],['../class_platform_assert.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'PlatformAssert::Type'],['../struct_net_address.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'NetAddress::Type'],['../struct_sim_object_1_1_notify.html#a1d1cfd8ffb84e947f82999c682b666a7',1,'SimObject::Notify::Type']]]
 ];

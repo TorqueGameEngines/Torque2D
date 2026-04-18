@@ -6,14 +6,13 @@ var searchData=
   ['valign_5ftop_3',['VALIGN_TOP',['../class_text_sprite.html#a3ba8a1cdd2e577efbad7c7b88e1c6175a667caf0089bc36abdd821dfd4e55038c',1,'TextSprite']]],
   ['variable_4',['Variable',['../class_gui_grid_ctrl.html#a6ff2c21ca9164133f8d990ea8e62eaf4a18c03e9114911894d062ca85749aeed9',1,'GuiGridCtrl']]],
   ['vectordeletion_5',['VectorDeletion',['../class_message_vector.html#a6b0b71f0ea4cc69997f0c2044f12f2bba558af43ae412aba188213529e80e9fa1',1,'MessageVector']]],
-  ['vertical_5fdivider_6',['VERTICAL_DIVIDER',['../class_gui_frame_set_ctrl.html#a81a01a86de31071a92e6cce0bab9bc4ba245412ab32d5f8a9118fdc45176c2235',1,'GuiFrameSetCtrl']]],
-  ['vertresizebottom_7',['vertResizeBottom',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4a3e18bc000b13c56fc990ff64cce65a',1,'GuiControl']]],
-  ['vertresizecenter_8',['vertResizeCenter',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4f042857e43c8a60b2806ff935427415',1,'GuiControl']]],
-  ['vertresizefill_9',['vertResizeFill',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba2e73a80504c95de51777a847f67c4abe',1,'GuiControl']]],
-  ['vertresizeheight_10',['vertResizeHeight',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4028b8e609b439e9740116613ee5b019',1,'GuiControl']]],
-  ['vertresizerelative_11',['vertResizeRelative',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137baf76715d1b9401168aaca4c46ea5ce7a2',1,'GuiControl']]],
-  ['vertresizetop_12',['vertResizeTop',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba96d7717856629053cec1ba7b308097f7',1,'GuiControl']]],
-  ['vertthumb_13',['VertThumb',['../class_gui_scroll_ctrl.html#a81a01a86de31071a92e6cce0bab9bc4ba2cdeb15520a17b9031faebc4f051371f',1,'GuiScrollCtrl']]],
-  ['voidcallbacktype_14',['VoidCallbackType',['../struct_namespace_1_1_entry.html#a61dadd085c1777f559549e05962b2c9ea0efe142a5427020f50ef046ee50825d8',1,'Namespace::Entry']]],
-  ['volumeblock_15',['VolumeBlock',['../class_resource_object.html#aa705cf7e79a21c2352b00ffe20cd295fada696efe95703e94b24f436441140f8e',1,'ResourceObject']]]
+  ['vertresizebottom_6',['vertResizeBottom',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4a3e18bc000b13c56fc990ff64cce65a',1,'GuiControl']]],
+  ['vertresizecenter_7',['vertResizeCenter',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4f042857e43c8a60b2806ff935427415',1,'GuiControl']]],
+  ['vertresizefill_8',['vertResizeFill',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba2e73a80504c95de51777a847f67c4abe',1,'GuiControl']]],
+  ['vertresizeheight_9',['vertResizeHeight',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4028b8e609b439e9740116613ee5b019',1,'GuiControl']]],
+  ['vertresizerelative_10',['vertResizeRelative',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137baf76715d1b9401168aaca4c46ea5ce7a2',1,'GuiControl']]],
+  ['vertresizetop_11',['vertResizeTop',['../class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba96d7717856629053cec1ba7b308097f7',1,'GuiControl']]],
+  ['vertthumb_12',['VertThumb',['../class_gui_scroll_ctrl.html#a81a01a86de31071a92e6cce0bab9bc4ba2cdeb15520a17b9031faebc4f051371f',1,'GuiScrollCtrl']]],
+  ['voidcallbacktype_13',['VoidCallbackType',['../struct_namespace_1_1_entry.html#a8065af6f0b96742122b847b366091b2fa0efe142a5427020f50ef046ee50825d8',1,'Namespace::Entry']]],
+  ['volumeblock_14',['VolumeBlock',['../class_resource_object.html#aa705cf7e79a21c2352b00ffe20cd295fada696efe95703e94b24f436441140f8e',1,'ResourceObject']]]
 ];

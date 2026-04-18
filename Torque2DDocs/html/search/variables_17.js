@@ -4,5 +4,5 @@ var searchData=
   ['xincrement_1',['xIncrement',['../struct_platform_font_1_1_char_info.html#aba90247079ca5956930bc22c117b2cd2',1,'PlatformFont::CharInfo']]],
   ['xoffset_2',['xOffset',['../struct_platform_font_1_1_char_info.html#aa55e67caa831ae10fe3541e2f5b909ec',1,'PlatformFont::CharInfo']]],
   ['xorigin_3',['xOrigin',['../struct_platform_font_1_1_char_info.html#ac24329de7059919e5fad4088eaae68c5',1,'PlatformFont::CharInfo']]],
-  ['xpos_4',['xpos',['../struct_mouse_move_event.html#a7744e8b96c0927eefcdcb486aaf17262',1,'MouseMoveEvent::xPos'],['../struct_screen_touch_event.html#a7744e8b96c0927eefcdcb486aaf17262',1,'ScreenTouchEvent::xPos']]]
+  ['xpos_4',['xPos',['../struct_mouse_move_event.html#a7744e8b96c0927eefcdcb486aaf17262',1,'MouseMoveEvent::xPos'],['../struct_screen_touch_event.html#a7744e8b96c0927eefcdcb486aaf17262',1,'ScreenTouchEvent::xPos']]]
 ];
