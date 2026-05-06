@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="40" tilewidth="32" tileheight="32" nextobjectid="31">
+ <tileset firstgid="1" name="town" tilewidth="32" tileheight="32" tilecount="209" columns="19">
+  <image source="../images/town.png" width="628" height="370"/>
+  <tile id="188">
+   <objectgroup draworder="index"/>
+  </tile>
+ </tileset>
+ <tileset firstgid="210" name="Others" tilewidth="32" tileheight="32" tilecount="42" columns="7">
+  <image source="../images/town1.png" width="246" height="209"/>
+ </tileset>
+ <tileset firstgid="252" name="Woodland_x3" tilewidth="32" tileheight="32" tilecount="96" columns="16">
+  <image source="../images/Woodland_x3.png" width="512" height="192"/>
+  <tile id="0">
+   <objectgroup draworder="index"/>
+  </tile>
+  <tile id="32">
+   <objectgroup draworder="index"/>
+  </tile>
+  <tile id="34">
+   <objectgroup draworder="index" name="Collision">
+    <object id="0" x="21.3333" y="1.33333">
+     <polyline points="0.333333,-1 1.66667,9 -8,14.3333 -4,25.6667 10.6667,27.3333"/>
+    </object>
+   </objectgroup>
+  </tile>
+  <tile id="35">
+   <objectgroup draworder="index" name="Collision">
+    <object id="0" x="0" y="10.3333" width="17.6667" height="17.6667">
+     <ellipse/>
+    </object>
+    <object id="0" x="0.333333" y="1" width="7.66667" height="26.3333"/>
+   </objectgroup>
+  </tile>
+  <tile id="88">
+   <objectgroup draworder="index"/>
+  </tile>
+ </tileset>
+ <layer name="Floor" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3VYQ7CIAwFYK5qdgXjbTwCR4EzqclIXl7aDQwFdP3xQkRk3zrLUgghv5MWGLXMdrnPfSuMo3xPyNV9uWF/r5/7RvmOgr6ztfj/vpKv9vlqFulcsPQd1Y/XjPBhbhD2Sb/T5qx8XIMVfLh3pDnJt8GY9nGDecv6Rfp+hfqxT+sPrClfE/u7py+SgT9L54vUy1zfnr4SzcXnC9cP50b7atwcK1+xfGPC++ndH2ejdF3prIzCul6+lufGNZ/pk+o3y1feuzW+8r4Y5fvse9+DPaL5HntmP98Y6vrS2qeNLbE4/9znvn/x1cR9v+/LSl6AqcfwABkAAA==
+  </data>
+ </layer>
+ <layer name="Fringe" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+1Xy04CMRQte597RfwE4y8YE7/AuCQkhBiXhA9g7YK48RdcE7Z+iz8iaEvmwOHOaafDwEY54WaG6W177qO3rXMHHPCP0PK/1n6nWHj5Uf/F3Fb3zLeft8rfG8HMe+LfT8V/zM1A27d/n3vp+PfrVnmMJrA2t/37FY2N/5ibgbYjL8eiTxM/oq+1WcUzOk+hc+HlUvRt4kfbFzareMbmgU6sb7uBD2MxUPG0MQdszFVfti2XK+uh/7N/f8kQRpXuxNhWyqEI2Cb0n2bYVRdj89/mQQwrm2gNgF/KjxMzTo7Pl31MDYvlSwD7ltcA+KX8OHNrn4wrdLlPnbrNvuU8nkbm7Ji5GKw7SvCL1jCB2Lpl/3W9fBXPwO89wQ+8eiTMLYit/Tl10drC/IYkt/Su+PUSAn52rlT+rWBqvIrvh5eH4gl/KH5twS18+yz65PpNrQ1bX+qujxDfm+LJgm8z8kXVvqzWho3vwK1rQ99867tNDIpv8PFbIfA7bLJnn5gfOe7gxfHdB3j91sk/8Gqyf/D+wH5/jejkrNuYDfv03zZ+W4L2nWBnzpmAUbmvuc36AuTU5wC1v22Dnnif0dOu29w6g7ydC35dI1X87P4xM0/nyjkfA/PH3WHJj+K9S3619g23eb7C3SHw43gHTnde7jO49khX8at7D4E9Nv/4PBP220cvT25zPx6K8Uaki/OCyr9cwJ5U/jWFyr/c+wfsCbrIP66vuxDshZx/qfMf7vgAdJF/6q6bqlt2PNuu8i91jond8QPUXXfh0nWLx1PtqfxT+Qg/KXuRh7EzrqpbPJ5tXzidf3WhOCgbq9afbQ9j7YKf4pC7/6Z06taTA/4mfgFE/BMNABkAAA==
+  </data>
+ </layer>
+ <objectgroup name="Script">
+  <object id="1" name="Function" type="Player" gid="189" x="639" y="787" width="96" height="128">
+   <properties>
+    <property name="Animation" value="&quot;ToyAssets:TD_Knight_MoveWest&quot;"/>
+    <property name="DefaultDensity" value="0.5"/>
+    <property name="DefaultFriction" value="0"/>
+    <property name="DefaultRestitution" value="1.0"/>
+    <property name="FixedAngle" value="true"/>
+    <property name="LinearVelocity" value="&quot;5 3&quot;"/>
+    <property name="size" value="&quot;1.5 1.5&quot;"/>
+   </properties>
+  </object>
+ </objectgroup>
+ <layer name="Over" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+2Yy0oDMRSGzyiigpeNStG6cqEi6k6kFqmufAYpiHTv5SF8hD6dbryAongpqCDU6h/MkBgynSiTy0A++Mi0PUxOTmZ6OiWKRCKRcOnCz5yYHvxykIuOsYRoPOkfM4HPJ3NibFHFvPOe5rZN03cCfTiCx/DE8bxNZXQ9N7vUBuAgHOIOwxE4SqImrmsj78c0nIEV7iycg9Wcc7S4NlmES3AZrnBX4RpcV2LlWrcU5ZoXBdvfGtyCdbjNbcAduKvET5GoNeMVPvL8TGtuiu5+aytjuoZ0lGutklVzm6RrkNeS1vqAx+zzsUH6mvuinXHsE5PvQF89xKQ/FNlDytgrz+GF+3SMuIRX8BreeM5F5RbewUPuA4lezNT1BFu9rat57wk+wxfYgfckejGzqJ7wX97gu/T6g0QvZrrsCUnGb/dT6XgDbsIF+unHjFrG+c6KSqwk6K6/EOgZxvh6rv1FSZ8fg6gdx2S//0JIa9Nh6/+OPY0mcRH36PYqJL8BZBBzwgAZAAA=
+  </data>
+ </layer>
+ <layer name="Hip roof" width="40" height="40">
+  <data encoding="base64" compression="gzip">
+   H4sIAAAAAAAAA+3VOwrCUBRF0TgBKwekg3QMOhlHoI0f8ItfFEwhbgtBkRfBKOcazoJdpAjvdDfLzMysjIt6wBv1mnqBRdCngXpEwpBGNKbJD99pfPDPlGY0pwUtafXNUSWtaUNb2tGeDtJFz450evg+Uy7aYmbV49v26n6vblL3KsptS92rCLet6F5FuW1NagneNbP/0FYPKNChrnpEMD31gIq7Ah5xH08AGQAA
+  </data>
+ </layer>
+ <objectgroup name="Collision">
+  <object id="2" name="Rectangle1" x="412" y="1145" width="162" height="42"/>
+  <object id="3" name="Circle1" x="735" y="1149" width="128" height="39">
+   <ellipse/>
+  </object>
+  <object id="4" name="Poly1" x="442" y="436">
+   <polygon points="0,0 205,0 205,82 0,81"/>
+  </object>
+  <object id="5" name="Poly2" x="449" y="519">
+   <polygon points="0,0 192,2 191,57 -1,56"/>
+  </object>
+  <object id="6" name="Poly3" x="513" y="579">
+   <polygon points="0,0 1,30 94,29 95,-2"/>
+  </object>
+  <object id="7" name="Poly4" x="854" y="455">
+   <polygon points="0,0 73,-70 145,-1 145,74 0,72"/>
+  </object>
+  <object id="8" name="Poly5" x="795" y="499">
+   <polygon points="0,0 270,1 269,82 0,78"/>
+  </object>
+  <object id="9" name="Poly6" x="801" y="582">
+   <polygon points="0,0 254,2 257,59 -2,56"/>
+  </object>
+  <object id="10" x="903" y="1036" width="54" height="52">
+   <ellipse/>
+  </object>
+  <object id="11" x="745" y="1040" width="68" height="62">
+   <ellipse/>
+  </object>
+  <object id="12" x="231" y="1003" width="61" height="58">
+   <ellipse/>
+  </object>
+  <object id="13" x="481" y="903" width="223" height="52"/>
+  <object id="14" x="616" y="818" width="95" height="79"/>
+  <object id="15" x="468" y="805" width="146" height="93"/>
+  <object id="16" x="491" y="769" width="100" height="34"/>
+  <object id="17" x="519" y="740" width="50" height="26"/>
+  <object id="18" x="821" y="803" width="147" height="73"/>
+  <object id="19" x="832" y="881" width="128" height="75"/>
+  <object id="20" x="847" y="782" width="92" height="18"/>
+  <object id="21" x="1" y="1275">
+   <polyline points="0,0 1,-1272 1278,-1267 1272,2 0,2"/>
+  </object>
+  <object id="22" x="-18" y="756">
+   <polyline points="0,0 281.459,-133.078 -8,-238"/>
+  </object>
+  <object id="23" x="1380" y="616">
+   <polyline points="0,0 -142,124 -10,360"/>
+  </object>
+  <object id="24" x="438" y="-52">
+   <polyline points="0,0 118,138 438,-8"/>
+  </object>
+  <object id="30" x="96.4986" y="1067.24">
+   <polyline points="0,0 24.346,-41.6095 60.201,-8.85308 63.2995,15.4929 45.1507,29.6578 50.9052,39.3962 38.9536,52.2332 17.2635,46.036 16.3782,35.4123 24.346,27.4446 11.509,21.2474 2.65592,12.837 0.442654,0.885308"/>
+  </object>
+ </objectgroup>
+</map>

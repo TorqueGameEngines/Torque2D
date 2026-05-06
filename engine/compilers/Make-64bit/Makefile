@@ -28,6 +28,7 @@ clean:
 .PHONY: all debug release clean
 
 -include x Torque2D.mk
+-include x TmxParser.mk
 -include x zlib
 -include x lpng
 -include x ljpeg

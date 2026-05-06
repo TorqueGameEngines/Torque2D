@@ -1,0 +1,8 @@
+<ImageAsset
+    AssetName="Woodland_x3"
+    ImageFile="Woodland_x3.png" 
+	CellWidth ="32"
+	CellHeight = "32"
+	CellCountX = "16"
+	CellCountY = "6"
+	/>
