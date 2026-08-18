@@ -66,6 +66,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga0db0f1ee99f226f37d30e44666daa9e8" id="r_ga0db0f1ee99f226f37d30e44666daa9e8"><td class="memItemLeft"><a class="el" href="group__MetaScriptingFunctions.html#ga3428b441d74b14a5aed2f08490b4b9f3">void</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga0db0f1ee99f226f37d30e44666daa9e8">sbmDumpStats</a> ()</td></tr>
 <tr class="memitem:ga535c7e38df40cb42f5ca1ccb4bea7125" id="r_ga535c7e38df40cb42f5ca1ccb4bea7125"><td class="memItemLeft"><a class="el" href="group__MetaScriptingFunctions.html#ga3428b441d74b14a5aed2f08490b4b9f3">void</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga535c7e38df40cb42f5ca1ccb4bea7125">sbmDumpStrings</a> ()</td></tr>
 <tr class="memitem:ga5935fd13ef727501211a83b8604ca4f3" id="r_ga5935fd13ef727501211a83b8604ca4f3"><td class="memItemLeft"><a class="el" href="group__MetaScriptingFunctions.html#ga3428b441d74b14a5aed2f08490b4b9f3">void</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga5935fd13ef727501211a83b8604ca4f3">setEchoFileLoads</a> (enable)</td></tr>
+<tr class="memitem:gadc0814b38e76bccd2d26750632712193" id="r_gadc0814b38e76bccd2d26750632712193"><td class="memItemLeft"><a class="el" href="group__MetaScriptingFunctions.html#ga3428b441d74b14a5aed2f08490b4b9f3">void</a>&#160;</td><td class="memItemRight"><a class="el" href="#gadc0814b38e76bccd2d26750632712193">setLogFileName</a> (<a class="el" href="group__FileSystem.html#ga4ea5109dc203259fb3c01292345bc0ee">fileName</a>)</td></tr>
 <tr class="memitem:gae9a0e1d31d7032ece309a31b3baca894" id="r_gae9a0e1d31d7032ece309a31b3baca894"><td class="memItemLeft"><a class="el" href="group__MetaScriptingFunctions.html#ga3428b441d74b14a5aed2f08490b4b9f3">void</a>&#160;</td><td class="memItemRight"><a class="el" href="#gae9a0e1d31d7032ece309a31b3baca894">setLogMode</a> (mode)</td></tr>
 <tr class="memitem:ga114a5617e40fee9bff41b64cff7f7b35" id="r_ga114a5617e40fee9bff41b64cff7f7b35"><td class="memItemLeft"><a class="el" href="group__MetaScriptingFunctions.html#ga3428b441d74b14a5aed2f08490b4b9f3">void</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga114a5617e40fee9bff41b64cff7f7b35">warn</a> (text, [...] *)</td></tr>
 </table>
@@ -420,6 +421,31 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>No return value. </dd></dl>
+
+</div>
+</div>
+<a id="gadc0814b38e76bccd2d26750632712193" name="gadc0814b38e76bccd2d26750632712193"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gadc0814b38e76bccd2d26750632712193">&#9670;&#160;</a></span>setLogFileName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__MetaScriptingFunctions.html#ga3428b441d74b14a5aed2f08490b4b9f3">void</a> setLogFileName </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="group__FileSystem.html#ga4ea5109dc203259fb3c01292345bc0ee">fileName</a></td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Use the setLogFileName function to write the console log somewhere other than console.log. The path is relative to the working directory, and the folders in it must already exist. Call this BEFORE setLogMode, or the opening lines land in the old file. Every copy of the engine started from the same folder shares one log, so two running at once either interleave their output or, in mode 2, leave the second unable to open it at all. A test harness wanting its own log is the reason this exists. </p><dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname"><a class="el" href="group__FileSystem.html#ga4ea5109dc203259fb3c01292345bc0ee">fileName</a></td><td>A string naming the file to log to. Pass "" to go back to console.log. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>No return value. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#gae9a0e1d31d7032ece309a31b3baca894">setLogMode</a> </dd></dl>
 
 </div>
 </div>

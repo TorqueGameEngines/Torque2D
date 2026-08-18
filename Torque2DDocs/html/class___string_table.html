@@ -127,7 +127,7 @@ Implementation details</h2></td></tr>
 <div class="line"> </div>
 <div class="line"><span class="comment">// Comparing two strings in the StringTable (see below).</span></div>
 <div class="line"><span class="keywordflow">if</span>(mRoot == stName) <a class="code hl_function" href="namespace_con.html#a0aff7311d684a0e0ef33125616a73385">Con::printf</a>(<span class="stringliteral">&quot;These strings are equal!&quot;</span>);</div>
-<div class="ttc" id="anamespace_con_html_a0aff7311d684a0e0ef33125616a73385"><div class="ttname"><a href="namespace_con.html#a0aff7311d684a0e0ef33125616a73385">Con::printf</a></div><div class="ttdeci">void printf(const char *fmt,...)</div><div class="ttdef"><b>Definition</b> console.cc:636</div></div>
+<div class="ttc" id="anamespace_con_html_a0aff7311d684a0e0ef33125616a73385"><div class="ttname"><a href="namespace_con.html#a0aff7311d684a0e0ef33125616a73385">Con::printf</a></div><div class="ttdeci">void printf(const char *fmt,...)</div><div class="ttdef"><b>Definition</b> console.cc:644</div></div>
 </div><!-- fragment --><p><b>But why is this useful, you ask?</b> Because every string that's run through the StringTable is stored once and only once, every string has one and only one pointer mapped to it. As a pointer is an integer value (usually an unsigned int), so we can do several neat things:</p><ul>
 <li>StringTableEntrys can be compared directly for equality, instead of using the time-consuming dStrcmp() or dStricmp() function.</li>
 <li>For things like object names, we can avoid storing multiple copies of the string containing the name. The StringTable ensures that we only ever store one copy.</li>

@@ -85,6 +85,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a016c924c1918e5d9d9e41601c22ebef3" id="r_a016c924c1918e5d9d9e41601c22ebef3"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a016c924c1918e5d9d9e41601c22ebef3">DeclareNamedSet</a> (ActiveActionMapSet) DeclareNamedSet(GhostAlwaysSet) DeclareNamedSet(BehaviorSet) DeclareNamedSet(AchievementSet) <a class="el" href="group__simbase__helpermacros.html#gafbf8ae284cf91d780432d37f4eaba6c0">DeclareNamedGroup</a>(ActionMapGroup) <a class="el" href="group__simbase__helpermacros.html#gafbf8ae284cf91d780432d37f4eaba6c0">DeclareNamedGroup</a>(ClientGroup) <a class="el" href="group__simbase__helpermacros.html#gafbf8ae284cf91d780432d37f4eaba6c0">DeclareNamedGroup</a>(GuiGroup) <a class="el" href="group__simbase__helpermacros.html#gafbf8ae284cf91d780432d37f4eaba6c0">DeclareNamedGroup</a>(GuiDataGroup) <a class="el" href="group__simbase__helpermacros.html#gafbf8ae284cf91d780432d37f4eaba6c0">DeclareNamedGroup</a>(TCPGroup) <a class="el" href="group__simbase__helpermacros.html#gafbf8ae284cf91d780432d37f4eaba6c0">DeclareNamedGroup</a>(ClientConnectionGroup) <a class="el" href="group__simbase__helpermacros.html#gafbf8ae284cf91d780432d37f4eaba6c0">DeclareNamedGroup</a>(ChunkFileGroup)</td></tr>
 <tr class="memitem:a02fd73d861ef2e4aabb38c0c9ff82947" id="r_a02fd73d861ef2e4aabb38c0c9ff82947"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a02fd73d861ef2e4aabb38c0c9ff82947">init</a> ()</td></tr>
 <tr class="memitem:a7861ee1569802186a619778efc85af13" id="r_a7861ee1569802186a619778efc85af13"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7861ee1569802186a619778efc85af13">shutdown</a> ()</td></tr>
+<tr class="memitem:a7e06d337122efd6ce9194013414d0650" id="r_a7e06d337122efd6ce9194013414d0650"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a7e06d337122efd6ce9194013414d0650">isShuttingDown</a> ()</td></tr>
 <tr class="memitem:a1d3da3ab670274d5d102d325e237d3b3" id="r_a1d3da3ab670274d5d102d325e237d3b3"><td class="memItemLeft"><a class="el" href="class_sim_data_block_group.html">SimDataBlockGroup</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a1d3da3ab670274d5d102d325e237d3b3">getDataBlockGroup</a> ()</td></tr>
 <tr class="memitem:a196bf04388ca617c104c6ad1cf0686cf" id="r_a196bf04388ca617c104c6ad1cf0686cf"><td class="memItemLeft"><a class="el" href="class_sim_group.html">SimGroup</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a196bf04388ca617c104c6ad1cf0686cf">getRootGroup</a> ()</td></tr>
 <tr class="memitem:a3e94a217b10a43c58030035d7efa5ea4" id="r_a3e94a217b10a43c58030035d7efa5ea4"><td class="memItemLeft"><a class="el" href="class_sim_object.html">SimObject</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a3e94a217b10a43c58030035d7efa5ea4">findObject</a> (SimObjectId)</td></tr>
@@ -620,6 +621,24 @@ template&lt;class T&gt; </div>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>true if this event is still outstanding and false if it has passed or eventID is invalid.</dd></dl>
 <dl class="section see"><dt>See also</dt><dd>cancel, <a class="el" href="#a7d5e393f52b295452c2b6d302986133a">getEventTimeLeft</a>, <a class="el" href="#adbfec8abe21f7bba0d98eaa0efac21f9">getScheduleDuration</a>, <a class="el" href="#a904d9f6fd2b0539fd569cad4c941b547">getTimeSinceStart</a>, schedule, obj.schedule </dd></dl>
+
+</div>
+</div>
+<a id="a7e06d337122efd6ce9194013414d0650" name="a7e06d337122efd6ce9194013414d0650"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7e06d337122efd6ce9194013414d0650">&#9670;&#160;</a></span>isShuttingDown()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isShuttingDown </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>True once <a class="el" href="#a7861ee1569802186a619778efc85af13">Sim::shutdown()</a> has begun tearing the root group down. At that point every object is being destroyed in an arbitrary order, so "X was deleted while Y still referenced it" is expected rather than a mistake - diagnostics that would otherwise flag it should stay quiet. </p>
 
 </div>
 </div>

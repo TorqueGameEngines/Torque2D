@@ -89,9 +89,11 @@ $(function() {
 <tr class="heading"><td colspan="2"><h2 id="header-pub-methods" class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
 <tr class="memitem:abde770f329bb02ec42cd1f6013ed845d" id="r_abde770f329bb02ec42cd1f6013ed845d"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#abde770f329bb02ec42cd1f6013ed845d">BitmapFont</a> ()</td></tr>
+<tr class="memitem:ac8bb3912a3ce86b15842e79d0b421204" id="r_ac8bb3912a3ce86b15842e79d0b421204"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac8bb3912a3ce86b15842e79d0b421204">clear</a> ()</td></tr>
 <tr class="memitem:a49fc6ba9c297f817f0cef80364e3293e" id="r_a49fc6ba9c297f817f0cef80364e3293e"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a49fc6ba9c297f817f0cef80364e3293e">parseFont</a> (<a class="el" href="class_stream.html">Stream</a> &amp;io_rStream)</td></tr>
 <tr class="memitem:a93ae44a27dc5bf39b58924b99a012f2e" id="r_a93ae44a27dc5bf39b58924b99a012f2e"><td class="memItemLeft"><a class="el" href="class_texture_handle.html">TextureHandle</a>&#160;</td><td class="memItemRight"><a class="el" href="#a93ae44a27dc5bf39b58924b99a012f2e">LoadTexture</a> (StringTableEntry fileName)</td></tr>
 <tr class="memitem:a76007e4f02b445d0c9710ed1d9b0fd11" id="r_a76007e4f02b445d0c9710ed1d9b0fd11"><td class="memItemLeft">const <a class="el" href="classfont_1_1_bitmap_font_character.html">BitmapFontCharacter</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a76007e4f02b445d0c9710ed1d9b0fd11">getCharacter</a> (const U16 charID)</td></tr>
+<tr class="memitem:adcc7d58dfb9af741c60b05606ba718eb" id="r_adcc7d58dfb9af741c60b05606ba718eb"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#adcc7d58dfb9af741c60b05606ba718eb">getCharacterCount</a> (void) const</td></tr>
 <tr class="memitem:ad6aa84a8b9492f08b040576512e996bc" id="r_ad6aa84a8b9492f08b040576512e996bc"><td class="memItemLeft">const F32&#160;</td><td class="memItemRight"><a class="el" href="#ad6aa84a8b9492f08b040576512e996bc">getSizeRatio</a> (const F32 size)</td></tr>
 <tr class="memitem:ad43dd302d9bdc6c37c3582910fdeb636" id="r_ad43dd302d9bdc6c37c3582910fdeb636"><td class="memItemLeft">const S16&#160;</td><td class="memItemRight"><a class="el" href="#ad43dd302d9bdc6c37c3582910fdeb636">getKerning</a> (U16 first, U16 second)</td></tr>
 </table><table class="memberdecls">
@@ -122,6 +124,25 @@ Public Attributes</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ac8bb3912a3ce86b15842e79d0b421204" name="ac8bb3912a3ce86b15842e79d0b421204"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac8bb3912a3ce86b15842e79d0b421204">&#9670;&#160;</a></span>clear()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void clear </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Forget everything read from a .fnt file.</p>
+<p>parseFont ADDS to what is already here &ndash; it has no clear of its own, and mChar and mKerning are maps, so parsing a second font over a first leaves the union of the two and a glyph count that only ever grows. Anything that re-reads a font has to come through here first. </p>
+
+</div>
+</div>
 <a id="a76007e4f02b445d0c9710ed1d9b0fd11" name="a76007e4f02b445d0c9710ed1d9b0fd11"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76007e4f02b445d0c9710ed1d9b0fd11">&#9670;&#160;</a></span>getCharacter()</h2>
 
@@ -144,6 +165,33 @@ Public Attributes</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="adcc7d58dfb9af741c60b05606ba718eb" name="adcc7d58dfb9af741c60b05606ba718eb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcc7d58dfb9af741c60b05606ba718eb">&#9670;&#160;</a></span>getCharacterCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getCharacterCount </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>How many glyphs the font actually holds.</p>
+<p>Const where getCharacter above cannot be: mChar[charID] on a std::map inserts a default-constructed character for a glyph the font does not have, and size() does not. </p>
 
 </div>
 </div>

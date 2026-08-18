@@ -106,15 +106,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:aa8fb2a4e72e5c4975d3cd912c5de131a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the object is added to the sim.  <br /></td></tr>
 <tr class="memitem:a28fb2b0653c2c31284ebef9237dc9c5c" id="r_a28fb2b0653c2c31284ebef9237dc9c5c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a28fb2b0653c2c31284ebef9237dc9c5c">onRemove</a> ()</td></tr>
 <tr class="memdesc:a28fb2b0653c2c31284ebef9237dc9c5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the object is removed from the sim.  <br /></td></tr>
-<tr class="memitem:a62aa4e3f1aea3c0841234882d0105c1b" id="r_a62aa4e3f1aea3c0841234882d0105c1b"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a62aa4e3f1aea3c0841234882d0105c1b">copyTo</a> (<a class="el" href="class_sim_object.html">SimObject</a> *object)</td></tr>
 <tr class="memitem:a04c3ab3709ebce270f682090803b139c" id="r_a04c3ab3709ebce270f682090803b139c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a04c3ab3709ebce270f682090803b139c">setFontFile</a> (const char *pFontFile)</td></tr>
 <tr class="memitem:abc6f4d863653c362e30db5d5efafc844" id="r_abc6f4d863653c362e30db5d5efafc844"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#abc6f4d863653c362e30db5d5efafc844">getFontFile</a> (void) const</td></tr>
+<tr class="memitem:afb02faabfe4980f519e7dd28ae8382e0" id="r_afb02faabfe4980f519e7dd28ae8382e0"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#afb02faabfe4980f519e7dd28ae8382e0">getRelativeFontFile</a> (void) const</td></tr>
 <tr class="memitem:a515b71030eff451ab12d96f77b929889" id="r_a515b71030eff451ab12d96f77b929889"><td class="memItemLeft"><a class="el" href="class_texture_handle.html">TextureHandle</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="#a515b71030eff451ab12d96f77b929889">getImageTexture</a> (U16 pageID)</td></tr>
+<tr class="memitem:a8153a9d13c67e355c38db995fbb65bfa" id="r_a8153a9d13c67e355c38db995fbb65bfa"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#a8153a9d13c67e355c38db995fbb65bfa">getGlyphCount</a> (void) const</td></tr>
+<tr class="memitem:af7daf59bf9674db14ca52a4701cc3df7" id="r_af7daf59bf9674db14ca52a4701cc3df7"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#af7daf59bf9674db14ca52a4701cc3df7">getPageCount</a> (void) const</td></tr>
+<tr class="memitem:adcc66aa97231c354616060b4a8f208b0" id="r_adcc66aa97231c354616060b4a8f208b0"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#adcc66aa97231c354616060b4a8f208b0">getFontSize</a> (void) const</td></tr>
+<tr class="memitem:ae26b73c2404a4801ab97a1fb3edc7e3e" id="r_ae26b73c2404a4801ab97a1fb3edc7e3e"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#ae26b73c2404a4801ab97a1fb3edc7e3e">getLineHeight</a> (void) const</td></tr>
+<tr class="memitem:abd0f756ae645d2ba2c7f3fdc6db2ccbb" id="r_abd0f756ae645d2ba2c7f3fdc6db2ccbb"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#abd0f756ae645d2ba2c7f3fdc6db2ccbb">getBaseline</a> (void) const</td></tr>
+<tr class="memitem:a06509a8a91d826904a357c65509792d2" id="r_a06509a8a91d826904a357c65509792d2"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#a06509a8a91d826904a357c65509792d2">getLoadedPageCount</a> (void) const</td></tr>
+<tr class="memitem:aa1ff2eec5a105e639c162fad24c1e8ec" id="r_aa1ff2eec5a105e639c162fad24c1e8ec"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#aa1ff2eec5a105e639c162fad24c1e8ec">getPageFile</a> (const U32 pageIndex) const</td></tr>
+<tr class="memitem:a752091e94a059cece252716db240f3e0" id="r_a752091e94a059cece252716db240f3e0"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#a752091e94a059cece252716db240f3e0">getPageWidth</a> (const U32 pageIndex) const</td></tr>
+<tr class="memitem:aeaf9b6ad16c8d8e4011ad8167db94725" id="r_aeaf9b6ad16c8d8e4011ad8167db94725"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#aeaf9b6ad16c8d8e4011ad8167db94725">getPageHeight</a> (const U32 pageIndex) const</td></tr>
 <tr class="memitem:a6cfade6e1e18a49a5c30b3519238a2f7" id="r_a6cfade6e1e18a49a5c30b3519238a2f7"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="#a6cfade6e1e18a49a5c30b3519238a2f7">DECLARE_CONOBJECT</a> (<a class="el" href="class_font_asset.html">FontAsset</a>)</td></tr>
 <tr class="memdesc:a6cfade6e1e18a49a5c30b3519238a2f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare Console Object.  <br /></td></tr>
 <tr class="inherit_header pub_methods_class_asset_base"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_asset_base')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="class_asset_base.html">AssetBase</a></td></tr>
 <tr class="memitem:a9e6e25862e3c7113486d1d7d9680a704 inherit pub_methods_class_asset_base" id="r_a9e6e25862e3c7113486d1d7d9680a704"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#a9e6e25862e3c7113486d1d7d9680a704">AssetBase</a> ()</td></tr>
 <tr class="memitem:ad450188345220cc87f0c62111529228d inherit pub_methods_class_asset_base" id="r_ad450188345220cc87f0c62111529228d"><td class="memItemLeft">virtual&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#ad450188345220cc87f0c62111529228d">~AssetBase</a> ()</td></tr>
+<tr class="memitem:a62aa4e3f1aea3c0841234882d0105c1b inherit pub_methods_class_asset_base" id="r_a62aa4e3f1aea3c0841234882d0105c1b"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#a62aa4e3f1aea3c0841234882d0105c1b">copyTo</a> (<a class="el" href="class_sim_object.html">SimObject</a> *object)</td></tr>
+<tr class="memitem:abd3f88ca7c9157508f6a71d5f02a9ee0 inherit pub_methods_class_asset_base" id="r_abd3f88ca7c9157508f6a71d5f02a9ee0"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#abd3f88ca7c9157508f6a71d5f02a9ee0">copyAssetStateTo</a> (<a class="el" href="class_asset_base.html">AssetBase</a> *pTarget)</td></tr>
 <tr class="memitem:ae295a391fb826f95f8635228bd782130 inherit pub_methods_class_asset_base" id="r_ae295a391fb826f95f8635228bd782130"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#ae295a391fb826f95f8635228bd782130">setAssetName</a> (const char *pAssetName)</td></tr>
 <tr class="memdesc:ae295a391fb826f95f8635228bd782130 inherit pub_methods_class_asset_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Asset configuration.  <br /></td></tr>
 <tr class="memitem:afc6353b986a621ae7e032ae4e4d7be33 inherit pub_methods_class_asset_base" id="r_afc6353b986a621ae7e032ae4e4d7be33"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#afc6353b986a621ae7e032ae4e4d7be33">getAssetName</a> (void) const</td></tr>
@@ -135,7 +146,14 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a926d587c7b73a1a39400c54d005c64fb inherit pub_methods_class_asset_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Expanding/Collapsing asset paths is only available once registered with the asset manager.  <br /></td></tr>
 <tr class="memitem:a46052c208a3dbea45568aeec71f49813 inherit pub_methods_class_asset_base" id="r_a46052c208a3dbea45568aeec71f49813"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#a46052c208a3dbea45568aeec71f49813">collapseAssetFilePath</a> (const char *pAssetFilePath) const</td></tr>
 <tr class="memitem:a7f9ca0bedbea0698b8bb5325f920c8f8 inherit pub_methods_class_asset_base" id="r_a7f9ca0bedbea0698b8bb5325f920c8f8"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#a7f9ca0bedbea0698b8bb5325f920c8f8">isAssetValid</a> (void) const</td></tr>
+<tr class="memitem:a45aee45b58d251b2e0dc39a76ea3c6d5 inherit pub_methods_class_asset_base" id="r_a45aee45b58d251b2e0dc39a76ea3c6d5"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#a45aee45b58d251b2e0dc39a76ea3c6d5">getAssetDirty</a> (void) const</td></tr>
+<tr class="memdesc:a45aee45b58d251b2e0dc39a76ea3c6d5 inherit pub_methods_class_asset_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Whether the asset has changes that have not been saved.  <br /></td></tr>
 <tr class="memitem:a544fa2d5ff491db4daef64c2f04d0202 inherit pub_methods_class_asset_base" id="r_a544fa2d5ff491db4daef64c2f04d0202"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#a544fa2d5ff491db4daef64c2f04d0202">refreshAsset</a> (void)</td></tr>
+<tr class="memitem:abab4b1951e731e5f8c04ea8073409426 inherit pub_methods_class_asset_base" id="r_abab4b1951e731e5f8c04ea8073409426"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#abab4b1951e731e5f8c04ea8073409426">saveAsset</a> (void)</td></tr>
+<tr class="memdesc:abab4b1951e731e5f8c04ea8073409426 inherit pub_methods_class_asset_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Save the asset's file, and revert it to what that file already holds.  <br /></td></tr>
+<tr class="memitem:af13dbfd67227a686cb45434c9ff7b7c2 inherit pub_methods_class_asset_base" id="r_af13dbfd67227a686cb45434c9ff7b7c2"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#af13dbfd67227a686cb45434c9ff7b7c2">revertAsset</a> (void)</td></tr>
+<tr class="memitem:a3c72cd94aadd025c7a3c658acc04d216 inherit pub_methods_class_asset_base" id="r_a3c72cd94aadd025c7a3c658acc04d216"><td class="memItemLeft"><a class="el" href="class_asset_base.html">AssetBase</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#a3c72cd94aadd025c7a3c658acc04d216">createStateSnapshot</a> (void)</td></tr>
+<tr class="memitem:aff94f8791288a88652dd020e89fa79c8 inherit pub_methods_class_asset_base" id="r_aff94f8791288a88652dd020e89fa79c8"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#aff94f8791288a88652dd020e89fa79c8">restoreStateSnapshot</a> (<a class="el" href="class_asset_base.html">AssetBase</a> *pSnapshot)</td></tr>
 <tr class="memitem:ae97a256626b0b85ddfe06e68d9327747 inherit pub_methods_class_asset_base" id="r_ae97a256626b0b85ddfe06e68d9327747"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_asset_base.html#ae97a256626b0b85ddfe06e68d9327747">DECLARE_CONOBJECT</a> (<a class="el" href="class_asset_base.html">AssetBase</a>)</td></tr>
 <tr class="memdesc:ae97a256626b0b85ddfe06e68d9327747 inherit pub_methods_class_asset_base"><td class="mdescLeft">&#160;</td><td class="mdescRight">Declare Console Object.  <br /></td></tr>
 <tr class="inherit_header pub_methods_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
@@ -153,10 +171,24 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:accd2600060dbaee3a3b41aed4034c63c inherit pub_methods_class_sim_object" id="r_accd2600060dbaee3a3b41aed4034c63c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#accd2600060dbaee3a3b41aed4034c63c">dump</a> ()</td></tr>
 <tr class="memitem:a1810f5aba25efd242c24232c2c2bbd1a inherit pub_methods_class_sim_object" id="r_a1810f5aba25efd242c24232c2c2bbd1a"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1810f5aba25efd242c24232c2c2bbd1a">dumpClassHierarchy</a> ()</td></tr>
 <tr class="memitem:aacb30b9c403e8687e109b7738af141d8 inherit pub_methods_class_sim_object" id="r_aacb30b9c403e8687e109b7738af141d8"><td class="memItemLeft"><a class="el" href="class_sim_object.html">SimObject</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aacb30b9c403e8687e109b7738af141d8">clone</a> (const bool copyDynamicFields)</td></tr>
+<tr class="memitem:a00fb274c69119bd75c3ccf9b3a143c00 inherit pub_methods_class_sim_object" id="r_a00fb274c69119bd75c3ccf9b3a143c00"><td class="memItemLeft"><a class="el" href="class_sim_object.html">SimObject</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a00fb274c69119bd75c3ccf9b3a143c00">deepClone</a> ()</td></tr>
 <tr class="memitem:a526b0ae2c04966128bcbb3c12f5a283d inherit pub_methods_class_sim_object" id="r_a526b0ae2c04966128bcbb3c12f5a283d"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a526b0ae2c04966128bcbb3c12f5a283d inherit pub_methods_class_sim_object template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a526b0ae2c04966128bcbb3c12f5a283d">isType</a> (void)</td></tr>
 <tr class="memitem:a76fd3b455488c03e0c8683b836ee96a2 inherit pub_methods_class_sim_object" id="r_a76fd3b455488c03e0c8683b836ee96a2"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a76fd3b455488c03e0c8683b836ee96a2">handlesConsoleMethod</a> (const char *fname, S32 *routingId)</td></tr>
 <tr class="memitem:a5347739a7bbaab1de0130ac29073dcfd inherit pub_methods_class_sim_object" id="r_a5347739a7bbaab1de0130ac29073dcfd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a5347739a7bbaab1de0130ac29073dcfd">DECLARE_CONOBJECT</a> (<a class="el" href="class_sim_object.html">SimObject</a>)</td></tr>
+<tr class="memitem:a8b9f425bde559d3f1b3146fd3c1ceba2 inherit pub_methods_class_sim_object" id="r_a8b9f425bde559d3f1b3146fd3c1ceba2"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8b9f425bde559d3f1b3146fd3c1ceba2">writeField</a> (StringTableEntry fieldname, const char *value)</td></tr>
+<tr class="memitem:add2aa52391620bbfb9f8c29eb1f921cd inherit pub_methods_class_sim_object" id="r_add2aa52391620bbfb9f8c29eb1f921cd"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#add2aa52391620bbfb9f8c29eb1f921cd">write</a> (<a class="el" href="class_stream.html">Stream</a> &amp;stream, U32 tabStop, U32 flags=0)</td></tr>
+<tr class="memitem:a200de464a60a45ee5904de160e677b5f inherit pub_methods_class_sim_object" id="r_a200de464a60a45ee5904de160e677b5f"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a200de464a60a45ee5904de160e677b5f">writeFields</a> (<a class="el" href="class_stream.html">Stream</a> &amp;stream, U32 tabStop)</td></tr>
+<tr class="memitem:aebb68b5bbb2a5feb7bbf710834c6888b inherit pub_methods_class_sim_object" id="r_aebb68b5bbb2a5feb7bbf710834c6888b"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aebb68b5bbb2a5feb7bbf710834c6888b">writeObject</a> (<a class="el" href="class_stream.html">Stream</a> *stream)</td></tr>
+<tr class="memitem:a783fe3358bc6a3bf993ec1bfef693529 inherit pub_methods_class_sim_object" id="r_a783fe3358bc6a3bf993ec1bfef693529"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a783fe3358bc6a3bf993ec1bfef693529">readObject</a> (<a class="el" href="class_stream.html">Stream</a> *stream)</td></tr>
+<tr class="memitem:afc937cb7e1cd1b0768101aec936bbe45 inherit pub_methods_class_sim_object" id="r_afc937cb7e1cd1b0768101aec936bbe45"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afc937cb7e1cd1b0768101aec936bbe45">buildFilterList</a> ()</td></tr>
+<tr class="memitem:ac9c1a44b539dfe7ca6782c5dd561e9ac inherit pub_methods_class_sim_object" id="r_ac9c1a44b539dfe7ca6782c5dd561e9ac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac9c1a44b539dfe7ca6782c5dd561e9ac">addFieldFilter</a> (const char *fieldName)</td></tr>
+<tr class="memitem:a800867188378386931156e3329846b71 inherit pub_methods_class_sim_object" id="r_a800867188378386931156e3329846b71"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a800867188378386931156e3329846b71">removeFieldFilter</a> (const char *fieldName)</td></tr>
+<tr class="memitem:a97791ba163a65547d7a5d47bed803d7d inherit pub_methods_class_sim_object" id="r_a97791ba163a65547d7a5d47bed803d7d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a97791ba163a65547d7a5d47bed803d7d">clearFieldFilters</a> ()</td></tr>
+<tr class="memitem:af05be979fb46390caf87d391486d38b1 inherit pub_methods_class_sim_object" id="r_af05be979fb46390caf87d391486d38b1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#af05be979fb46390caf87d391486d38b1">isFiltered</a> (const char *fieldName)</td></tr>
+<tr class="memitem:afe42c2298dcfb82059cd5d8590a76479 inherit pub_methods_class_sim_object" id="r_afe42c2298dcfb82059cd5d8590a76479"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afe42c2298dcfb82059cd5d8590a76479">assignFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
+<tr class="memitem:ac7bed917724f47887e26e55aad281aff inherit pub_methods_class_sim_object" id="r_ac7bed917724f47887e26e55aad281aff"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac7bed917724f47887e26e55aad281aff">copyFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj, const U32 flags)</td></tr>
+<tr class="memitem:a2ed3c32bdfeb17efd31de7faf0f5b37c inherit pub_methods_class_sim_object" id="r_a2ed3c32bdfeb17efd31de7faf0f5b37c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a2ed3c32bdfeb17efd31de7faf0f5b37c">assignDynamicFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
 <tr class="memitem:ac894e7acfdf29d01464a20d670e1208a inherit pub_methods_class_sim_object" id="r_ac894e7acfdf29d01464a20d670e1208a"><td class="memItemLeft"><a class="el" href="struct_sim_object_1_1_notify.html">Notify</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac894e7acfdf29d01464a20d670e1208a">removeNotify</a> (void *ptr, <a class="el" href="struct_sim_object_1_1_notify.html#a1d1cfd8ffb84e947f82999c682b666a7">Notify::Type</a>)</td></tr>
 <tr class="memdesc:ac894e7acfdf29d01464a20d670e1208a inherit pub_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a notification from the list.  <br /></td></tr>
 <tr class="memitem:a2838b603fe80fa772e6be008b649decf inherit pub_methods_class_sim_object" id="r_a2838b603fe80fa772e6be008b649decf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a2838b603fe80fa772e6be008b649decf">deleteNotify</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
@@ -249,18 +281,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae32c75b008160f8599389fa1416270f4 inherit pub_methods_class_sim_object" id="r_ae32c75b008160f8599389fa1416270f4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ae32c75b008160f8599389fa1416270f4">addToSet</a> (const char *)</td></tr>
 <tr class="memitem:a8fb724887b442070d3f78e5ffdf529fc inherit pub_methods_class_sim_object" id="r_a8fb724887b442070d3f78e5ffdf529fc"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8fb724887b442070d3f78e5ffdf529fc">removeFromSet</a> (SimObjectId)</td></tr>
 <tr class="memitem:ae15bec249a7c1003e0ebb253ba7ca4df inherit pub_methods_class_sim_object" id="r_ae15bec249a7c1003e0ebb253ba7ca4df"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ae15bec249a7c1003e0ebb253ba7ca4df">removeFromSet</a> (const char *)</td></tr>
-<tr class="memitem:a8b9f425bde559d3f1b3146fd3c1ceba2 inherit pub_methods_class_sim_object" id="r_a8b9f425bde559d3f1b3146fd3c1ceba2"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8b9f425bde559d3f1b3146fd3c1ceba2">writeField</a> (StringTableEntry fieldname, const char *value)</td></tr>
-<tr class="memitem:add2aa52391620bbfb9f8c29eb1f921cd inherit pub_methods_class_sim_object" id="r_add2aa52391620bbfb9f8c29eb1f921cd"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#add2aa52391620bbfb9f8c29eb1f921cd">write</a> (<a class="el" href="class_stream.html">Stream</a> &amp;stream, U32 tabStop, U32 flags=0)</td></tr>
-<tr class="memitem:a200de464a60a45ee5904de160e677b5f inherit pub_methods_class_sim_object" id="r_a200de464a60a45ee5904de160e677b5f"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a200de464a60a45ee5904de160e677b5f">writeFields</a> (<a class="el" href="class_stream.html">Stream</a> &amp;stream, U32 tabStop)</td></tr>
-<tr class="memitem:aebb68b5bbb2a5feb7bbf710834c6888b inherit pub_methods_class_sim_object" id="r_aebb68b5bbb2a5feb7bbf710834c6888b"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aebb68b5bbb2a5feb7bbf710834c6888b">writeObject</a> (<a class="el" href="class_stream.html">Stream</a> *stream)</td></tr>
-<tr class="memitem:a783fe3358bc6a3bf993ec1bfef693529 inherit pub_methods_class_sim_object" id="r_a783fe3358bc6a3bf993ec1bfef693529"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a783fe3358bc6a3bf993ec1bfef693529">readObject</a> (<a class="el" href="class_stream.html">Stream</a> *stream)</td></tr>
-<tr class="memitem:afc937cb7e1cd1b0768101aec936bbe45 inherit pub_methods_class_sim_object" id="r_afc937cb7e1cd1b0768101aec936bbe45"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afc937cb7e1cd1b0768101aec936bbe45">buildFilterList</a> ()</td></tr>
-<tr class="memitem:ac9c1a44b539dfe7ca6782c5dd561e9ac inherit pub_methods_class_sim_object" id="r_ac9c1a44b539dfe7ca6782c5dd561e9ac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac9c1a44b539dfe7ca6782c5dd561e9ac">addFieldFilter</a> (const char *fieldName)</td></tr>
-<tr class="memitem:a800867188378386931156e3329846b71 inherit pub_methods_class_sim_object" id="r_a800867188378386931156e3329846b71"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a800867188378386931156e3329846b71">removeFieldFilter</a> (const char *fieldName)</td></tr>
-<tr class="memitem:a97791ba163a65547d7a5d47bed803d7d inherit pub_methods_class_sim_object" id="r_a97791ba163a65547d7a5d47bed803d7d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a97791ba163a65547d7a5d47bed803d7d">clearFieldFilters</a> ()</td></tr>
-<tr class="memitem:af05be979fb46390caf87d391486d38b1 inherit pub_methods_class_sim_object" id="r_af05be979fb46390caf87d391486d38b1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#af05be979fb46390caf87d391486d38b1">isFiltered</a> (const char *fieldName)</td></tr>
-<tr class="memitem:afe42c2298dcfb82059cd5d8590a76479 inherit pub_methods_class_sim_object" id="r_afe42c2298dcfb82059cd5d8590a76479"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afe42c2298dcfb82059cd5d8590a76479">assignFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
-<tr class="memitem:a2ed3c32bdfeb17efd31de7faf0f5b37c inherit pub_methods_class_sim_object" id="r_a2ed3c32bdfeb17efd31de7faf0f5b37c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a2ed3c32bdfeb17efd31de7faf0f5b37c">assignDynamicFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
 <tr class="inherit_header pub_methods_class_console_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_console_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="class_console_object.html">ConsoleObject</a></td></tr>
 <tr class="memitem:a1126670f9cef40e89f356669cd373252 inherit pub_methods_class_console_object" id="r_a1126670f9cef40e89f356669cd373252"><td class="memItemLeft">const <a class="el" href="struct_abstract_class_rep_1_1_field.html">AbstractClassRep::Field</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a1126670f9cef40e89f356669cd373252">findField</a> (StringTableEntry fieldName) const</td></tr>
 <tr class="memdesc:a1126670f9cef40e89f356669cd373252 inherit pub_methods_class_console_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a reference to a field by name.  <br /></td></tr>
@@ -323,6 +343,10 @@ Protected Member Functions</h2></td></tr>
 <tr class="memdesc:ad03b42162545e4be24b218369f4fbcf5 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after <a class="el" href="class_taml.html">Taml</a> has finished reading the object and has added the object to any parent.  <br /></td></tr>
 <tr class="memitem:a9d1bbaa7a9b2443eeb39c4a127d9f9e8 inherit pro_methods_class_sim_object" id="r_a9d1bbaa7a9b2443eeb39c4a127d9f9e8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a9d1bbaa7a9b2443eeb39c4a127d9f9e8">linkNamespaces</a> ()</td></tr>
 <tr class="memitem:a97551603378a0bbc3d3d98326a56631e inherit pro_methods_class_sim_object" id="r_a97551603378a0bbc3d3d98326a56631e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a97551603378a0bbc3d3d98326a56631e">unlinkNamespaces</a> ()</td></tr>
+<tr class="memitem:a313b2b805488c66eba57f580fc93a8c0 inherit pro_methods_class_sim_object" id="r_a313b2b805488c66eba57f580fc93a8c0"><td class="memItemLeft">virtual <a class="el" href="class_sim_object.html">SimObject</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a313b2b805488c66eba57f580fc93a8c0">allocClone</a> ()</td></tr>
+<tr class="memdesc:a313b2b805488c66eba57f580fc93a8c0 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">A registered but empty object of this object's class.  <br /></td></tr>
+<tr class="memitem:aa95dcf32362eadbf61db2b910ddf7724 inherit pro_methods_class_sim_object" id="r_aa95dcf32362eadbf61db2b910ddf7724"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa95dcf32362eadbf61db2b910ddf7724">cloneInto</a> (<a class="el" href="class_sim_object.html">SimObject</a> *<a class="el" href="class_sim_object.html#aacb30b9c403e8687e109b7738af141d8">clone</a>)</td></tr>
+<tr class="memitem:aaf69950eeb2e43fc3e58d61128026cbb inherit pro_methods_class_sim_object" id="r_aaf69950eeb2e43fc3e58d61128026cbb"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aaf69950eeb2e43fc3e58d61128026cbb">deepCloneChildren</a> (<a class="el" href="class_sim_object.html">SimObject</a> *<a class="el" href="class_sim_object.html#aacb30b9c403e8687e109b7738af141d8">clone</a>)</td></tr>
 <tr class="inherit_header pro_methods_class_console_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_console_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_console_object.html">ConsoleObject</a></td></tr>
 <tr class="memitem:a8b5a944ed3b7fa672a250a5d389c8f15 inherit pro_methods_class_console_object" id="r_a8b5a944ed3b7fa672a250a5d389c8f15"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a8b5a944ed3b7fa672a250a5d389c8f15">ConsoleObject</a> ()</td></tr>
 <tr class="memitem:a601f42ddcee97ab4eee59e6dbc9df75b inherit pro_methods_class_console_object" id="r_a601f42ddcee97ab4eee59e6dbc9df75b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a601f42ddcee97ab4eee59e6dbc9df75b">ConsoleObject</a> (const <a class="el" href="class_console_object.html">ConsoleObject</a> &amp;)</td></tr>
@@ -383,6 +407,11 @@ Additional Inherited Members</h2></td></tr>
 <tr class="inherit_header pub_types_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
 <tr class="memitem:aa764d6ab46a34397a2a625235de83577 inherit pub_types_class_sim_object" id="r_aa764d6ab46a34397a2a625235de83577"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa764d6ab46a34397a2a625235de83577">WriteFlags</a> { <a class="el" href="class_sim_object.html#aa764d6ab46a34397a2a625235de83577a03224eeb724e582e75ae323a49e31156">SelectedOnly</a> = BIT(0)
  }</td></tr>
+<tr class="memitem:a15c126452a329f263b0b33b4242bd2a9 inherit pub_types_class_sim_object" id="r_a15c126452a329f263b0b33b4242bd2a9"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9">CopyFieldsFlags</a> { <a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9a721d0a66e058eb2caa3f061a225eb946">CopyFields_SkipName</a> = BIT(0)
+, <a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9ae09fa12c0d8e83128ee6be2a61e7a209">CopyFields_SkipParentGroup</a> = BIT(1)
+, <a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9aace8a3f1ec5b062738b3ffd4cd12a4ad">CopyFields_SkipScriptClass</a> = BIT(2)
+ }</td></tr>
+<tr class="memdesc:a15c126452a329f263b0b33b4242bd2a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">What copyFieldsFrom may be told to leave alone.  <a href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9">More...</a><br /></td></tr>
 <tr class="memitem:a5d6df47d150d38ec4999f9bd9ac68fa5" id="r_a5d6df47d150d38ec4999f9bd9ac68fa5"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a5d6df47d150d38ec4999f9bd9ac68fa5">disableNameChanging</a> = false</td></tr>
 <tr class="inherit_header pro_attribs_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Attributes inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
 <tr class="memitem:a084af54739c09b7f36838bd505d3f683 inherit pro_attribs_class_sim_object" id="r_a084af54739c09b7f36838bd505d3f683"><td class="memItemLeft">SimObjectId&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a084af54739c09b7f36838bd505d3f683">mId</a></td></tr>
@@ -446,7 +475,7 @@ Additional Inherited Members</h2></td></tr>
 <div class="ttc" id="aclass_asset_ptr_base_html"><div class="ttname"><a href="class_asset_ptr_base.html">AssetPtrBase</a></div><div class="ttdef"><b>Definition</b> assetPtr.h:43</div></div>
 <div class="ttc" id="aclass_asset_ptr_html"><div class="ttname"><a href="class_asset_ptr.html">AssetPtr</a></div><div class="ttdef"><b>Definition</b> assetPtr.h:84</div></div>
 <div class="ttc" id="aclass_asset_ptr_html_a801a61a589c653363f063bea9e7cf99d"><div class="ttname"><a href="class_asset_ptr.html#a801a61a589c653363f063bea9e7cf99d">AssetPtr::setAssetId</a></div><div class="ttdeci">virtual void setAssetId(const char *pAssetId)</div><div class="ttdef"><b>Definition</b> assetPtr.h:174</div></div>
-<div class="ttc" id="anamespace_con_html_a8559290355d1bfb41d57211f47a25805"><div class="ttname"><a href="namespace_con.html#a8559290355d1bfb41d57211f47a25805">Con::warnf</a></div><div class="ttdeci">void warnf(ConsoleLogEntry::Type type, const char *fmt,...)</div><div class="ttdef"><b>Definition</b> console.cc:649</div></div>
+<div class="ttc" id="anamespace_con_html_a8559290355d1bfb41d57211f47a25805"><div class="ttname"><a href="namespace_con.html#a8559290355d1bfb41d57211f47a25805">Con::warnf</a></div><div class="ttdeci">void warnf(ConsoleLogEntry::Type type, const char *fmt,...)</div><div class="ttdef"><b>Definition</b> console.cc:657</div></div>
 </div><!-- fragment -->
 </div>
 </div>
@@ -476,33 +505,6 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
-<a id="a62aa4e3f1aea3c0841234882d0105c1b" name="a62aa4e3f1aea3c0841234882d0105c1b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a62aa4e3f1aea3c0841234882d0105c1b">&#9670;&#160;</a></span>copyTo()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">void copyTo </td>
-          <td>(</td>
-          <td class="paramtype"><a class="el" href="class_sim_object.html">SimObject</a> *</td>          <td class="paramname"><span class="paramname"><em>object</em></span></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel virtual">virtual</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Reimplemented from <a class="el" href="class_asset_base.html#a62aa4e3f1aea3c0841234882d0105c1b">AssetBase</a>.</p>
-
-</div>
-</div>
 <a id="a6cfade6e1e18a49a5c30b3519238a2f7" name="a6cfade6e1e18a49a5c30b3519238a2f7"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6cfade6e1e18a49a5c30b3519238a2f7">&#9670;&#160;</a></span>DECLARE_CONOBJECT()</h2>
 
@@ -519,6 +521,31 @@ Additional Inherited Members</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Declare Console Object. </p>
+
+</div>
+</div>
+<a id="abd0f756ae645d2ba2c7f3fdc6db2ccbb" name="abd0f756ae645d2ba2c7f3fdc6db2ccbb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abd0f756ae645d2ba2c7f3fdc6db2ccbb">&#9670;&#160;</a></span>getBaseline()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getBaseline </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
 
 </div>
 </div>
@@ -547,6 +574,58 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="adcc66aa97231c354616060b4a8f208b0" name="adcc66aa97231c354616060b4a8f208b0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcc66aa97231c354616060b4a8f208b0">&#9670;&#160;</a></span>getFontSize()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getFontSize </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8153a9d13c67e355c38db995fbb65bfa" name="a8153a9d13c67e355c38db995fbb65bfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8153a9d13c67e355c38db995fbb65bfa">&#9670;&#160;</a></span>getGlyphCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getGlyphCount </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>What the .fnt turned out to hold.</p>
+<p>None of this is a value the asset stores &ndash; it is the result of the last parse, so it can only be asked, never told. An editor needs it to say whether a font loaded and what came out of it; before this there was no way to find out from script at all. </p>
+
+</div>
+</div>
 <a id="a515b71030eff451ab12d96f77b929889" name="a515b71030eff451ab12d96f77b929889"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a515b71030eff451ab12d96f77b929889">&#9670;&#160;</a></span>getImageTexture()</h2>
 
@@ -569,6 +648,183 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae26b73c2404a4801ab97a1fb3edc7e3e" name="ae26b73c2404a4801ab97a1fb3edc7e3e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae26b73c2404a4801ab97a1fb3edc7e3e">&#9670;&#160;</a></span>getLineHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getLineHeight </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a06509a8a91d826904a357c65509792d2" name="a06509a8a91d826904a357c65509792d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06509a8a91d826904a357c65509792d2">&#9670;&#160;</a></span>getLoadedPageCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getLoadedPageCount </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>How many of the declared pages actually have a texture. A page is named inside the .fnt rather than in the asset file, so a missing page image is invisible from the asset and this is the only way to notice it. </p>
+
+</div>
+</div>
+<a id="af7daf59bf9674db14ca52a4701cc3df7" name="af7daf59bf9674db14ca52a4701cc3df7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af7daf59bf9674db14ca52a4701cc3df7">&#9670;&#160;</a></span>getPageCount()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getPageCount </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1ff2eec5a105e639c162fad24c1e8ec" name="aa1ff2eec5a105e639c162fad24c1e8ec"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1ff2eec5a105e639c162fad24c1e8ec">&#9670;&#160;</a></span>getPageFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry getPageFile </td>
+          <td>(</td>
+          <td class="paramtype">const U32</td>          <td class="paramname"><span class="paramname"><em>pageIndex</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aeaf9b6ad16c8d8e4011ad8167db94725" name="aeaf9b6ad16c8d8e4011ad8167db94725"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeaf9b6ad16c8d8e4011ad8167db94725">&#9670;&#160;</a></span>getPageHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getPageHeight </td>
+          <td>(</td>
+          <td class="paramtype">const U32</td>          <td class="paramname"><span class="paramname"><em>pageIndex</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a752091e94a059cece252716db240f3e0" name="a752091e94a059cece252716db240f3e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a752091e94a059cece252716db240f3e0">&#9670;&#160;</a></span>getPageWidth()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getPageWidth </td>
+          <td>(</td>
+          <td class="paramtype">const U32</td>          <td class="paramname"><span class="paramname"><em>pageIndex</em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="afb02faabfe4980f519e7dd28ae8382e0" name="afb02faabfe4980f519e7dd28ae8382e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb02faabfe4980f519e7dd28ae8382e0">&#9670;&#160;</a></span>getRelativeFontFile()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry getRelativeFontFile </td>
+          <td>(</td>
+          <td class="paramtype">void</td>          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The font file as it is stored on disk &ndash; relative to the folder the asset itself lives in. getFontFile answers the expanded absolute path, which is what the engine needs and is neither readable nor portable anywhere else. </p>
 
 </div>
 </div>

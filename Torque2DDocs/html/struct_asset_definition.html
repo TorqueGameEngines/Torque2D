@@ -97,6 +97,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a8d4c3600bd476bb158960baa605e48fd" id="r_a8d4c3600bd476bb158960baa605e48fd"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#a8d4c3600bd476bb158960baa605e48fd">mAssetLoadedCount</a></td></tr>
 <tr class="memitem:a3400a6b9a1f83fbc5f5c5d9c8dd86ca1" id="r_a3400a6b9a1f83fbc5f5c5d9c8dd86ca1"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#a3400a6b9a1f83fbc5f5c5d9c8dd86ca1">mAssetUnloadedCount</a></td></tr>
 <tr class="memitem:a16f451939ea4f037cdf8f9f6aeb9263a" id="r_a16f451939ea4f037cdf8f9f6aeb9263a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a16f451939ea4f037cdf8f9f6aeb9263a">mAssetRefreshEnable</a></td></tr>
+<tr class="memitem:afb3eea150cf03d0b49ad7c1d32482329" id="r_afb3eea150cf03d0b49ad7c1d32482329"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#afb3eea150cf03d0b49ad7c1d32482329">mAssetDirty</a></td></tr>
 <tr class="memitem:a33ca3b178f5238db88deca66cc1c7563" id="r_a33ca3b178f5238db88deca66cc1c7563"><td class="memItemLeft"><a class="el" href="class_vector.html">Vector</a>&lt; StringTableEntry &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a33ca3b178f5238db88deca66cc1c7563">mAssetLooseFiles</a></td></tr>
 <tr class="memitem:ad30b805a9dda267baa72fa8294894309" id="r_ad30b805a9dda267baa72fa8294894309"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#ad30b805a9dda267baa72fa8294894309">mAssetName</a></td></tr>
 <tr class="memdesc:ad30b805a9dda267baa72fa8294894309"><td class="mdescLeft">&#160;</td><td class="mdescRight">Persisted state.  <br /></td></tr>
@@ -239,6 +240,22 @@ Public Attributes</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="afb3eea150cf03d0b49ad7c1d32482329" name="afb3eea150cf03d0b49ad7c1d32482329"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afb3eea150cf03d0b49ad7c1d32482329">&#9670;&#160;</a></span>mAssetDirty</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool mAssetDirty</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Whether the asset has been changed in memory since it was last saved.</p>
+<p>This lives on the definition and not on the asset because the definition outlives the asset: unloadAsset deletes mpAssetBase and keeps the definition, so a flag on the asset would be destroyed along with the unsaved edits, and along with the record that there were any. </p>
 
 </div>
 </div>

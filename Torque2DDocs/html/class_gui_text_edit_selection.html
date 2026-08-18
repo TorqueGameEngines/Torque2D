@@ -100,7 +100,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a810d635114f3d0f9f00d42003122a95a" id="r_a810d635114f3d0f9f00d42003122a95a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a810d635114f3d0f9f00d42003122a95a">selectTo</a> (const U32 target)</td></tr>
 <tr class="memitem:a9611b40ac93242890c345169d16a90a1" id="r_a9611b40ac93242890c345169d16a90a1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a9611b40ac93242890c345169d16a90a1">hasSelection</a> ()</td></tr>
 <tr class="memitem:a76fffa56d9cecbd7b6b5608ca0dfe42b" id="r_a76fffa56d9cecbd7b6b5608ca0dfe42b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a76fffa56d9cecbd7b6b5608ca0dfe42b">onPreRender</a> (const U32 time)</td></tr>
-<tr class="memitem:a69bdfaa85df06e28c3829dff0f16ec0c" id="r_a69bdfaa85df06e28c3829dff0f16ec0c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a69bdfaa85df06e28c3829dff0f16ec0c">renderIbeam</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;startPoint, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;extent, const string line, const U32 start, const U32 end, <a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile, <a class="el" href="class_g_font.html">GFont</a> *<a class="el" href="namespacefont.html">font</a>)</td></tr>
+<tr class="memitem:af4bc2f145faa3ff5514b72c23be77dca" id="r_af4bc2f145faa3ff5514b72c23be77dca"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#af4bc2f145faa3ff5514b72c23be77dca">isIbeamOnLine</a> (const U32 start, const U32 end, const bool isLastLine) const</td></tr>
+<tr class="memitem:a8a16fb910d7f751c8b903a4f3649d69f" id="r_a8a16fb910d7f751c8b903a4f3649d69f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a8a16fb910d7f751c8b903a4f3649d69f">renderIbeam</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;startPoint, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;extent, const string line, const U32 start, const U32 end, const bool isLastLine, <a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile, <a class="el" href="class_g_font.html">GFont</a> *<a class="el" href="namespacefont.html">font</a>)</td></tr>
 <tr class="memitem:ac3b94f7f339df21cc5e37ded8a3d9a71" id="r_ac3b94f7f339df21cc5e37ded8a3d9a71"><td class="memItemLeft">string&#160;</td><td class="memItemRight"><a class="el" href="#ac3b94f7f339df21cc5e37ded8a3d9a71">getSelection</a> (const string &amp;fullText)</td></tr>
 <tr class="memitem:adfa201f7705d2a2c104da8444694878e" id="r_adfa201f7705d2a2c104da8444694878e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#adfa201f7705d2a2c104da8444694878e">eraseSelection</a> (string &amp;fullText)</td></tr>
 <tr class="memitem:ab1ecf1179cfd284866e5377aeae98ea0" id="r_ab1ecf1179cfd284866e5377aeae98ea0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab1ecf1179cfd284866e5377aeae98ea0">stepCursorForward</a> ()</td></tr>
@@ -386,6 +387,32 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
+<a id="af4bc2f145faa3ff5514b72c23be77dca" name="af4bc2f145faa3ff5514b72c23be77dca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af4bc2f145faa3ff5514b72c23be77dca">&#9670;&#160;</a></span>isIbeamOnLine()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool isIbeamOnLine </td>
+          <td>(</td>
+          <td class="paramtype">const U32</td>          <td class="paramname"><span class="paramname"><em>start</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U32</td>          <td class="paramname"><span class="paramname"><em>end</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>isLastLine</em></span>&#160;) const</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a76fffa56d9cecbd7b6b5608ca0dfe42b" name="a76fffa56d9cecbd7b6b5608ca0dfe42b"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a76fffa56d9cecbd7b6b5608ca0dfe42b">&#9670;&#160;</a></span>onPreRender()</h2>
 
@@ -403,8 +430,8 @@ Public Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a69bdfaa85df06e28c3829dff0f16ec0c" name="a69bdfaa85df06e28c3829dff0f16ec0c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a69bdfaa85df06e28c3829dff0f16ec0c">&#9670;&#160;</a></span>renderIbeam()</h2>
+<a id="a8a16fb910d7f751c8b903a4f3649d69f" name="a8a16fb910d7f751c8b903a4f3649d69f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8a16fb910d7f751c8b903a4f3649d69f">&#9670;&#160;</a></span>renderIbeam()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -433,6 +460,11 @@ Public Member Functions</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">const U32</td>          <td class="paramname"><span class="paramname"><em>end</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const bool</td>          <td class="paramname"><span class="paramname"><em>isLastLine</em></span>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>

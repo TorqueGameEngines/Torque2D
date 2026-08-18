@@ -37,6 +37,7 @@ var searchData=
   ['construct_34',['Construct',['../struct_type_traits_3_01_raw_data_t_3_01_t_01_4_01_5_01_4_1_1_construct.html',1,'TypeTraits&lt; RawDataT&lt; T &gt; * &gt;']]],
   ['contactfilter_35',['ContactFilter',['../class_contact_filter.html',1,'']]],
   ['continuestmtnode_36',['ContinueStmtNode',['../struct_continue_stmt_node.html',1,'']]],
-  ['cursormanager_37',['CursorManager',['../class_cursor_manager.html',1,'']]],
-  ['cursors_38',['cursors',['../struct_cursor_manager_1_1cursors.html',1,'CursorManager']]]
+  ['cursorcategory_37',['CursorCategory',['../struct_gui_profile_theme_1_1_cursor_category.html',1,'GuiProfileTheme']]],
+  ['cursormanager_38',['CursorManager',['../class_cursor_manager.html',1,'']]],
+  ['cursors_39',['cursors',['../struct_cursor_manager_1_1cursors.html',1,'CursorManager']]]
 ];

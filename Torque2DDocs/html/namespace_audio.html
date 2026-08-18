@@ -88,6 +88,7 @@ Classes</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-enum-members" class="groupheader"><a id="enum-members" name="enum-members"></a>
 Enumerations</h2></td></tr>
 <tr class="memitem:a198b8c2c77ea9f9815a181ddeda1c320" id="r_a198b8c2c77ea9f9815a181ddeda1c320"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="#a198b8c2c77ea9f9815a181ddeda1c320">Constants</a> { <a class="el" href="#a198b8c2c77ea9f9815a181ddeda1c320a96d3f502c04a9ed84045c9f0b14aee02">AudioVolumeChannels</a> = 32
+, <a class="el" href="#a198b8c2c77ea9f9815a181ddeda1c320ac32314f811dc8f89a8ddbed742d634fc">AudioPreviewChannel</a> = AudioVolumeChannels - 1
  }</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 id="header-func-members" class="groupheader"><a id="func-members" name="func-members"></a>
@@ -95,6 +96,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a6c213cdd553c140645ed810242469fa7" id="r_a6c213cdd553c140645ed810242469fa7"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#a6c213cdd553c140645ed810242469fa7">DBToLinear</a> (F32 value)</td></tr>
 <tr class="memitem:a1b2ab3cb2d82d3c26ecc4ee5cb149d33" id="r_a1b2ab3cb2d82d3c26ecc4ee5cb149d33"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#a1b2ab3cb2d82d3c26ecc4ee5cb149d33">linearToDB</a> (F32 value)</td></tr>
 <tr class="memitem:a00e4189eb514109bf422c81ebeac44d8" id="r_a00e4189eb514109bf422c81ebeac44d8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a00e4189eb514109bf422c81ebeac44d8">shutdownContext</a> ()</td></tr>
+<tr class="memitem:adf356534edf4ee93da79b8d033f6d62c" id="r_adf356534edf4ee93da79b8d033f6d62c"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#adf356534edf4ee93da79b8d033f6d62c">OpenALIsInitialized</a> ()</td></tr>
 <tr class="memitem:abe640ab92547c08914ed9f608ab23b7f" id="r_abe640ab92547c08914ed9f608ab23b7f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#abe640ab92547c08914ed9f608ab23b7f">OpenALInit</a> ()</td></tr>
 <tr class="memitem:a0770aa78c545ed11c1de63b9b48daa69" id="r_a0770aa78c545ed11c1de63b9b48daa69"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0770aa78c545ed11c1de63b9b48daa69">OpenALShutdown</a> ()</td></tr>
 <tr class="memitem:a7804f4027f1b52cd38519de9a59e8d9e" id="r_a7804f4027f1b52cd38519de9a59e8d9e"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a7804f4027f1b52cd38519de9a59e8d9e">OpenALDLLInit</a> ()</td></tr>
@@ -121,6 +123,10 @@ Variables</h2></td></tr>
 </div><div class="memdoc">
 <table class="fieldtable">
 <tr><th colspan="2">Enumerator</th></tr><tr><td class="fieldname"><a id="a198b8c2c77ea9f9815a181ddeda1c320a96d3f502c04a9ed84045c9f0b14aee02" name="a198b8c2c77ea9f9815a181ddeda1c320a96d3f502c04a9ed84045c9f0b14aee02"></a>AudioVolumeChannels&#160;</td><td class="fielddoc"></td></tr>
+<tr><td class="fieldname"><a id="a198b8c2c77ea9f9815a181ddeda1c320ac32314f811dc8f89a8ddbed742d634fc" name="a198b8c2c77ea9f9815a181ddeda1c320ac32314f811dc8f89a8ddbed742d634fc"></a>AudioPreviewChannel&#160;</td><td class="fielddoc"><p>The channel an editor auditions an asset on.</p>
+<p>Reserved so a preview cannot be silenced by, or interfere with, the running game's mix: a game that has turned its music channel down to nothing would otherwise make the Asset Manager unable to play a music asset at all, because alxCreateSource refuses to build a source on a muted channel rather than building a quiet one.</p>
+<p>The last channel rather than the first free one, because channel numbering is a per-game convention with no engine meaning and games count up from zero. </p>
+</td></tr>
 </table>
 
 </div>
@@ -244,6 +250,25 @@ Variables</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="adf356534edf4ee93da79b8d033f6d62c" name="adf356534edf4ee93da79b8d033f6d62c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf356534edf4ee93da79b8d033f6d62c">&#9670;&#160;</a></span>OpenALIsInitialized()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool OpenALIsInitialized </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Whether there is a live OpenAL context.</p>
+<p>OpenALInit begins by shutting the driver down, so calling it a second time is destructive: it drops every playing source and resets the channel volumes. Anything that wants to start the driver only if nobody else has &ndash; an editor, say &ndash; has to be able to ask first. </p>
 
 </div>
 </div>

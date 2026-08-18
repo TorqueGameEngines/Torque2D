@@ -9,6 +9,5 @@ var searchData=
   ['horizresizerelative_6',['horizResizeRelative',['../class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a63a9f5d72dcc627edc29c351aeb056e4',1,'GuiControl']]],
   ['horizresizeright_7',['horizResizeRight',['../class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31af7920d4385e15dc9506189c4a1149bdb',1,'GuiControl']]],
   ['horizresizewidth_8',['horizResizeWidth',['../class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a196fff721a2a72f60c117c0b1ad7270a',1,'GuiControl']]],
-  ['horizthumb_9',['HorizThumb',['../class_gui_scroll_ctrl.html#a81a01a86de31071a92e6cce0bab9bc4ba6403f0045eb1108448cb7f58f23f0794',1,'GuiScrollCtrl']]],
-  ['hover_10',['HOVER',['../class_gui_image_button_ctrl.html#aa46074d34fe2d6631c6bd9dc74633657a8df21af5ed7da4b83ff86f107b52ef75',1,'GuiImageButtonCtrl']]]
+  ['horizthumb_9',['HorizThumb',['../class_gui_scroll_ctrl.html#a81a01a86de31071a92e6cce0bab9bc4ba6403f0045eb1108448cb7f58f23f0794',1,'GuiScrollCtrl']]]
 ];

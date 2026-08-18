@@ -20,8 +20,9 @@ var searchData=
   ['arrowdown_17',['ArrowDown',['../class_gui_text_edit_slider_ctrl.html#addadffd2318004a2f4de50d0032fd07aa5c6a21e78bc9a2b6f3e4d529ca203a30',1,'GuiTextEditSliderCtrl']]],
   ['arrowup_18',['ArrowUp',['../class_gui_text_edit_slider_ctrl.html#addadffd2318004a2f4de50d0032fd07aaacdf844600e5cbd73a4633360241a17d',1,'GuiTextEditSliderCtrl']]],
   ['assert_19',['Assert',['../struct_console_log_entry.html#a1d1cfd8ffb84e947f82999c682b666a7a22a0d96e3c0f9b98fb568c695fa25f97',1,'ConsoleLogEntry']]],
-  ['audiovolumechannels_20',['AudioVolumeChannels',['../namespace_audio.html#a198b8c2c77ea9f9815a181ddeda1c320a96d3f502c04a9ed84045c9f0b14aee02',1,'Audio']]],
-  ['awaitingchallengeresponse_21',['AwaitingChallengeResponse',['../class_net_connection.html#ae3896c8a189c10fecdecbfbbdc7d3ca1ab47dd1467dc15e3ab71d13530c48d005',1,'NetConnection']]],
-  ['awaitingconnectrequest_22',['AwaitingConnectRequest',['../class_net_connection.html#ae3896c8a189c10fecdecbfbbdc7d3ca1afccd391097ca9d71967b00a826294871',1,'NetConnection']]],
-  ['awaitingconnectresponse_23',['AwaitingConnectResponse',['../class_net_connection.html#ae3896c8a189c10fecdecbfbbdc7d3ca1ab3243239ac4b642915af0696d3cf273c',1,'NetConnection']]]
+  ['audiopreviewchannel_20',['AudioPreviewChannel',['../namespace_audio.html#a198b8c2c77ea9f9815a181ddeda1c320ac32314f811dc8f89a8ddbed742d634fc',1,'Audio']]],
+  ['audiovolumechannels_21',['AudioVolumeChannels',['../namespace_audio.html#a198b8c2c77ea9f9815a181ddeda1c320a96d3f502c04a9ed84045c9f0b14aee02',1,'Audio']]],
+  ['awaitingchallengeresponse_22',['AwaitingChallengeResponse',['../class_net_connection.html#ae3896c8a189c10fecdecbfbbdc7d3ca1ab47dd1467dc15e3ab71d13530c48d005',1,'NetConnection']]],
+  ['awaitingconnectrequest_23',['AwaitingConnectRequest',['../class_net_connection.html#ae3896c8a189c10fecdecbfbbdc7d3ca1afccd391097ca9d71967b00a826294871',1,'NetConnection']]],
+  ['awaitingconnectresponse_24',['AwaitingConnectResponse',['../class_net_connection.html#ae3896c8a189c10fecdecbfbbdc7d3ca1ab3243239ac4b642915af0696d3cf273c',1,'NetConnection']]]
 ];

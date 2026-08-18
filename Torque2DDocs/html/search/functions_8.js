@@ -14,7 +14,7 @@ var searchData=
   ['handledelete_11',['handleDelete',['../class_gui_console_edit_ctrl.html#a2c5fa7af4baa3a754c22fdf2f0268f17',1,'GuiConsoleEditCtrl::handleDelete()'],['../class_gui_text_edit_ctrl.html#a2c5fa7af4baa3a754c22fdf2f0268f17',1,'GuiTextEditCtrl::handleDelete()']]],
   ['handledisconnect_12',['handleDisconnect',['../class_net_interface.html#a4c287ba1c31510177593cf721b7f95d2',1,'NetInterface']]],
   ['handledropbuttons_13',['handleDropButtons',['../class_gui_frame_set_ctrl.html#ad885c49a5dcebfeccff93a8bd8057307',1,'GuiFrameSetCtrl']]],
-  ['handleenterkey_14',['handleEnterKey',['../class_gui_console_edit_ctrl.html#ad8a8c980ee021aa4f61c4c5b0ac13828',1,'GuiConsoleEditCtrl::handleEnterKey()'],['../class_gui_text_edit_ctrl.html#ad8a8c980ee021aa4f61c4c5b0ac13828',1,'GuiTextEditCtrl::handleEnterKey()']]],
+  ['handleenterkey_14',['handleEnterKey',['../class_gui_color_popup_value_ctrl.html#ad8a8c980ee021aa4f61c4c5b0ac13828',1,'GuiColorPopupValueCtrl::handleEnterKey()'],['../class_gui_console_edit_ctrl.html#ad8a8c980ee021aa4f61c4c5b0ac13828',1,'GuiConsoleEditCtrl::handleEnterKey()'],['../class_gui_text_edit_ctrl.html#ad8a8c980ee021aa4f61c4c5b0ac13828',1,'GuiTextEditCtrl::handleEnterKey()']]],
   ['handleescapekey_15',['handleEscapeKey',['../class_gui_text_edit_ctrl.html#a6895c0202f73c07b1a2c465123154fff',1,'GuiTextEditCtrl']]],
   ['handleevent_16',['handleEvent',['../class_action_map.html#a2886a89aa45203c35810954f57a2e527',1,'ActionMap']]],
   ['handleeventglobal_17',['handleEventGlobal',['../class_action_map.html#a75c2f75d1ce9edf81e44d624fb519939',1,'ActionMap']]],
@@ -65,6 +65,7 @@ var searchData=
   ['hidefield_62',['hideField',['../class_gui_inspector.html#a1e2cc0fb682362954f50f27c894b1cbe',1,'GuiInspector']]],
   ['hideselector_63',['hideSelector',['../class_gui_color_picker_ctrl.html#a5e16e20054df2f50edf2d3dc8a24d473',1,'GuiColorPickerCtrl']]],
   ['highbit_64',['highBit',['../class_bit_tables.html#acc30b44b7de05a53a7d07ef226fa6ba0',1,'BitTables']]],
-  ['httpobject_65',['HTTPObject',['../class_h_t_t_p_object.html#a51cfecd34835fa2e0da327adef154800',1,'HTTPObject']]],
-  ['huffmanprocessor_66',['HuffmanProcessor',['../class_huffman_processor.html#af0113e629921b1fecb1c6453719e9b48',1,'HuffmanProcessor']]]
+  ['hitgutter_65',['hitGutter',['../class_gui_editor_explorer_tree.html#ab9692c3fb30343dcc0a65888818bf2b9',1,'GuiEditorExplorerTree']]],
+  ['httpobject_66',['HTTPObject',['../class_h_t_t_p_object.html#a51cfecd34835fa2e0da327adef154800',1,'HTTPObject']]],
+  ['huffmanprocessor_67',['HuffmanProcessor',['../class_huffman_processor.html#af0113e629921b1fecb1c6453719e9b48',1,'HuffmanProcessor']]]
 ];

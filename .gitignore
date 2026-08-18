@@ -8,3 +8,13 @@
 
 /engine/*
 /tools/*
+
+# This branch is checked out in the same working directory as the source, so
+# whatever survives a branch switch shows up here as untracked. Ignore it, or a
+# git add -A commits the engine into the documentation branch.
+/PlanetXPrefs.cs
+/Torque2D_DEBUG.pdb
+/build/*
+/shots/*
+/tests/*
+/toybox/*

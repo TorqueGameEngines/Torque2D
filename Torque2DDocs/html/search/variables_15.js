@@ -13,7 +13,8 @@ var searchData=
   ['version_10',['version',['../struct_server_info.html#abfc135ca1bffe2ff4b2d94a70c00a9af',1,'ServerInfo']]],
   ['vertexarray_11',['vertexArray',['../struct_sprite_batch_item_1_1_draw_dat_type.html#ad189b6927fae8f1908b1133d4a16e67e',1,'SpriteBatchItem::DrawDatType']]],
   ['vertexcount_12',['vertexCount',['../struct_sprite_batch_item_1_1_draw_dat_type.html#a9417ce036fc3ebe96b3f7af0aa0e5dec',1,'SpriteBatchItem::DrawDatType']]],
-  ['visibledistance_13',['visibleDistance',['../struct_camera_scope_query.html#acb5adf44377f378d3a2f826889f18942',1,'CameraScopeQuery']]],
-  ['vreflectionspan_14',['vReflectionsPan',['../struct___e_a_x_l_i_s_t_e_n_e_r_p_r_o_p_e_r_t_i_e_s.html#a8d3e92b3943261979779318e0c4d455c',1,'_EAXLISTENERPROPERTIES']]],
-  ['vreverbpan_15',['vReverbPan',['../struct___e_a_x_l_i_s_t_e_n_e_r_p_r_o_p_e_r_t_i_e_s.html#a4b69badd076ac6b5bfce328b8946b038',1,'_EAXLISTENERPROPERTIES']]]
+  ['vertical_13',['vertical',['../struct_bar_presence.html#a0ef08fd776d2f8ef00eeaea1128aa89c',1,'BarPresence']]],
+  ['visibledistance_14',['visibleDistance',['../struct_camera_scope_query.html#acb5adf44377f378d3a2f826889f18942',1,'CameraScopeQuery']]],
+  ['vreflectionspan_15',['vReflectionsPan',['../struct___e_a_x_l_i_s_t_e_n_e_r_p_r_o_p_e_r_t_i_e_s.html#a8d3e92b3943261979779318e0c4d455c',1,'_EAXLISTENERPROPERTIES']]],
+  ['vreverbpan_16',['vReverbPan',['../struct___e_a_x_l_i_s_t_e_n_e_r_p_r_o_p_e_r_t_i_e_s.html#a4b69badd076ac6b5bfce328b8946b038',1,'_EAXLISTENERPROPERTIES']]]
 ];

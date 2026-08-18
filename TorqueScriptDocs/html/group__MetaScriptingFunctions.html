@@ -66,6 +66,7 @@ Functions</h2></td></tr>
 <tr class="memitem:ga0ebd75528902993c748fdf52b00e2081" id="r_ga0ebd75528902993c748fdf52b00e2081"><td class="memItemLeft"><a class="el" href="group__TorqueScriptTypes.html#gadd36cf0d984acde0881d9ab8fff3ae5d">String</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga0ebd75528902993c748fdf52b00e2081">getModNameFromPath</a> (string path)</td></tr>
 <tr class="memitem:ga333a8d2d5e17a3fe233825cb050e60f1" id="r_ga333a8d2d5e17a3fe233825cb050e60f1"><td class="memItemLeft"><a class="el" href="group__TorqueScriptTypes.html#gadd36cf0d984acde0881d9ab8fff3ae5d">String</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga333a8d2d5e17a3fe233825cb050e60f1">getPrefsPath</a> ([<a class="el" href="group__FileSystem.html#ga4ea5109dc203259fb3c01292345bc0ee">fileName</a>]?)</td></tr>
 <tr class="memitem:ga732bd5c5c6c0bf6a193ad275cfdc208d" id="r_ga732bd5c5c6c0bf6a193ad275cfdc208d"><td class="memItemLeft"><a class="el" href="group__TorqueScriptTypes.html#gadd36cf0d984acde0881d9ab8fff3ae5d">String</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga732bd5c5c6c0bf6a193ad275cfdc208d">getVariable</a> (string varName)</td></tr>
+<tr class="memitem:gab448636e04e3d366dd4476b7b8b9bbfd" id="r_gab448636e04e3d366dd4476b7b8b9bbfd"><td class="memItemLeft"><a class="el" href="group__TorqueScriptTypes.html#ga2b43030c97cd77d3fe3fc96fd39aa246">Boolean</a>&#160;</td><td class="memItemRight"><a class="el" href="#gab448636e04e3d366dd4476b7b8b9bbfd">isEditorMode</a> ()</td></tr>
 <tr class="memitem:gab14840a4465d4dab20117f341895dfb4" id="r_gab14840a4465d4dab20117f341895dfb4"><td class="memItemLeft"><a class="el" href="group__TorqueScriptTypes.html#ga2b43030c97cd77d3fe3fc96fd39aa246">Boolean</a>&#160;</td><td class="memItemRight"><a class="el" href="#gab14840a4465d4dab20117f341895dfb4">isFunction</a> (string funcName)</td></tr>
 <tr class="memitem:ga3fc8f69d5837dd27ffa1331ce371018c" id="r_ga3fc8f69d5837dd27ffa1331ce371018c"><td class="memItemLeft"><a class="el" href="group__TorqueScriptTypes.html#ga2b43030c97cd77d3fe3fc96fd39aa246">Boolean</a>&#160;</td><td class="memItemRight"><a class="el" href="#ga3fc8f69d5837dd27ffa1331ce371018c">isMethod</a> (string namespace, string method)</td></tr>
 <tr class="memitem:gae39262a34f5e7fc4a214c2c1aa6e96b0" id="r_gae39262a34f5e7fc4a214c2c1aa6e96b0"><td class="memItemLeft"><a class="el" href="#ga3428b441d74b14a5aed2f08490b4b9f3">void</a>&#160;</td><td class="memItemRight"><a class="el" href="#gae39262a34f5e7fc4a214c2c1aa6e96b0">setScriptExecEcho</a> (<a class="el" href="group__ConsoleOutput.html#gadc918a80dc292eeae84dcca04998faba">echo</a>?)</td></tr>
@@ -202,9 +203,9 @@ Functions</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
-<p>Use the trace function to enable (or disable) function call tracing. If enabled, tracing will print a message every time a function is entered, showing what arguments it received, and it will print a message every time a function is exited, showing the return value (or last value of last statement) for that function. </p><dl class="params"><dt>Parameters</dt><dd>
+<p>Turns editor mode on or off. In editor mode, naming an object stashes the name on the object instead of registering it, so that naming a control you are editing does not create a global object name (see SimObject::assignName). The Gui Editor turns this on while it is open. </p><dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
-    <tr><td class="paramname">enable</td><td>A boolean value. If set to true, tracing is enabled, otherwise it is disabled. </td></tr>
+    <tr><td class="paramname">enable</td><td>A boolean value. If set to true, editor mode is enabled, otherwise it is disabled. </td></tr>
   </table>
   </dd>
 </dl>
@@ -414,6 +415,25 @@ Functions</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Returns a string containing component data for the requested variable or an empty string if not found. </dd></dl>
+
+</div>
+</div>
+<a id="gab448636e04e3d366dd4476b7b8b9bbfd" name="gab448636e04e3d366dd4476b7b8b9bbfd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#gab448636e04e3d366dd4476b7b8b9bbfd">&#9670;&#160;</a></span>isEditorMode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="group__TorqueScriptTypes.html#ga2b43030c97cd77d3fe3fc96fd39aa246">Boolean</a> isEditorMode </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Is editor mode on? Tools that need to create a genuinely named object while an editor is open - one a saved file will refer to by name - check this so they can step out of editor mode and put it back. </p><dl class="section return"><dt>Returns</dt><dd>True when editor mode is on. </dd></dl>
+<dl class="section see"><dt>See also</dt><dd><a class="el" href="#ga5f8020022e8c7dd0011c94a82fd36326">editorMode</a> </dd></dl>
 
 </div>
 </div>

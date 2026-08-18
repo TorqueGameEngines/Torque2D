@@ -122,6 +122,7 @@ Functions</h2></td></tr>
 <tr class="memitem:a7a567eee4c11f2b36849d4895f2824a4" id="r_a7a567eee4c11f2b36849d4895f2824a4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a7a567eee4c11f2b36849d4895f2824a4">getLockLog</a> (<a class="el" href="struct_console_log_entry.html">ConsoleLogEntry</a> *&amp;log, U32 &amp;size)</td></tr>
 <tr class="memitem:a0fbda1952e95e63be5f2b96c5a140abc" id="r_a0fbda1952e95e63be5f2b96c5a140abc"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0fbda1952e95e63be5f2b96c5a140abc">unlockLog</a> ()</td></tr>
 <tr class="memitem:ac56041c92b409836c4d809e4880d0ff4" id="r_ac56041c92b409836c4d809e4880d0ff4"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ac56041c92b409836c4d809e4880d0ff4">setLogMode</a> (S32 newMode)</td></tr>
+<tr class="memitem:ab60fb88f16394cb2cb9c0d26b015bea5" id="r_ab60fb88f16394cb2cb9c0d26b015bea5"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#ab60fb88f16394cb2cb9c0d26b015bea5">setLogFileName</a> (const char *name)</td></tr>
 <tr id="func-members-3" class="groupHeader"><td colspan="2"><div class="groupHeader">Miscellaneous</div></td></tr>
 <tr class="memitem:a3ccce5ef4dd2bc53a33e07a4cc1fa313" id="r_a3ccce5ef4dd2bc53a33e07a4cc1fa313"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#a3ccce5ef4dd2bc53a33e07a4cc1fa313">tabComplete</a> (char *inputBuffer, U32 cursorPos, U32 maxResultLength, bool forwardTab)</td></tr>
 <tr class="memitem:aba4d99980cbe6d1fae6b61a4a85f5c38" id="r_aba4d99980cbe6d1fae6b61a4a85f5c38"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#aba4d99980cbe6d1fae6b61a4a85f5c38">stripColorChars</a> (char *line)</td></tr>
@@ -1199,7 +1200,7 @@ Introduction</h1>
     <tr><td class="paramname">argv</td><td>A character string array containing the name of the function to call followed by the arguments to that function. <div class="fragment"><div class="line"><span class="comment">// Call a Torque script function called mAbs, having one parameter.</span></div>
 <div class="line"><span class="keywordtype">char</span>* argv[] = {<span class="stringliteral">&quot;abs&quot;</span>, <span class="stringliteral">&quot;-9&quot;</span>};</div>
 <div class="line"><span class="keywordtype">char</span>* result = <a class="code hl_function" href="#a27b33db8c092259f68383935d89ab802">execute</a>(2, argv);</div>
-<div class="ttc" id="anamespace_con_html_a27b33db8c092259f68383935d89ab802"><div class="ttname"><a href="#a27b33db8c092259f68383935d89ab802">Con::execute</a></div><div class="ttdeci">const char * execute(S32 argc, const char *argv[])</div><div class="ttdef"><b>Definition</b> console.cc:971</div></div>
+<div class="ttc" id="anamespace_con_html_a27b33db8c092259f68383935d89ab802"><div class="ttname"><a href="#a27b33db8c092259f68383935d89ab802">Con::execute</a></div><div class="ttdeci">const char * execute(S32 argc, const char *argv[])</div><div class="ttdef"><b>Definition</b> console.cc:979</div></div>
 </div><!-- fragment --> </td></tr>
   </table>
   </dd>
@@ -2198,6 +2199,24 @@ Introduction</h1>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="ab60fb88f16394cb2cb9c0d26b015bea5" name="ab60fb88f16394cb2cb9c0d26b015bea5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab60fb88f16394cb2cb9c0d26b015bea5">&#9670;&#160;</a></span>setLogFileName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void setLogFileName </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>name</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Redirects the console log. Pass NULL or an empty string to put it back to console.log. Safe to call at any time: mode 2 holds the file open, so the old one is closed and the new one opened in its place. </p>
 
 </div>
 </div>

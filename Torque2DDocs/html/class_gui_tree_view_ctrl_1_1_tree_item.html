@@ -112,6 +112,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a7c741203cb7b2066f567811e2edbe872" id="r_a7c741203cb7b2066f567811e2edbe872"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#a7c741203cb7b2066f567811e2edbe872">isVisible</a></td></tr>
 <tr class="memitem:a4f65f9cdf59c9c6a89bea8e35aa1c8c6" id="r_a4f65f9cdf59c9c6a89bea8e35aa1c8c6"><td class="memItemLeft">vector&lt; <a class="el" href="#a5cea8c52dc38d5f60d3c94d1fa579487">TreeItem</a> * &gt;&#160;</td><td class="memItemRight"><a class="el" href="#a4f65f9cdf59c9c6a89bea8e35aa1c8c6">branchList</a></td></tr>
 <tr class="memitem:a1add65c325533170fd392a58e485d533" id="r_a1add65c325533170fd392a58e485d533"><td class="memItemLeft"><a class="el" href="#a5cea8c52dc38d5f60d3c94d1fa579487">TreeItem</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a1add65c325533170fd392a58e485d533">trunk</a></td></tr>
+<tr class="memitem:a84e2d56b3ef42afa558e262450317935" id="r_a84e2d56b3ef42afa558e262450317935"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="#a84e2d56b3ef42afa558e262450317935">iconFrame</a></td></tr>
 <tr class="inherit_header pub_attribs_class_gui_list_box_ctrl_1_1_l_b_item"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_attribs_class_gui_list_box_ctrl_1_1_l_b_item')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Attributes inherited from <a class="el" href="class_gui_list_box_ctrl_1_1_l_b_item.html">GuiListBoxCtrl::LBItem</a></td></tr>
 <tr class="memitem:a2eed6a5da3b6c394e9746503907a3ff5 inherit pub_attribs_class_gui_list_box_ctrl_1_1_l_b_item" id="r_a2eed6a5da3b6c394e9746503907a3ff5"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="class_gui_list_box_ctrl_1_1_l_b_item.html#a2eed6a5da3b6c394e9746503907a3ff5">itemText</a></td></tr>
 <tr class="memitem:aa878fd61855f549b463ca8e9ac7ad0f6 inherit pub_attribs_class_gui_list_box_ctrl_1_1_l_b_item" id="r_aa878fd61855f549b463ca8e9ac7ad0f6"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_list_box_ctrl_1_1_l_b_item.html#aa878fd61855f549b463ca8e9ac7ad0f6">isSelected</a></td></tr>
@@ -192,6 +193,21 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a84e2d56b3ef42afa558e262450317935" name="a84e2d56b3ef42afa558e262450317935"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a84e2d56b3ef42afa558e262450317935">&#9670;&#160;</a></span>iconFrame</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">S32 iconFrame</td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Which frame of the tree's icon sheet this row draws, or -1 for none. Asked of script once when the row is built rather than every frame - onRenderItem runs for every visible row of every frame, so a callback here would be a console call per row per frame. </p>
 
 </div>
 </div>

@@ -77,7 +77,9 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pub-attribs">Public Attributes</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pro-methods">Protected Member Functions</a> &#124;
+<a href="#pro-attribs">Protected Attributes</a> &#124;
 <a href="class_gui_particle_graph_inspector-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">GuiParticleGraphInspector Class Reference</div></div>
 </div><!--header-->
@@ -99,6 +101,7 @@ $(function() {
 <area href="class_taml_children.html" alt="TamlChildren" shape="rect" coords="256,56,417,80"/>
 <area href="class_console_object.html" alt="ConsoleObject" shape="rect" coords="0,0,161,24"/>
 <area href="class_taml_callbacks.html" alt="TamlCallbacks" shape="rect" coords="171,0,332,24"/>
+<area href="class_gui_edit_particle_color_graph.html" alt="GuiEditParticleColorGraph" shape="rect" coords="256,336,417,360"/>
   </map>
 </div></div>
 <table class="memberdecls">
@@ -113,6 +116,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a6b6fec44df03ec791ee9369af4cf6173" id="r_a6b6fec44df03ec791ee9369af4cf6173"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a6b6fec44df03ec791ee9369af4cf6173">inspectObject</a> (<a class="el" href="class_particle_asset.html">ParticleAsset</a> *object)</td></tr>
 <tr class="memitem:a0299f884d82ecc03fc387420d1dc7ee4" id="r_a0299f884d82ecc03fc387420d1dc7ee4"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a0299f884d82ecc03fc387420d1dc7ee4">setDisplayField</a> (const char *fieldName)</td></tr>
 <tr class="memitem:aaadc3854a65ce5ef4bc2b476e723aa81" id="r_aaadc3854a65ce5ef4bc2b476e723aa81"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#aaadc3854a65ce5ef4bc2b476e723aa81">setDisplayField</a> (const char *fieldName, U16 index)</td></tr>
+<tr class="memitem:aea81f19efcf508ec694a080198cd716e" id="r_aea81f19efcf508ec694a080198cd716e"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#aea81f19efcf508ec694a080198cd716e">getDisplayField</a> () const</td></tr>
+<tr class="memitem:aa063e281ce3b07c006567fe4c690f839" id="r_aa063e281ce3b07c006567fe4c690f839"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#aa063e281ce3b07c006567fe4c690f839">getEmitterIndex</a> () const</td></tr>
 <tr class="memitem:a5b9e944ba3b19f18c166a07a72225da7" id="r_a5b9e944ba3b19f18c166a07a72225da7"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a5b9e944ba3b19f18c166a07a72225da7">setDisplayArea</a> (StringTableEntry minX, StringTableEntry minY, StringTableEntry maxX, StringTableEntry maxY)</td></tr>
 <tr class="memitem:af0db8bd7dfbd40a81b494dba6020777f" id="r_af0db8bd7dfbd40a81b494dba6020777f"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#af0db8bd7dfbd40a81b494dba6020777f">setDisplayLabels</a> (const char *labelX, const char *labelY)</td></tr>
 <tr class="memitem:adb0fbf30e73ae6142fda59c478bb2642" id="r_adb0fbf30e73ae6142fda59c478bb2642"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#adb0fbf30e73ae6142fda59c478bb2642">setVariationGraphInspector</a> (<a class="el" href="class_gui_particle_graph_inspector.html">GuiParticleGraphInspector</a> *object)</td></tr>
@@ -126,6 +131,7 @@ Public Member Functions</h2></td></tr>
 <tr class="inherit_header pub_methods_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
 <tr class="memitem:ac468d72ee759ecce365195c76f14d613 inherit pub_methods_class_gui_control" id="r_ac468d72ee759ecce365195c76f14d613"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ac468d72ee759ecce365195c76f14d613">isEditMode</a> ()</td></tr>
 <tr class="memitem:ab18dd60ccd4d9107c1918609cb0117ef inherit pub_methods_class_gui_control" id="r_ab18dd60ccd4d9107c1918609cb0117ef"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab18dd60ccd4d9107c1918609cb0117ef">isEditSelected</a> ()</td></tr>
+<tr class="memitem:ab4b2eb274b96e7703e6ca73e5a989019 inherit pub_methods_class_gui_control" id="r_ab4b2eb274b96e7703e6ca73e5a989019"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab4b2eb274b96e7703e6ca73e5a989019">isHiddenInEditor</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *child)</td></tr>
 <tr class="memitem:a556b92511d0b04e3ada9b19785de0a6c inherit pub_methods_class_gui_control" id="r_a556b92511d0b04e3ada9b19785de0a6c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a556b92511d0b04e3ada9b19785de0a6c">getScrollLineSizes</a> (U32 *rowHeight, U32 *columnWidth)</td></tr>
 <tr class="memitem:a418558737b404312380ab3ef7efd65fd inherit pub_methods_class_gui_control" id="r_a418558737b404312380ab3ef7efd65fd"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a418558737b404312380ab3ef7efd65fd">getCursor</a> (<a class="el" href="class_gui_cursor.html">GuiCursor</a> *&amp;cursor, bool &amp;showCursor, const <a class="el" href="struct_gui_event.html">GuiEvent</a> &amp;lastGuiEvent)</td></tr>
 <tr class="memitem:aaf5f3fbcf5ced405f37b2bd1751ce3e6 inherit pub_methods_class_gui_control" id="r_aaf5f3fbcf5ced405f37b2bd1751ce3e6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aaf5f3fbcf5ced405f37b2bd1751ce3e6">awaken</a> ()</td></tr>
@@ -143,6 +149,7 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a44ce862021d551f2aa102c84c8bd6446 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">General input handler.  <br /></td></tr>
 <tr class="memitem:a55d4de604909cede1339c4827276d0e5 inherit pub_methods_class_gui_control" id="r_a55d4de604909cede1339c4827276d0e5"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a55d4de604909cede1339c4827276d0e5">onFocus</a> (bool foundFirstResponder)</td></tr>
 <tr class="memitem:acfd2f23cf258aab4d310ade2d6cda6f6 inherit pub_methods_class_gui_control" id="r_acfd2f23cf258aab4d310ade2d6cda6f6"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#acfd2f23cf258aab4d310ade2d6cda6f6">ControlIsChild</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *child)</td></tr>
+<tr class="memitem:ae157eb4ad8e49a60f7197f729537ba3d inherit pub_methods_class_gui_control" id="r_ae157eb4ad8e49a60f7197f729537ba3d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae157eb4ad8e49a60f7197f729537ba3d">setControlTooltipProfile</a> (<a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *prof)</td></tr>
 <tr class="memitem:ab6d59b6e981373702290534f65463d95 inherit pub_methods_class_gui_control" id="r_ab6d59b6e981373702290534f65463d95"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab6d59b6e981373702290534f65463d95">onAction</a> ()</td></tr>
 <tr class="memdesc:ab6d59b6e981373702290534f65463d95 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Occurs when this control performs its "action".  <br /></td></tr>
 <tr class="memitem:a50c1bacaad8816dac5560ef37ac4d1ed inherit pub_methods_class_gui_control" id="r_a50c1bacaad8816dac5560ef37ac4d1ed"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a50c1bacaad8816dac5560ef37ac4d1ed">renderText</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;offset, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;extent, const char *text, <a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile, <a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201c">TextRotationOptions</a> rot=<a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201ca20c4634bc42fa5f52492e9b7f00d6d96">tRotateNone</a>)</td></tr>
@@ -189,23 +196,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memdesc:a96faf5971f2ab3623d8e5cd14ed3cb87 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the root canvas of this control.  <br /></td></tr>
 <tr class="memitem:ab48048176248a6d54daafe42ac57e402 inherit pub_methods_class_gui_control" id="r_ab48048176248a6d54daafe42ac57e402"><td class="memItemLeft">virtual <a class="el" href="class_point2_i.html">Point2I</a>&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab48048176248a6d54daafe42ac57e402">localToGlobalCoord</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;src)</td></tr>
 <tr class="memitem:a90a2a543cda21c5711d65e6225b80fb0 inherit pub_methods_class_gui_control" id="r_a90a2a543cda21c5711d65e6225b80fb0"><td class="memItemLeft">virtual <a class="el" href="class_point2_i.html">Point2I</a>&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a90a2a543cda21c5711d65e6225b80fb0">globalToLocalCoord</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;src)</td></tr>
-<tr class="memitem:aa68876bc6573d585289ffe10c9f6d569 inherit pub_methods_class_gui_control" id="r_aa68876bc6573d585289ffe10c9f6d569"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa68876bc6573d585289ffe10c9f6d569">setPosition</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;newPosition)</td></tr>
-<tr class="memitem:aaf6a389ae4125bf2364268b67851f59e inherit pub_methods_class_gui_control" id="r_aaf6a389ae4125bf2364268b67851f59e"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aaf6a389ae4125bf2364268b67851f59e">setExtent</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;newExtent)</td></tr>
-<tr class="memitem:a94bf288946d520f409ed19c0ebbc85cc inherit pub_methods_class_gui_control" id="r_a94bf288946d520f409ed19c0ebbc85cc"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a94bf288946d520f409ed19c0ebbc85cc">setBounds</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;newBounds)</td></tr>
-<tr class="memitem:ae8ec0148a03c753f3cfc3be7aa07aad6 inherit pub_methods_class_gui_control" id="r_ae8ec0148a03c753f3cfc3be7aa07aad6"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae8ec0148a03c753f3cfc3be7aa07aad6">setLeft</a> (S32 newLeft)</td></tr>
-<tr class="memitem:ab1b6a64d8395ecf41cad9413e3e3305d inherit pub_methods_class_gui_control" id="r_ab1b6a64d8395ecf41cad9413e3e3305d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab1b6a64d8395ecf41cad9413e3e3305d">setTop</a> (S32 newTop)</td></tr>
-<tr class="memitem:a0228d7f053060dcf5bae1e72a58b50a3 inherit pub_methods_class_gui_control" id="r_a0228d7f053060dcf5bae1e72a58b50a3"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a0228d7f053060dcf5bae1e72a58b50a3">setWidth</a> (S32 newWidth)</td></tr>
-<tr class="memitem:a69c692cc51d2bdd8026911fe02d22c98 inherit pub_methods_class_gui_control" id="r_a69c692cc51d2bdd8026911fe02d22c98"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a69c692cc51d2bdd8026911fe02d22c98">setHeight</a> (S32 newHeight)</td></tr>
-<tr class="memitem:aee75cfcd748af3483e8fa3b497dc4c8c inherit pub_methods_class_gui_control" id="r_aee75cfcd748af3483e8fa3b497dc4c8c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aee75cfcd748af3483e8fa3b497dc4c8c">childResized</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *child)</td></tr>
-<tr class="memitem:adb5640aafb22d41837bb4f2c4811dca3 inherit pub_methods_class_gui_control" id="r_adb5640aafb22d41837bb4f2c4811dca3"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#adb5640aafb22d41837bb4f2c4811dca3">childMoved</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *child)</td></tr>
-<tr class="memitem:ade9c7f2b40db18b451feb9efef9c05e0 inherit pub_methods_class_gui_control" id="r_ade9c7f2b40db18b451feb9efef9c05e0"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ade9c7f2b40db18b451feb9efef9c05e0">childrenReordered</a> ()</td></tr>
-<tr class="memdesc:ade9c7f2b40db18b451feb9efef9c05e0 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the children of this control may have been reordered.  <br /></td></tr>
-<tr class="memitem:a375e5fb06ee435b6c1b5a54f63335cec inherit pub_methods_class_gui_control" id="r_a375e5fb06ee435b6c1b5a54f63335cec"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a375e5fb06ee435b6c1b5a54f63335cec">parentResized</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;oldParentExtent, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;newParentExtent)</td></tr>
-<tr class="memitem:a97954df58178e4c9bf82d2e7a50be3fd inherit pub_methods_class_gui_control" id="r_a97954df58178e4c9bf82d2e7a50be3fd"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a97954df58178e4c9bf82d2e7a50be3fd">preventResizeModeFill</a> ()</td></tr>
-<tr class="memdesc:a97954df58178e4c9bf82d2e7a50be3fd inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the resize mode of fill and changes it to right or bottom.  <br /></td></tr>
-<tr class="memitem:af0ee4db4b0e08d86f298b89f18296997 inherit pub_methods_class_gui_control" id="r_af0ee4db4b0e08d86f298b89f18296997"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#af0ee4db4b0e08d86f298b89f18296997">preventResizeModeCenter</a> ()</td></tr>
-<tr class="memdesc:af0ee4db4b0e08d86f298b89f18296997 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the resize mode of center and changes it to right or bottom.  <br /></td></tr>
 <tr class="memitem:ac3fda187a45ac93c7ab3a86e4919eeb8 inherit pub_methods_class_gui_control" id="r_ac3fda187a45ac93c7ab3a86e4919eeb8"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ac3fda187a45ac93c7ab3a86e4919eeb8">renderTooltip</a> (<a class="el" href="class_point2_i.html">Point2I</a> &amp;cursorPos, const char *tipText=NULL)</td></tr>
+<tr class="memitem:a8b457b77609c2db18a9e8360c45eedad inherit pub_methods_class_gui_control" id="r_a8b457b77609c2db18a9e8360c45eedad"><td class="memItemLeft"><a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a8b457b77609c2db18a9e8360c45eedad">resolveDefaultTooltipProfile</a> ()</td></tr>
 <tr class="memitem:a0d441262aaaa579e0d57be192bc43c0d inherit pub_methods_class_gui_control" id="r_a0d441262aaaa579e0d57be192bc43c0d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a0d441262aaaa579e0d57be192bc43c0d">renderChildControls</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;offset, const <a class="el" href="class_rect_i.html">RectI</a> &amp;content, const <a class="el" href="class_rect_i.html">RectI</a> &amp;updateRect)</td></tr>
 <tr class="memitem:a6cfc13a13e675baa1822caddf428ebee inherit pub_methods_class_gui_control" id="r_a6cfc13a13e675baa1822caddf428ebee"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a6cfc13a13e675baa1822caddf428ebee">renderChild</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *ctrl, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;offset, const <a class="el" href="class_rect_i.html">RectI</a> &amp;content, const <a class="el" href="class_rect_i.html">RectI</a> &amp;clipRect)</td></tr>
 <tr class="memdesc:a6cfc13a13e675baa1822caddf428ebee inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Renders a single child control.  <br /></td></tr>
@@ -254,6 +246,8 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a549ca6106d2a5fd4b1c7f86d1f443a19 inherit pub_methods_class_gui_control" id="r_a549ca6106d2a5fd4b1c7f86d1f443a19"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a549ca6106d2a5fd4b1c7f86d1f443a19">onMouseUpEditor</a> (const <a class="el" href="struct_gui_event.html">GuiEvent</a> &amp;event, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;offset)</td></tr>
 <tr class="memitem:aedd0ebfd13077e22e5cb3d74273d774f inherit pub_methods_class_gui_control" id="r_aedd0ebfd13077e22e5cb3d74273d774f"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aedd0ebfd13077e22e5cb3d74273d774f">onRightMouseDownEditor</a> (const <a class="el" href="struct_gui_event.html">GuiEvent</a> &amp;event, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;offset)</td></tr>
 <tr class="memitem:acc5a2f240523c88879e3b6966f6084cf inherit pub_methods_class_gui_control" id="r_acc5a2f240523c88879e3b6966f6084cf"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#acc5a2f240523c88879e3b6966f6084cf">onMouseDraggedEditor</a> (const <a class="el" href="struct_gui_event.html">GuiEvent</a> &amp;event, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;offset)</td></tr>
+<tr class="memitem:a15fdbecb2b7f1ea762d26fc8dbc8bd6f inherit pub_methods_class_gui_control" id="r_a15fdbecb2b7f1ea762d26fc8dbc8bd6f"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a15fdbecb2b7f1ea762d26fc8dbc8bd6f">canBeChildOf</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *parent)</td></tr>
+<tr class="memitem:a2aae3af263300efefe38df65f1b45b69 inherit pub_methods_class_gui_control" id="r_a2aae3af263300efefe38df65f1b45b69"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a2aae3af263300efefe38df65f1b45b69">isGeometryEditable</a> ()</td></tr>
 <tr class="memitem:a4845fb5b916d4401af48953867c1f55e inherit pub_methods_class_gui_control" id="r_a4845fb5b916d4401af48953867c1f55e"><td class="memItemLeft">virtual <a class="el" href="class_gui_control.html">GuiControl</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a4845fb5b916d4401af48953867c1f55e">findFirstTabable</a> ()</td></tr>
 <tr class="memdesc:a4845fb5b916d4401af48953867c1f55e inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Find the first tab-accessable child of this control.  <br /></td></tr>
 <tr class="memitem:a6f0ee5723d76719515bcc99168ea2333 inherit pub_methods_class_gui_control" id="r_a6f0ee5723d76719515bcc99168ea2333"><td class="memItemLeft">virtual <a class="el" href="class_gui_control.html">GuiControl</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a6f0ee5723d76719515bcc99168ea2333">findLastTabable</a> (bool firstCall=true)</td></tr>
@@ -322,11 +316,34 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:afa7366a3ed681fda2fd5c274914c4c1d inherit pub_methods_class_gui_control" id="r_afa7366a3ed681fda2fd5c274914c4c1d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#afa7366a3ed681fda2fd5c274914c4c1d">setVisible</a> (bool <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
 <tr class="memitem:aadc2f7e6c414e3e7016fb654293daa7f inherit pub_methods_class_gui_control" id="r_aadc2f7e6c414e3e7016fb654293daa7f"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aadc2f7e6c414e3e7016fb654293daa7f">isVisible</a> ()</td></tr>
 <tr class="memdesc:aadc2f7e6c414e3e7016fb654293daa7f inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if the object is visible.  <br /></td></tr>
+<tr class="memitem:ab27431499b77838a9130304b2b655164 inherit pub_methods_class_gui_control" id="r_ab27431499b77838a9130304b2b655164"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab27431499b77838a9130304b2b655164">rendersChildren</a> ()</td></tr>
+<tr class="memdesc:ab27431499b77838a9130304b2b655164 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">True if the control draws its children, which is what makes it able to be a container.  <br /></td></tr>
 <tr class="memitem:ac9d2cf6313c55ef9496b9697e775fddb inherit pub_methods_class_gui_control" id="r_ac9d2cf6313c55ef9496b9697e775fddb"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ac9d2cf6313c55ef9496b9697e775fddb">setActive</a> (bool <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
 <tr class="memitem:aa1f512ab0fcc05612f8e3d6a4664ce9a inherit pub_methods_class_gui_control" id="r_aa1f512ab0fcc05612f8e3d6a4664ce9a"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa1f512ab0fcc05612f8e3d6a4664ce9a">isActive</a> ()</td></tr>
 <tr class="memdesc:aa1f512ab0fcc05612f8e3d6a4664ce9a inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this control is active.  <br /></td></tr>
 <tr class="memitem:a4b2316e45e67779a655ca132c9fe90f0 inherit pub_methods_class_gui_control" id="r_a4b2316e45e67779a655ca132c9fe90f0"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a4b2316e45e67779a655ca132c9fe90f0">isAwake</a> ()</td></tr>
 <tr class="memdesc:a4b2316e45e67779a655ca132c9fe90f0 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns true if this control is awake.  <br /></td></tr>
+<tr class="memitem:aa68876bc6573d585289ffe10c9f6d569 inherit pub_methods_class_gui_control" id="r_aa68876bc6573d585289ffe10c9f6d569"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa68876bc6573d585289ffe10c9f6d569">setPosition</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;newPosition)</td></tr>
+<tr class="memitem:aaf6a389ae4125bf2364268b67851f59e inherit pub_methods_class_gui_control" id="r_aaf6a389ae4125bf2364268b67851f59e"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aaf6a389ae4125bf2364268b67851f59e">setExtent</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;newExtent)</td></tr>
+<tr class="memitem:a94bf288946d520f409ed19c0ebbc85cc inherit pub_methods_class_gui_control" id="r_a94bf288946d520f409ed19c0ebbc85cc"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a94bf288946d520f409ed19c0ebbc85cc">setBounds</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;newBounds)</td></tr>
+<tr class="memitem:ae8ec0148a03c753f3cfc3be7aa07aad6 inherit pub_methods_class_gui_control" id="r_ae8ec0148a03c753f3cfc3be7aa07aad6"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae8ec0148a03c753f3cfc3be7aa07aad6">setLeft</a> (S32 newLeft)</td></tr>
+<tr class="memitem:ab1b6a64d8395ecf41cad9413e3e3305d inherit pub_methods_class_gui_control" id="r_ab1b6a64d8395ecf41cad9413e3e3305d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab1b6a64d8395ecf41cad9413e3e3305d">setTop</a> (S32 newTop)</td></tr>
+<tr class="memitem:a0228d7f053060dcf5bae1e72a58b50a3 inherit pub_methods_class_gui_control" id="r_a0228d7f053060dcf5bae1e72a58b50a3"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a0228d7f053060dcf5bae1e72a58b50a3">setWidth</a> (S32 newWidth)</td></tr>
+<tr class="memitem:a69c692cc51d2bdd8026911fe02d22c98 inherit pub_methods_class_gui_control" id="r_a69c692cc51d2bdd8026911fe02d22c98"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a69c692cc51d2bdd8026911fe02d22c98">setHeight</a> (S32 newHeight)</td></tr>
+<tr class="memitem:aee75cfcd748af3483e8fa3b497dc4c8c inherit pub_methods_class_gui_control" id="r_aee75cfcd748af3483e8fa3b497dc4c8c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aee75cfcd748af3483e8fa3b497dc4c8c">childResized</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *child)</td></tr>
+<tr class="memitem:adb5640aafb22d41837bb4f2c4811dca3 inherit pub_methods_class_gui_control" id="r_adb5640aafb22d41837bb4f2c4811dca3"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#adb5640aafb22d41837bb4f2c4811dca3">childMoved</a> (<a class="el" href="class_gui_control.html">GuiControl</a> *child)</td></tr>
+<tr class="memitem:ade9c7f2b40db18b451feb9efef9c05e0 inherit pub_methods_class_gui_control" id="r_ade9c7f2b40db18b451feb9efef9c05e0"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ade9c7f2b40db18b451feb9efef9c05e0">childrenReordered</a> ()</td></tr>
+<tr class="memdesc:ade9c7f2b40db18b451feb9efef9c05e0 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called when the children of this control may have been reordered.  <br /></td></tr>
+<tr class="memitem:a375e5fb06ee435b6c1b5a54f63335cec inherit pub_methods_class_gui_control" id="r_a375e5fb06ee435b6c1b5a54f63335cec"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a375e5fb06ee435b6c1b5a54f63335cec">parentResized</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;oldParentExtent, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;newParentExtent)</td></tr>
+<tr class="memitem:a90a62bac07aeedff8f91d2d7ec06dcbe inherit pub_methods_class_gui_control" id="r_a90a62bac07aeedff8f91d2d7ec06dcbe"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a90a62bac07aeedff8f91d2d7ec06dcbe">pullIntoView</a> ()</td></tr>
+<tr class="memitem:a97954df58178e4c9bf82d2e7a50be3fd inherit pub_methods_class_gui_control" id="r_a97954df58178e4c9bf82d2e7a50be3fd"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a97954df58178e4c9bf82d2e7a50be3fd">preventResizeModeFill</a> ()</td></tr>
+<tr class="memdesc:a97954df58178e4c9bf82d2e7a50be3fd inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the resize mode of fill and changes it to right or bottom.  <br /></td></tr>
+<tr class="memitem:af0ee4db4b0e08d86f298b89f18296997 inherit pub_methods_class_gui_control" id="r_af0ee4db4b0e08d86f298b89f18296997"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#af0ee4db4b0e08d86f298b89f18296997">preventResizeModeCenter</a> ()</td></tr>
+<tr class="memdesc:af0ee4db4b0e08d86f298b89f18296997 inherit pub_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Removes the resize mode of center and changes it to right or bottom.  <br /></td></tr>
+<tr class="memitem:ab3072caf5e14291f4555e2825ff148e6 inherit pub_methods_class_gui_control" id="r_ab3072caf5e14291f4555e2825ff148e6"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab3072caf5e14291f4555e2825ff148e6">preventHorizResizeModeFill</a> ()</td></tr>
+<tr class="memitem:a94c2d18bbfc14a9b5c06e6e1403a99d3 inherit pub_methods_class_gui_control" id="r_a94c2d18bbfc14a9b5c06e6e1403a99d3"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a94c2d18bbfc14a9b5c06e6e1403a99d3">preventVertResizeModeFill</a> ()</td></tr>
+<tr class="memitem:ae25b625c427117d361131d39baa68c1a inherit pub_methods_class_gui_control" id="r_ae25b625c427117d361131d39baa68c1a"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae25b625c427117d361131d39baa68c1a">preventHorizResizeModeCenter</a> ()</td></tr>
+<tr class="memitem:a8b9e7bceaf964f8aa8ec8dbbcdb1ee0f inherit pub_methods_class_gui_control" id="r_a8b9e7bceaf964f8aa8ec8dbbcdb1ee0f"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a8b9e7bceaf964f8aa8ec8dbbcdb1ee0f">preventVertResizeModeCenter</a> ()</td></tr>
 <tr class="memitem:aded38c77043c472fe2247e0444ac4434 inherit pub_methods_class_gui_control" id="r_aded38c77043c472fe2247e0444ac4434"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aded38c77043c472fe2247e0444ac4434">setConsoleVariable</a> (const char *variable)</td></tr>
 <tr class="memitem:a45ff66bad6a2d88956ceaf4408f3d5f0 inherit pub_methods_class_gui_control" id="r_a45ff66bad6a2d88956ceaf4408f3d5f0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a45ff66bad6a2d88956ceaf4408f3d5f0">setConsoleCommand</a> (const char *newCmd)</td></tr>
 <tr class="memitem:a4d6737d1504570c23d584d3461eba606 inherit pub_methods_class_gui_control" id="r_a4d6737d1504570c23d584d3461eba606"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a4d6737d1504570c23d584d3461eba606">getConsoleCommand</a> ()</td></tr>
@@ -402,10 +419,21 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a1810f5aba25efd242c24232c2c2bbd1a inherit pub_methods_class_sim_object" id="r_a1810f5aba25efd242c24232c2c2bbd1a"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1810f5aba25efd242c24232c2c2bbd1a">dumpClassHierarchy</a> ()</td></tr>
 <tr class="memitem:aacb30b9c403e8687e109b7738af141d8 inherit pub_methods_class_sim_object" id="r_aacb30b9c403e8687e109b7738af141d8"><td class="memItemLeft"><a class="el" href="class_sim_object.html">SimObject</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aacb30b9c403e8687e109b7738af141d8">clone</a> (const bool copyDynamicFields)</td></tr>
 <tr class="memitem:a62aa4e3f1aea3c0841234882d0105c1b inherit pub_methods_class_sim_object" id="r_a62aa4e3f1aea3c0841234882d0105c1b"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a62aa4e3f1aea3c0841234882d0105c1b">copyTo</a> (<a class="el" href="class_sim_object.html">SimObject</a> *object)</td></tr>
+<tr class="memitem:a00fb274c69119bd75c3ccf9b3a143c00 inherit pub_methods_class_sim_object" id="r_a00fb274c69119bd75c3ccf9b3a143c00"><td class="memItemLeft"><a class="el" href="class_sim_object.html">SimObject</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a00fb274c69119bd75c3ccf9b3a143c00">deepClone</a> ()</td></tr>
 <tr class="memitem:a526b0ae2c04966128bcbb3c12f5a283d inherit pub_methods_class_sim_object" id="r_a526b0ae2c04966128bcbb3c12f5a283d"><td class="memTemplParams" colspan="2">template&lt;typename T&gt; </td></tr>
 <tr class="memitem:a526b0ae2c04966128bcbb3c12f5a283d inherit pub_methods_class_sim_object template"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a526b0ae2c04966128bcbb3c12f5a283d">isType</a> (void)</td></tr>
 <tr class="memitem:a76fd3b455488c03e0c8683b836ee96a2 inherit pub_methods_class_sim_object" id="r_a76fd3b455488c03e0c8683b836ee96a2"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a76fd3b455488c03e0c8683b836ee96a2">handlesConsoleMethod</a> (const char *fname, S32 *routingId)</td></tr>
 <tr class="memitem:a5347739a7bbaab1de0130ac29073dcfd inherit pub_methods_class_sim_object" id="r_a5347739a7bbaab1de0130ac29073dcfd"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a5347739a7bbaab1de0130ac29073dcfd">DECLARE_CONOBJECT</a> (<a class="el" href="class_sim_object.html">SimObject</a>)</td></tr>
+<tr class="memitem:a8b9f425bde559d3f1b3146fd3c1ceba2 inherit pub_methods_class_sim_object" id="r_a8b9f425bde559d3f1b3146fd3c1ceba2"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8b9f425bde559d3f1b3146fd3c1ceba2">writeField</a> (StringTableEntry fieldname, const char *value)</td></tr>
+<tr class="memitem:a200de464a60a45ee5904de160e677b5f inherit pub_methods_class_sim_object" id="r_a200de464a60a45ee5904de160e677b5f"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a200de464a60a45ee5904de160e677b5f">writeFields</a> (<a class="el" href="class_stream.html">Stream</a> &amp;stream, U32 tabStop)</td></tr>
+<tr class="memitem:afc937cb7e1cd1b0768101aec936bbe45 inherit pub_methods_class_sim_object" id="r_afc937cb7e1cd1b0768101aec936bbe45"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afc937cb7e1cd1b0768101aec936bbe45">buildFilterList</a> ()</td></tr>
+<tr class="memitem:ac9c1a44b539dfe7ca6782c5dd561e9ac inherit pub_methods_class_sim_object" id="r_ac9c1a44b539dfe7ca6782c5dd561e9ac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac9c1a44b539dfe7ca6782c5dd561e9ac">addFieldFilter</a> (const char *fieldName)</td></tr>
+<tr class="memitem:a800867188378386931156e3329846b71 inherit pub_methods_class_sim_object" id="r_a800867188378386931156e3329846b71"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a800867188378386931156e3329846b71">removeFieldFilter</a> (const char *fieldName)</td></tr>
+<tr class="memitem:a97791ba163a65547d7a5d47bed803d7d inherit pub_methods_class_sim_object" id="r_a97791ba163a65547d7a5d47bed803d7d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a97791ba163a65547d7a5d47bed803d7d">clearFieldFilters</a> ()</td></tr>
+<tr class="memitem:af05be979fb46390caf87d391486d38b1 inherit pub_methods_class_sim_object" id="r_af05be979fb46390caf87d391486d38b1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#af05be979fb46390caf87d391486d38b1">isFiltered</a> (const char *fieldName)</td></tr>
+<tr class="memitem:afe42c2298dcfb82059cd5d8590a76479 inherit pub_methods_class_sim_object" id="r_afe42c2298dcfb82059cd5d8590a76479"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afe42c2298dcfb82059cd5d8590a76479">assignFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
+<tr class="memitem:ac7bed917724f47887e26e55aad281aff inherit pub_methods_class_sim_object" id="r_ac7bed917724f47887e26e55aad281aff"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac7bed917724f47887e26e55aad281aff">copyFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj, const U32 flags)</td></tr>
+<tr class="memitem:a2ed3c32bdfeb17efd31de7faf0f5b37c inherit pub_methods_class_sim_object" id="r_a2ed3c32bdfeb17efd31de7faf0f5b37c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a2ed3c32bdfeb17efd31de7faf0f5b37c">assignDynamicFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
 <tr class="memitem:ac894e7acfdf29d01464a20d670e1208a inherit pub_methods_class_sim_object" id="r_ac894e7acfdf29d01464a20d670e1208a"><td class="memItemLeft"><a class="el" href="struct_sim_object_1_1_notify.html">Notify</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac894e7acfdf29d01464a20d670e1208a">removeNotify</a> (void *ptr, <a class="el" href="struct_sim_object_1_1_notify.html#a1d1cfd8ffb84e947f82999c682b666a7">Notify::Type</a>)</td></tr>
 <tr class="memdesc:ac894e7acfdf29d01464a20d670e1208a inherit pub_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Remove a notification from the list.  <br /></td></tr>
 <tr class="memitem:a2838b603fe80fa772e6be008b649decf inherit pub_methods_class_sim_object" id="r_a2838b603fe80fa772e6be008b649decf"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a2838b603fe80fa772e6be008b649decf">deleteNotify</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
@@ -490,15 +518,6 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ae32c75b008160f8599389fa1416270f4 inherit pub_methods_class_sim_object" id="r_ae32c75b008160f8599389fa1416270f4"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ae32c75b008160f8599389fa1416270f4">addToSet</a> (const char *)</td></tr>
 <tr class="memitem:a8fb724887b442070d3f78e5ffdf529fc inherit pub_methods_class_sim_object" id="r_a8fb724887b442070d3f78e5ffdf529fc"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8fb724887b442070d3f78e5ffdf529fc">removeFromSet</a> (SimObjectId)</td></tr>
 <tr class="memitem:ae15bec249a7c1003e0ebb253ba7ca4df inherit pub_methods_class_sim_object" id="r_ae15bec249a7c1003e0ebb253ba7ca4df"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ae15bec249a7c1003e0ebb253ba7ca4df">removeFromSet</a> (const char *)</td></tr>
-<tr class="memitem:a8b9f425bde559d3f1b3146fd3c1ceba2 inherit pub_methods_class_sim_object" id="r_a8b9f425bde559d3f1b3146fd3c1ceba2"><td class="memItemLeft">virtual bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8b9f425bde559d3f1b3146fd3c1ceba2">writeField</a> (StringTableEntry fieldname, const char *value)</td></tr>
-<tr class="memitem:a200de464a60a45ee5904de160e677b5f inherit pub_methods_class_sim_object" id="r_a200de464a60a45ee5904de160e677b5f"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a200de464a60a45ee5904de160e677b5f">writeFields</a> (<a class="el" href="class_stream.html">Stream</a> &amp;stream, U32 tabStop)</td></tr>
-<tr class="memitem:afc937cb7e1cd1b0768101aec936bbe45 inherit pub_methods_class_sim_object" id="r_afc937cb7e1cd1b0768101aec936bbe45"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afc937cb7e1cd1b0768101aec936bbe45">buildFilterList</a> ()</td></tr>
-<tr class="memitem:ac9c1a44b539dfe7ca6782c5dd561e9ac inherit pub_methods_class_sim_object" id="r_ac9c1a44b539dfe7ca6782c5dd561e9ac"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ac9c1a44b539dfe7ca6782c5dd561e9ac">addFieldFilter</a> (const char *fieldName)</td></tr>
-<tr class="memitem:a800867188378386931156e3329846b71 inherit pub_methods_class_sim_object" id="r_a800867188378386931156e3329846b71"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a800867188378386931156e3329846b71">removeFieldFilter</a> (const char *fieldName)</td></tr>
-<tr class="memitem:a97791ba163a65547d7a5d47bed803d7d inherit pub_methods_class_sim_object" id="r_a97791ba163a65547d7a5d47bed803d7d"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a97791ba163a65547d7a5d47bed803d7d">clearFieldFilters</a> ()</td></tr>
-<tr class="memitem:af05be979fb46390caf87d391486d38b1 inherit pub_methods_class_sim_object" id="r_af05be979fb46390caf87d391486d38b1"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#af05be979fb46390caf87d391486d38b1">isFiltered</a> (const char *fieldName)</td></tr>
-<tr class="memitem:afe42c2298dcfb82059cd5d8590a76479 inherit pub_methods_class_sim_object" id="r_afe42c2298dcfb82059cd5d8590a76479"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#afe42c2298dcfb82059cd5d8590a76479">assignFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
-<tr class="memitem:a2ed3c32bdfeb17efd31de7faf0f5b37c inherit pub_methods_class_sim_object" id="r_a2ed3c32bdfeb17efd31de7faf0f5b37c"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a2ed3c32bdfeb17efd31de7faf0f5b37c">assignDynamicFieldsFrom</a> (<a class="el" href="class_sim_object.html">SimObject</a> *obj)</td></tr>
 <tr class="inherit_header pub_methods_class_console_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_methods_class_console_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Member Functions inherited from <a class="el" href="class_console_object.html">ConsoleObject</a></td></tr>
 <tr class="memitem:a1126670f9cef40e89f356669cd373252 inherit pub_methods_class_console_object" id="r_a1126670f9cef40e89f356669cd373252"><td class="memItemLeft">const <a class="el" href="struct_abstract_class_rep_1_1_field.html">AbstractClassRep::Field</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a1126670f9cef40e89f356669cd373252">findField</a> (StringTableEntry fieldName) const</td></tr>
 <tr class="memdesc:a1126670f9cef40e89f356669cd373252 inherit pub_methods_class_console_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a reference to a field by name.  <br /></td></tr>
@@ -522,21 +541,29 @@ Public Member Functions</h2></td></tr>
 <tr class="heading"><td colspan="2"><h2 id="header-pub-static-methods" class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a67420d3593db1aae6efb2c3abb23c690" id="r_a67420d3593db1aae6efb2c3abb23c690"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="#a67420d3593db1aae6efb2c3abb23c690">initPersistFields</a> ()</td></tr>
-<tr class="memitem:a30a33d70d36438ffbc10b0e1c5513a4d" id="r_a30a33d70d36438ffbc10b0e1c5513a4d"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a30a33d70d36438ffbc10b0e1c5513a4d">writeToolTipWidthFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a4a3a47118868620098c6587468a21aae" id="r_a4a3a47118868620098c6587468a21aae"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a4a3a47118868620098c6587468a21aae">writeToolTipHoverTimeFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a67420d3593db1aae6efb2c3abb23c690" id="r_a67420d3593db1aae6efb2c3abb23c690"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a67420d3593db1aae6efb2c3abb23c690">initPersistFields</a> ()</td></tr>
-<tr class="memitem:a339706ec562e154bd2391cfb997cfd1c" id="r_a339706ec562e154bd2391cfb997cfd1c"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a339706ec562e154bd2391cfb997cfd1c">setTextProperty</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a3267463f9f0ccee45b8f566f5e0e9dfb" id="r_a3267463f9f0ccee45b8f566f5e0e9dfb"><td class="memItemLeft">static const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3267463f9f0ccee45b8f566f5e0e9dfb">getTextProperty</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:ab514e271d6532bd68a723201be3d5996" id="r_ab514e271d6532bd68a723201be3d5996"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab514e271d6532bd68a723201be3d5996">writeTextWrapFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:ae9eae8215ac036c2ecf90f1bcc63eed0" id="r_ae9eae8215ac036c2ecf90f1bcc63eed0"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae9eae8215ac036c2ecf90f1bcc63eed0">writeTextExtendFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:ad5d8daf41101db5b5d7eeaac2ca2476b" id="r_ad5d8daf41101db5b5d7eeaac2ca2476b"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ad5d8daf41101db5b5d7eeaac2ca2476b">setExtentFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a3c175687a91fca981ad3893b5dbc3c45" id="r_a3c175687a91fca981ad3893b5dbc3c45"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3c175687a91fca981ad3893b5dbc3c45">setMinExtentFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a5dd87f46db3e730d20ca15c02f8637a0" id="r_a5dd87f46db3e730d20ca15c02f8637a0"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a5dd87f46db3e730d20ca15c02f8637a0">writeMinExtentFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a974359ffad7ec453f6f047108b4ad8c4" id="r_a974359ffad7ec453f6f047108b4ad8c4"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a974359ffad7ec453f6f047108b4ad8c4">setPositionFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:aa9eecd5393f7efde4173fe818f20cc84" id="r_aa9eecd5393f7efde4173fe818f20cc84"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa9eecd5393f7efde4173fe818f20cc84">writeVisibleFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:ae81ab8b963a5095483ded3e4efd897b6" id="r_ae81ab8b963a5095483ded3e4efd897b6"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae81ab8b963a5095483ded3e4efd897b6">writeUseInputFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a5fce44c942adfa6901bf8104339c2a2e" id="r_a5fce44c942adfa6901bf8104339c2a2e"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a5fce44c942adfa6901bf8104339c2a2e">writeIsContainerFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:afe1dce4b3ccb96c18806c67640e3abb8" id="r_afe1dce4b3ccb96c18806c67640e3abb8"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#afe1dce4b3ccb96c18806c67640e3abb8">setIsContainerFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:ad94aab3cb6c265651ed4f3cb8489257d" id="r_ad94aab3cb6c265651ed4f3cb8489257d"><td class="memItemLeft">static S32&#160;</td><td class="memItemRight"><a class="el" href="#ad94aab3cb6c265651ed4f3cb8489257d">getUnderPlotReserve</a> (const S32 bandHeight)</td></tr>
+<tr class="memitem:a69ad5eb5b5a576504cc7a6578a12f7c4" id="r_a69ad5eb5b5a576504cc7a6578a12f7c4"><td class="memItemLeft">static const char *&#160;</td><td class="memItemRight"><a class="el" href="#a69ad5eb5b5a576504cc7a6578a12f7c4">formatAxisLabel</a> (const F32 <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>, char *buffer, const U32 bufferSize)</td></tr>
+<tr class="memitem:ad5f7616215fa5f7a18227b6022618d77" id="r_ad5f7616215fa5f7a18227b6022618d77"><td class="memItemLeft">static <a class="el" href="class_rect_i.html">RectI</a>&#160;</td><td class="memItemRight"><a class="el" href="#ad5f7616215fa5f7a18227b6022618d77">snapRectToGrid</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;rect, const S32 divisor)</td></tr>
+<tr class="inherit_header pub_static_methods_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Member Functions inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
+<tr class="memitem:ab0ab4be91b63182b3a9c19c63cfce3a6 inherit pub_static_methods_class_gui_control" id="r_ab0ab4be91b63182b3a9c19c63cfce3a6"><td class="memItemLeft">static vector&lt; string &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab0ab4be91b63182b3a9c19c63cfce3a6">splitParagraphs</a> (const char *text)</td></tr>
+<tr class="memitem:a2475eda4ccc9337232e5f561e10c0b90 inherit pub_static_methods_class_gui_control" id="r_a2475eda4ccc9337232e5f561e10c0b90"><td class="memItemLeft">static vector&lt; string &gt;&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a2475eda4ccc9337232e5f561e10c0b90">wrapParagraph</a> (const string &amp;paragraph, S32 totalWidth, <a class="el" href="class_gui_control.html#a84ee0e44d69ef36fa38ffb1a43fe108b">TextWidthFn</a> measure, void *context)</td></tr>
+<tr class="memitem:a98d9b18a637b13baf9cebb296e492845 inherit pub_static_methods_class_gui_control" id="r_a98d9b18a637b13baf9cebb296e492845"><td class="memItemLeft">static S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a98d9b18a637b13baf9cebb296e492845">getTextVerticalOffset</a> (S32 textHeight, S32 totalHeight, VertAlignmentType align)</td></tr>
+<tr class="memitem:a30a33d70d36438ffbc10b0e1c5513a4d inherit pub_static_methods_class_gui_control" id="r_a30a33d70d36438ffbc10b0e1c5513a4d"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a30a33d70d36438ffbc10b0e1c5513a4d">writeToolTipWidthFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a4a3a47118868620098c6587468a21aae inherit pub_static_methods_class_gui_control" id="r_a4a3a47118868620098c6587468a21aae"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a4a3a47118868620098c6587468a21aae">writeToolTipHoverTimeFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a67420d3593db1aae6efb2c3abb23c690 inherit pub_static_methods_class_gui_control" id="r_a67420d3593db1aae6efb2c3abb23c690"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a67420d3593db1aae6efb2c3abb23c690">initPersistFields</a> ()</td></tr>
+<tr class="memitem:a339706ec562e154bd2391cfb997cfd1c inherit pub_static_methods_class_gui_control" id="r_a339706ec562e154bd2391cfb997cfd1c"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a339706ec562e154bd2391cfb997cfd1c">setTextProperty</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a3267463f9f0ccee45b8f566f5e0e9dfb inherit pub_static_methods_class_gui_control" id="r_a3267463f9f0ccee45b8f566f5e0e9dfb"><td class="memItemLeft">static const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3267463f9f0ccee45b8f566f5e0e9dfb">getTextProperty</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:ab514e271d6532bd68a723201be3d5996 inherit pub_static_methods_class_gui_control" id="r_ab514e271d6532bd68a723201be3d5996"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab514e271d6532bd68a723201be3d5996">writeTextWrapFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:ae9eae8215ac036c2ecf90f1bcc63eed0 inherit pub_static_methods_class_gui_control" id="r_ae9eae8215ac036c2ecf90f1bcc63eed0"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae9eae8215ac036c2ecf90f1bcc63eed0">writeTextExtendFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:ad5d8daf41101db5b5d7eeaac2ca2476b inherit pub_static_methods_class_gui_control" id="r_ad5d8daf41101db5b5d7eeaac2ca2476b"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ad5d8daf41101db5b5d7eeaac2ca2476b">setExtentFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a3c175687a91fca981ad3893b5dbc3c45 inherit pub_static_methods_class_gui_control" id="r_a3c175687a91fca981ad3893b5dbc3c45"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3c175687a91fca981ad3893b5dbc3c45">setMinExtentFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a5dd87f46db3e730d20ca15c02f8637a0 inherit pub_static_methods_class_gui_control" id="r_a5dd87f46db3e730d20ca15c02f8637a0"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a5dd87f46db3e730d20ca15c02f8637a0">writeMinExtentFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a974359ffad7ec453f6f047108b4ad8c4 inherit pub_static_methods_class_gui_control" id="r_a974359ffad7ec453f6f047108b4ad8c4"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a974359ffad7ec453f6f047108b4ad8c4">setPositionFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:aa9eecd5393f7efde4173fe818f20cc84 inherit pub_static_methods_class_gui_control" id="r_aa9eecd5393f7efde4173fe818f20cc84"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa9eecd5393f7efde4173fe818f20cc84">writeVisibleFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:ae81ab8b963a5095483ded3e4efd897b6 inherit pub_static_methods_class_gui_control" id="r_ae81ab8b963a5095483ded3e4efd897b6"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae81ab8b963a5095483ded3e4efd897b6">writeUseInputFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a5fce44c942adfa6901bf8104339c2a2e inherit pub_static_methods_class_gui_control" id="r_a5fce44c942adfa6901bf8104339c2a2e"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a5fce44c942adfa6901bf8104339c2a2e">writeIsContainerFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:afe1dce4b3ccb96c18806c67640e3abb8 inherit pub_static_methods_class_gui_control" id="r_afe1dce4b3ccb96c18806c67640e3abb8"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#afe1dce4b3ccb96c18806c67640e3abb8">setIsContainerFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a71f7d20a9d7de341f99dcc131b9c8fb6 inherit pub_static_methods_class_gui_control" id="r_a71f7d20a9d7de341f99dcc131b9c8fb6"><td class="memItemLeft">static <a class="el" href="class_point2_i.html">Point2I</a>&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a71f7d20a9d7de341f99dcc131b9c8fb6">rescuedPosition</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;pos, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;extent, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;parentInnerExtent)</td></tr>
 <tr class="inherit_header pub_static_methods_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Member Functions inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
 <tr class="memitem:a67420d3593db1aae6efb2c3abb23c690 inherit pub_static_methods_class_sim_object" id="r_a67420d3593db1aae6efb2c3abb23c690"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a67420d3593db1aae6efb2c3abb23c690">initPersistFields</a> ()</td></tr>
 <tr class="inherit_header pub_static_methods_class_console_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_methods_class_console_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Member Functions inherited from <a class="el" href="class_console_object.html">ConsoleObject</a></td></tr>
@@ -563,6 +590,7 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a3c044b65ef6a438bf014ad4fc92870a5 inherit pub_attribs_class_gui_control" id="r_a3c044b65ef6a438bf014ad4fc92870a5"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3c044b65ef6a438bf014ad4fc92870a5">mAllowEventPassThru</a></td></tr>
 <tr class="memitem:a5adc7ad73bc75eed8f57aed6fa06f8a3 inherit pub_attribs_class_gui_control" id="r_a5adc7ad73bc75eed8f57aed6fa06f8a3"><td class="memItemLeft"><a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a5adc7ad73bc75eed8f57aed6fa06f8a3">mProfile</a></td></tr>
 <tr class="memitem:abb8e731cf1b3d0221d79025d394cbf1a inherit pub_attribs_class_gui_control" id="r_abb8e731cf1b3d0221d79025d394cbf1a"><td class="memItemLeft"><a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#abb8e731cf1b3d0221d79025d394cbf1a">mTooltipProfile</a></td></tr>
+<tr class="memitem:a30ec5ff0b38b8729f2488aa1c37f8768 inherit pub_attribs_class_gui_control" id="r_a30ec5ff0b38b8729f2488aa1c37f8768"><td class="memItemLeft"><a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a30ec5ff0b38b8729f2488aa1c37f8768">mLazyTooltipProfile</a></td></tr>
 <tr class="memitem:a3d55e40a35d0059b82bf82e216f67c48 inherit pub_attribs_class_gui_control" id="r_a3d55e40a35d0059b82bf82e216f67c48"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3d55e40a35d0059b82bf82e216f67c48">mTipHoverTime</a></td></tr>
 <tr class="memitem:af537c8a00506bd587a00c9b1407a8311 inherit pub_attribs_class_gui_control" id="r_af537c8a00506bd587a00c9b1407a8311"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#af537c8a00506bd587a00c9b1407a8311">mTooltipWidth</a></td></tr>
 <tr class="memitem:a1d94696db39f3a31382dd7d2429f4953 inherit pub_attribs_class_gui_control" id="r_a1d94696db39f3a31382dd7d2429f4953"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a1d94696db39f3a31382dd7d2429f4953">mVisible</a></td></tr>
@@ -587,97 +615,11 @@ Public Attributes</h2></td></tr>
 <tr class="memitem:a0d5b017e9e4377e420e32cdfe41dc36c inherit pub_attribs_class_gui_control" id="r_a0d5b017e9e4377e420e32cdfe41dc36c"><td class="memItemLeft"><a class="el" href="class_lang_table.html">LangTable</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a0d5b017e9e4377e420e32cdfe41dc36c">mLangTable</a></td></tr>
 <tr class="memitem:ae2270bb2b216fea4dad9103857aa1a79 inherit pub_attribs_class_gui_control" id="r_ae2270bb2b216fea4dad9103857aa1a79"><td class="memItemLeft"><a class="el" href="class_gui_control.html">GuiControl</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ae2270bb2b216fea4dad9103857aa1a79">mFirstResponder</a></td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
-Protected Member Functions</h2></td></tr>
-<tr class="memitem:aa3af3b1a20ff0568d7395009ce2c228b" id="r_aa3af3b1a20ff0568d7395009ce2c228b"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#aa3af3b1a20ff0568d7395009ce2c228b">findHitGraphPoint</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point)</td></tr>
-<tr class="memitem:aeb60d0254215ac9c49ae5518ee2a17e6" id="r_aeb60d0254215ac9c49ae5518ee2a17e6"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#aeb60d0254215ac9c49ae5518ee2a17e6">getGraphValue</a> (const F32 y)</td></tr>
-<tr class="memitem:a6d752cdf96a27108f17071bd5442eb30" id="r_a6d752cdf96a27108f17071bd5442eb30"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#a6d752cdf96a27108f17071bd5442eb30">getGraphTime</a> (const F32 x)</td></tr>
-<tr class="memitem:a4e1f0740cf7cca907d3af233c15e33ff" id="r_a4e1f0740cf7cca907d3af233c15e33ff"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4e1f0740cf7cca907d3af233c15e33ff">calculatePoints</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect)</td></tr>
-<tr class="memitem:a7aa9fb0305e7a59df28465288a0098c7" id="r_a7aa9fb0305e7a59df28465288a0098c7"><td class="memItemLeft"><a class="el" href="class_point2_i.html">Point2I</a>&#160;</td><td class="memItemRight"><a class="el" href="#a7aa9fb0305e7a59df28465288a0098c7">convertToRenderPoint</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, F32 time, F32 <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
-<tr class="memitem:a62ebc314d949466b4d1dbe3aa791f2f0" id="r_a62ebc314d949466b4d1dbe3aa791f2f0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a62ebc314d949466b4d1dbe3aa791f2f0">renderLabels</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;labelColor)</td></tr>
-<tr class="memitem:a898f89abf1412e5b93d892df00d17d55" id="r_a898f89abf1412e5b93d892df00d17d55"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a898f89abf1412e5b93d892df00d17d55">renderGrid</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;gridColor)</td></tr>
-<tr class="memitem:a0ce6731c25e1e718765df3715fd3b1f7" id="r_a0ce6731c25e1e718765df3715fd3b1f7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0ce6731c25e1e718765df3715fd3b1f7">renderPoints</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;lineColor)</td></tr>
-<tr class="memitem:afdd5a1aa8ab34e7e404838263e8c77ab" id="r_afdd5a1aa8ab34e7e404838263e8c77ab"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afdd5a1aa8ab34e7e404838263e8c77ab">renderVariation</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;color)</td></tr>
-<tr class="memitem:abc2020080d0f37eee99b1af18ee90f30" id="r_abc2020080d0f37eee99b1af18ee90f30"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abc2020080d0f37eee99b1af18ee90f30">renderDot</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;cursorPt, bool <a class="el" href="class_sim_object.html#a56a065a2c20a230931de0ed98019d8fb">isSelected</a>)</td></tr>
-<tr class="memitem:a1d0f66b03dc1fd3bdd43a1ddfbdeab14" id="r_a1d0f66b03dc1fd3bdd43a1ddfbdeab14"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1d0f66b03dc1fd3bdd43a1ddfbdeab14">renderLine</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point1, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point2, const <a class="el" href="class_color_i.html">ColorI</a> &amp;lineColor)</td></tr>
-<tr class="memitem:a5ec3d038b6df333dc215aece7f6d5f52" id="r_a5ec3d038b6df333dc215aece7f6d5f52"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a5ec3d038b6df333dc215aece7f6d5f52">renderQuad</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point1, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point2, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point3, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point4, const <a class="el" href="class_color_i.html">ColorI</a> &amp;quadColor)</td></tr>
-<tr class="memitem:af36c57cb1614ec6895deb27bf6bcbf63" id="r_af36c57cb1614ec6895deb27bf6bcbf63"><td class="memItemLeft"><a class="el" href="class_particle_asset_field.html">ParticleAssetField</a> *&#160;</td><td class="memItemRight"><a class="el" href="#af36c57cb1614ec6895deb27bf6bcbf63">getTargetField</a> ()</td></tr>
-<tr class="inherit_header pro_methods_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
-<tr class="memitem:a62ec28263feafe2ebd8c2083c174c5a9 inherit pro_methods_class_gui_control" id="r_a62ec28263feafe2ebd8c2083c174c5a9"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a62ec28263feafe2ebd8c2083c174c5a9">interpolateTick</a> (F32 delta)</td></tr>
-<tr class="memitem:a3fa9439f27c61f4ebd63e9e796524e53 inherit pro_methods_class_gui_control" id="r_a3fa9439f27c61f4ebd63e9e796524e53"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3fa9439f27c61f4ebd63e9e796524e53">processTick</a> ()</td></tr>
-<tr class="memitem:af6fb95f4d0573e394a66d791adfa1cc7 inherit pro_methods_class_gui_control" id="r_af6fb95f4d0573e394a66d791adfa1cc7"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#af6fb95f4d0573e394a66d791adfa1cc7">advanceTime</a> (F32 timeDelta)</td></tr>
-<tr class="memitem:ac94f4dfb8ce97833fc03a8a1432eaeb4 inherit pro_methods_class_gui_control" id="r_ac94f4dfb8ce97833fc03a8a1432eaeb4"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ac94f4dfb8ce97833fc03a8a1432eaeb4">getTextHorizontalOffset</a> (S32 textWidth, S32 totalWidth, AlignmentType align)</td></tr>
-<tr class="memitem:a98d9b18a637b13baf9cebb296e492845 inherit pro_methods_class_gui_control" id="r_a98d9b18a637b13baf9cebb296e492845"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a98d9b18a637b13baf9cebb296e492845">getTextVerticalOffset</a> (S32 textHeight, S32 totalHeight, VertAlignmentType align)</td></tr>
-<tr class="memitem:a9699ea7111ed96eadbfa1928e4e71bec inherit pro_methods_class_gui_control" id="r_a9699ea7111ed96eadbfa1928e4e71bec"><td class="memItemLeft">AlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a9699ea7111ed96eadbfa1928e4e71bec">getAlignmentType</a> ()</td></tr>
-<tr class="memitem:aed71c0139c481789400f95d5154ca53f inherit pro_methods_class_gui_control" id="r_aed71c0139c481789400f95d5154ca53f"><td class="memItemLeft">VertAlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aed71c0139c481789400f95d5154ca53f">getVertAlignmentType</a> ()</td></tr>
-<tr class="memitem:a4c55cb7b5fe2b4ddf48e01025d8698cb inherit pro_methods_class_gui_control" id="r_a4c55cb7b5fe2b4ddf48e01025d8698cb"><td class="memItemLeft">AlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a4c55cb7b5fe2b4ddf48e01025d8698cb">getAlignmentType</a> (<a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile)</td></tr>
-<tr class="memitem:a5dff447e53c9f92e5ac639adab6f7def inherit pro_methods_class_gui_control" id="r_a5dff447e53c9f92e5ac639adab6f7def"><td class="memItemLeft">VertAlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a5dff447e53c9f92e5ac639adab6f7def">getVertAlignmentType</a> (<a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile)</td></tr>
-<tr class="memitem:a23b069fedf61f355eb8475bccb64e9a9 inherit pro_methods_class_gui_control" id="r_a23b069fedf61f355eb8475bccb64e9a9"><td class="memItemLeft">const <a class="el" href="class_color_i.html">ColorI</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a23b069fedf61f355eb8475bccb64e9a9">getFontColor</a> (<a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile, const GuiControlState state=GuiControlState::NormalState)</td></tr>
-<tr class="memitem:a341ef6a1983320aeba42a9cf3cc87073 inherit pro_methods_class_gui_control" id="r_a341ef6a1983320aeba42a9cf3cc87073"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a341ef6a1983320aeba42a9cf3cc87073">execConsoleCallback</a> ()</td></tr>
-<tr class="memdesc:a341ef6a1983320aeba42a9cf3cc87073 inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes mConsoleCommand, and returns the result.  <br /></td></tr>
-<tr class="memitem:a8c68993ea95ba19bde362832000bb0b9 inherit pro_methods_class_gui_control" id="r_a8c68993ea95ba19bde362832000bb0b9"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a8c68993ea95ba19bde362832000bb0b9">execAltConsoleCallback</a> ()</td></tr>
-<tr class="memdesc:a8c68993ea95ba19bde362832000bb0b9 inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes mAltConsoleCommand, and returns the result.  <br /></td></tr>
-<tr class="memitem:a17bdb35346c229ed6f8d554847ea352b inherit pro_methods_class_gui_control" id="r_a17bdb35346c229ed6f8d554847ea352b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a17bdb35346c229ed6f8d554847ea352b">setVariable</a> (const char *<a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
-<tr class="memitem:a764dca10e8d271f1520fa07076190576 inherit pro_methods_class_gui_control" id="r_a764dca10e8d271f1520fa07076190576"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a764dca10e8d271f1520fa07076190576">setIntVariable</a> (S32 <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
-<tr class="memitem:a40df69a231d21881afb5353aca808282 inherit pro_methods_class_gui_control" id="r_a40df69a231d21881afb5353aca808282"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a40df69a231d21881afb5353aca808282">setFloatVariable</a> (F32 <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
-<tr class="memitem:a31c2bca39484265bc8fb58f6a06a2482 inherit pro_methods_class_gui_control" id="r_a31c2bca39484265bc8fb58f6a06a2482"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a31c2bca39484265bc8fb58f6a06a2482">getVariable</a> ()</td></tr>
-<tr class="memdesc:a31c2bca39484265bc8fb58f6a06a2482 inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns value of control's bound variable as a string.  <br /></td></tr>
-<tr class="memitem:adee3913a77d3d973ee25fad1ee16ecdd inherit pro_methods_class_gui_control" id="r_adee3913a77d3d973ee25fad1ee16ecdd"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#adee3913a77d3d973ee25fad1ee16ecdd">getIntVariable</a> ()</td></tr>
-<tr class="memdesc:adee3913a77d3d973ee25fad1ee16ecdd inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns value of control's bound variable as a integer.  <br /></td></tr>
-<tr class="memitem:adb52471f7e3a0c66fccd79b5107e03dc inherit pro_methods_class_gui_control" id="r_adb52471f7e3a0c66fccd79b5107e03dc"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#adb52471f7e3a0c66fccd79b5107e03dc">getFloatVariable</a> ()</td></tr>
-<tr class="memdesc:adb52471f7e3a0c66fccd79b5107e03dc inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns value of control's bound variable as a float.  <br /></td></tr>
-<tr class="inherit_header pro_methods_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
-<tr class="memitem:a3b0caf75cb0eccb9fb63406b813c431d inherit pro_methods_class_sim_object" id="r_a3b0caf75cb0eccb9fb63406b813c431d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a3b0caf75cb0eccb9fb63406b813c431d">onTamlPreWrite</a> (void)</td></tr>
-<tr class="memdesc:a3b0caf75cb0eccb9fb63406b813c431d inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_taml.html">Taml</a> callbacks.  <br /></td></tr>
-<tr class="memitem:a1baf86d5d5d9f1c2190e7bb72aacb068 inherit pro_methods_class_sim_object" id="r_a1baf86d5d5d9f1c2190e7bb72aacb068"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1baf86d5d5d9f1c2190e7bb72aacb068">onTamlPostWrite</a> (void)</td></tr>
-<tr class="memdesc:a1baf86d5d5d9f1c2190e7bb72aacb068 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after <a class="el" href="class_taml.html">Taml</a> has finished writing the object.  <br /></td></tr>
-<tr class="memitem:af3830391b29fe4e30779260612049995 inherit pro_methods_class_sim_object" id="r_af3830391b29fe4e30779260612049995"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#af3830391b29fe4e30779260612049995">onTamlPreRead</a> (void)</td></tr>
-<tr class="memdesc:af3830391b29fe4e30779260612049995 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called prior to <a class="el" href="class_taml.html">Taml</a> reading the object.  <br /></td></tr>
-<tr class="memitem:a8d896544fb75ff4b98cac3099bf5f55f inherit pro_methods_class_sim_object" id="r_a8d896544fb75ff4b98cac3099bf5f55f"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8d896544fb75ff4b98cac3099bf5f55f">onTamlPostRead</a> (const <a class="el" href="class_taml_custom_nodes.html">TamlCustomNodes</a> &amp;customNodes)</td></tr>
-<tr class="memitem:ad03b42162545e4be24b218369f4fbcf5 inherit pro_methods_class_sim_object" id="r_ad03b42162545e4be24b218369f4fbcf5"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ad03b42162545e4be24b218369f4fbcf5">onTamlAddParent</a> (<a class="el" href="class_sim_object.html">SimObject</a> *pParentObject)</td></tr>
-<tr class="memdesc:ad03b42162545e4be24b218369f4fbcf5 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after <a class="el" href="class_taml.html">Taml</a> has finished reading the object and has added the object to any parent.  <br /></td></tr>
-<tr class="memitem:a037d9b99b69dbd817a78b7a7758d1a69 inherit pro_methods_class_sim_object" id="r_a037d9b99b69dbd817a78b7a7758d1a69"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a037d9b99b69dbd817a78b7a7758d1a69">onTamlCustomWrite</a> (<a class="el" href="class_taml_custom_nodes.html">TamlCustomNodes</a> &amp;customNodes)</td></tr>
-<tr class="memdesc:a037d9b99b69dbd817a78b7a7758d1a69 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called during the writing of the object to allow custom properties to be written.  <br /></td></tr>
-<tr class="memitem:a3d9c05e2d4a4ba16cc11dc7949015a3e inherit pro_methods_class_sim_object" id="r_a3d9c05e2d4a4ba16cc11dc7949015a3e"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a3d9c05e2d4a4ba16cc11dc7949015a3e">onTamlCustomRead</a> (const <a class="el" href="class_taml_custom_nodes.html">TamlCustomNodes</a> &amp;customNodes)</td></tr>
-<tr class="memdesc:a3d9c05e2d4a4ba16cc11dc7949015a3e inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called during the reading of the object to allow custom properties to be read.  <br /></td></tr>
-<tr class="memitem:a9d1bbaa7a9b2443eeb39c4a127d9f9e8 inherit pro_methods_class_sim_object" id="r_a9d1bbaa7a9b2443eeb39c4a127d9f9e8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a9d1bbaa7a9b2443eeb39c4a127d9f9e8">linkNamespaces</a> ()</td></tr>
-<tr class="memitem:a97551603378a0bbc3d3d98326a56631e inherit pro_methods_class_sim_object" id="r_a97551603378a0bbc3d3d98326a56631e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a97551603378a0bbc3d3d98326a56631e">unlinkNamespaces</a> ()</td></tr>
-<tr class="inherit_header pro_methods_class_console_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_console_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_console_object.html">ConsoleObject</a></td></tr>
-<tr class="memitem:a8b5a944ed3b7fa672a250a5d389c8f15 inherit pro_methods_class_console_object" id="r_a8b5a944ed3b7fa672a250a5d389c8f15"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a8b5a944ed3b7fa672a250a5d389c8f15">ConsoleObject</a> ()</td></tr>
-<tr class="memitem:a601f42ddcee97ab4eee59e6dbc9df75b inherit pro_methods_class_console_object" id="r_a601f42ddcee97ab4eee59e6dbc9df75b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a601f42ddcee97ab4eee59e6dbc9df75b">ConsoleObject</a> (const <a class="el" href="class_console_object.html">ConsoleObject</a> &amp;)</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
-Additional Inherited Members</h2></td></tr>
-<tr class="inherit_header pub_types_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
-<tr class="memitem:a28b4f8e8e5a114ca944918995c9c5b31 inherit pub_types_class_gui_control" id="r_a28b4f8e8e5a114ca944918995c9c5b31"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31">horizSizingOptions</a> { <br />
-&#160;&#160;<a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31af7920d4385e15dc9506189c4a1149bdb">horizResizeRight</a> = 0
-, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a196fff721a2a72f60c117c0b1ad7270a">horizResizeWidth</a>
-, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31aa25fa09462e9b1009c1a26f27d92d6ba">horizResizeLeft</a>
-, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a94cd6c3a78d30d5676444d7165e2f582">horizResizeCenter</a>
-, <br />
-&#160;&#160;<a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a63a9f5d72dcc627edc29c351aeb056e4">horizResizeRelative</a>
-, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a7496de77e27c46d80c43920e6c2e2396">horizResizeFill</a>
-<br />
- }</td></tr>
-<tr class="memitem:a2a3615f2581f4aa3eea851a273f6137b inherit pub_types_class_gui_control" id="r_a2a3615f2581f4aa3eea851a273f6137b"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137b">vertSizingOptions</a> { <br />
-&#160;&#160;<a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4a3e18bc000b13c56fc990ff64cce65a">vertResizeBottom</a> = 0
-, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4028b8e609b439e9740116613ee5b019">vertResizeHeight</a>
-, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba96d7717856629053cec1ba7b308097f7">vertResizeTop</a>
-, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4f042857e43c8a60b2806ff935427415">vertResizeCenter</a>
-, <br />
-&#160;&#160;<a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137baf76715d1b9401168aaca4c46ea5ce7a2">vertResizeRelative</a>
-, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba2e73a80504c95de51777a847f67c4abe">vertResizeFill</a>
-<br />
- }</td></tr>
-<tr class="memitem:a482df10062b0c98191619562e804201c inherit pub_types_class_gui_control" id="r_a482df10062b0c98191619562e804201c"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201c">TextRotationOptions</a> { <a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201ca20c4634bc42fa5f52492e9b7f00d6d96">tRotateNone</a> = 0
-, <a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201caba7e0347a2fb7446c384616c7791b872">tRotateLeft</a>
-, <a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201cad12de31cdbd39c7e9034061b109bb041">tRotateRight</a>
- }</td></tr>
-<tr class="memitem:a30a7b4e0c9496c6025a5306687fbe3ee" id="r_a30a7b4e0c9496c6025a5306687fbe3ee"><td class="memItemLeft">typedef <a class="el" href="class_vector.html#a35c955cacac6aacaa1e82874b1628865">SimObjectList::iterator</a>&#160;</td><td class="memItemRight"><a class="el" href="class_sim_set.html#a30a7b4e0c9496c6025a5306687fbe3ee">iterator</a></td></tr>
-<tr class="memitem:ab3c555e81926f13d0b6304ec2510d488" id="r_ab3c555e81926f13d0b6304ec2510d488"><td class="memItemLeft">typedef <a class="el" href="class_vector.html#a265a253612b46abed17c61b0a5e5ce30">SimObjectList::value_type</a>&#160;</td><td class="memItemRight"><a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a></td></tr>
-<tr class="inherit_header pub_types_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
-<tr class="memitem:aa764d6ab46a34397a2a625235de83577 inherit pub_types_class_sim_object" id="r_aa764d6ab46a34397a2a625235de83577"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa764d6ab46a34397a2a625235de83577">WriteFlags</a> { <a class="el" href="class_sim_object.html#aa764d6ab46a34397a2a625235de83577a03224eeb724e582e75ae323a49e31156">SelectedOnly</a> = BIT(0)
- }</td></tr>
+<tr class="heading"><td colspan="2"><h2 id="header-pub-static-attribs" class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:a1268eab3ecc5a1f3b570ef62c636f39b" id="r_a1268eab3ecc5a1f3b570ef62c636f39b"><td class="memItemLeft">static constexpr F32&#160;</td><td class="memItemRight"><a class="el" href="#a1268eab3ecc5a1f3b570ef62c636f39b">smPointRadius</a> = 7.0f</td></tr>
+<tr class="memitem:a9ad3926387a32dbd18169caa926bfb94" id="r_a9ad3926387a32dbd18169caa926bfb94"><td class="memItemLeft">static constexpr S32&#160;</td><td class="memItemRight"><a class="el" href="#a9ad3926387a32dbd18169caa926bfb94">smUnderPlotGap</a> = 3</td></tr>
+<tr class="memdesc:a9ad3926387a32dbd18169caa926bfb94"><td class="mdescLeft">&#160;</td><td class="mdescRight">The gap left above and below a band reserved under the plot.  <br /></td></tr>
 <tr class="inherit_header pub_static_attribs_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_static_attribs_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Public Attributes inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
 <tr class="memitem:aef3ce4fe3b06c56a16ef3ebbc2b716ba inherit pub_static_attribs_class_gui_control" id="r_aef3ce4fe3b06c56a16ef3ebbc2b716ba"><td class="memItemLeft">static <a class="el" href="class_gui_edit_ctrl.html">GuiEditCtrl</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aef3ce4fe3b06c56a16ef3ebbc2b716ba">smEditorHandle</a> = NULL</td></tr>
 <tr class="memdesc:aef3ce4fe3b06c56a16ef3ebbc2b716ba inherit pub_static_attribs_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">static <a class="el" href="class_gui_edit_ctrl.html">GuiEditCtrl</a> pointer that gives controls access to editor-NULL if editor is closed  <br /></td></tr>
@@ -698,38 +640,100 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:afec655d10b6a2d0eb2cd6d2362c626b5 inherit pub_static_attribs_class_tickable" id="r_afec655d10b6a2d0eb2cd6d2362c626b5"><td class="memItemLeft">static const F32&#160;</td><td class="memItemRight"><a class="el" href="class_tickable.html#afec655d10b6a2d0eb2cd6d2362c626b5">smTickSec</a> = ( F32( <a class="el" href="class_tickable.html#a9c00bdc780fce65d2d57055093bb28c4">Tickable::smTickMs</a> ) / 1000.f )</td></tr>
 <tr class="memdesc:afec655d10b6a2d0eb2cd6d2362c626b5 inherit pub_static_attribs_class_tickable"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fraction of a second per tick.  <br /></td></tr>
 <tr class="memitem:aab266025d7181bbfb16f3af77250eec8 inherit pub_static_attribs_class_tickable" id="r_aab266025d7181bbfb16f3af77250eec8"><td class="memItemLeft">static const U32&#160;</td><td class="memItemRight"><a class="el" href="class_tickable.html#aab266025d7181bbfb16f3af77250eec8">smTickMask</a> = ( <a class="el" href="class_tickable.html#a9c00bdc780fce65d2d57055093bb28c4">smTickMs</a> - 1 )</td></tr>
-<tr class="memitem:aa514ba35f518bad019dfd8b78769e152" id="r_aa514ba35f518bad019dfd8b78769e152"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa514ba35f518bad019dfd8b78769e152">writeFontSizeAdjustFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a86a12d6bbf50691f3a23b2232c3783f0" id="r_a86a12d6bbf50691f3a23b2232c3783f0"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a86a12d6bbf50691f3a23b2232c3783f0">writeFontColorFn</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:ab9611c88cc8033e7a79f96a3d77626c4" id="r_ab9611c88cc8033e7a79f96a3d77626c4"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab9611c88cc8033e7a79f96a3d77626c4">writeOverrideFontColorFn</a> (void *obj, const char *data)</td></tr>
-<tr class="inherit_header pro_static_methods_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_static_methods_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Protected Member Functions inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
-<tr class="memitem:a238c87f71783e3654af75d5ca4a84ae8 inherit pro_static_methods_class_sim_object" id="r_a238c87f71783e3654af75d5ca4a84ae8"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a238c87f71783e3654af75d5ca4a84ae8">setClass</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a43001ba1a3e2861eb120a04cf0796588 inherit pro_static_methods_class_sim_object" id="r_a43001ba1a3e2861eb120a04cf0796588"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a43001ba1a3e2861eb120a04cf0796588">setSuperClass</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a050c10f238d99841ebaf065d96054342 inherit pro_static_methods_class_sim_object" id="r_a050c10f238d99841ebaf065d96054342"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a050c10f238d99841ebaf065d96054342">writeObjectName</a> (void *obj, StringTableEntry pFieldName)</td></tr>
-<tr class="memitem:aa7652122ac6a5cf7337b0e7a7b3825e5 inherit pro_static_methods_class_sim_object" id="r_aa7652122ac6a5cf7337b0e7a7b3825e5"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa7652122ac6a5cf7337b0e7a7b3825e5">writeCanSaveDynamicFields</a> (void *obj, StringTableEntry pFieldName)</td></tr>
-<tr class="memitem:a57d090bc62bb37dd4a36dab7d5538ad4 inherit pro_static_methods_class_sim_object" id="r_a57d090bc62bb37dd4a36dab7d5538ad4"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a57d090bc62bb37dd4a36dab7d5538ad4">writeInternalName</a> (void *obj, StringTableEntry pFieldName)</td></tr>
-<tr class="memitem:a1f5140e6ccbc12845db7038be8c8c2e1 inherit pro_static_methods_class_sim_object" id="r_a1f5140e6ccbc12845db7038be8c8c2e1"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1f5140e6ccbc12845db7038be8c8c2e1">setParentGroup</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:ad11229fc0e726de20183e61c4e963904 inherit pro_static_methods_class_sim_object" id="r_ad11229fc0e726de20183e61c4e963904"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ad11229fc0e726de20183e61c4e963904">writeParentGroup</a> (void *obj, StringTableEntry pFieldName)</td></tr>
-<tr class="memitem:a1a0d756e0d41114cfb264c5a0a38399b inherit pro_static_methods_class_sim_object" id="r_a1a0d756e0d41114cfb264c5a0a38399b"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1a0d756e0d41114cfb264c5a0a38399b">writeSuperclass</a> (void *obj, StringTableEntry pFieldName)</td></tr>
-<tr class="memitem:a3753e8d47c78c8b6c39f5a1df2586d45 inherit pro_static_methods_class_sim_object" id="r_a3753e8d47c78c8b6c39f5a1df2586d45"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a3753e8d47c78c8b6c39f5a1df2586d45">writeClass</a> (void *obj, StringTableEntry pFieldName)</td></tr>
-<tr class="memitem:a359e31abae34476f5e76b43114058166 inherit pro_static_methods_class_sim_object" id="r_a359e31abae34476f5e76b43114058166"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a359e31abae34476f5e76b43114058166">setProtectedName</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:aa589e09f1c35f021ff19883ec805e991 inherit pro_static_methods_class_sim_object" id="r_aa589e09f1c35f021ff19883ec805e991"><td class="memItemLeft">static const char *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa589e09f1c35f021ff19883ec805e991">getProtectedName</a> (void *obj, const char *data)</td></tr>
-<tr class="memitem:a27f9b7da7ac37f39ba7e364a74cc943f inherit pro_static_methods_class_sim_object" id="r_a27f9b7da7ac37f39ba7e364a74cc943f"><td class="memItemLeft">static <a class="el" href="struct_sim_object_1_1_notify.html">SimObject::Notify</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a27f9b7da7ac37f39ba7e364a74cc943f">allocNotify</a> ()</td></tr>
-<tr class="memdesc:a27f9b7da7ac37f39ba7e364a74cc943f inherit pro_static_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a free <a class="el" href="struct_sim_object_1_1_notify.html">Notify</a> structure.  <br /></td></tr>
-<tr class="memitem:aa77d566406c826b12013b264b4d72450 inherit pro_static_methods_class_sim_object" id="r_aa77d566406c826b12013b264b4d72450"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa77d566406c826b12013b264b4d72450">freeNotify</a> (<a class="el" href="struct_sim_object_1_1_notify.html">SimObject::Notify</a> *)</td></tr>
-<tr class="memdesc:aa77d566406c826b12013b264b4d72450 inherit pro_static_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark a <a class="el" href="struct_sim_object_1_1_notify.html">Notify</a> structure as free.  <br /></td></tr>
-<tr class="memitem:a38f3095c01e8b2055e4c2e58d9a133e8" id="r_a38f3095c01e8b2055e4c2e58d9a133e8"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a38f3095c01e8b2055e4c2e58d9a133e8">addGroup</a> (const char *in_pGroupname, const char *in_pGroupDocs=NULL)</td></tr>
-<tr class="memitem:a1918263ead95ed1906c7027651938e0c" id="r_a1918263ead95ed1906c7027651938e0c"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a1918263ead95ed1906c7027651938e0c">endGroup</a> (const char *in_pGroupname)</td></tr>
-<tr class="memitem:a1e61452413a8cd497dfc1a2b62f072cd" id="r_a1e61452413a8cd497dfc1a2b62f072cd"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a1e61452413a8cd497dfc1a2b62f072cd">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
-<tr class="memitem:ad4ad51d247b2e09ea51783a8fdbb4b95" id="r_ad4ad51d247b2e09ea51783a8fdbb4b95"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#ad4ad51d247b2e09ea51783a8fdbb4b95">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
-<tr class="memitem:a7fe0d513b2bea8f6a1710c35189f550c" id="r_a7fe0d513b2bea8f6a1710c35189f550c"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a7fe0d513b2bea8f6a1710c35189f550c">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, const char *in_pFieldDocs)</td></tr>
-<tr class="memitem:a83176674ac909724b9ba2dce44a71e9a" id="r_a83176674ac909724b9ba2dce44a71e9a"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a83176674ac909724b9ba2dce44a71e9a">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn, const char *in_pFieldDocs)</td></tr>
-<tr class="memitem:a3356a3140575cbc1e4466883937daf0b" id="r_a3356a3140575cbc1e4466883937daf0b"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a3356a3140575cbc1e4466883937daf0b">addFieldV</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_console_type_validator.html">ConsoleTypeValidator</a> *v, const char *in_pFieldDocs=NULL)</td></tr>
-<tr class="memitem:ae5af434e7146816044ce3be70f61ebb8" id="r_ae5af434e7146816044ce3be70f61ebb8"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#ae5af434e7146816044ce3be70f61ebb8">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
-<tr class="memitem:a5161f628159e510b744cef47fd6598a3" id="r_a5161f628159e510b744cef47fd6598a3"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a5161f628159e510b744cef47fd6598a3">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn=&amp;defaultProtectedWriteFn, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
-<tr class="memitem:a2df2d873096113f009661c676c4d0c81" id="r_a2df2d873096113f009661c676c4d0c81"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a2df2d873096113f009661c676c4d0c81">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, const char *in_pFieldDocs=NULL)</td></tr>
-<tr class="memitem:aed96a36e73e2eee15cf6a3ae1412d9bd" id="r_aed96a36e73e2eee15cf6a3ae1412d9bd"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#aed96a36e73e2eee15cf6a3ae1412d9bd">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn=&amp;defaultProtectedWriteFn, const char *in_pFieldDocs=NULL)</td></tr>
-<tr class="memitem:aed3d0d1abd7ba4a17e792ca80f3478a7" id="r_aed3d0d1abd7ba4a17e792ca80f3478a7"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#aed3d0d1abd7ba4a17e792ca80f3478a7">addDepricatedField</a> (const char *fieldName)</td></tr>
-<tr class="memitem:a7a47772574721164fe83b2fd5e3c6fc8" id="r_a7a47772574721164fe83b2fd5e3c6fc8"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a7a47772574721164fe83b2fd5e3c6fc8">removeField</a> (const char *in_pFieldname)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-methods" class="groupheader"><a id="pro-methods" name="pro-methods"></a>
+Protected Member Functions</h2></td></tr>
+<tr class="memitem:a0db2c5cb7e975bfc29d8b91eb6310a37" id="r_a0db2c5cb7e975bfc29d8b91eb6310a37"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="#a0db2c5cb7e975bfc29d8b91eb6310a37">findHitGraphPoint</a> (const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point)</td></tr>
+<tr class="memitem:aeb60d0254215ac9c49ae5518ee2a17e6" id="r_aeb60d0254215ac9c49ae5518ee2a17e6"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#aeb60d0254215ac9c49ae5518ee2a17e6">getGraphValue</a> (const F32 y)</td></tr>
+<tr class="memitem:a6d752cdf96a27108f17071bd5442eb30" id="r_a6d752cdf96a27108f17071bd5442eb30"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#a6d752cdf96a27108f17071bd5442eb30">getGraphTime</a> (const F32 x)</td></tr>
+<tr class="memitem:a7220cb2c56223434cec8d1a474e10dc5" id="r_a7220cb2c56223434cec8d1a474e10dc5"><td class="memItemLeft">virtual S32&#160;</td><td class="memItemRight"><a class="el" href="#a7220cb2c56223434cec8d1a474e10dc5">getUnderPlotBandHeight</a> ()</td></tr>
+<tr class="memitem:a1630455672809445ab26d650b6aca29d" id="r_a1630455672809445ab26d650b6aca29d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a1630455672809445ab26d650b6aca29d">renderUnderlay</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;plotRect)</td></tr>
+<tr class="memitem:a42f83dee0f3e01ce876936f3483bfe18" id="r_a42f83dee0f3e01ce876936f3483bfe18"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="#a42f83dee0f3e01ce876936f3483bfe18">renderUnderPlot</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;bandRect)</td></tr>
+<tr class="memdesc:a42f83dee0f3e01ce876936f3483bfe18"><td class="mdescLeft">&#160;</td><td class="mdescRight">Drawn into the band. Not called when no band was asked for.  <br /></td></tr>
+<tr class="memitem:a9672f0516689b4b2fe3754e41cd77573" id="r_a9672f0516689b4b2fe3754e41cd77573"><td class="memItemLeft">virtual <a class="el" href="class_color_i.html">ColorI</a>&#160;</td><td class="memItemRight"><a class="el" href="#a9672f0516689b4b2fe3754e41cd77573">getCurveColor</a> ()</td></tr>
+<tr class="memdesc:a9672f0516689b4b2fe3754e41cd77573"><td class="mdescLeft">&#160;</td><td class="mdescRight">The color the curve and its dots draw in.  <br /></td></tr>
+<tr class="memitem:ace3d8bff8cc949fcac5e710188c0d418" id="r_ace3d8bff8cc949fcac5e710188c0d418"><td class="memItemLeft"><a class="el" href="class_rect_i.html">RectI</a>&#160;</td><td class="memItemRight"><a class="el" href="#ace3d8bff8cc949fcac5e710188c0d418">calculatePlotRect</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect)</td></tr>
+<tr class="memitem:a569d2ab86a3b540c8bd4c56d13efb3d5" id="r_a569d2ab86a3b540c8bd4c56d13efb3d5"><td class="memItemLeft"><a class="el" href="class_rect_i.html">RectI</a>&#160;</td><td class="memItemRight"><a class="el" href="#a569d2ab86a3b540c8bd4c56d13efb3d5">getUnderPlotRect</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;plotRect)</td></tr>
+<tr class="memitem:a4d841c2d73a085821227930787feb168" id="r_a4d841c2d73a085821227930787feb168"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="#a4d841c2d73a085821227930787feb168">getXLabelTop</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;plotRect)</td></tr>
+<tr class="memitem:a4e1f0740cf7cca907d3af233c15e33ff" id="r_a4e1f0740cf7cca907d3af233c15e33ff"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a4e1f0740cf7cca907d3af233c15e33ff">calculatePoints</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect)</td></tr>
+<tr class="memitem:a7aa9fb0305e7a59df28465288a0098c7" id="r_a7aa9fb0305e7a59df28465288a0098c7"><td class="memItemLeft"><a class="el" href="class_point2_i.html">Point2I</a>&#160;</td><td class="memItemRight"><a class="el" href="#a7aa9fb0305e7a59df28465288a0098c7">convertToRenderPoint</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, F32 time, F32 <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
+<tr class="memitem:a62ebc314d949466b4d1dbe3aa791f2f0" id="r_a62ebc314d949466b4d1dbe3aa791f2f0"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a62ebc314d949466b4d1dbe3aa791f2f0">renderLabels</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;labelColor)</td></tr>
+<tr class="memitem:a898f89abf1412e5b93d892df00d17d55" id="r_a898f89abf1412e5b93d892df00d17d55"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a898f89abf1412e5b93d892df00d17d55">renderGrid</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;gridColor)</td></tr>
+<tr class="memitem:a0ce6731c25e1e718765df3715fd3b1f7" id="r_a0ce6731c25e1e718765df3715fd3b1f7"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a0ce6731c25e1e718765df3715fd3b1f7">renderPoints</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;lineColor)</td></tr>
+<tr class="memitem:afdd5a1aa8ab34e7e404838263e8c77ab" id="r_afdd5a1aa8ab34e7e404838263e8c77ab"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#afdd5a1aa8ab34e7e404838263e8c77ab">renderVariation</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_color_i.html">ColorI</a> &amp;color)</td></tr>
+<tr class="memitem:abc2020080d0f37eee99b1af18ee90f30" id="r_abc2020080d0f37eee99b1af18ee90f30"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#abc2020080d0f37eee99b1af18ee90f30">renderDot</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;cursorPt, bool <a class="el" href="class_sim_object.html#a56a065a2c20a230931de0ed98019d8fb">isSelected</a>)</td></tr>
+<tr class="memitem:a1d0f66b03dc1fd3bdd43a1ddfbdeab14" id="r_a1d0f66b03dc1fd3bdd43a1ddfbdeab14"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a1d0f66b03dc1fd3bdd43a1ddfbdeab14">renderLine</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point1, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point2, const <a class="el" href="class_color_i.html">ColorI</a> &amp;lineColor)</td></tr>
+<tr class="memitem:a5ec3d038b6df333dc215aece7f6d5f52" id="r_a5ec3d038b6df333dc215aece7f6d5f52"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="#a5ec3d038b6df333dc215aece7f6d5f52">renderQuad</a> (const <a class="el" href="class_rect_i.html">RectI</a> &amp;contentRect, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point1, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point2, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point3, const <a class="el" href="class_point2_i.html">Point2I</a> &amp;point4, const <a class="el" href="class_color_i.html">ColorI</a> &amp;quadColor)</td></tr>
+<tr class="memitem:a0fc723741b11d392ba67f0c5f2cb52aa" id="r_a0fc723741b11d392ba67f0c5f2cb52aa"><td class="memItemLeft"><a class="el" href="class_particle_asset_field.html">ParticleAssetField</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a0fc723741b11d392ba67f0c5f2cb52aa">findField</a> (StringTableEntry fieldName)</td></tr>
+<tr class="memitem:af36c57cb1614ec6895deb27bf6bcbf63" id="r_af36c57cb1614ec6895deb27bf6bcbf63"><td class="memItemLeft"><a class="el" href="class_particle_asset_field.html">ParticleAssetField</a> *&#160;</td><td class="memItemRight"><a class="el" href="#af36c57cb1614ec6895deb27bf6bcbf63">getTargetField</a> ()</td></tr>
+<tr class="memdesc:af36c57cb1614ec6895deb27bf6bcbf63"><td class="mdescLeft">&#160;</td><td class="mdescRight">The field being edited, or NULL.  <br /></td></tr>
+<tr class="memitem:af387999b46259da3468d11ea00d99e8b" id="r_af387999b46259da3468d11ea00d99e8b"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="#af387999b46259da3468d11ea00d99e8b">repairDataKeys</a> (<a class="el" href="class_particle_asset_field.html">ParticleAssetField</a> *field)</td></tr>
+<tr class="inherit_header pro_methods_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
+<tr class="memitem:a62ec28263feafe2ebd8c2083c174c5a9 inherit pro_methods_class_gui_control" id="r_a62ec28263feafe2ebd8c2083c174c5a9"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a62ec28263feafe2ebd8c2083c174c5a9">interpolateTick</a> (F32 delta)</td></tr>
+<tr class="memitem:a3fa9439f27c61f4ebd63e9e796524e53 inherit pro_methods_class_gui_control" id="r_a3fa9439f27c61f4ebd63e9e796524e53"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3fa9439f27c61f4ebd63e9e796524e53">processTick</a> ()</td></tr>
+<tr class="memitem:af6fb95f4d0573e394a66d791adfa1cc7 inherit pro_methods_class_gui_control" id="r_af6fb95f4d0573e394a66d791adfa1cc7"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#af6fb95f4d0573e394a66d791adfa1cc7">advanceTime</a> (F32 timeDelta)</td></tr>
+<tr class="memitem:ac94f4dfb8ce97833fc03a8a1432eaeb4 inherit pro_methods_class_gui_control" id="r_ac94f4dfb8ce97833fc03a8a1432eaeb4"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ac94f4dfb8ce97833fc03a8a1432eaeb4">getTextHorizontalOffset</a> (S32 textWidth, S32 totalWidth, AlignmentType align)</td></tr>
+<tr class="memitem:a9699ea7111ed96eadbfa1928e4e71bec inherit pro_methods_class_gui_control" id="r_a9699ea7111ed96eadbfa1928e4e71bec"><td class="memItemLeft">AlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a9699ea7111ed96eadbfa1928e4e71bec">getAlignmentType</a> ()</td></tr>
+<tr class="memitem:aed71c0139c481789400f95d5154ca53f inherit pro_methods_class_gui_control" id="r_aed71c0139c481789400f95d5154ca53f"><td class="memItemLeft">VertAlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aed71c0139c481789400f95d5154ca53f">getVertAlignmentType</a> ()</td></tr>
+<tr class="memitem:a4c55cb7b5fe2b4ddf48e01025d8698cb inherit pro_methods_class_gui_control" id="r_a4c55cb7b5fe2b4ddf48e01025d8698cb"><td class="memItemLeft">AlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a4c55cb7b5fe2b4ddf48e01025d8698cb">getAlignmentType</a> (<a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile)</td></tr>
+<tr class="memitem:a5dff447e53c9f92e5ac639adab6f7def inherit pro_methods_class_gui_control" id="r_a5dff447e53c9f92e5ac639adab6f7def"><td class="memItemLeft">VertAlignmentType&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a5dff447e53c9f92e5ac639adab6f7def">getVertAlignmentType</a> (<a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile)</td></tr>
+<tr class="memitem:a23b069fedf61f355eb8475bccb64e9a9 inherit pro_methods_class_gui_control" id="r_a23b069fedf61f355eb8475bccb64e9a9"><td class="memItemLeft">const <a class="el" href="class_color_i.html">ColorI</a> &amp;&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a23b069fedf61f355eb8475bccb64e9a9">getFontColor</a> (<a class="el" href="class_gui_control_profile.html">GuiControlProfile</a> *profile, const GuiControlState state=GuiControlState::NormalState)</td></tr>
+<tr class="memitem:a341ef6a1983320aeba42a9cf3cc87073 inherit pro_methods_class_gui_control" id="r_a341ef6a1983320aeba42a9cf3cc87073"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a341ef6a1983320aeba42a9cf3cc87073">execConsoleCallback</a> ()</td></tr>
+<tr class="memdesc:a341ef6a1983320aeba42a9cf3cc87073 inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes mConsoleCommand, and returns the result.  <br /></td></tr>
+<tr class="memitem:a8c68993ea95ba19bde362832000bb0b9 inherit pro_methods_class_gui_control" id="r_a8c68993ea95ba19bde362832000bb0b9"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a8c68993ea95ba19bde362832000bb0b9">execAltConsoleCallback</a> ()</td></tr>
+<tr class="memdesc:a8c68993ea95ba19bde362832000bb0b9 inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes mAltConsoleCommand, and returns the result.  <br /></td></tr>
+<tr class="memitem:a17bdb35346c229ed6f8d554847ea352b inherit pro_methods_class_gui_control" id="r_a17bdb35346c229ed6f8d554847ea352b"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a17bdb35346c229ed6f8d554847ea352b">setVariable</a> (const char *<a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
+<tr class="memitem:a764dca10e8d271f1520fa07076190576 inherit pro_methods_class_gui_control" id="r_a764dca10e8d271f1520fa07076190576"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a764dca10e8d271f1520fa07076190576">setIntVariable</a> (S32 <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
+<tr class="memitem:a40df69a231d21881afb5353aca808282 inherit pro_methods_class_gui_control" id="r_a40df69a231d21881afb5353aca808282"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a40df69a231d21881afb5353aca808282">setFloatVariable</a> (F32 <a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a>)</td></tr>
+<tr class="memitem:a31c2bca39484265bc8fb58f6a06a2482 inherit pro_methods_class_gui_control" id="r_a31c2bca39484265bc8fb58f6a06a2482"><td class="memItemLeft">const char *&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a31c2bca39484265bc8fb58f6a06a2482">getVariable</a> ()</td></tr>
+<tr class="memdesc:a31c2bca39484265bc8fb58f6a06a2482 inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns value of control's bound variable as a string.  <br /></td></tr>
+<tr class="memitem:adee3913a77d3d973ee25fad1ee16ecdd inherit pro_methods_class_gui_control" id="r_adee3913a77d3d973ee25fad1ee16ecdd"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#adee3913a77d3d973ee25fad1ee16ecdd">getIntVariable</a> ()</td></tr>
+<tr class="memdesc:adee3913a77d3d973ee25fad1ee16ecdd inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns value of control's bound variable as a integer.  <br /></td></tr>
+<tr class="memitem:adb52471f7e3a0c66fccd79b5107e03dc inherit pro_methods_class_gui_control" id="r_adb52471f7e3a0c66fccd79b5107e03dc"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#adb52471f7e3a0c66fccd79b5107e03dc">getFloatVariable</a> ()</td></tr>
+<tr class="memdesc:adb52471f7e3a0c66fccd79b5107e03dc inherit pro_methods_class_gui_control"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns value of control's bound variable as a float.  <br /></td></tr>
+<tr class="inherit_header pro_methods_class_sim_group"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_sim_group')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_sim_group.html">SimGroup</a></td></tr>
+<tr class="memitem:a4ca6a74fdae02b4e55fec4ad79ec3f0c inherit pro_methods_class_sim_group" id="r_a4ca6a74fdae02b4e55fec4ad79ec3f0c"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_group.html#a4ca6a74fdae02b4e55fec4ad79ec3f0c">deepCloneChildren</a> (<a class="el" href="class_sim_object.html">SimObject</a> *<a class="el" href="class_sim_object.html#aacb30b9c403e8687e109b7738af141d8">clone</a>)</td></tr>
+<tr class="inherit_header pro_methods_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
+<tr class="memitem:a3b0caf75cb0eccb9fb63406b813c431d inherit pro_methods_class_sim_object" id="r_a3b0caf75cb0eccb9fb63406b813c431d"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a3b0caf75cb0eccb9fb63406b813c431d">onTamlPreWrite</a> (void)</td></tr>
+<tr class="memdesc:a3b0caf75cb0eccb9fb63406b813c431d inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="class_taml.html">Taml</a> callbacks.  <br /></td></tr>
+<tr class="memitem:a1baf86d5d5d9f1c2190e7bb72aacb068 inherit pro_methods_class_sim_object" id="r_a1baf86d5d5d9f1c2190e7bb72aacb068"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1baf86d5d5d9f1c2190e7bb72aacb068">onTamlPostWrite</a> (void)</td></tr>
+<tr class="memdesc:a1baf86d5d5d9f1c2190e7bb72aacb068 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after <a class="el" href="class_taml.html">Taml</a> has finished writing the object.  <br /></td></tr>
+<tr class="memitem:af3830391b29fe4e30779260612049995 inherit pro_methods_class_sim_object" id="r_af3830391b29fe4e30779260612049995"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#af3830391b29fe4e30779260612049995">onTamlPreRead</a> (void)</td></tr>
+<tr class="memdesc:af3830391b29fe4e30779260612049995 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called prior to <a class="el" href="class_taml.html">Taml</a> reading the object.  <br /></td></tr>
+<tr class="memitem:a8d896544fb75ff4b98cac3099bf5f55f inherit pro_methods_class_sim_object" id="r_a8d896544fb75ff4b98cac3099bf5f55f"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8d896544fb75ff4b98cac3099bf5f55f">onTamlPostRead</a> (const <a class="el" href="class_taml_custom_nodes.html">TamlCustomNodes</a> &amp;customNodes)</td></tr>
+<tr class="memitem:ad03b42162545e4be24b218369f4fbcf5 inherit pro_methods_class_sim_object" id="r_ad03b42162545e4be24b218369f4fbcf5"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ad03b42162545e4be24b218369f4fbcf5">onTamlAddParent</a> (<a class="el" href="class_sim_object.html">SimObject</a> *pParentObject)</td></tr>
+<tr class="memdesc:ad03b42162545e4be24b218369f4fbcf5 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called after <a class="el" href="class_taml.html">Taml</a> has finished reading the object and has added the object to any parent.  <br /></td></tr>
+<tr class="memitem:a037d9b99b69dbd817a78b7a7758d1a69 inherit pro_methods_class_sim_object" id="r_a037d9b99b69dbd817a78b7a7758d1a69"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a037d9b99b69dbd817a78b7a7758d1a69">onTamlCustomWrite</a> (<a class="el" href="class_taml_custom_nodes.html">TamlCustomNodes</a> &amp;customNodes)</td></tr>
+<tr class="memdesc:a037d9b99b69dbd817a78b7a7758d1a69 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called during the writing of the object to allow custom properties to be written.  <br /></td></tr>
+<tr class="memitem:a3d9c05e2d4a4ba16cc11dc7949015a3e inherit pro_methods_class_sim_object" id="r_a3d9c05e2d4a4ba16cc11dc7949015a3e"><td class="memItemLeft">virtual void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a3d9c05e2d4a4ba16cc11dc7949015a3e">onTamlCustomRead</a> (const <a class="el" href="class_taml_custom_nodes.html">TamlCustomNodes</a> &amp;customNodes)</td></tr>
+<tr class="memdesc:a3d9c05e2d4a4ba16cc11dc7949015a3e inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Called during the reading of the object to allow custom properties to be read.  <br /></td></tr>
+<tr class="memitem:a9d1bbaa7a9b2443eeb39c4a127d9f9e8 inherit pro_methods_class_sim_object" id="r_a9d1bbaa7a9b2443eeb39c4a127d9f9e8"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a9d1bbaa7a9b2443eeb39c4a127d9f9e8">linkNamespaces</a> ()</td></tr>
+<tr class="memitem:a97551603378a0bbc3d3d98326a56631e inherit pro_methods_class_sim_object" id="r_a97551603378a0bbc3d3d98326a56631e"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a97551603378a0bbc3d3d98326a56631e">unlinkNamespaces</a> ()</td></tr>
+<tr class="memitem:a313b2b805488c66eba57f580fc93a8c0 inherit pro_methods_class_sim_object" id="r_a313b2b805488c66eba57f580fc93a8c0"><td class="memItemLeft">virtual <a class="el" href="class_sim_object.html">SimObject</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a313b2b805488c66eba57f580fc93a8c0">allocClone</a> ()</td></tr>
+<tr class="memdesc:a313b2b805488c66eba57f580fc93a8c0 inherit pro_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">A registered but empty object of this object's class.  <br /></td></tr>
+<tr class="memitem:aa95dcf32362eadbf61db2b910ddf7724 inherit pro_methods_class_sim_object" id="r_aa95dcf32362eadbf61db2b910ddf7724"><td class="memItemLeft">void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa95dcf32362eadbf61db2b910ddf7724">cloneInto</a> (<a class="el" href="class_sim_object.html">SimObject</a> *<a class="el" href="class_sim_object.html#aacb30b9c403e8687e109b7738af141d8">clone</a>)</td></tr>
+<tr class="inherit_header pro_methods_class_console_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_methods_class_console_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Member Functions inherited from <a class="el" href="class_console_object.html">ConsoleObject</a></td></tr>
+<tr class="memitem:a8b5a944ed3b7fa672a250a5d389c8f15 inherit pro_methods_class_console_object" id="r_a8b5a944ed3b7fa672a250a5d389c8f15"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a8b5a944ed3b7fa672a250a5d389c8f15">ConsoleObject</a> ()</td></tr>
+<tr class="memitem:a601f42ddcee97ab4eee59e6dbc9df75b inherit pro_methods_class_console_object" id="r_a601f42ddcee97ab4eee59e6dbc9df75b"><td class="memItemLeft">&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a601f42ddcee97ab4eee59e6dbc9df75b">ConsoleObject</a> (const <a class="el" href="class_console_object.html">ConsoleObject</a> &amp;)</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-pro-attribs" class="groupheader"><a id="pro-attribs" name="pro-attribs"></a>
+Protected Attributes</h2></td></tr>
+<tr class="memitem:a2ec4414874f7039af7e70955e147df36" id="r_a2ec4414874f7039af7e70955e147df36"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#a2ec4414874f7039af7e70955e147df36">mTargetField</a></td></tr>
+<tr class="memitem:abeff866c3525c102cfc51b483f4d201e" id="r_abeff866c3525c102cfc51b483f4d201e"><td class="memItemLeft"><a class="el" href="class_particle_asset.html">ParticleAsset</a> *&#160;</td><td class="memItemRight"><a class="el" href="#abeff866c3525c102cfc51b483f4d201e">mTargetAsset</a></td></tr>
+<tr class="memitem:a8b628f4b1a917c9521157aa66bc13abf" id="r_a8b628f4b1a917c9521157aa66bc13abf"><td class="memItemLeft">U32&#160;</td><td class="memItemRight"><a class="el" href="#a8b628f4b1a917c9521157aa66bc13abf">mEmitterIndex</a></td></tr>
+<tr class="memitem:a06c8adbee819b6f217c321f9bfb7962a" id="r_a06c8adbee819b6f217c321f9bfb7962a"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#a06c8adbee819b6f217c321f9bfb7962a">mMinX</a></td></tr>
+<tr class="memitem:a9a811a82a5885069ec8d488bd32178b7" id="r_a9a811a82a5885069ec8d488bd32178b7"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#a9a811a82a5885069ec8d488bd32178b7">mMinY</a></td></tr>
+<tr class="memitem:af35735fa706285fb8ce415d3873b4605" id="r_af35735fa706285fb8ce415d3873b4605"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#af35735fa706285fb8ce415d3873b4605">mMaxX</a></td></tr>
+<tr class="memitem:ae2bd24c9da74268c47c50b7fd2a83bfa" id="r_ae2bd24c9da74268c47c50b7fd2a83bfa"><td class="memItemLeft">F32&#160;</td><td class="memItemRight"><a class="el" href="#ae2bd24c9da74268c47c50b7fd2a83bfa">mMaxY</a></td></tr>
+<tr class="memitem:aad0e7d9448f1a0000770f24447eb61da" id="r_aad0e7d9448f1a0000770f24447eb61da"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#aad0e7d9448f1a0000770f24447eb61da">mLabelX</a></td></tr>
+<tr class="memitem:a5a917d088231b9c054140b286dc73de4" id="r_a5a917d088231b9c054140b286dc73de4"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#a5a917d088231b9c054140b286dc73de4">mLabelY</a></td></tr>
+<tr class="memitem:adf20b8fed2755ed539a8a00d96d6c9e9" id="r_adf20b8fed2755ed539a8a00d96d6c9e9"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#adf20b8fed2755ed539a8a00d96d6c9e9">mMaxYLabel</a></td></tr>
+<tr class="memitem:aa1ff231f8c7ac65bbbe077e2db147bc1" id="r_aa1ff231f8c7ac65bbbe077e2db147bc1"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#aa1ff231f8c7ac65bbbe077e2db147bc1">mMinYLabel</a></td></tr>
+<tr class="memitem:a622537e22851dc0dda0719e8d82c2d60" id="r_a622537e22851dc0dda0719e8d82c2d60"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#a622537e22851dc0dda0719e8d82c2d60">mMaxXLabel</a></td></tr>
+<tr class="memitem:ad3827a9d8c8b8577a6e07567f832889d" id="r_ad3827a9d8c8b8577a6e07567f832889d"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="#ad3827a9d8c8b8577a6e07567f832889d">mMinXLabel</a></td></tr>
+<tr class="memitem:a65c0c42b3b5b60a9000f8486750be002" id="r_a65c0c42b3b5b60a9000f8486750be002"><td class="memItemLeft"><a class="el" href="class_rect_i.html">RectI</a>&#160;</td><td class="memItemRight"><a class="el" href="#a65c0c42b3b5b60a9000f8486750be002">mGridRect</a></td></tr>
+<tr class="memitem:a7c91a34d754ecc6f09a989a4993ecda9" id="r_a7c91a34d754ecc6f09a989a4993ecda9"><td class="memItemLeft"><a class="el" href="class_point2_i.html">Point2I</a>&#160;</td><td class="memItemRight"><a class="el" href="#a7c91a34d754ecc6f09a989a4993ecda9">mCalculationOffset</a></td></tr>
+<tr class="memitem:a446588e841527b42ee8c10e616946dce" id="r_a446588e841527b42ee8c10e616946dce"><td class="memItemLeft"><a class="el" href="class_gui_particle_graph_inspector.html">GuiParticleGraphInspector</a> *&#160;</td><td class="memItemRight"><a class="el" href="#a446588e841527b42ee8c10e616946dce">mVariationInspector</a></td></tr>
 <tr class="inherit_header pro_attribs_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_attribs_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Protected Attributes inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
 <tr class="memitem:a3fe7ef70e73e4603aa8c8dc60fc1aad7 inherit pro_attribs_class_gui_control" id="r_a3fe7ef70e73e4603aa8c8dc60fc1aad7"><td class="memItemLeft">bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a3fe7ef70e73e4603aa8c8dc60fc1aad7">mPreviouslyAwake</a></td></tr>
 <tr class="memitem:aa6119f21f2ce2baabb7ddb75752cfed1 inherit pro_attribs_class_gui_control" id="r_aa6119f21f2ce2baabb7ddb75752cfed1"><td class="memItemLeft">S32&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa6119f21f2ce2baabb7ddb75752cfed1">mHorizSizing</a></td></tr>
@@ -774,6 +778,77 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memdesc:afcdd8b2e39eb6cab2310ec01fc23dfc8 inherit pro_attribs_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores the class name to link script class namespaces.  <br /></td></tr>
 <tr class="memitem:a2866b6130ce096fe6563e71995d35f0f inherit pro_attribs_class_sim_object" id="r_a2866b6130ce096fe6563e71995d35f0f"><td class="memItemLeft">StringTableEntry&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a2866b6130ce096fe6563e71995d35f0f">mSuperClassName</a></td></tr>
 <tr class="memdesc:a2866b6130ce096fe6563e71995d35f0f inherit pro_attribs_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stores super class name to link script class namespaces.  <br /></td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 id="header-inherited" class="groupheader"><a id="inherited" name="inherited"></a>
+Additional Inherited Members</h2></td></tr>
+<tr class="inherit_header pub_types_class_gui_control"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_gui_control')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="class_gui_control.html">GuiControl</a></td></tr>
+<tr class="memitem:a28b4f8e8e5a114ca944918995c9c5b31 inherit pub_types_class_gui_control" id="r_a28b4f8e8e5a114ca944918995c9c5b31"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31">horizSizingOptions</a> { <br />
+&#160;&#160;<a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31af7920d4385e15dc9506189c4a1149bdb">horizResizeRight</a> = 0
+, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a196fff721a2a72f60c117c0b1ad7270a">horizResizeWidth</a>
+, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31aa25fa09462e9b1009c1a26f27d92d6ba">horizResizeLeft</a>
+, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a94cd6c3a78d30d5676444d7165e2f582">horizResizeCenter</a>
+, <br />
+&#160;&#160;<a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a63a9f5d72dcc627edc29c351aeb056e4">horizResizeRelative</a>
+, <a class="el" href="class_gui_control.html#a28b4f8e8e5a114ca944918995c9c5b31a7496de77e27c46d80c43920e6c2e2396">horizResizeFill</a>
+<br />
+ }</td></tr>
+<tr class="memitem:a2a3615f2581f4aa3eea851a273f6137b inherit pub_types_class_gui_control" id="r_a2a3615f2581f4aa3eea851a273f6137b"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137b">vertSizingOptions</a> { <br />
+&#160;&#160;<a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4a3e18bc000b13c56fc990ff64cce65a">vertResizeBottom</a> = 0
+, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4028b8e609b439e9740116613ee5b019">vertResizeHeight</a>
+, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba96d7717856629053cec1ba7b308097f7">vertResizeTop</a>
+, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba4f042857e43c8a60b2806ff935427415">vertResizeCenter</a>
+, <br />
+&#160;&#160;<a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137baf76715d1b9401168aaca4c46ea5ce7a2">vertResizeRelative</a>
+, <a class="el" href="class_gui_control.html#a2a3615f2581f4aa3eea851a273f6137ba2e73a80504c95de51777a847f67c4abe">vertResizeFill</a>
+<br />
+ }</td></tr>
+<tr class="memitem:a482df10062b0c98191619562e804201c inherit pub_types_class_gui_control" id="r_a482df10062b0c98191619562e804201c"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201c">TextRotationOptions</a> { <a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201ca20c4634bc42fa5f52492e9b7f00d6d96">tRotateNone</a> = 0
+, <a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201caba7e0347a2fb7446c384616c7791b872">tRotateLeft</a>
+, <a class="el" href="class_gui_control.html#a482df10062b0c98191619562e804201cad12de31cdbd39c7e9034061b109bb041">tRotateRight</a>
+ }</td></tr>
+<tr class="memitem:a84ee0e44d69ef36fa38ffb1a43fe108b inherit pub_types_class_gui_control" id="r_a84ee0e44d69ef36fa38ffb1a43fe108b"><td class="memItemLeft">typedef U32(*&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a84ee0e44d69ef36fa38ffb1a43fe108b">TextWidthFn</a>) (void *context, const char *text)</td></tr>
+<tr class="memitem:a30a7b4e0c9496c6025a5306687fbe3ee" id="r_a30a7b4e0c9496c6025a5306687fbe3ee"><td class="memItemLeft">typedef <a class="el" href="class_vector.html#a35c955cacac6aacaa1e82874b1628865">SimObjectList::iterator</a>&#160;</td><td class="memItemRight"><a class="el" href="class_sim_set.html#a30a7b4e0c9496c6025a5306687fbe3ee">iterator</a></td></tr>
+<tr class="memitem:ab3c555e81926f13d0b6304ec2510d488" id="r_ab3c555e81926f13d0b6304ec2510d488"><td class="memItemLeft">typedef <a class="el" href="class_vector.html#a265a253612b46abed17c61b0a5e5ce30">SimObjectList::value_type</a>&#160;</td><td class="memItemRight"><a class="el" href="class_sim_set.html#ab3c555e81926f13d0b6304ec2510d488">value</a></td></tr>
+<tr class="inherit_header pub_types_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pub_types_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Public Types inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
+<tr class="memitem:aa764d6ab46a34397a2a625235de83577 inherit pub_types_class_sim_object" id="r_aa764d6ab46a34397a2a625235de83577"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa764d6ab46a34397a2a625235de83577">WriteFlags</a> { <a class="el" href="class_sim_object.html#aa764d6ab46a34397a2a625235de83577a03224eeb724e582e75ae323a49e31156">SelectedOnly</a> = BIT(0)
+ }</td></tr>
+<tr class="memitem:a15c126452a329f263b0b33b4242bd2a9 inherit pub_types_class_sim_object" id="r_a15c126452a329f263b0b33b4242bd2a9"><td class="memItemLeft">enum &#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9">CopyFieldsFlags</a> { <a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9a721d0a66e058eb2caa3f061a225eb946">CopyFields_SkipName</a> = BIT(0)
+, <a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9ae09fa12c0d8e83128ee6be2a61e7a209">CopyFields_SkipParentGroup</a> = BIT(1)
+, <a class="el" href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9aace8a3f1ec5b062738b3ffd4cd12a4ad">CopyFields_SkipScriptClass</a> = BIT(2)
+ }</td></tr>
+<tr class="memdesc:a15c126452a329f263b0b33b4242bd2a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">What copyFieldsFrom may be told to leave alone.  <a href="class_sim_object.html#a15c126452a329f263b0b33b4242bd2a9">More...</a><br /></td></tr>
+<tr class="memitem:aa514ba35f518bad019dfd8b78769e152" id="r_aa514ba35f518bad019dfd8b78769e152"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#aa514ba35f518bad019dfd8b78769e152">writeFontSizeAdjustFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a86a12d6bbf50691f3a23b2232c3783f0" id="r_a86a12d6bbf50691f3a23b2232c3783f0"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#a86a12d6bbf50691f3a23b2232c3783f0">writeFontColorFn</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:ab9611c88cc8033e7a79f96a3d77626c4" id="r_ab9611c88cc8033e7a79f96a3d77626c4"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_gui_control.html#ab9611c88cc8033e7a79f96a3d77626c4">writeOverrideFontColorFn</a> (void *obj, const char *data)</td></tr>
+<tr class="inherit_header pro_static_methods_class_sim_object"><td colspan="2" onclick="javascript:dynsection.toggleInherit('pro_static_methods_class_sim_object')"><span class="dynarrow"><span class="arrowhead closed"></span></span>Static Protected Member Functions inherited from <a class="el" href="class_sim_object.html">SimObject</a></td></tr>
+<tr class="memitem:a238c87f71783e3654af75d5ca4a84ae8 inherit pro_static_methods_class_sim_object" id="r_a238c87f71783e3654af75d5ca4a84ae8"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a238c87f71783e3654af75d5ca4a84ae8">setClass</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a43001ba1a3e2861eb120a04cf0796588 inherit pro_static_methods_class_sim_object" id="r_a43001ba1a3e2861eb120a04cf0796588"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a43001ba1a3e2861eb120a04cf0796588">setSuperClass</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a050c10f238d99841ebaf065d96054342 inherit pro_static_methods_class_sim_object" id="r_a050c10f238d99841ebaf065d96054342"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a050c10f238d99841ebaf065d96054342">writeObjectName</a> (void *obj, StringTableEntry pFieldName)</td></tr>
+<tr class="memitem:aa7652122ac6a5cf7337b0e7a7b3825e5 inherit pro_static_methods_class_sim_object" id="r_aa7652122ac6a5cf7337b0e7a7b3825e5"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa7652122ac6a5cf7337b0e7a7b3825e5">writeCanSaveDynamicFields</a> (void *obj, StringTableEntry pFieldName)</td></tr>
+<tr class="memitem:a57d090bc62bb37dd4a36dab7d5538ad4 inherit pro_static_methods_class_sim_object" id="r_a57d090bc62bb37dd4a36dab7d5538ad4"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a57d090bc62bb37dd4a36dab7d5538ad4">writeInternalName</a> (void *obj, StringTableEntry pFieldName)</td></tr>
+<tr class="memitem:a1f5140e6ccbc12845db7038be8c8c2e1 inherit pro_static_methods_class_sim_object" id="r_a1f5140e6ccbc12845db7038be8c8c2e1"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1f5140e6ccbc12845db7038be8c8c2e1">setParentGroup</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:ad11229fc0e726de20183e61c4e963904 inherit pro_static_methods_class_sim_object" id="r_ad11229fc0e726de20183e61c4e963904"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#ad11229fc0e726de20183e61c4e963904">writeParentGroup</a> (void *obj, StringTableEntry pFieldName)</td></tr>
+<tr class="memitem:a1a0d756e0d41114cfb264c5a0a38399b inherit pro_static_methods_class_sim_object" id="r_a1a0d756e0d41114cfb264c5a0a38399b"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a1a0d756e0d41114cfb264c5a0a38399b">writeSuperclass</a> (void *obj, StringTableEntry pFieldName)</td></tr>
+<tr class="memitem:a3753e8d47c78c8b6c39f5a1df2586d45 inherit pro_static_methods_class_sim_object" id="r_a3753e8d47c78c8b6c39f5a1df2586d45"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a3753e8d47c78c8b6c39f5a1df2586d45">writeClass</a> (void *obj, StringTableEntry pFieldName)</td></tr>
+<tr class="memitem:a359e31abae34476f5e76b43114058166 inherit pro_static_methods_class_sim_object" id="r_a359e31abae34476f5e76b43114058166"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a359e31abae34476f5e76b43114058166">setProtectedName</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:aa589e09f1c35f021ff19883ec805e991 inherit pro_static_methods_class_sim_object" id="r_aa589e09f1c35f021ff19883ec805e991"><td class="memItemLeft">static const char *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa589e09f1c35f021ff19883ec805e991">getProtectedName</a> (void *obj, const char *data)</td></tr>
+<tr class="memitem:a27f9b7da7ac37f39ba7e364a74cc943f inherit pro_static_methods_class_sim_object" id="r_a27f9b7da7ac37f39ba7e364a74cc943f"><td class="memItemLeft">static <a class="el" href="struct_sim_object_1_1_notify.html">SimObject::Notify</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a27f9b7da7ac37f39ba7e364a74cc943f">allocNotify</a> ()</td></tr>
+<tr class="memdesc:a27f9b7da7ac37f39ba7e364a74cc943f inherit pro_static_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get a free <a class="el" href="struct_sim_object_1_1_notify.html">Notify</a> structure.  <br /></td></tr>
+<tr class="memitem:aa77d566406c826b12013b264b4d72450 inherit pro_static_methods_class_sim_object" id="r_aa77d566406c826b12013b264b4d72450"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#aa77d566406c826b12013b264b4d72450">freeNotify</a> (<a class="el" href="struct_sim_object_1_1_notify.html">SimObject::Notify</a> *)</td></tr>
+<tr class="memdesc:aa77d566406c826b12013b264b4d72450 inherit pro_static_methods_class_sim_object"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark a <a class="el" href="struct_sim_object_1_1_notify.html">Notify</a> structure as free.  <br /></td></tr>
+<tr class="memitem:a38f3095c01e8b2055e4c2e58d9a133e8" id="r_a38f3095c01e8b2055e4c2e58d9a133e8"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a38f3095c01e8b2055e4c2e58d9a133e8">addGroup</a> (const char *in_pGroupname, const char *in_pGroupDocs=NULL)</td></tr>
+<tr class="memitem:a1918263ead95ed1906c7027651938e0c" id="r_a1918263ead95ed1906c7027651938e0c"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a1918263ead95ed1906c7027651938e0c">endGroup</a> (const char *in_pGroupname)</td></tr>
+<tr class="memitem:a1e61452413a8cd497dfc1a2b62f072cd" id="r_a1e61452413a8cd497dfc1a2b62f072cd"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a1e61452413a8cd497dfc1a2b62f072cd">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
+<tr class="memitem:ad4ad51d247b2e09ea51783a8fdbb4b95" id="r_ad4ad51d247b2e09ea51783a8fdbb4b95"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#ad4ad51d247b2e09ea51783a8fdbb4b95">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
+<tr class="memitem:a7fe0d513b2bea8f6a1710c35189f550c" id="r_a7fe0d513b2bea8f6a1710c35189f550c"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a7fe0d513b2bea8f6a1710c35189f550c">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, const char *in_pFieldDocs)</td></tr>
+<tr class="memitem:a83176674ac909724b9ba2dce44a71e9a" id="r_a83176674ac909724b9ba2dce44a71e9a"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a83176674ac909724b9ba2dce44a71e9a">addField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn, const char *in_pFieldDocs)</td></tr>
+<tr class="memitem:a3356a3140575cbc1e4466883937daf0b" id="r_a3356a3140575cbc1e4466883937daf0b"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a3356a3140575cbc1e4466883937daf0b">addFieldV</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_console_type_validator.html">ConsoleTypeValidator</a> *v, const char *in_pFieldDocs=NULL)</td></tr>
+<tr class="memitem:ae5af434e7146816044ce3be70f61ebb8" id="r_ae5af434e7146816044ce3be70f61ebb8"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#ae5af434e7146816044ce3be70f61ebb8">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
+<tr class="memitem:a5161f628159e510b744cef47fd6598a3" id="r_a5161f628159e510b744cef47fd6598a3"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a5161f628159e510b744cef47fd6598a3">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn=&amp;defaultProtectedWriteFn, const U32 in_elementCount=1, <a class="el" href="struct_enum_table.html">EnumTable</a> *in_table=NULL, const char *in_pFieldDocs=NULL)</td></tr>
+<tr class="memitem:a2df2d873096113f009661c676c4d0c81" id="r_a2df2d873096113f009661c676c4d0c81"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a2df2d873096113f009661c676c4d0c81">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, const char *in_pFieldDocs=NULL)</td></tr>
+<tr class="memitem:aed96a36e73e2eee15cf6a3ae1412d9bd" id="r_aed96a36e73e2eee15cf6a3ae1412d9bd"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#aed96a36e73e2eee15cf6a3ae1412d9bd">addProtectedField</a> (const char *in_pFieldname, const U32 in_fieldType, const dsize_t in_fieldOffset, <a class="el" href="class_abstract_class_rep.html#a23fe751b9b844d180a5e8ee921968aa5">AbstractClassRep::SetDataNotify</a> in_setDataFn, <a class="el" href="class_abstract_class_rep.html#a11f286fc60ce139f916571059ec35e22">AbstractClassRep::GetDataNotify</a> in_getDataFn=&amp;defaultProtectedGetFn, <a class="el" href="class_abstract_class_rep.html#ab897bbd2116b331da38ac71717dbb3b3">AbstractClassRep::WriteDataNotify</a> in_writeDataFn=&amp;defaultProtectedWriteFn, const char *in_pFieldDocs=NULL)</td></tr>
+<tr class="memitem:aed3d0d1abd7ba4a17e792ca80f3478a7" id="r_aed3d0d1abd7ba4a17e792ca80f3478a7"><td class="memItemLeft">static void&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#aed3d0d1abd7ba4a17e792ca80f3478a7">addDepricatedField</a> (const char *fieldName)</td></tr>
+<tr class="memitem:a7a47772574721164fe83b2fd5e3c6fc8" id="r_a7a47772574721164fe83b2fd5e3c6fc8"><td class="memItemLeft">static bool&#160;</td><td class="memItemRight"><a class="el" href="class_console_object.html#a7a47772574721164fe83b2fd5e3c6fc8">removeField</a> (const char *in_pFieldname)</td></tr>
 <tr class="memitem:a8f583d26e810008b4532327b7bbae397" id="r_a8f583d26e810008b4532327b7bbae397"><td class="memItemLeft">static <a class="el" href="struct_sim_object_1_1_notify.html">SimObject::Notify</a> *&#160;</td><td class="memItemRight"><a class="el" href="class_sim_object.html#a8f583d26e810008b4532327b7bbae397">mNotifyFreeList</a> = NULL</td></tr>
 </table>
 <a name="doc-constructors" id="doc-constructors"></a><h2 id="header-doc-constructors" class="groupheader">Constructor &amp; Destructor Documentation</h2>
@@ -795,6 +870,32 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <a name="doc-func-members" id="doc-func-members"></a><h2 id="header-doc-func-members" class="groupheader">Member Function Documentation</h2>
+<a id="ace3d8bff8cc949fcac5e710188c0d418" name="ace3d8bff8cc949fcac5e710188c0d418"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ace3d8bff8cc949fcac5e710188c0d418">&#9670;&#160;</a></span>calculatePlotRect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rect_i.html">RectI</a> calculatePlotRect </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rect_i.html">RectI</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>contentRect</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The plot area inside a content rect: the label rows and any band a subclass reserved taken off, then snapped to the grid. Measures text, so it cannot be tested &ndash; everything in it that is arithmetic lives in the two statics. </p>
+
+</div>
+</div>
 <a id="a4e1f0740cf7cca907d3af233c15e33ff" name="a4e1f0740cf7cca907d3af233c15e33ff"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4e1f0740cf7cca907d3af233c15e33ff">&#9670;&#160;</a></span>calculatePoints()</h2>
 
@@ -871,8 +972,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="aa3af3b1a20ff0568d7395009ce2c228b" name="aa3af3b1a20ff0568d7395009ce2c228b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa3af3b1a20ff0568d7395009ce2c228b">&#9670;&#160;</a></span>findHitGraphPoint()</h2>
+<a id="a0fc723741b11d392ba67f0c5f2cb52aa" name="a0fc723741b11d392ba67f0c5f2cb52aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0fc723741b11d392ba67f0c5f2cb52aa">&#9670;&#160;</a></span>findField()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -881,7 +982,34 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">U32 findHitGraphPoint </td>
+          <td class="memname"><a class="el" href="class_particle_asset_field.html">ParticleAssetField</a> * findField </td>
+          <td>(</td>
+          <td class="paramtype">StringTableEntry</td>          <td class="paramname"><span class="paramname"><em>fieldName</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The field a name refers to, or NULL. The asset's own collection first and then the addressed emitter's, because a name is usually an emitter's but the asset's are the ones that always exist.</p>
+<p>Never asserts and never dereferences a missing emitter. An asset with no emitters is an ordinary state for a half-built particle, and it used to take this through getEmitterCount() - 1 on an unsigned count of zero. </p>
+
+</div>
+</div>
+<a id="a0db2c5cb7e975bfc29d8b91eb6310a37" name="a0db2c5cb7e975bfc29d8b91eb6310a37"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0db2c5cb7e975bfc29d8b91eb6310a37">&#9670;&#160;</a></span>findHitGraphPoint()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">S32 findHitGraphPoint </td>
           <td>(</td>
           <td class="paramtype">const <a class="el" href="class_point2_i.html">Point2I</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>point</em></span></td><td>)</td>
           <td></td>
@@ -890,6 +1018,122 @@ Additional Inherited Members</h2></td></tr>
   </td>
   <td class="mlabels-right">
 <span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a69ad5eb5b5a576504cc7a6578a12f7c4" name="a69ad5eb5b5a576504cc7a6578a12f7c4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a69ad5eb5b5a576504cc7a6578a12f7c4">&#9670;&#160;</a></span>formatAxisLabel()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * formatAxisLabel </td>
+          <td>(</td>
+          <td class="paramtype">const F32</td>          <td class="paramname"><span class="paramname"><em>value</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">char *</td>          <td class="paramname"><span class="paramname"><em>buffer</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const U32</td>          <td class="paramname"><span class="paramname"><em>bufferSize</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>An axis end label, printed from the value rather than kept as whatever text the caller built it out of.</p>
+<p>Script hands these over as strings, and a script float is an F32 printed with "%.9g" &ndash; so a tenth arrives as "0.100000001". The y labels are the whole reason the plot gives up a left margin, so eleven characters of rounding error were costing a zoomed-in graph a third of its width. Six significant digits is more than an axis end can usefully show, and it drops the trailing zeros with them.</p>
+<p>Only the label is reprinted; the window itself keeps the value it parsed, so nothing the camera computes has to agree with what is drawn to the pixel. </p>
+
+</div>
+</div>
+<a id="a9672f0516689b4b2fe3754e41cd77573" name="a9672f0516689b4b2fe3754e41cd77573"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9672f0516689b4b2fe3754e41cd77573">&#9670;&#160;</a></span>getCurveColor()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual <a class="el" href="class_color_i.html">ColorI</a> getCurveColor </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The color the curve and its dots draw in. </p>
+
+<p>Reimplemented in <a class="el" href="class_gui_edit_particle_color_graph.html#a9672f0516689b4b2fe3754e41cd77573">GuiEditParticleColorGraph</a>.</p>
+
+</div>
+</div>
+<a id="aea81f19efcf508ec694a080198cd716e" name="aea81f19efcf508ec694a080198cd716e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aea81f19efcf508ec694a080198cd716e">&#9670;&#160;</a></span>getDisplayField()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry getDisplayField </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa063e281ce3b07c006567fe4c690f839" name="aa063e281ce3b07c006567fe4c690f839"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa063e281ce3b07c006567fe4c690f839">&#9670;&#160;</a></span>getEmitterIndex()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 getEmitterIndex </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td> const</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -985,6 +1229,115 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+<p>The field being edited, or NULL. </p>
+
+</div>
+</div>
+<a id="a7220cb2c56223434cec8d1a474e10dc5" name="a7220cb2c56223434cec8d1a474e10dc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7220cb2c56223434cec8d1a474e10dc5">&#9670;&#160;</a></span>getUnderPlotBandHeight()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual S32 getUnderPlotBandHeight </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>How tall a band under the plot this control wants, between the curve and the x axis labels. Zero in the base, which is what keeps the base's layout identical to what it has always drawn. </p>
+
+<p>Reimplemented in <a class="el" href="class_gui_edit_particle_color_graph.html#a7220cb2c56223434cec8d1a474e10dc5">GuiEditParticleColorGraph</a>.</p>
+
+</div>
+</div>
+<a id="a569d2ab86a3b540c8bd4c56d13efb3d5" name="a569d2ab86a3b540c8bd4c56d13efb3d5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a569d2ab86a3b540c8bd4c56d13efb3d5">&#9670;&#160;</a></span>getUnderPlotRect()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rect_i.html">RectI</a> getUnderPlotRect </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rect_i.html">RectI</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>plotRect</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The reserved band, placed against the SNAPPED plot rect rather than measured from the content rect. The snap moves the plot by up to nine pixels and a band measured independently would drift by exactly that much. An empty rect when no band was asked for. </p>
+
+</div>
+</div>
+<a id="ad94aab3cb6c265651ed4f3cb8489257d" name="ad94aab3cb6c265651ed4f3cb8489257d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad94aab3cb6c265651ed4f3cb8489257d">&#9670;&#160;</a></span>getUnderPlotReserve()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">S32 getUnderPlotReserve </td>
+          <td>(</td>
+          <td class="paramtype">const S32</td>          <td class="paramname"><span class="paramname"><em>bandHeight</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>What a band under the plot costs altogether: itself plus the gap above and below it, or nothing at all when none was asked for.</p>
+<p>One function because the space reserved, the rect drawn into and the label row pushed down by it are three formulas that have to agree, and three chances to be a pixel out is two too many. </p>
+
+</div>
+</div>
+<a id="a4d841c2d73a085821227930787feb168" name="a4d841c2d73a085821227930787feb168"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d841c2d73a085821227930787feb168">&#9670;&#160;</a></span>getXLabelTop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">S32 getXLabelTop </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rect_i.html">RectI</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>plotRect</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>The y the x axis label row starts at. A band sits between it and the plot, so this is the only place that knows the order of the two. </p>
 
 </div>
 </div>
@@ -1371,6 +1724,63 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
+<a id="a1630455672809445ab26d650b6aca29d" name="a1630455672809445ab26d650b6aca29d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1630455672809445ab26d650b6aca29d">&#9670;&#160;</a></span>renderUnderlay()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void renderUnderlay </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rect_i.html">RectI</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>plotRect</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Drawn after the grid and before the editable curve: whatever belongs behind it. mDirty is still set when this is called on a recalculating frame, which is what lets a subclass rebuild its own caches in step with the one renderPoints is about to build. </p>
+
+<p>Reimplemented in <a class="el" href="class_gui_edit_particle_color_graph.html#a87a0002413ffaeccfb5a1de1e9babbac">GuiEditParticleColorGraph</a>.</p>
+
+</div>
+</div>
+<a id="a42f83dee0f3e01ce876936f3483bfe18" name="a42f83dee0f3e01ce876936f3483bfe18"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42f83dee0f3e01ce876936f3483bfe18">&#9670;&#160;</a></span>renderUnderPlot()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void renderUnderPlot </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rect_i.html">RectI</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>bandRect</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel inline">inline</span><span class="mlabel protected">protected</span><span class="mlabel virtual">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Drawn into the band. Not called when no band was asked for. </p>
+
+<p>Reimplemented in <a class="el" href="class_gui_edit_particle_color_graph.html#a0b5d9542da4f6eae9e5b5f04112bee3a">GuiEditParticleColorGraph</a>.</p>
+
+</div>
+</div>
 <a id="afdd5a1aa8ab34e7e404838263e8c77ab" name="afdd5a1aa8ab34e7e404838263e8c77ab"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#afdd5a1aa8ab34e7e404838263e8c77ab">&#9670;&#160;</a></span>renderVariation()</h2>
 
@@ -1397,6 +1807,33 @@ Additional Inherited Members</h2></td></tr>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="af387999b46259da3468d11ea00d99e8b" name="af387999b46259da3468d11ea00d99e8b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af387999b46259da3468d11ea00d99e8b">&#9670;&#160;</a></span>repairDataKeys()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool repairDataKeys </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="class_particle_asset_field.html">ParticleAssetField</a> *</td>          <td class="paramname"><span class="paramname"><em>field</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Force a field's keys into the shape everything downstream assumes: a key at time zero, and strictly increasing times after it. Idempotent, so a second caller on the same frame walks the list and changes nothing. Returns true when it changed something.</p>
+<p>This edits the asset as a side effect of drawing, which is what this control has always done. </p>
 
 </div>
 </div>
@@ -1535,6 +1972,8 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Reimplemented in <a class="el" href="class_gui_edit_particle_color_graph.html#a0299f884d82ecc03fc387420d1dc7ee4">GuiEditParticleColorGraph</a>.</p>
+
 </div>
 </div>
 <a id="aaadc3854a65ce5ef4bc2b476e723aa81" name="aaadc3854a65ce5ef4bc2b476e723aa81"></a>
@@ -1618,9 +2057,64 @@ Additional Inherited Members</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Reimplemented in <a class="el" href="class_gui_edit_particle_color_graph.html#a53e04655378535105603e50db0b4bfdb">GuiEditParticleColorGraph</a>.</p>
+
+</div>
+</div>
+<a id="ad5f7616215fa5f7a18227b6022618d77" name="ad5f7616215fa5f7a18227b6022618d77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad5f7616215fa5f7a18227b6022618d77">&#9670;&#160;</a></span>snapRectToGrid()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rect_i.html">RectI</a> snapRectToGrid </td>
+          <td>(</td>
+          <td class="paramtype">const <a class="el" href="class_rect_i.html">RectI</a> &amp;</td>          <td class="paramname"><span class="paramname"><em>rect</em></span>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">const S32</td>          <td class="paramname"><span class="paramname"><em>divisor</em></span>&#160;)</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>Shrink a rect to a whole number of grid cells and re-center what is left. The graph draws ten by ten, so a plot whose width is not a multiple of ten has grid lines landing between pixels.</p>
+<p>A rect measured mid-resize can have a negative extent. That used to be an unsigned modulus, which made the correction about four billion. </p>
+
 </div>
 </div>
 <a name="doc-variable-members" id="doc-variable-members"></a><h2 id="header-doc-variable-members" class="groupheader">Member Data Documentation</h2>
+<a id="a7c91a34d754ecc6f09a989a4993ecda9" name="a7c91a34d754ecc6f09a989a4993ecda9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7c91a34d754ecc6f09a989a4993ecda9">&#9670;&#160;</a></span>mCalculationOffset</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_point2_i.html">Point2I</a> mCalculationOffset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="ae359f43cc65ae5e26cfd52dc66ea5083" name="ae359f43cc65ae5e26cfd52dc66ea5083"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae359f43cc65ae5e26cfd52dc66ea5083">&#9670;&#160;</a></span>mDirty</h2>
 
@@ -1631,6 +2125,270 @@ Additional Inherited Members</h2></td></tr>
           <td class="memname">bool mDirty</td>
         </tr>
       </table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a8b628f4b1a917c9521157aa66bc13abf" name="a8b628f4b1a917c9521157aa66bc13abf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8b628f4b1a917c9521157aa66bc13abf">&#9670;&#160;</a></span>mEmitterIndex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">U32 mEmitterIndex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a65c0c42b3b5b60a9000f8486750be002" name="a65c0c42b3b5b60a9000f8486750be002"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a65c0c42b3b5b60a9000f8486750be002">&#9670;&#160;</a></span>mGridRect</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_rect_i.html">RectI</a> mGridRect</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aad0e7d9448f1a0000770f24447eb61da" name="aad0e7d9448f1a0000770f24447eb61da"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aad0e7d9448f1a0000770f24447eb61da">&#9670;&#160;</a></span>mLabelX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry mLabelX</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a5a917d088231b9c054140b286dc73de4" name="a5a917d088231b9c054140b286dc73de4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5a917d088231b9c054140b286dc73de4">&#9670;&#160;</a></span>mLabelY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry mLabelY</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="af35735fa706285fb8ce415d3873b4605" name="af35735fa706285fb8ce415d3873b4605"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af35735fa706285fb8ce415d3873b4605">&#9670;&#160;</a></span>mMaxX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">F32 mMaxX</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a622537e22851dc0dda0719e8d82c2d60" name="a622537e22851dc0dda0719e8d82c2d60"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a622537e22851dc0dda0719e8d82c2d60">&#9670;&#160;</a></span>mMaxXLabel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry mMaxXLabel</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ae2bd24c9da74268c47c50b7fd2a83bfa" name="ae2bd24c9da74268c47c50b7fd2a83bfa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2bd24c9da74268c47c50b7fd2a83bfa">&#9670;&#160;</a></span>mMaxY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">F32 mMaxY</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="adf20b8fed2755ed539a8a00d96d6c9e9" name="adf20b8fed2755ed539a8a00d96d6c9e9"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adf20b8fed2755ed539a8a00d96d6c9e9">&#9670;&#160;</a></span>mMaxYLabel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry mMaxYLabel</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a06c8adbee819b6f217c321f9bfb7962a" name="a06c8adbee819b6f217c321f9bfb7962a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a06c8adbee819b6f217c321f9bfb7962a">&#9670;&#160;</a></span>mMinX</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">F32 mMinX</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="ad3827a9d8c8b8577a6e07567f832889d" name="ad3827a9d8c8b8577a6e07567f832889d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3827a9d8c8b8577a6e07567f832889d">&#9670;&#160;</a></span>mMinXLabel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry mMinXLabel</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a9a811a82a5885069ec8d488bd32178b7" name="a9a811a82a5885069ec8d488bd32178b7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a811a82a5885069ec8d488bd32178b7">&#9670;&#160;</a></span>mMinY</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">F32 mMinY</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="aa1ff231f8c7ac65bbbe077e2db147bc1" name="aa1ff231f8c7ac65bbbe077e2db147bc1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa1ff231f8c7ac65bbbe077e2db147bc1">&#9670;&#160;</a></span>mMinYLabel</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry mMinYLabel</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
 </div><div class="memdoc">
 
 </div>
@@ -1660,6 +2418,120 @@ Additional Inherited Members</h2></td></tr>
         </tr>
       </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="abeff866c3525c102cfc51b483f4d201e" name="abeff866c3525c102cfc51b483f4d201e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abeff866c3525c102cfc51b483f4d201e">&#9670;&#160;</a></span>mTargetAsset</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_particle_asset.html">ParticleAsset</a>* mTargetAsset</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a2ec4414874f7039af7e70955e147df36" name="a2ec4414874f7039af7e70955e147df36"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2ec4414874f7039af7e70955e147df36">&#9670;&#160;</a></span>mTargetField</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">StringTableEntry mTargetField</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a446588e841527b42ee8c10e616946dce" name="a446588e841527b42ee8c10e616946dce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a446588e841527b42ee8c10e616946dce">&#9670;&#160;</a></span>mVariationInspector</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="class_gui_particle_graph_inspector.html">GuiParticleGraphInspector</a>* mVariationInspector</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel protected">protected</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
+<a id="a1268eab3ecc5a1f3b570ef62c636f39b" name="a1268eab3ecc5a1f3b570ef62c636f39b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1268eab3ecc5a1f3b570ef62c636f39b">&#9670;&#160;</a></span>smPointRadius</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">F32 smPointRadius = 7.0f</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<p>What a point draws at, and what a click has to land inside to hit one.</p>
+<p>static constexpr rather than a const member: a test binds it by const reference, which would odr-use a static const and fail to link, and a subclass's layout wants it without an instance in hand. </p>
+
+</div>
+</div>
+<a id="a9ad3926387a32dbd18169caa926bfb94" name="a9ad3926387a32dbd18169caa926bfb94"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9ad3926387a32dbd18169caa926bfb94">&#9670;&#160;</a></span>smUnderPlotGap</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">S32 smUnderPlotGap = 3</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel static">static</span><span class="mlabel constexpr">constexpr</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>The gap left above and below a band reserved under the plot. </p>
 
 </div>
 </div>
