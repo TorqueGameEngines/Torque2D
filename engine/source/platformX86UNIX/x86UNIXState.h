@@ -59,7 +59,6 @@ class x86UNIXPlatformState
       bool                 mXWindowsRunning;
       bool                 mDedicated;
       bool                 mDSleep;
-      bool                 mUseRedirect;
 
       // Access to the display* needs to be controlled because the SDL event
       // loop runs in a separate thread.  If you need the display pointer,
@@ -145,9 +144,6 @@ class x86UNIXPlatformState
       bool getDSleep() { return mDSleep; }
       void setDSleep(bool enabled) { mDSleep = enabled; }
 
-      bool getUseRedirect() { return mUseRedirect; }
-      void setUseRedirect(bool enabled) { mUseRedirect = enabled; }
-      
       x86UNIXPlatformState()
       {
          currentTime = 0;
@@ -160,11 +156,6 @@ class x86UNIXPlatformState
          mXWindowsRunning = false;
          mDedicated = false;
          mDSleep = false;
-#ifdef USE_FILE_REDIRECT
-         mUseRedirect = true;
-#else
-         mUseRedirect = false;
-#endif
       }
 };
 

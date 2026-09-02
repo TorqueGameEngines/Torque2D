@@ -35,11 +35,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// these will be used to construct the user preference directory where
-// created files will be stored (~/PREF_DIR_ROOT/PREF_DIR_GAME_NAME)
-#define PREF_DIR_ROOT ".garagegames"
-#define PREF_DIR_GAME_NAME "tgb"
-
 // event codes for custom SDL events
 const S32 TORQUE_SETVIDEOMODE = 1;
 

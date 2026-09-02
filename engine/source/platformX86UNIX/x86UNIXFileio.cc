@@ -22,25 +22,29 @@
 
  /* JMQ:
  
-    Here's the scoop on unix file IO.  The windows platform makes some 
-    assumptions about fileio: 1) the file system is case-insensitive, and 
-    2) the platform can write to the directory in which
-    the game is running.  Both of these are usually false on linux.  So, to 
-    compensate, we "route" created files and directories to the user's home
-    directory (see GetPrefPath()).  When a file is to be accessed, the code 
-    looks in the home directory first.  If the file is not found there and the
-    open mode is read only, the code will look in the game installation 
-    directory.  Files are never created or modified in the game directory.
- 
-    For case-sensitivity, the MungePath code will test whether a given path
-    specified by the engine exists.  If not, it will use the MungeCase function
-    which will try to determine if an actual filesystem path matches the 
-    specified path case insensitive.  If one is found, the actual path 
+    Here's the scoop on unix file IO.  The windows platform makes an assumption
+    about fileio that is usually false on linux: that the file system is
+    case-insensitive.  The MungePath code compensates.  It will test whether a
+    given path specified by the engine exists.  If not, it will use the MungeCase
+    function, which will try to determine if an actual filesystem path matches
+    the specified path case insensitive.  If one is found, the actual path
     transparently (we hope) replaces the one requested by the engine.
  
-    The preference directory is global to all torque executables with the same
-    name.  You should make sure you keep it clean if you build from multiple
-    torque development trees.
+    It used to compensate for a second assumption as well -- that the platform
+    can write to the directory the game is running in -- by routing every created
+    file into a "pref dir" under the user's home, reading from there first and
+    falling back to the game directory.  That was never switched on.  It was gated
+    on USE_FILE_REDIRECT, which nothing in the tree ever defined, so the pref dir
+    was only ever the working directory, and every path was built twice to the
+    same place.  It was also cached at the first file open, which happens before
+    the engine chdirs to the folder holding main.cs -- so a relative write such
+    as console.log landed wherever the process was launched from rather than
+    beside the game, which is not what Win32 or macOS do with the same name.
+ 
+    A relative path is now resolved against the working directory as it stands at
+    the call, as it is on every other desktop platform.  A file that genuinely
+    belongs to the user rather than to the game has a portable way to say so:
+    Platform::getPrefsPath, over Platform::getUserDataDirectory below.
  */
  
  #include "platformX86UNIX/x86UNIXState.h"
@@ -60,7 +64,6 @@
  #if defined(__FreeBSD__)
     #include <sys/types.h>
  #endif
- #include <utime.h>
  
  /* include sys/param.h for MAXPATHLEN */
  #include <sys/param.h>
@@ -98,74 +101,6 @@
     }
  }
 
- //------------------------------------------------------------------------------
- // copy a file from src to dest
- static bool CopyFile(const char* src, const char* dest)
- {
-    S32 srcFd = x86UNIXOpen(src, O_RDONLY);
-    S32 destFd = x86UNIXOpen(dest, O_WRONLY | O_CREAT | O_TRUNC);
-    bool error = false;
- 
-    if (srcFd != -1 && destFd != -1)
-    {
-       const int BufSize = 8192;
-       char buf[BufSize];
-       S32 bytesRead = 0;
-       while ((bytesRead = x86UNIXRead(srcFd, buf, BufSize)) > 0)
-       {
-          // write data
-          if (x86UNIXWrite(destFd, buf, bytesRead) == -1)
-          {
-             error = true;
-             break;
-          }
-       }
- 
-       if (bytesRead == -1)
-          error = true;
-    }
- 
-    if (srcFd != -1)
-       x86UNIXClose(srcFd);
-    if (destFd != -1)
-       x86UNIXClose(destFd);
- 
-    if (error)
-    {
-       Con::errorf("Error copying file: %s, %s", src, dest);
-       remove(dest);
-    }
-    return error;
- }
-
- //-----------------------------------------------------------------------------
- static char sgPrefDir[MaxPath];
- static bool sgPrefDirInitialized = false;
- 
- // get the "pref dir", which is where game output files are stored.  the pref
- // dir is ~/PREF_DIR_ROOT/PREF_DIR_GAME_NAME
- static const char* GetPrefDir()
- {
-    if (sgPrefDirInitialized)
-       return sgPrefDir;
- 
-    if (x86UNIXState->getUseRedirect())
-    {
-       const char *home = getenv("HOME");
-       AssertFatal(home, "HOME environment variable must be set");
- 
-       dSprintf(sgPrefDir, MaxPath, "%s/%s/%s", 
-          home, PREF_DIR_ROOT, PREF_DIR_GAME_NAME);
-    }
-    else
-    {
-       getcwd(sgPrefDir, MaxPath);
-    }
- 
-    sgPrefDirInitialized = true;
-    return sgPrefDir;
- }
- 
  //------------------------------------------------------------------------------
  // munge the case of the specified pathName.  This means try to find the actual
  // filename in with case-insensitive matching on the specified pathName, and
@@ -287,38 +222,6 @@
  }
  
  //-----------------------------------------------------------------------------
- enum
- {
-    TOUCH,
-    DELETE
- };
- 
- //-----------------------------------------------------------------------------
- // perform a modification on the specified file.  allowed modifications are 
- // specified in the enum above.
- bool ModifyFile(const char * name, S32 modType)
- {
-    if(!name || (dStrlen(name) >= MAX_PATH) || dStrstr(name, "../") != NULL)
-       return(false);
- 
-    // if its absolute skip it
-    if (name[0]=='/' || name[0]=='\\')
-       return(false);
- 
-    // only modify files in home directory
-    char prefPathName[MaxPath];
-    MungePath(prefPathName, MaxPath, name, GetPrefDir());
- 
-    if (modType == TOUCH)
-       return(utime(prefPathName, 0) != -1);
-    else if (modType == DELETE)
-       return (remove(prefPathName) != -1);
-    else 
-       AssertFatal(false, "Unknown File Mod type");
-    return false;
- }
- 
- //-----------------------------------------------------------------------------
  static bool RecurseDumpPath(const char *path, const char* relativePath, const char *pattern, Vector<Platform::FileInfo> &fileVector, int recurseDepth) 
 {
     char search[1024];
@@ -396,18 +299,6 @@
  }   
  
  //-----------------------------------------------------------------------------
- bool dFileDelete(const char * name)
- {
-    return ModifyFile(name, DELETE);
- }
- 
- //-----------------------------------------------------------------------------
- bool dFileTouch(const char * name)
- {
-    return ModifyFile(name, TOUCH);
- }
- 
- //-----------------------------------------------------------------------------
  // Constructors & Destructor
  //-----------------------------------------------------------------------------
  
@@ -453,15 +344,14 @@
     if (Closed != currentStatus)
        close();
  
-    char prefPathName[MaxPath];
-    char gamePathName[MaxPath];
+    // One path, against the working directory as it stands at the call. Win32
+    // hands the name to CreateFile and macOS to fopen, both of which do this.
+    char pathName[MaxPath];
     char cwd[MaxPath];
     getcwd(cwd, MaxPath);
-    MungePath(prefPathName, MaxPath, filename, GetPrefDir());
-    MungePath(gamePathName, MaxPath, filename, cwd);
+    MungePath(pathName, MaxPath, filename, cwd);
  
     int oflag;
-    struct stat filestat;
     handle = (void *)dRealMalloc(sizeof(int));
  
     switch (openMode)
@@ -474,15 +364,9 @@
           break;
        case ReadWrite:
           oflag = O_RDWR | O_CREAT;
-          // if the file does not exist copy it before reading/writing
-          if (stat(prefPathName, &filestat) == -1)
-             bool ret = CopyFile(gamePathName, prefPathName);
           break;
        case WriteAppend:
           oflag = O_WRONLY | O_CREAT | O_APPEND;
-          // if the file does not exist copy it before appending
-          if (stat(prefPathName, &filestat) == -1)
-              bool ret = CopyFile(gamePathName, prefPathName);
           break;
        default:
           AssertFatal(false, "File::open: bad access mode");    // impossible
@@ -490,13 +374,9 @@
  
     // if we are writing, make sure output path exists
     if (openMode == Write || openMode == ReadWrite || openMode == WriteAppend)
-        Platform::createPath(prefPathName);
+        Platform::createPath(pathName);
  
-    int fd = -1;
-    fd = x86UNIXOpen(prefPathName, oflag);
-    if (fd == -1 && openMode == Read)
-       // for read only files we can use the gamePathName
-       fd = x86UNIXOpen(gamePathName, oflag);
+    int fd = x86UNIXOpen(pathName, oflag);
  
     dMemcpy(handle, &fd, sizeof(int));
      
@@ -815,24 +695,12 @@
  //-----------------------------------------------------------------------------
  bool Platform::getFileTimes(const char *filePath, FileTime *createTime, FileTime *modifyTime)
  {
-    char pathName[MaxPath];
- 
-    // if it starts with cwd, we need to strip that off so that we can look for
-    // the file in the pref dir
+    // Resolved against the working directory, so a relative path is answered for
+    // where the game is actually running.
     char cwd[MaxPath];
     getcwd(cwd, MaxPath);
-    if (dStrstr(filePath, cwd) == filePath)
-       filePath = filePath + dStrlen(cwd) + 1;
-    
-    // if its relative, first look in the pref dir
-    if (filePath[0] != '/' && filePath[0] != '\\')
-    {
-       MungePath(pathName, MaxPath, filePath, GetPrefDir());
-       if (GetFileTimes(pathName, createTime, modifyTime))
-          return true;
-    }
  
-    // here if the path is absolute or not in the pref dir
+    char pathName[MaxPath];
     MungePath(pathName, MaxPath, filePath, cwd);
     return GetFileTimes(pathName, createTime, modifyTime);
  }
@@ -845,13 +713,15 @@
     pathbuf[0] = 0;
     U32 pathLen = 0;
  
-    // all paths should be created in home directory
-    char prefPathName[MaxPath];
-    MungePath(prefPathName, MaxPath, file, GetPrefDir());
-    file = prefPathName;
+    char cwd[MaxPath];
+    getcwd(cwd, MaxPath);
+ 
+    char pathName[MaxPath];
+    MungePath(pathName, MaxPath, file, cwd);
+    file = pathName;
  
     // does the directory exist already?
-    if (DirExists(prefPathName, true)) // true means that the path is a filepath
+    if (DirExists(pathName, true)) // true means that the path is a filepath
        return true;
     
     while((dir = dStrchr(file, '/')) != NULL)
@@ -878,18 +748,12 @@
  {
     const char* pattern = "*";
  
-    // if it is not absolute, dump the pref dir first
-    if (path[0] != '/' && path[0] != '\\')
-    {
-       char prefPathName[MaxPath];
-       MungePath(prefPathName, MaxPath, path, GetPrefDir());
-       RecurseDumpPath(prefPathName, path, pattern, fileVector, depth);
-    }
- 
-    // munge the requested path and dump it
-    char mungedPath[MaxPath];
+    // Resolved against the working directory as it stands at the call, which is
+    // how Win32 and macOS resolve a relative name.
     char cwd[MaxPath];
     getcwd(cwd, MaxPath);
+ 
+    char mungedPath[MaxPath];
     MungePath(mungedPath, MaxPath, path, cwd);
     return RecurseDumpPath(mungedPath, path, pattern, fileVector, depth);
  }
@@ -1397,19 +1261,20 @@ StringTableEntry Platform::osGetTemporaryDirectory()
 // copy of the stock cursor art.
 //
 // Paths are used as handed over, like isFile and isDirectory and fileDelete
-// above, rather than routed through MungePath into the pref directory the way
-// createPath is. Every caller builds an absolute path first and then asks isFile
-// whether the copy arrived, so a copy that landed anywhere else would read as a
-// failure -- and MungePath leaves an absolute path alone in any case.
+// above, rather than sent through MungePath the way createPath and File::open
+// are. Every caller builds an absolute path first and then asks isFile whether
+// the copy arrived, so a copy that landed anywhere else would read as a failure
+// -- and MungePath leaves an absolute path alone in any case.
 //-----------------------------------------------------------------------------
 
 static const U32 sCopyBufferSize = 32768;
 
 // The directories leading up to a file, made on the path exactly as given.
-// Platform::createPath is not usable here: it sends a relative path through
-// MungePath into the pref directory, which is not where the copy itself would
-// then be written, so the open would fail on the parent it had just made
-// somewhere else.
+// Platform::createPath is not usable here: it sends the path through MungePath
+// first, whose case-fixing can substitute a directory that already exists for
+// the one that was named, so it can make the parents somewhere other than where
+// the copy is then written. It also makes them 0700, where a copied tree should
+// follow the umask like the files in it do.
 static void CreateParentDirectories(const char* path)
 {
    char buffer[MaxPath];
@@ -1597,8 +1462,9 @@ bool Platform::fileRename(const char* source, const char* dest)
    if (rename(source, dest) == 0)
       return true;
 
-   // rename cannot cross a filesystem, and the pref directory and the game
-   // directory are not always on the same one. Fall back to moving it by hand.
+   // rename cannot cross a filesystem, and source and destination are not always
+   // on the same one -- a project stamped out of a template that lives on another
+   // mount, say. Fall back to moving it by hand.
    if (errno != EXDEV)
       return false;
 

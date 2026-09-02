@@ -97,11 +97,6 @@ static S32 ParseCommandLine(S32 argc, const char **argv,
          x86UNIXState->setDSleep(true);
          continue;
       }
-      if (dStrcmp(argv[i], "-nohomedir") == 0)
-      {
-         x86UNIXState->setUseRedirect(false);
-         continue;
-      }
       if (dStrcmp(argv[i], "-chdir") == 0)
       {
          if ( ++i >= argc )
