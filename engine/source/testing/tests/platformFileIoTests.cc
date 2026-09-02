@@ -237,5 +237,53 @@ TEST( PlatformFileIOTests, PathCopyAndRename )
     SUCCEED();
 }
 //-----------------------------------------------------------------------------
+// The per-user directories.
+//
+// On the Unix back-end all three of these answered the literal string "~/",
+// which is a home directory only to a shell. Nothing in the engine expands one,
+// so the answer was taken for a relative path and resolved against the working
+// directory -- the folder the executable was launched from -- and the editor's
+// preferences were written into a directory named "~" inside the repository.
+//
+// These assertions are about shape rather than about any particular folder,
+// because the right answer differs per platform: %APPDATA% on Windows,
+// ~/Library/Application Support on macOS, $XDG_DATA_HOME on Linux. What all
+// three have to be is somewhere real, named absolutely, and reached without a
+// shell.
+//-----------------------------------------------------------------------------
+
+static void unitTestUserDirectory( const char* what, const char* path )
+{
+    ASSERT_TRUE( path != NULL && *path != 0 ) << what << " is empty.";
+    ASSERT_TRUE( Platform::isFullPath( path ) ) << what << " is not an absolute path: " << path;
+    ASSERT_TRUE( dStrchr( path, '~' ) == NULL ) << what << " holds an unexpanded tilde: " << path;
+    ASSERT_TRUE( Platform::isDirectory( path ) ) << what << " does not exist: " << path;
+}
+
+TEST( PlatformFileIOTests, UserDirectories )
+{
+    unitTestUserDirectory( "The user data directory", Platform::getUserDataDirectory() );
+    unitTestUserDirectory( "The user home directory", Platform::getUserHomeDirectory() );
+
+    // The unwrapped one: Platform::getTemporaryDirectory falls back to the
+    // working directory when this does not name a real folder, which is exactly
+    // how a bad answer here stayed invisible.
+    unitTestUserDirectory( "The temporary directory", Platform::osGetTemporaryDirectory() );
+
+    // getPrefsPath is what actually names a file, and it is where the tilde did
+    // its damage: it hangs the company and product off the user data directory,
+    // so a relative answer above put every project's preferences under whatever
+    // folder the game happened to be launched from.
+    const char* prefsPath = Platform::getPrefsPath( "unitTestPreferences.taml" );
+    ASSERT_TRUE( prefsPath != NULL && *prefsPath != 0 ) << "There is no preferences path.";
+    ASSERT_TRUE( Platform::isFullPath( prefsPath ) ) << "The preferences path is not absolute: " << prefsPath;
+    ASSERT_TRUE( dStrchr( prefsPath, '~' ) == NULL ) << "The preferences path holds an unexpanded tilde: " << prefsPath;
+
+    // Nothing is created here. getPrefsPath names a folder that need not exist
+    // yet, and the point of the check is that it is named somewhere sane.
+
+    SUCCEED();
+}
+//-----------------------------------------------------------------------------
 
 #endif // TORQUE_SHIPPING

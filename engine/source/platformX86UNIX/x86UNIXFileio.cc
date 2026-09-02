@@ -73,6 +73,7 @@
  #include <sys/types.h>
  #include <sys/stat.h>
  #include <unistd.h>
+ #include <pwd.h>
  #include <fcntl.h>
  #include <errno.h>
  #include <stdlib.h>
@@ -1243,22 +1244,151 @@ bool Platform::setCurrentDirectory(StringTableEntry newDir)
 }
 
 //-----------------------------------------------------------------------------
-const char* Platform::getUserDataDirectory() 
-{
-	return StringTable->insert("~/");
+// Where a per-user file belongs.
+//
+// These three used to answer "~/", which names a home directory only to a
+// shell. POSIX does not expand a tilde -- to open(2) it is an ordinary
+// character -- so the string reached MungePath above with a first character
+// that is not '/', was judged relative, and was hung off the current
+// directory. What that produced was a directory literally named "~" inside
+// whatever folder the executable was launched from, holding the preferences of
+// every project run out of it. The same calls answer with %APPDATA% on Windows
+// and ~/Library/Application Support on macOS.
+//
+// The Linux equivalent is the XDG Base Directory specification, which the rest
+// of the desktop already follows: an environment variable when the user has
+// set one, a well-known default when they have not. A variable holding a
+// relative path is ignored rather than honoured -- the spec asks for that, and
+// it is also what stops a stray value from landing us back where we started.
+//-----------------------------------------------------------------------------
 
+// Defined further down, beside the file copy that needs it: every directory
+// component of a path before its last '/'.
+static void CreateParentDirectories(const char* path);
+
+// A directory name without a trailing slash, because every caller here appends
+// its own separator. Never eats a lone "/".
+static void StripTrailingSlashes(char* path)
+{
+   S32 length = dStrlen(path);
+   while (length > 1 && path[length - 1] == '/')
+      path[--length] = '\0';
+}
+
+// CreateParentDirectories makes every component before the last '/', so a
+// trailing slash is what makes the named directory itself one of them.
+static void CreateDirectoryPath(const char* directory)
+{
+   char buffer[MaxPath];
+   dSprintf(buffer, MaxPath, "%s/", directory);
+   CreateParentDirectories(buffer);
+}
+
+// The user's home, from the environment or -- when that has been stripped, as
+// it is for a service or a bare su -- from the passwd database.
+static const char* GetHomeDirectory()
+{
+   const char* home = getenv("HOME");
+   if (home != NULL && home[0] == '/')
+      return home;
+
+   struct passwd* entry = getpwuid(getuid());
+   if (entry != NULL && entry->pw_dir != NULL && entry->pw_dir[0] == '/')
+      return entry->pw_dir;
+
+   return NULL;
+}
+
+// An XDG base directory: $<variable> when it holds an absolute path, otherwise
+// the given default below the home directory. False means there is no home to
+// fall back on, which leaves each caller to decide what that costs it.
+static bool GetXDGDirectory(const char* variable, const char* fallback,
+   char* dest, S32 destSize)
+{
+   const char* value = getenv(variable);
+   if (value != NULL && value[0] == '/')
+      dStrncpy(dest, value, destSize - 1);
+   else
+   {
+      const char* home = GetHomeDirectory();
+      if (home == NULL)
+         return false;
+
+      dSprintf(dest, destSize, "%s/%s", home, fallback);
+   }
+
+   dest[destSize - 1] = '\0';
+   StripTrailingSlashes(dest);
+   return true;
+}
+
+//-----------------------------------------------------------------------------
+const char* Platform::getUserDataDirectory()
+{
+   static StringTableEntry sUserDataDirectory = NULL;
+   if (sUserDataDirectory != NULL)
+      return sUserDataDirectory;
+
+   char path[MaxPath];
+   if (!GetXDGDirectory("XDG_DATA_HOME", ".local/share", path, MaxPath))
+   {
+      // Nowhere to write but where we are: the old behaviour, minus the "~"
+      // folder, and where every relative path already goes.
+      sUserDataDirectory = Platform::getCurrentDirectory();
+      return sUserDataDirectory;
+   }
+
+   // Handed back ready to be written into, because Windows and macOS both
+   // create theirs and callers were written against a directory that exists.
+   CreateDirectoryPath(path);
+
+   sUserDataDirectory = StringTable->insert(path);
+   return sUserDataDirectory;
 }
 
 //-----------------------------------------------------------------------------
 const char* Platform::getUserHomeDirectory() 
 {
-	return StringTable->insert("~/");
+   static StringTableEntry sUserHomeDirectory = NULL;
+   if (sUserHomeDirectory != NULL)
+      return sUserHomeDirectory;
+
+   // Windows and macOS answer this one with the Documents folder. Linux has no
+   // folder reliably there under any name -- ~/Documents exists only if the
+   // user's desktop made it, and is called something else in another language
+   // -- so the home directory itself is both the honest answer and the one the
+   // function's name promises.
+   const char* home = GetHomeDirectory();
+
+   sUserHomeDirectory = (home != NULL)
+      ? StringTable->insert(home)
+      : Platform::getCurrentDirectory();
+
+   return sUserHomeDirectory;
 }
 
 //-----------------------------------------------------------------------------
 StringTableEntry Platform::osGetTemporaryDirectory()
 {
-	return StringTable->insert("~/");
+   static StringTableEntry sTemporaryDirectory = NULL;
+   if (sTemporaryDirectory != NULL)
+      return sTemporaryDirectory;
+
+   // $TMPDIR is what POSIX tells a program to honour; /tmp is what is there
+   // when nobody has said otherwise. Note that XDG_RUNTIME_DIR is deliberately
+   // not consulted: it is wiped when the session ends, which is a promise this
+   // engine's temporary files do not need and users would not expect.
+   const char* temporary = getenv("TMPDIR");
+   if (temporary == NULL || temporary[0] != '/')
+      temporary = "/tmp";
+
+   char path[MaxPath];
+   dStrncpy(path, temporary, MaxPath - 1);
+   path[MaxPath - 1] = '\0';
+   StripTrailingSlashes(path);
+
+   sTemporaryDirectory = StringTable->insert(path);
+   return sTemporaryDirectory;
 }
 
 //-----------------------------------------------------------------------------
