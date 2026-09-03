@@ -452,8 +452,10 @@ if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
     # Linux / X11 desktop build (platformX86UNIX). NOTES for the on-platform
     # (WSL/Linux) session:
     #   * SDL 1.2 is REQUIRED, not optional: the platform back-end calls 1.2-only
-    #     APIs (SDL_GetVideoSurface, SDL_WM_*, SDL_*GammaRamp, SDL_GL_SwapBuffers)
-    #     and pulls X11_KeyToUnicode out of libSDL. This is NOT SDL2.
+    #     APIs (SDL_GetVideoSurface, SDL_WM_*, SDL_*GammaRamp, SDL_GL_SwapBuffers).
+    #     This is NOT SDL2. The SDL2-backed sdl12-compat shim (Ubuntu 24.04+, Arch)
+    #     is fine: the back-end no longer reaches into libSDL for the private
+    #     X11_KeyToUnicode symbol, it reads the keymap through Xlib.
     #   * `rt` is a no-op on modern glibc but harmless.
     #   * OpenGL/FreeType are resolved via find_package (more robust than the old
     #     hard-coded /usr/include/freetype2 paths). Install dev packages, e.g. on

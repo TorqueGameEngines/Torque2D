@@ -53,9 +53,6 @@ static const U32 JoystickMask = SDL_JOYAXISMOTION | SDL_JOYBUTTONUP;//SDL_JOYEVE
 
 static const U32 AllInputEvents = MouseMask | KeyboardMask | JoystickMask;
 
-// defined in SDL
-extern "C" Uint16 X11_KeyToUnicode( SDLKey keysym, SDLMod modifiers );
-
 //==============================================================================
 // Static helper functions
 //==============================================================================
@@ -68,8 +65,8 @@ static void MapKey(Uint16 SDLkey, U8 tkey)
    // >= 0x100) and the 0x7F-0xFF range must map to ascii 0; otherwise they're
    // treated as character input and insert phantom glyphs into text fields (e.g.
    // pressing Ctrl typed a stray "box" character). The desktop x86UNIX back-end
-   // gets this for free via X11_KeyToUnicode (which returns 0 for non-character
-   // keys), but emscripten's SDL1 port has no working X11_KeyToUnicode, hence this
+   // gets this for free by reading the X keymap (which yields nothing for a
+   // non-character key), but a browser canvas has no keymap to read, hence this
    // explicit filter. Control keys (< 0x20: Tab/Enter/Backspace/Esc) also map to 0
    // here and are handled by keycode, not by character input. Shifted variants of
    // the printable keys are still set by the switch below.

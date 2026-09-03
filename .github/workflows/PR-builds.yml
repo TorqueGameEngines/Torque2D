@@ -52,11 +52,10 @@ jobs:
   # ===========================================================================
   linux-x64:
     name: Linux x86_64
-    # Pinned to 22.04: the engine's X11 back-end needs GENUINE SDL 1.2 (it links
-    # the SDL-1.2 X11 driver symbol X11_KeyToUnicode and calls 1.2-only APIs).
-    # On 24.04, libsdl1.2-dev is the SDL2-based sdl12-compat shim, which does NOT
-    # export those symbols, so the link fails.
-    runs-on: ubuntu-22.04
+    # Not pinned: libsdl1.2-dev on 24.04 is the SDL2-backed sdl12-compat shim,
+    # which the back-end is happy with now that the ascii key table is read from
+    # the X keymap rather than from SDL's private X11_KeyToUnicode.
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: lukka/get-cmake@latest
@@ -88,9 +87,11 @@ jobs:
 
   linux-x86:
     name: Linux x86 (32-bit)
-    # Pinned to 22.04 for genuine SDL 1.2 (see the linux-x64 job). The 32-bit
-    # build additionally needs NASM: platform/platformCPUInfo.asm (detectX86CPUInfo)
-    # is compiled only on 32-bit (it is x86-only and is skipped on 64-bit via
+    # Still pinned to 22.04, but for the :i386 dev packages rather than for SDL:
+    # newer Debian/Ubuntu drop the 32-bit dev symlinks the configure step needs
+    # (see the multilib gotchas in cmake/BUILD-PLATFORM-NOTES.md). The 32-bit build
+    # additionally needs NASM: platform/platformCPUInfo.asm (detectX86CPUInfo) is
+    # compiled only on 32-bit (it is x86-only and is skipped on 64-bit via
     # TORQUE_64).
     runs-on: ubuntu-22.04
     steps:

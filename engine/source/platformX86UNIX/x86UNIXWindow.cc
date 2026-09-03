@@ -152,6 +152,16 @@ static void InitWindow(const Point2I &initialSize, const char *name)
 //------------------------------------------------------------------------------
 static bool InitSDL()
 {
+   // Ask for the X11 video driver unless the user named one.  This back-end is
+   // an X11 back-end: it takes its Display, screen and display lock functions
+   // straight out of SDL_GetWMInfo's x11 union below, and everything from the
+   // keymap to the clipboard is built on them.  Genuine SDL 1.2 only ever had
+   // X11 to offer, but the SDL2/3-backed sdl12-compat shim that distributions
+   // now ship as SDL 1.2 defaults to Wayland on a Wayland desktop, where
+   // SDL_GetWMInfo answers "No SysWM support available" and the engine used to
+   // stop at "Unable to initialize SDL".  Xwayland serves us fine.
+   setenv("SDL_VIDEODRIVER", "x11", 0);
+
    if (SDL_Init(SDL_INIT_VIDEO) != 0)
       return false;
 

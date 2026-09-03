@@ -28,6 +28,10 @@
 #include "platformX86UNIX/x86UNIXInputManager.h"
 #include "math/mMathFn.h"
 
+#include <X11/Xlib.h>
+#include <X11/Xutil.h>
+#include <X11/keysym.h>
+
 #include <SDL/SDL.h>
 
 // ascii table
@@ -54,30 +58,157 @@ static const U32 JoystickMask = SDL_JOYEVENTMASK;
 
 static const U32 AllInputEvents = MouseMask | KeyboardMask | JoystickMask;
 
-// defined in SDL
-extern "C" Uint16 X11_KeyToUnicode( SDLKey keysym, SDLMod modifiers );
+// The display InitKeyMaps() builds the ascii table against.  Only valid for the
+// duration of that call; MapKey() reads it rather than taking it as an argument
+// so that the (long) list of MapKey() calls below stays readable.
+static Display* sgKeymapDisplay = NULL;
 
 //==============================================================================
 // Static helper functions
 //==============================================================================
+// Translate an SDL 1.2 keysym to the X keysym naming the same key.
+//
+// SDL numbered its keysyms after the X ones it was built on, so the printable
+// range needs no table: SDLK_SPACE..SDLK_z and the Latin-1 SDLK_WORLD_* range
+// already are the X keysym of the same character.  Everything else -- the
+// control keys (whose SDL value is the ASCII code, not the keysym), the keypad,
+// navigation, function and modifier keys -- has to be named explicitly.
+static KeySym SDLKeyToXKeySym(SDLKey key)
+{
+   switch (key)
+   {
+      // Control keys.  SDL numbered these after their ASCII code.
+      case SDLK_BACKSPACE:    return XK_BackSpace;
+      case SDLK_TAB:          return XK_Tab;
+      case SDLK_CLEAR:        return XK_Clear;
+      case SDLK_RETURN:       return XK_Return;
+      case SDLK_PAUSE:        return XK_Pause;
+      case SDLK_ESCAPE:       return XK_Escape;
+      case SDLK_DELETE:       return XK_Delete;
+
+      // Keypad.  These are deliberately the numlock-OFF spellings: a keyboard
+      // binds both spellings of each numpad key and XKeysymToKeycode can resolve
+      // them to *different* keycodes -- XK_KP_Decimal commonly lands on a
+      // separate layout-defined separator key rather than the physical numpad
+      // period.  The numlock-off spelling is the one SDL 1.2 resolved to.
+      case SDLK_KP0:          return XK_KP_Insert;
+      case SDLK_KP1:          return XK_KP_End;
+      case SDLK_KP2:          return XK_KP_Down;
+      case SDLK_KP3:          return XK_KP_Page_Down;
+      case SDLK_KP4:          return XK_KP_Left;
+      case SDLK_KP5:          return XK_KP_Begin;
+      case SDLK_KP6:          return XK_KP_Right;
+      case SDLK_KP7:          return XK_KP_Home;
+      case SDLK_KP8:          return XK_KP_Up;
+      case SDLK_KP9:          return XK_KP_Page_Up;
+      case SDLK_KP_PERIOD:    return XK_KP_Delete;
+      case SDLK_KP_DIVIDE:    return XK_KP_Divide;
+      case SDLK_KP_MULTIPLY:  return XK_KP_Multiply;
+      case SDLK_KP_MINUS:     return XK_KP_Subtract;
+      case SDLK_KP_PLUS:      return XK_KP_Add;
+      case SDLK_KP_ENTER:     return XK_KP_Enter;
+      case SDLK_KP_EQUALS:    return XK_KP_Equal;
+
+      // Navigation.
+      case SDLK_UP:           return XK_Up;
+      case SDLK_DOWN:         return XK_Down;
+      case SDLK_RIGHT:        return XK_Right;
+      case SDLK_LEFT:         return XK_Left;
+      case SDLK_INSERT:       return XK_Insert;
+      case SDLK_HOME:         return XK_Home;
+      case SDLK_END:          return XK_End;
+      case SDLK_PAGEUP:       return XK_Page_Up;
+      case SDLK_PAGEDOWN:     return XK_Page_Down;
+
+      // Function keys.
+      case SDLK_F1:           return XK_F1;
+      case SDLK_F2:           return XK_F2;
+      case SDLK_F3:           return XK_F3;
+      case SDLK_F4:           return XK_F4;
+      case SDLK_F5:           return XK_F5;
+      case SDLK_F6:           return XK_F6;
+      case SDLK_F7:           return XK_F7;
+      case SDLK_F8:           return XK_F8;
+      case SDLK_F9:           return XK_F9;
+      case SDLK_F10:          return XK_F10;
+      case SDLK_F11:          return XK_F11;
+      case SDLK_F12:          return XK_F12;
+      case SDLK_F13:          return XK_F13;
+      case SDLK_F14:          return XK_F14;
+      case SDLK_F15:          return XK_F15;
+
+      // Locks and modifiers.
+      case SDLK_NUMLOCK:      return XK_Num_Lock;
+      case SDLK_CAPSLOCK:     return XK_Caps_Lock;
+      case SDLK_SCROLLOCK:    return XK_Scroll_Lock;
+      case SDLK_RSHIFT:       return XK_Shift_R;
+      case SDLK_LSHIFT:       return XK_Shift_L;
+      case SDLK_RCTRL:        return XK_Control_R;
+      case SDLK_LCTRL:        return XK_Control_L;
+      case SDLK_RALT:         return XK_Alt_R;
+      case SDLK_LALT:         return XK_Alt_L;
+      case SDLK_RMETA:        return XK_Meta_R;
+      case SDLK_LMETA:        return XK_Meta_L;
+      case SDLK_LSUPER:       return XK_Super_L;
+      case SDLK_RSUPER:       return XK_Super_R;
+      case SDLK_MODE:         return XK_Mode_switch;
+      case SDLK_COMPOSE:      return XK_Multi_key;
+
+      // Misc.
+      case SDLK_HELP:         return XK_Help;
+      case SDLK_PRINT:        return XK_Print;
+      case SDLK_SYSREQ:       return XK_Sys_Req;
+      case SDLK_BREAK:        return XK_Break;
+      case SDLK_MENU:         return XK_Menu;
+
+      default:
+         if ((key >= 0x20 && key < 0x7F) || (key >= 0xA0 && key <= 0xFF))
+            return static_cast<KeySym>(key);
+         return NoSymbol;
+   }
+}
+
+// The character the given key produces with the given modifiers held, according
+// to the keymap the X server is currently using.  Asking X rather than assuming
+// a layout is the whole point: on a German keyboard shift-7 is '/' and AltGr-q
+// is '@', and a hardcoded US table would get both wrong.
+static U16 KeySymToAscii(KeySym sym, unsigned int state)
+{
+   XKeyEvent xkey;
+   char keybuf[32];
+
+   if (sgKeymapDisplay == NULL || sym == NoSymbol)
+      return 0;
+
+   dMemset(&xkey, 0, sizeof(xkey));
+   xkey.type = KeyPress;
+   xkey.display = sgKeymapDisplay;
+   xkey.keycode = XKeysymToKeycode(sgKeymapDisplay, sym);
+   xkey.state = state;
+
+   // The key isn't on this keymap at all.
+   if (xkey.keycode == 0)
+      return 0;
+
+   if (XLookupString(&xkey, keybuf, sizeof(keybuf), NULL, NULL) > 0)
+      return static_cast<U16>(static_cast<unsigned char>(keybuf[0]));
+
+   return 0;
+}
+
+//------------------------------------------------------------------------------
 static void MapKey(Uint16 SDLkey, U8 tkey)
 {
    SDLtoTKeyMap[SDLkey] = tkey; 
 
-   Uint16 key = 0;
-   SDLKey skey = (SDLKey)SDLkey;
-   SDLMod mod = KMOD_NONE;
+   KeySym sym = SDLKeyToXKeySym(static_cast<SDLKey>(SDLkey));
+
    // lower case
-   key = X11_KeyToUnicode( skey, mod );
-   AsciiTable[tkey].lower.ascii = key;
+   AsciiTable[tkey].lower.ascii = KeySymToAscii(sym, 0);
    // upper case
-   mod = KMOD_LSHIFT;
-   key = X11_KeyToUnicode( skey, mod );
-   AsciiTable[tkey].upper.ascii = key;
-   // goofy (i18n) case
-   mod = KMOD_MODE;
-   key = X11_KeyToUnicode( skey, mod );
-   AsciiTable[tkey].goofy.ascii = key;
+   AsciiTable[tkey].upper.ascii = KeySymToAscii(sym, ShiftMask);
+   // goofy (i18n) case -- AltGr, which X keymaps reach through Mod5.
+   AsciiTable[tkey].goofy.ascii = KeySymToAscii(sym, Mod5Mask);
 }
 
 //------------------------------------------------------------------------------
@@ -85,7 +216,16 @@ void InitKeyMaps()
 {
    dMemset( &AsciiTable, 0, sizeof( AsciiTable ) );
    dMemset(SDLtoTKeyMap, KEY_NULL, SDLtoTKeyMapSize);
-   
+
+   // The ascii half of the table is read off the X keymap, so it is only as
+   // good as the layout in effect right now.  If there is no display to ask,
+   // every key still maps to its Torque keycode; only the ascii stays zero.
+   DisplayPtrManager xdisplay;
+   sgKeymapDisplay = xdisplay.getDisplayPointer();
+   if (sgKeymapDisplay == NULL)
+      Con::warnf("Input: no X display to read the keymap from; "
+                 "keys will report no ascii character.");
+
    // set up the X to Torque key map
    // stuff
    MapKey(SDLK_BACKSPACE, KEY_BACKSPACE);
@@ -167,6 +307,7 @@ void InitKeyMaps()
    MapKey(SDLK_MENU, KEY_WIN_APPS);
    MapKey(SDLK_MODE, KEY_OEM_102);
 
+   sgKeymapDisplay = NULL;
    keyMapsInitialized = true;
 };
 

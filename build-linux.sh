@@ -17,8 +17,9 @@
 #    sudo apt install build-essential cmake \
 #         libsdl1.2-dev libx11-dev libxft-dev libfreetype6-dev \
 #         libopenal-dev libgl1-mesa-dev
-#  Note: GENUINE SDL 1.2 is required (NOT the SDL2-based sdl12-compat shim that
-#  ships on Ubuntu 24.04+). For a 32-bit build see cmake/BUILD-PLATFORM-NOTES.md.
+#  Note: that is SDL *1.2*, not SDL2. The SDL2-backed sdl12-compat shim that
+#  ships on Ubuntu 24.04+ and Arch works too.
+#  For a 32-bit build see cmake/BUILD-PLATFORM-NOTES.md.
 # ---------------------------------------------------------------------------
 set -e
 
