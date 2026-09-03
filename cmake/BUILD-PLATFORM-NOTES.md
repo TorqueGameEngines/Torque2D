@@ -370,10 +370,15 @@ codesign — `rm -rf Torque2D_DEBUG.app` when switching platforms.
    and rebuild whichever bitness you want at the root.
 3. Resolved issues (the original scaffold's wrong assumptions):
    - **SDL 1.2 is REQUIRED, not optional.** The back-end calls 1.2-only APIs
-     (`SDL_GetVideoSurface`, `SDL_WM_*`, `SDL_*GammaRamp`, `SDL_GL_SwapBuffers`)
-     and pulls `X11_KeyToUnicode` out of `libSDL`. This is **NOT SDL2** — and NOT
-     the SDL2-based `sdl12-compat` shim, which lacks `X11_KeyToUnicode` (so CI is
-     pinned to ubuntu-22.04, which still ships genuine SDL 1.2.15).
+     (`SDL_GetVideoSurface`, `SDL_WM_*`, `SDL_*GammaRamp`, `SDL_GL_SwapBuffers`).
+     This is **NOT SDL2**. The SDL2-backed `sdl12-compat` shim (Ubuntu 24.04+,
+     Arch) *is* supported: the ascii key table used to be built by calling
+     `X11_KeyToUnicode`, a private symbol of SDL 1.2's X11 driver that was never
+     in a public header, and it is now read from the X keymap through Xlib.
+     `sdl12-compat` does export an `X11_KeyToUnicode`, but it is a US-layout
+     `toupper()` stub — it answers `1` for shift-`1` and `;` for shift-`;` — so
+     linking against it used to succeed and then mistype every shifted
+     punctuation character.
    - **`detectX86CPUInfo`** comes from `platform/platformCPUInfo.asm`, 32-bit-only
      NASM (does not assemble for elf64). It's referenced only `#ifndef TORQUE_64`,
      so 64-bit defines `TORQUE_64` (asm unneeded); 32-bit assembles it via NASM.
@@ -386,9 +391,8 @@ codesign — `rm -rf Torque2D_DEBUG.app` when switching platforms.
    up (`DISPLAY=:0`, `WAYLAND_DISPLAY=wayland-0`, `/mnt/wslg/.X11-unix/X0`),
    `./Torque2D_DEBUG` launches the Project Manager GUI: OpenGL initializes through
    WSLg's GL stack (`Renderer: D3D12 (...) Mesa`), screen mode sets, editor modules
-   load, and it exits 0 on close. The `X11_KeyToUnicode()` warning at startup is
-   expected (the genuine-SDL-1.2 symbol, see above) and harmless. Without WSLg/an X
-   server the build/link still verifies but the window won't appear.
+   load, and it exits 0 on close. Without WSLg/an X server the build/link still
+   verifies but the window won't appear.
    **32-bit also boots under WSLg**, but falls back to **llvmpipe (software GL)** —
    `Renderer: llvmpipe (...)` rather than the 64-bit `D3D12 (NVIDIA ...)`, because
    WSLg's hardware-GL passthrough (the d3d12 Mesa driver) is 64-bit only. It still
@@ -748,9 +752,9 @@ keyboard input). Four fixes:
   (`string/stringTable.cc`) — a latent CROSS-PLATFORM bug; fixes all high-bit/accented input.
 - **Phantom glyphs from modifier keys.** `EmscriptenInputManager::MapKey` assigned the raw SDL
   keysym as each key's `ascii`, so modifiers/function/arrow/keypad keys all carried a bogus
-  non-zero ascii and got inserted as (unrenderable) characters. Desktop x86UNIX avoids this via
-  `X11_KeyToUnicode()` (returns 0 for non-character keys), but emscripten's SDL1 port has no
-  working `X11_KeyToUnicode`. Filtered the default assignment: only printable ASCII (0x20-0x7E)
+  non-zero ascii and got inserted as (unrenderable) characters. Desktop x86UNIX avoids this by
+  reading the X keymap (which yields nothing for a non-character key), but a browser canvas has
+  no keymap to read. Filtered the default assignment: only printable ASCII (0x20-0x7E)
   carries a character ascii; SDL specials (≥0x100), 0x7F-0xFF, and control keys (<0x20) map to
   0 and stay handled by keycode (`EmscriptenInputManager.cpp`).
 - **Event-list re-entrancy OOB.** `ProcessMessages()` cached the size of the shared
