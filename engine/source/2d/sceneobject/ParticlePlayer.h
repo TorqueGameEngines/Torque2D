@@ -182,6 +182,15 @@ public:
     inline void setPaused( const bool paused ) { mPaused = paused; }
     inline bool getPaused( void ) const { return mPaused; }
 
+    /// Combine an emitter's authored emission angle with the player's own rotation.
+    /// The authored angle is in DEGREES (that is how the field is edited, and how the
+    /// rest of the emission math carries it), while a SceneObject's angle is in
+    /// RADIANS, so the player angle has to be converted before the two are added.
+    static inline F32 calculateEmissionAngle( const F32 emissionAngleDegrees, const F32 playerAngleRadians, const bool linkEmissionRotation )
+    {
+        return linkEmissionRotation ? emissionAngleDegrees + mRadToDeg( playerAngleRadians ) : emissionAngleDegrees;
+    }
+
     /// Declare Console Object.
     DECLARE_CONOBJECT(ParticlePlayer);
 

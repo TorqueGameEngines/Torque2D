@@ -1178,12 +1178,8 @@ void ParticlePlayer::configureParticle( EmitterNode* pEmitterNode, ParticleSyste
                                                             pParticleAssetEmitter->getEmissionArcVariationField(),
                                                             particlePlayerAge ) * 0.5f;
 
-        // Is the emission rotation linked?
-        if ( pParticleAssetEmitter->getLinkEmissionRotation() )
-        {
-            // Yes, so add the particle player angle.
-            emissionAngle += getAngle();
-        }
+        // Add the particle player's own angle if the emission rotation is linked.
+        emissionAngle = calculateEmissionAngle( emissionAngle, getAngle(), pParticleAssetEmitter->getLinkEmissionRotation() );
 
         // Calculate the final emission angle choosing random Arc.
         emissionAngle = mFmod( CoreMath::mGetRandomF( emissionAngle-emissionArc, emissionAngle+emissionArc ), 360.0f );

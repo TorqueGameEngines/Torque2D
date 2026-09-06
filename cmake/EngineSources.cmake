@@ -360,6 +360,7 @@ set(TORQUE_ENGINE_SOURCES
     ${TORQUE_SRC}/testing/tests/guiTreeRowLayoutTests.cc
     ${TORQUE_SRC}/testing/tests/imageAssetCellNameTests.cc
     ${TORQUE_SRC}/testing/tests/namespaceLinkTests.cc
+    ${TORQUE_SRC}/testing/tests/particleEmissionAngleTests.cc
     ${TORQUE_SRC}/testing/tests/platformFileIoTests.cc
     ${TORQUE_SRC}/testing/tests/platformMemoryTests.cc
     ${TORQUE_SRC}/testing/tests/platformStringTests.cc
