@@ -696,8 +696,9 @@ static bool recurseDumpPath(const char *path, const char *pattern, Vector<Platfo
          fileVector.increment();
          Platform::FileInfo& rInfo = fileVector.last();
 
-         rInfo.pFullPath = StringTable->insert(path);
-         rInfo.pFileName = StringTable->insert(fnbuf);
+         // Case sensitively -- see the note in recurseDumpDirectories below.
+         rInfo.pFullPath = StringTable->insert(path, true);
+         rInfo.pFileName = StringTable->insert(fnbuf, true);
          rInfo.fileSize  = findData.nFileSizeLow;
       }
 
@@ -1092,6 +1093,16 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
    //-----------------------------------------------------------------------------
    // add path to our return list ( provided it is valid )
    //-----------------------------------------------------------------------------
+   // The names pushed below came off FindFirstFile, so they are interned case
+   // sensitively. The string table's hash folds case, and an ordinary insert
+   // returns whichever spelling of a name reached the table first -- "Sprites"
+   // and "Fonts" are both there from static initialisation, so a directory
+   // genuinely called sprites or fonts would be reported under a spelling that
+   // is not the one on disk. See the x86UNIX back-end for the full account. The
+   // file names in recurseDumpPath above are interned the same way, and both
+   // have to stay in step with ResManager::getPaths and the ResDictionary,
+   // which hashes by pointer value and so misses the bucket outright if only
+   // some of these move.
    if (!Platform::isExcludedDirectory(subPath))
    {
 
@@ -1099,7 +1110,7 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
       {
          // We have a path and it's not an empty string or an excluded directory
          if ((subPath && (dStrncmp(subPath, "", 1) != 0)))
-            directoryVector.push_back(StringTable->insert(subPath));
+            directoryVector.push_back(StringTable->insert(subPath, true));
       }
       else
       {
@@ -1121,10 +1132,10 @@ static bool recurseDumpDirectories(const char *basePath, const char *subPath, Ve
                else
                   dSprintf(szPath, 1024, "%s/%s", basePath, subPath);
             }
-            directoryVector.push_back(StringTable->insert(szPath));
+            directoryVector.push_back(StringTable->insert(szPath, true));
          }
          else
-            directoryVector.push_back(StringTable->insert(basePath));
+            directoryVector.push_back(StringTable->insert(basePath, true));
       }
    }
 
