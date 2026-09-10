@@ -161,8 +161,10 @@ ConsoleFunctionWithDocs(populateFontCacheString, ConsoleVoid, 4, 4, (faceName, s
     Note we only support BMP-0, so code points range from 0 to 65535.
     @param faceName The name of the font
     @param size The size of the font.
-    @param rangeStart The initial Unicode point
-    @param rangeEnd The final Unicode point in range
+    @param rangeStart The first Unicode point to generate.
+    @param rangeEnd One past the last Unicode point to generate -- the range is
+    half-open, so 32 to 256 covers printable Latin-1 including 0xFF, and 255
+    stops one code point short of it.
     @return No return value
 */
 ConsoleFunctionWithDocs(populateFontCacheRange, ConsoleVoid, 5, 5, (faceName, size, rangeStart, rangeEnd))
@@ -389,7 +391,9 @@ ConsoleFunctionWithDocs(populateAllFontCacheString, ConsoleVoid, 2, 2, (string i
 /*! 
     Populate the font cache for all fonts with Unicode code points in the specified range. 
     Note we only support BMP-0, so code points range from 0 to 65535.
-    @param rangeStart, rangeEnd The range of the unicode points to populate caches with
+    @param rangeStart, rangeEnd The half-open range of Unicode points to populate
+    caches with. rangeEnd is one past the last point generated, so 32 to 256
+    covers printable Latin-1 including 0xFF.
     @return No return value
 */
 ConsoleFunctionWithDocs(populateAllFontCacheRange, ConsoleVoid, 3, 3, (rangeStart, rangeEnd))

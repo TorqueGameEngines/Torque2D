@@ -1719,9 +1719,11 @@ function GuiProfileEditorLibrary::bakeFont(%this, %face, %dir, %size)
 
 	%prev = $GUI::fontCacheDirectory;
 	$GUI::fontCacheDirectory = %dir;
-	// Printable Latin-1. Anything outside it still renders -- it just rasterizes
-	// on demand instead of coming from the cache.
-	populateFontCacheRange(%face, %size, 32, 255);
+	// Printable Latin-1. The end of the range is exclusive, so 256 is the bound
+	// that bakes 0xFF -- 255 stops one code point short of it. Anything outside
+	// the range still renders; it just rasterizes on demand instead of coming
+	// from the cache.
+	populateFontCacheRange(%face, %size, 32, 256);
 	writeOneFontCache(%face, %size);
 	$GUI::fontCacheDirectory = %prev;
 }

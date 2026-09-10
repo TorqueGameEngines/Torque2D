@@ -6,6 +6,14 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Ent
 describe what changed for someone building a game on the engine: what you can do,
 what your scripts have to say, and what ends up in your files.
 
+## [Unreleased]
+
+### Fixed
+
+- `populateFontCacheRange()` and `populateAllFontCacheRange()` stop one code point short of `rangeEnd`, and their documentation said the opposite -- it called `rangeEnd` "the final Unicode point in range". A bake asking for printable Latin-1 as `32, 255` therefore never generated 0xFF; it wants `32, 256`. The documentation now states that the range is half-open, and the Gui Profile Editor's own font bake, which had the bug, asks for 256.
+- Editor theme fonts are baked at the sizes that are actually drawn. A control's `fontSizeAdjust` multiplies its profile's `fontSize`, so the editor asks for sizes no field anywhere declares -- a profile set to 16 worn by a control adjusting 1.2 asks for 19 -- and `ThemeManager.populateFonts()` only ever filled five hardcoded ones. A size it missed was not a loud failure: the engine built that cache on demand from the installed face and filled it with only the characters that happened to be on screen, which looks correct on a machine that has the theme faces and renders as nothing on one that does not. The bake now covers every size the theme's font folder already holds and every size the engine had to rasterize during the session, and it writes each face and size on its own instead of rescanning the project for every cache sharing the face name. The twenty-one caches the four stock themes were shipping in this state -- nine of them holding nothing but a header -- have been rebaked, so editor text at those sizes now draws without the theme faces installed.
+- The editor's theme font caches shrank from 124MB to 27MB. They had been baked over the whole of BMP-0, which writes a fixed 30-byte record for each of 65,536 code points whether or not the face has that glyph: about 92% of every 2MB file was that table, and most of the remainder was the missing-glyph box cached tens of thousands of times over. `ThemeManager.populateFonts()` now bakes space through the end of the Miscellaneous Symbols block (U+0020 to U+26FF) -- Latin-1, Latin Extended, Greek, Cyrillic, the punctuation nobody notices until it is missing (curly quotes, en and em dashes, the ellipsis), currency, fractions, arrows, math operators and box drawing. Every glyph metric in the rebaked caches is identical to the one it replaced. What is no longer cached is 57 code points across all four themes: the C0 control codes (which a font draws as its missing-glyph box, so caching them only made a stray control character visible), five dingbat arrows, Fira Code's private-use terminal glyphs, and the fi/fl ligatures.
+
 ## [4.0-ea4] - 2026-08-18
 
 Early Access 4 builds out the GUI Editor that Early Access 3 introduced, gives the
