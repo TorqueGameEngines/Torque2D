@@ -414,6 +414,14 @@ public:
    void addPath(const char *path, bool ignoreZips=false);///< Add a path
    void removePath(const char *path);                 ///< Remove a path. Only removes resources that are not loaded.
 
+   /// Forget a file that is no longer on disk. Returns false only if the file
+   /// was still loaded and so had to be kept.
+   bool removeFile(const char *fileName);
+
+   /// Forget every file beneath a directory that is no longer on disk. Returns
+   /// false if any of them was still loaded and so had to be kept.
+   bool removeDirectory(const char *path);
+
    void setMissingFileLogging(bool log);              ///< Should we log missing files?
    bool getMissingFileList(Vector<char *> &list);     ///< Gets which files are missing
    void clearMissingFileList();                       ///< Clears the missing file list

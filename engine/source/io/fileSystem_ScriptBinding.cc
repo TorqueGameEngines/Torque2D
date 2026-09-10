@@ -222,6 +222,12 @@ ConsoleFunctionWithDocs(isDirectory, ConsoleBool, 2, 2, (path))
 /*! 
     @param fileName Filename to check.
     @return Returns true if the given filename is an existing file or false otherwise
+
+    Answered by the resource manager rather than by asking the filesystem
+    directly, so that it also reports the files a mounted zip provides -- those
+    have no standalone path to stat. Files the manager has never heard of are
+    checked on disk and remembered, and fileDelete() and directoryDelete() make
+    it forget, so the answer tracks the disk either way.
 */
 ConsoleFunctionWithDocs(isFile, ConsoleBool, 2, 2, (fileName))
 {
@@ -384,7 +390,21 @@ ConsoleFunctionWithDocs(fileDelete, ConsoleBool, 2,2, (fileName))
    Con::expandPath( fileName, sizeof( fileName ), argv[1] );
    Platform::makeFullPathName(fileName, sandboxFileName, sizeof(sandboxFileName));
 
-   return Platform::fileDelete(sandboxFileName);
+   if (!Platform::fileDelete(sandboxFileName))
+      return false;
+
+   // The resource manager keeps its own record of what exists and isFile() and
+   // getFileCRC() answer out of it, so a delete that does not say so leaves both
+   // of them describing a file that is gone -- and getFileCRC opening nothing.
+   // Its dictionary is keyed on the name as written, since getPaths only splits
+   // at the last separator and does not resolve, so the expanded name and the
+   // full one are two different keys and whichever the file was registered
+   // under is the one that has to go.
+   ResourceManager->removeFile(fileName);
+   if (dStricmp(fileName, sandboxFileName))
+      ResourceManager->removeFile(sandboxFileName);
+
+   return true;
 }
 
 /*! 
@@ -399,7 +419,16 @@ ConsoleFunctionWithDocs(directoryDelete, ConsoleBool, 2,2, (directoryName))
    Con::expandPath( directoryName, sizeof( directoryName ), argv[1] );
    Platform::makeFullPathName(directoryName, sandboxdirectoryName, sizeof(sandboxdirectoryName));
 
-   return Platform::deleteDirectory(sandboxdirectoryName);
+   if (!Platform::deleteDirectory(sandboxdirectoryName))
+      return false;
+
+   // As fileDelete: every entry beneath the directory has to be forgotten too,
+   // or isFile() goes on reporting the files that were inside it. One call
+   // rather than two, because removeDirectory resolves both sides to a full
+   // path before comparing them.
+   ResourceManager->removeDirectory(sandboxdirectoryName);
+
+   return true;
 }
 
 //----------------------------------------------------------------

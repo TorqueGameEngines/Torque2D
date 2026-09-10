@@ -553,6 +553,91 @@ void ResManager::removePath(const char *path)
    }
 }
 
+//------------------------------------------------------------------------------
+// isFile() and getFileCRC() answer out of this dictionary rather than off the
+// filesystem, and they are right to: a file inside a mounted zip has no
+// standalone path to stat, so making them a plain Platform::isFile would stop
+// them reporting everything a volume provides. The cost of that is that a
+// delete has to say so here, or the manager goes on insisting the file is
+// there for the rest of the session.
+//
+// Dropping the entry is all it takes. find() falls back to Platform::isFile
+// when the dictionary misses, so a name with no entry left is answered from the
+// filesystem, while a name a volume still provides keeps its entry and its
+// answer.
+//
+// A resource that is still loaded is left alone -- the rule removePath already
+// follows -- because freeResource deletes the ResourceObject and any live
+// Resource<T> handle holds a pointer to it. Deleting a file out from under a
+// loaded resource is a questionable thing for a caller to do; it should not
+// also corrupt the manager.
+//------------------------------------------------------------------------------
+
+bool ResManager::removeFile (const char *fileName)
+{
+   if (!fileName)
+      return (false);
+
+   StringTableEntry path, file;
+   getPaths (fileName, path, file);
+
+   ResourceObject *obj = dictionary.find (path, file);
+   if (!obj)
+      return (true);          // nothing knew about it; nothing to forget
+
+   if (obj->mInstance || obj->lockCount)
+      return (false);
+
+   freeResource (obj);
+   return (true);
+}
+
+//------------------------------------------------------------------------------
+
+bool ResManager::removeDirectory (const char *path)
+{
+   if (!path)
+      return (false);
+
+   char dir[1024];
+   Platform::makeFullPathName (path, dir, sizeof (dir));
+
+   // A trailing separator would never match: the built path carries exactly one
+   // between the directory and the name, and it is tested separately below.
+   S32 len = (S32) dStrlen (dir);
+   while (len && (dir[len - 1] == '/' || dir[len - 1] == '\\'))
+      dir[--len] = 0;
+
+   if (!len)
+      return (false);
+
+   // A path prefix rather than a glob: the directory is named exactly, and
+   // everything beneath it goes with it. Compared without case, as removePath
+   // does, because the two platforms that reach this disagree about it.
+   bool removedAll = true;
+   ResourceObject *walk = resourceList.nextResource;
+   while (walk)
+   {
+      ResourceObject *next = walk->nextResource;
+      const char *fname = buildPath (walk->path, walk->name);
+
+      if (!dStrnicmp (fname, dir, len) &&
+          (fname[len] == '/' || fname[len] == '\\'))
+      {
+         if (walk->mInstance || walk->lockCount)
+            removedAll = false;
+         else
+            freeResource (walk);
+      }
+
+      walk = next;
+   }
+
+   return (removedAll);
+}
+
+//------------------------------------------------------------------------------
+
 void ResManager::setModPaths (U32 numPaths, const char **paths)
 {
    // [tom, 10/28/2006] If we're using a VFS, we don't want to do this
@@ -784,6 +869,13 @@ bool ResManager::getCrc (const char *fileName, U32 & crcVal,
       obj->destruct ();
 
       Stream *stream = openStream (obj);
+
+      // The entry can outlive the file it describes -- a delete that did not
+      // maintain the dictionary, a removable volume, a file taken away by
+      // something else -- and every line below here dereferences this. It used
+      // to go straight to stream->read and take the process with it.
+      if (!stream)
+         return (false);
 
       U32 waterMark = 0xFFFFFFFF;
 
