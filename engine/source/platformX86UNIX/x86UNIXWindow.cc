@@ -53,6 +53,8 @@
 #include <SDL/SDL.h>
 #include <SDL/SDL_syswm.h>
 #include <SDL/SDL_version.h>
+#include <X11/Xatom.h>
+#include <X11/Xutil.h>
 #endif
 
 x86UNIXPlatformState *x86UNIXState;
@@ -204,6 +206,135 @@ static bool InitSDL()
 }
 
 //------------------------------------------------------------------------------
+// Debounced window-geometry state (see ProcessMessages).  File scope because a
+// change can be reported by SDL or by the window watcher below, and both are
+// settled the same way.
+static bool      sGeometryPending = false;
+static U32       sGeometryChangedMs = 0;
+static const U32 GeometrySettleMs = 150;
+
+static void NoteGeometryChanged()
+{
+   sGeometryPending = true;
+   sGeometryChangedMs = Platform::getRealMilliseconds();
+}
+
+//------------------------------------------------------------------------------
+// The window watcher: a connection of our own to the X server, selecting
+// structure and property events on the window the window manager manages.
+// Neither SDL 1.2 reports what the window manager does to the window: genuine
+// SDL 1.2 passes on its resizes but not its _NET_WM_STATE, and sdl12-compat
+// passes on no X events at all -- and while the window manager has the window
+// fullscreen (SUPER+F in Hyprland), not even its resizes, which SDL3 sees but
+// drops on the way up to the SDL 1.2 API.  Any client may select events on any
+// window, so a second connection sees all of it without disturbing SDL's.
+static Display* sWatchDisplay = NULL;
+static Window   sWatchedWindow = 0;
+static Atom     sNetWMState = None;
+static Atom     sNetWMStateFullScreen = None;
+
+void WatchWMWindow(Window wmWindow)
+{
+   if (sWatchDisplay == NULL)
+   {
+      sWatchDisplay = XOpenDisplay(NULL);
+      if (sWatchDisplay == NULL)
+         return;
+      sNetWMState = XInternAtom(sWatchDisplay, "_NET_WM_STATE", False);
+      sNetWMStateFullScreen =
+         XInternAtom(sWatchDisplay, "_NET_WM_STATE_FULLSCREEN", False);
+   }
+   if (wmWindow == sWatchedWindow)
+      return;
+   sWatchedWindow = wmWindow;
+   XSelectInput(sWatchDisplay, wmWindow, StructureNotifyMask | PropertyChangeMask);
+   XFlush(sWatchDisplay);
+}
+
+static void ProcessWatcherEvents()
+{
+   if (sWatchDisplay == NULL)
+      return;
+   while (XPending(sWatchDisplay))
+   {
+      XEvent event;
+      XNextEvent(sWatchDisplay, &event);
+      if (event.xany.window != sWatchedWindow)
+         continue;
+      if (event.type == ConfigureNotify ||
+          (event.type == PropertyNotify && event.xproperty.atom == sNetWMState))
+         NoteGeometryChanged();
+   }
+}
+
+//------------------------------------------------------------------------------
+// The managed window's real size, and whether the window manager has it
+// fullscreen (_NET_WM_STATE_FULLSCREEN).
+static bool GetWindowGeometry(Point2I& size, bool& fullScreen)
+{
+   XWindowAttributes attributes;
+   if (sWatchDisplay == NULL || sWatchedWindow == 0 ||
+       !XGetWindowAttributes(sWatchDisplay, sWatchedWindow, &attributes))
+      return false;
+   size.set(attributes.width, attributes.height);
+
+   fullScreen = false;
+   Atom type;
+   int format;
+   unsigned long count, remaining;
+   unsigned char* data = NULL;
+   if (XGetWindowProperty(sWatchDisplay, sWatchedWindow, sNetWMState, 0, 64,
+         False, XA_ATOM, &type, &format, &count, &remaining, &data) == Success &&
+       data != NULL)
+   {
+      Atom* atoms = (Atom*) data;
+      for (unsigned long i = 0; i < count; ++i)
+         if (atoms[i] == sNetWMStateFullScreen)
+            fullScreen = true;
+      XFree(data);
+   }
+   return true;
+}
+
+//------------------------------------------------------------------------------
+// Let go of a window created at an exact size (OpenGLDevice::setScreenMode)
+// once the window manager has had time to float it.  It decides a moment after
+// the window maps, not at the map itself, and a window whose hints are gone by
+// then is tiled; holding them 100 ms was already enough on Hyprland.  Straight
+// to the X server rather than through SDL_SetVideoMode, which would rebuild the
+// surface and reload every texture to change nothing else; both SDL 1.2s go on
+// reporting the window's resizes either way.
+static const U32 ExactSizeHoldMs = 500;
+
+static void ReleaseExactSize()
+{
+   if (!OpenGLDevice::smHoldingExactSize ||
+       Platform::getRealMilliseconds() - OpenGLDevice::smExactSizeHeldSince < ExactSizeHoldMs)
+      return;
+   OpenGLDevice::smHoldingExactSize = false;
+   if (sWatchDisplay == NULL || sWatchedWindow == 0)
+      return;
+   XSizeHints hints;
+   long supplied;
+   if (!XGetWMNormalHints(sWatchDisplay, sWatchedWindow, &hints, &supplied))
+      hints.flags = 0;
+   hints.flags &= ~(PMinSize | PMaxSize);
+   XSetWMNormalHints(sWatchDisplay, sWatchedWindow, &hints);
+   XFlush(sWatchDisplay);
+}
+
+//------------------------------------------------------------------------------
+// sdl12-compat -- SDL 1.2 implemented on SDL2/SDL3, which distributions now ship
+// as SDL 1.2 -- reports itself as 1.2.50 or later; genuine SDL 1.2 ended at
+// 1.2.15.  They go fullscreen differently: sdl12-compat asks the window manager
+// (_NET_WM_STATE_FULLSCREEN), while genuine SDL 1.2 covers the screen with an
+// override-redirect window of its own that the window manager never sees.
+static bool SDLIsCompat()
+{
+   return SDL_Linked_Version()->patch >= 50;
+}
+
+//------------------------------------------------------------------------------
 static void ProcessSYSWMEvent(const SDL_Event& event)
 {
    XEvent& xevent = event.syswm.msg->event.xevent;
@@ -307,18 +438,14 @@ static bool ProcessMessages()
       SDL_EVENTMASK(SDL_USEREVENT);
    static SDL_Event events[MaxEvents];
  
-   // Debounced window-resize state. Under SDL 1.2 the only way to resize the GL
+   // Window geometry is debounced. Under SDL 1.2 the only way to resize the GL
    // surface is SDL_SetVideoMode, which recreates the GL context and forces a
    // full texture reload -- unlike the Win32 back-end, where the GL drawable
    // follows the window for free (WM_SIZE just calls Platform::setWindowSize).
    // Rebuilding on every SDL_VIDEORESIZE during a live drag is painfully laggy,
-   // so we remember the latest requested size and rebuild the surface only once
-   // the user stops resizing for ResizeSettleMs (one texture reload per resize
-   // gesture instead of one per frame).
-   static bool      sResizePending = false;
-   static S32       sResizeW = 0, sResizeH = 0;
-   static U32       sLastResizeMs = 0;
-   static const U32 ResizeSettleMs = 150;
+   // so the surface is rebuilt only once the user stops resizing for
+   // GeometrySettleMs (one texture reload per resize gesture instead of one per
+   // frame). The state lives at file scope, beside NoteGeometryChanged.
 
    SDL_PumpEvents();
    S32 numEvents = SDL_PeepEvents(events, MaxEvents, SDL_GETEVENT, Mask);
@@ -332,15 +459,9 @@ static bool ProcessMessages()
             return false;
             break;
          case SDL_VIDEORESIZE:
-            // Record the requested size; the surface is rebuilt once the drag
-            // settles (see below).
-            if (event.resize.w > 0 && event.resize.h > 0)
-            {
-               sResizePending = true;
-               sResizeW = event.resize.w;
-               sResizeH = event.resize.h;
-               sLastResizeMs = Platform::getRealMilliseconds();
-            }
+            // The surface is rebuilt once the drag settles (see below), at
+            // the size the X server reports then.
+            NoteGeometryChanged();
             break;
          case SDL_VIDEOEXPOSE:
             Game->refreshWindow();
@@ -368,19 +489,53 @@ static bool ProcessMessages()
       }
    }
 
-   // Once the drag has settled, rebuild the GL surface at the final size. This
-   // runs every frame (not gated on events) so it still fires after the resize
+   ProcessWatcherEvents();
+   ReleaseExactSize();
+
+   // Once things have settled, bring the surface into line with the window.
+   // This runs every frame (not gated on events) so it still fires after the
    // events stop. setScreenMode also updates Platform::getWindowSize(), which
    // drives the canvas extent (GuiCanvas::maintainSizing) and GL viewport
-   // (dglSetClipRect). Windowed sizes bypass the resolution-list check in
-   // OpenGLDevice::setScreenMode.
-   if (sResizePending &&
-       (Platform::getRealMilliseconds() - sLastResizeMs) >= ResizeSettleMs)
+   // (dglSetClipRect).
+   if (sGeometryPending &&
+       (Platform::getRealMilliseconds() - sGeometryChangedMs) >= GeometrySettleMs)
    {
-      sResizePending = false;
-      Point2I cur = Platform::getWindowSize();
-      if (sResizeW != cur.x || sResizeH != cur.y)
-         Video::setScreenMode(sResizeW, sResizeH, Video::getResolution().bpp, false);
+      sGeometryPending = false;
+      Point2I size;
+      bool wmFullScreen;
+      if (GetWindowGeometry(size, wmFullScreen))
+      {
+         const U32 bpp = Video::getResolution().bpp;
+         if (SDLIsCompat() && wmFullScreen != Video::isFullScreen())
+         {
+            if (wmFullScreen)
+            {
+               // The window manager made the window fullscreen (SUPER+F). Go
+               // fullscreen with it: sdl12-compat takes a windowed
+               // SDL_SetVideoMode now as a request to leave again. forceIt:
+               // this is the size the window manager chose, not a mode to
+               // check against the resolution list.
+               DisplayDevice* device = Video::getDevice("OpenGL");
+               if (device)
+                  device->setScreenMode(size.x, size.y, bpp, true, true);
+            }
+            else
+            {
+               // ...and has taken it out of fullscreen again.
+               Video::setScreenMode(size.x, size.y, bpp, false);
+            }
+         }
+         else if (!Video::isFullScreen() && size != Platform::getWindowSize())
+         {
+            // Resized as a window -- a drag, or a tiling window manager laying
+            // it out. Under genuine SDL 1.2 this is also how a window the
+            // window manager makes fullscreen is followed, since SDL_FULLSCREEN
+            // there would put up an override-redirect window of its own. A
+            // window the game made fullscreen keeps the size the game gave it:
+            // it may have asked for 1024x768, which SDL scales to fill.
+            Video::setScreenMode(size.x, size.y, bpp, false);
+         }
+      }
       Game->refreshWindow();
    }
 
@@ -945,8 +1100,8 @@ void Platform::setWindowTitle( const char* title )
 Resolution Video::getDesktopResolution()
 {
    Resolution  Result;
-   Result.h   = x86UNIXState->getDesktopSize().x;
-   Result.w   = x86UNIXState->getDesktopSize().y;
+   Result.w   = x86UNIXState->getDesktopSize().x;
+   Result.h   = x86UNIXState->getDesktopSize().y;
    Result.bpp = x86UNIXState->getDesktopBpp();
 
   return Result;

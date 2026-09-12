@@ -8,7 +8,15 @@ what your scripts have to say, and what ends up in your files.
 
 ## [Unreleased]
 
+### Added
+
+- On Linux, the game window works with tiling window managers such as Hyprland, i3 and sway. `$pref::Video::windowedRes` now says whether the game has a size in mind. Leave it empty and the window opens resizable at `$pref::Video::defaultResolution`, and a tiling window manager is free to tile it. Give it a size and the window opens at exactly that size, which a tiling window manager takes as its cue to float the window rather than tile it; it can still be resized afterwards. A stacking desktop simply opens the window at the size either way. The editor's own preferences now leave `windowedRes` empty, so the editor tiles; everywhere else -- Windows, macOS, a stacking Linux desktop -- it still opens at 1024x768. New projects keep AppCore's `1024 768`, so a game opens at the size it was designed for and floats on a tiling window manager until the player tiles it.
+- On Linux, the engine follows the window manager into and out of fullscreen. Make the window fullscreen from the window manager -- SUPER+F in Hyprland -- and the canvas grows to fill the screen, and shrinks back when you leave. With the SDL 1.2 that distributions now ship (`sdl12-compat`), `isFullScreen()` reports it as well, and `$pref::Video::fullScreen` is honoured at start-up as it already was on Windows and macOS. A build against genuine SDL 1.2 follows the new size but goes on reporting a window, because that SDL's own fullscreen covers the screen with a window the window manager never sees.
+
 ### Fixed
+
+- On Linux, the window no longer appears at 800x600 and resizes itself a moment later. It is created at the size the game is about to ask for; the old placeholder came from `$pref::Video::resolution`, which nothing sets before the canvas exists. The first size mattered more than it looked: a tiling window manager remembers it, and it was the size Hyprland floated the window at.
+- On Linux, `getDesktopResolution()` could report the desktop's width and height the wrong way round.
 
 - `fileDelete()` and `directoryDelete()` now tell the resource manager what they removed, so `isFile()` stops reporting a file that has been deleted. `isFile()` and `getFileCRC()` answer out of the manager's dictionary rather than off the filesystem -- deliberately, because a file inside a mounted zip has no standalone path to check -- and nothing maintained that dictionary on delete, so for the rest of the session a deleted file went on existing as far as script could tell. A fresh process reported correctly, which is what made it easy to miss. A file whose resource is still loaded is left in place, the same rule `removePath()` follows. `fileSize()` was never affected and remains a straight filesystem check.
 - `getFileCRC()` no longer crashes when the file behind it has gone. It opened whatever the resource manager handed it and read from the result without checking, so any entry that outlived its file -- a delete that went around the engine, a removable volume, a file taken away by another process -- ended the process with an access violation instead of returning -1.

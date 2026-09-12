@@ -48,6 +48,7 @@ class x86UNIXPlatformState
       S32                  mDesktopBpp;
       Display              *mDisplay;
       Window               mCurrentWindow;
+      Window               mWMWindow;
       Screen               *mScreenPointer;
       int                  mScreenNumber;
       char                 mWindowName[40];
@@ -95,6 +96,14 @@ class x86UNIXPlatformState
 
       void setWindow( Window newWindow ) { mCurrentWindow = newWindow; }
       Window getWindow() { return mCurrentWindow; }
+
+      // The window the window manager manages, which is not always the one we
+      // draw into: genuine SDL 1.2 draws into a child of it (SDL_SysWMinfo's
+      // window) and hands the toplevel over as wmwindow; sdl12-compat has only
+      // the one window and reports it as both.  Size hints, _NET_WM_STATE and
+      // the window manager's resizes all belong to this one.
+      void setWMWindow( Window newWindow ) { mWMWindow = newWindow; }
+      Window getWMWindow() { return mWMWindow; }
 
       void setWindowSize (S32 horizontal, S32 vertical ) 
           { mWindowSize.set ( horizontal, vertical ); }
@@ -156,10 +165,15 @@ class x86UNIXPlatformState
          mXWindowsRunning = false;
          mDedicated = false;
          mDSleep = false;
+         mCurrentWindow = mWMWindow = 0;
       }
 };
 
 extern x86UNIXPlatformState  * x86UNIXState;
+
+// Follow what the window manager does to wmWindow -- its resizes and its
+// _NET_WM_STATE -- on a connection of our own (x86UNIXWindow.cc).
+void WatchWMWindow( Window wmWindow );
 
 class DisplayPtrManager
 {

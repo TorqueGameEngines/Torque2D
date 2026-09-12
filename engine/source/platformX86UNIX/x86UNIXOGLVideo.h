@@ -39,6 +39,14 @@ class OpenGLDevice : public DisplayDevice
       void addResolution(S32 width, S32 height, bool check=true);
 
    public:
+      // Set by InitOpenGL: the window is to be created at exactly the size
+      // asked for, so a tiling window manager floats it instead of tiling it.
+      static bool smCreateAtExactSize;
+      // While set, the window is being held at that size (see setScreenMode);
+      // x86UNIXWindow.cc lets go of it once the window manager has decided.
+      static bool smHoldingExactSize;
+      static U32  smExactSizeHeldSince;
+
       OpenGLDevice();
       virtual ~OpenGLDevice();
 

@@ -41,8 +41,21 @@ bool InitOpenGL()
 {
    DisplayDevice::init();
 
-   // Get the video settings from the prefs:
-   const char* resString = Con::getVariable( "$pref::Video::resolution" );
+   // Create the window at the size the game is about to ask for -- the choice
+   // canvas.cs makes: $pref::Video::windowedRes, or defaultResolution when
+   // that is empty.  This used to read $pref::Video::resolution, which nothing
+   // sets before the canvas exists, so the window first appeared at an 800x600
+   // placeholder and was resized a moment later.  The first map is the one a
+   // tiling window manager remembers: that placeholder was the size Hyprland
+   // floated the window at.
+   //
+   // An empty windowedRes is also how a game says it has no preference, which
+   // leaves a tiling window manager free to tile the window.  A windowedRes is
+   // a size the game wants exactly; see OpenGLDevice::setScreenMode.
+   const char* resString = Con::getVariable( "$pref::Video::windowedRes" );
+   OpenGLDevice::smCreateAtExactSize = ( resString[0] != '\0' );
+   if ( !OpenGLDevice::smCreateAtExactSize )
+      resString = Con::getVariable( "$pref::Video::defaultResolution" );
    char* tempBuf = new char[dStrlen( resString ) + 1];
    dStrcpy( tempBuf, resString );
    char* temp = dStrtok( tempBuf, " x\0" );
@@ -75,6 +88,9 @@ bool InitOpenGL()
 
 //------------------------------------------------------------------------------
 bool OpenGLDevice::smCanSwitchBitDepth = false;
+bool OpenGLDevice::smCreateAtExactSize = false;
+bool OpenGLDevice::smHoldingExactSize = false;
+U32  OpenGLDevice::smExactSizeHeldSince = 0;
 
 //------------------------------------------------------------------------------
 OpenGLDevice::OpenGLDevice()
@@ -301,8 +317,10 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp,
 
       // The resolution list only constrains fullscreen modes. A windowed surface
       // can be any size (e.g. an arbitrary window-manager drag resize), so don't
-      // reject windowed sizes that aren't in the list.
-      if ( !IsInList && fullScreen )
+      // reject windowed sizes that aren't in the list. Nor a fullscreen one with
+      // forceIt: that is the window manager having made the window fullscreen
+      // at a size of its choosing, which we are only matching.
+      if ( !IsInList && fullScreen && !forceIt )
       {
          Con::printf( "Selected resolution not available: %d %d %d",
             width, height, bpp);
@@ -338,21 +356,51 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp,
 //    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
 //    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
 
+   // A window the game wants at an exact size is created fixed-size: SDL sets
+   // its minimum and maximum size hints to that size before the window is
+   // first mapped, which is what makes a tiling window manager (Hyprland, i3,
+   // sway) float it at that size instead of tiling it; a stacking window
+   // manager just sees a window open at the size it asked for. It is held
+   // fixed-size -- through the canvas's own setScreenMode a moment later --
+   // until x86UNIXWindow.cc lets go of it, so the player can then resize it.
+   // Letting go straight away loses the race: the window manager decides a
+   // moment after the window maps, and by then the hints would be gone. Only
+   // ever at creation: a window already mapped and tiled cannot be floated.
+   const bool creatingExact = !fullScreen && smCreateAtExactSize &&
+      !x86UNIXState->windowCreated();
+   if ( creatingExact )
+   {
+      smHoldingExactSize = true;
+      smExactSizeHeldSince = Platform::getRealMilliseconds();
+   }
+
    U32 flags = SDL_OPENGL;
    if (fullScreen)
       flags |= SDL_FULLSCREEN;
-   else
-      // Let the window manager resize the window; without this SDL fixes the
-      // window size and never emits SDL_VIDEORESIZE, so the canvas could not
-      // follow a resize. The resize handler in x86UNIXWindow.cc picks up the
-      // new size from the event.
+   else if (!smHoldingExactSize)
+      // Let the window manager resize the window; without this SDL sets
+      // minimum and maximum size hints that pin it at this size. Its resizes
+      // arrive as SDL_VIDEORESIZE and are followed in x86UNIXWindow.cc.
       flags |= SDL_RESIZABLE;
 
+   // Centre the window we are creating at an exact size. Genuine SDL 1.2
+   // otherwise leaves it where the X server put it, the top-left corner, which
+   // is where a tiling window manager floats it -- under its bar. SDL 1.2
+   // reads this on every mode change, so it is set for creation only, and
+   // never over a value of the user's own. (sdl12-compat reads its environment
+   // once, at SDL_Init, and needs no help: SDL3 centres a window by default.)
+   const bool centre = creatingExact && getenv( "SDL_VIDEO_CENTERED" ) == NULL;
+   if ( centre )
+      setenv( "SDL_VIDEO_CENTERED", "1", 1 );
+
    Con::printf( "Setting screen mode to %dx%dx%d (%s)...", width, height,
-      bpp, ( fullScreen ? "fs" : "w" ) );
+      bpp, ( fullScreen ? "fs" : ( smHoldingExactSize ? "w, exact" : "w" ) ) );
 
    // set the new video mode
-   if (SDL_SetVideoMode(width, height, bpp, flags) == NULL)
+   SDL_Surface* surface = SDL_SetVideoMode(width, height, bpp, flags);
+   if ( centre )
+      unsetenv( "SDL_VIDEO_CENTERED" );
+   if (surface == NULL)
    {
       Con::printf("Unable to set SDL Video Mode: %s", SDL_GetError());
       return false;
@@ -385,6 +433,11 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp,
       return false;
    }
    x86UNIXState->setWindow(sysinfo.info.x11.window);
+   // The toplevel, which under genuine SDL 1.2 is not the window above (see
+   // x86UNIXPlatformState::setWMWindow).
+   x86UNIXState->setWMWindow(sysinfo.info.x11.wmwindow ?
+      sysinfo.info.x11.wmwindow : sysinfo.info.x11.window);
+   WatchWMWindow(x86UNIXState->getWMWindow());
 
    // set various other parameters
    x86UNIXState->setWindowCreated(true);
