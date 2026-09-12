@@ -21,6 +21,15 @@
 //-----------------------------------------------------------------------------
 #include "platformEmscripten/platformEmscripten.h"
 
+// The web build keeps its own alerts, in platform.js, rather than using
+// platformSDL/sdlMsgBox.cpp as Linux does: SDL 2 cannot show a message box in
+// a browser. A page has no way to put up a box with buttons of its choosing
+// and wait for the answer, so SDL_ShowMessageBox fails there ("No message
+// system available"); only SDL_ShowSimpleMessageBox works, as a blocking
+// alert(). sdlMsgBox.cpp would print every alert to the console and answer
+// every question no. platform.js logs AlertOK, which the engine also uses for
+// failed asserts, and asks the others with confirm().
+
 extern "C"
 {
 	extern int js_AlertOK(const char *title, const char *message);

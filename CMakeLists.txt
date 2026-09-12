@@ -533,10 +533,16 @@ if(EMSCRIPTEN)
     # engine's types.gcc.h and some vendored libs both key off bare EMSCRIPTEN.
     # That's what makes the engine select TORQUE_OS_EMSCRIPTEN / platformEmscripten.)
 
-    # SDL 1.2 (input/video back-end, like the desktop X11 build) is provided by
-    # emscripten's bundled SDL1 port; USE_SDL=1 is the default but set it explicitly
-    # for both compile (headers: #include <SDL/SDL.h>) and link.
-    target_compile_options(Torque2D PRIVATE "-sUSE_SDL=1")
+    # SDL 2 is Emscripten's own port -- 2.32.10, the version the Linux build
+    # vendors -- which emcc fetches and builds the first time it is asked for.
+    # It makes the canvas and its WebGL context, and delivers every key,
+    # character, mouse and wheel event. -sUSE_SDL=2 is needed when compiling
+    # as well as when linking: it puts the port's headers on the include path,
+    # so that <SDL.h> is found -- the form platformSDL and the Linux back-end
+    # include. TORQUE_SDL: the platform layer is built on SDL 2 and compiles
+    # engine/source/platformSDL, as on Linux.
+    target_compile_options(Torque2D PRIVATE "-sUSE_SDL=2")
+    target_compile_definitions(Torque2D PRIVATE TORQUE_SDL)
 
     # FreeType (built from source in engine/lib for the web build only) — the
     # rasterizer EmscriptenFont uses to synthesize glyphs from a bundled .ttf when a
@@ -570,8 +576,11 @@ if(EMSCRIPTEN)
         "SHELL:--preload-file ${CMAKE_SOURCE_DIR}/PlanetX@/PlanetX")
 
     target_link_options(Torque2D PRIVATE
-        "-sUSE_SDL=1"
-        "-sLEGACY_GL_EMULATION=1"      # fixed-function GL over WebGL (at-risk flag; see notes)
+        "-sUSE_SDL=2"
+        # Fixed-function GL over WebGL 1. It needs the context made by SDL (see
+        # CreateGLWindow in EmscriptenOGLVideo.cpp), and cannot be combined with
+        # FULL_ES2/FULL_ES3, which is why the build stays on WebGL 1.
+        "-sLEGACY_GL_EMULATION=1"
         # Fixed 512 MB heap: with ALLOW_MEMORY_GROWTH the WASM heap ArrayBuffer is
         # resizable, and Chrome's texImage2D rejects typed-array views into a
         # resizable buffer (seen with emscripten 6.x + LEGACY_GL_EMULATION).

@@ -16,7 +16,7 @@ project files from it.
 | iOS (arm64 simulator) | ✅ | ✅ | ✅ Debug (.app, full bundle) | ✅ editor renders + touch works (user-confirmed) |
 | iOS (arm64 device) | ✅ | ✅ | ✅ Debug (.app, code-signed) | ✅ runs on a real iPad — perfect FPS, touch good (user-confirmed) |
 | Android (Gradle+CMake) | ✅ | ✅ (CI) | ✅ APK (CI) | ✅ editor boots, renders & runs on a real Pixel 7 Pro via Firebase Test Lab — main UI (Roboto) text renders; only un-baked decorative faces (e.g. "black ops one") stay blank. See Android round |
-| Web (Emscripten/WASM) | ✅ | ✅ | ✅ Debug (.html/.js/.wasm/.data) | ✅ editor renders in-browser — Project Manager UI with full TEXT (.uft cache + a FreeType-rasterized Roboto fallback for any uncached face/size) + sprites; toys render incl. blended/lit draws (PyramidToy light); stable, no crash |
+| Web (Emscripten/WASM) | ✅ | ✅ | ✅ Debug+Release (.html/.js/.wasm/.data) | ✅ editor renders in-browser — Project Manager UI with full TEXT (.uft cache + a FreeType-rasterized Roboto fallback for any uncached face/size) + sprites; toys render incl. blended/lit draws (PyramidToy light); stable, no crash. On SDL 2 since the SDL 2 round: typing (accented letters too), the mouse wheel and browser resizes verified headless |
 
 **Linux (32 & 64-bit) builds and links** (verified in WSL/Ubuntu 22.04). The
 **64-bit Debug GUI runtime is verified under WSLg** (`./build-linux.sh` →
@@ -541,7 +541,11 @@ Android pattern: one list + guards), NOT the legacy list.
 ### How it's wired (root `CMakeLists.txt` + `PlatformSources.cmake`)
 - `TORQUE_PLATFORM_SOURCES_EMSCRIPTEN` lists the `platformEmscripten/*.cpp` back-end
   (incl. `EmscriptenGL2ES.cpp`, the fixed-function→GLES immediate-mode shim, which
-  the legacy list wrongly omitted).
+  the legacy list wrongly omitted). Its `glBegin`/`glEnd`/`glVertex*` are dead code,
+  though: they are declared as C++ overloads (`glBegin(GLint)`, not GL's C
+  `glBegin(GLenum)`), which nothing calls — `llvm-nm` shows only the mangled
+  `_Z7glBegini` and no caller of it. Immediate mode on the web is emscripten's
+  `LEGACY_GL_EMULATION`.
 - The `EMSCRIPTEN` branch is matched **before** `UNIX` in the platform dispatch (the
   Emscripten toolchain sets `UNIX=1`, exactly like Android).
 - **`EMSCRIPTEN=1` is defined GLOBALLY** (before `add_subdirectory(engine/lib)`) — emcc
@@ -552,11 +556,15 @@ Android pattern: one list + guards), NOT the legacy list.
 - **Net swap:** the engine list filters out `platformNet.cpp`/`platformNetAsync.cpp`
   and adds `platform/platformNet_Emscripten.cpp` (all stubs — browsers can't open raw
   sockets). `platformNet_ScriptBinding.cc` (the script API) is shared and stays.
-- **emcc link flags:** `-sUSE_SDL=1` (SDL 1.2 input/video via emscripten's bundled
-  port), `-sLEGACY_GL_EMULATION=1` (fixed-function GL over WebGL 1.0 — works on emsdk
-  6.0.1; this was the flagged "at-risk" flag and it's fine), `-sINITIAL_MEMORY=128MB`
-  `-sALLOW_MEMORY_GROWTH=1` `-sEXIT_RUNTIME=0` `-sFORCE_FILESYSTEM=1`,
-  `--js-library platformEmscripten/platform.js`.
+- **emcc flags:** `-sUSE_SDL=2` at compile *and* link (Emscripten's SDL 2.32.10 port,
+  the version Linux vendors; at compile time it puts the port's headers on the include
+  path, so `<SDL.h>` resolves as it does on Linux), `TORQUE_SDL` defined as on Linux,
+  `-sLEGACY_GL_EMULATION=1` (fixed-function GL over WebGL 1.0 — works on emsdk 6.0.x;
+  it needs the context SDL makes, and can't be combined with `FULL_ES2`/`FULL_ES3`),
+  a fixed `-sINITIAL_MEMORY=512MB` with `-sALLOW_MEMORY_GROWTH=0` (a growable heap is a
+  resizable ArrayBuffer, which Chrome's `texImage2D` rejects), `-sEXIT_RUNTIME=0`
+  `-sFORCE_FILESYSTEM=1`, `-sASSERTIONS=1` in Debug, and
+  `--js-library platformEmscripten/platform.js`. See the SDL 2 round below.
 - **Assets** are packaged into MEMFS with `--preload-file SRC@/DST` (no host FS to
   lazy-load from in a browser → a `.data` sidecar). `main.cs` + `editor/`, `library/`,
   `toybox/` are bundled at the VFS root (engine cwd is `/`). **`tools/` is deliberately
@@ -753,6 +761,11 @@ keyboard input). Four fixes:
   re-entrancy can't corrupt iteration (`EmscriptenWindow.cpp`). Root-caused with a temporary
   `emscripten_log(EM_LOG_C_STACK)` in the assert path.
 
+*Since the SDL 2 round (below), the last two are moot: the SDL keysym table, its ASCII filter,
+the copied event list and the `SDL_USEREVENT` that re-entered it are gone. Keys arrive by
+scancode and characters from `SDL_TEXTINPUT`, through `platformSDL`, and SDL's queue is
+emptied in one loop.*
+
 ### Blending / immediate-mode round — DONE: toys render correctly (e.g. PyramidToy light)
 First exercise of the toys' raw `glBegin`/`glEnd` draw path on the web (the editor uses the
 batched array path; toys reach further into legacy GL). The PyramidToy `LightObject` rendered
@@ -762,9 +775,9 @@ as an opaque dark "umbrella" fading to BLACK instead of a soft light fading OUT.
   (`2d/sceneobject/LightObject.cc`) called `glDisable(GL_BLEND)` before `glEnd()`. On desktop
   GL that call is illegal between glBegin/glEnd (`GL_INVALID_OPERATION`) and is silently
   IGNORED, so the fan still draws with the additive blend it set up — fades out correctly.
-  But the web's immediate-mode shim (`EmscriptenGL2ES.cpp`, compiled by `PlatformSources.cmake`
-  — its `glBegin`/`glEnd` override emscripten's `LEGACY_GL_EMULATION` ones) only BUFFERS the
-  vertices and defers the real `glDrawArrays` to `glEnd()`. So the `glDisable(GL_BLEND)` runs
+  But the web's immediate mode (emscripten's `LEGACY_GL_EMULATION`; `EmscriptenGL2ES.cpp`'s
+  own `glBegin`/`glEnd` turned out to be uncalled C++ overloads, see above) only BUFFERS the
+  vertices and defers the real draw to `glEnd()`. So the `glDisable(GL_BLEND)` runs
   immediately and the deferred draw happens with blending OFF → opaque fan whose per-vertex
   colors fade to black. Fixed by moving the disable AFTER `glEnd()`.
 - **General rule (web immediate mode):** only emit vertex/color/texcoord between glBegin/glEnd;
@@ -772,6 +785,96 @@ as an opaque dark "umbrella" fading to BLACK instead of a soft light fading OUT.
   `LightObject` was the only offender — `DebugDraw.cc` already disables blend after `glEnd()`,
   and BatchRender/SceneWindow/SceneObject use direct vertex arrays (no deferral). Watch for
   this when porting any other legacy-GL toy/sample to the web.
+
+### SDL 2 round — DONE: the web on SDL 2, sharing its input code with Linux
+The back-end left Emscripten's SDL 1.2 port (a JavaScript reimplementation of 1.2) for its
+SDL 2 port — 2.32.10, the version the Linux build vendors — and for `engine/source/platformSDL`,
+the keyboard and text code the Linux port took from Torque3D. Torque3D has no web target, so
+that shared code is the reuse.
+
+- **Build.** `-sUSE_SDL=2` at compile and link, `TORQUE_SDL` defined. Both back-ends include
+  `<SDL.h>`: compiling with `-sUSE_SDL=2` adds `-isystem <sysroot>/include/SDL2`, so no include
+  directory of our own is needed (`<SDL2/SDL.h>` resolves too, but the vendored Linux SDL only
+  offers `<SDL.h>`). The Emscripten list gains `platformSDL/sdlInput.cpp` and
+  `sdlTextInput.cpp`, not `sdlMsgBox.cpp` (below); `EmscriptenEvents.cpp`, which held only the
+  keyboard-translation stubs `sdlTextInput.cpp` now provides, is deleted.
+- **One canvas, one context** (`CreateGLWindow`, `EmscriptenOGLVideo.cpp`):
+  `SDL_CreateWindow(SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE)`, `SDL_GL_CreateContext`,
+  `SDL_GL_MakeCurrent`, once. The context must come from SDL: its driver makes it through
+  Emscripten's EGL, which is what starts `LEGACY_GL_EMULATION`'s immediate mode (the phase-0
+  prototype showed this); `emscripten_webgl_create_context` skips that. No version is asked
+  for, so it is WebGL 1 (GLES 2.0), now RGB 8/8/8 where SDL 1.2 reported 3/3/2. Mode changes
+  resize around the context, so the texture kill/resurrect on every mode change is gone.
+- **Canvas size.** If the page sizes `#canvas` with CSS (tested the way SDL tests it, before the
+  window exists), the page decides: SDL resizes the drawing buffer on every browser resize and
+  sends `SDL_WINDOWEVENT_SIZE_CHANGED`, which the event loop hands to
+  `OpenGLDevice::followWindow` → `Platform::setWindowSize` and `$pref::Video::resolution`, and
+  `setScreenMode` leaves the size alone (it would only change the buffer, which the page then
+  stretches). Otherwise — emcc's default shell — the canvas takes the game's size,
+  `$pref::Video::windowedRes` or else `defaultResolution`, as on Linux. Not
+  `SDL_WINDOW_ALLOW_HIGHDPI`: the buffer would outgrow the page size by the pixel ratio while
+  the GUI and the mouse stay in page pixels. The desktop is SDL's one display mode,
+  `screen.width × screen.height` (it was a made-up 1024×768 in `platform.js`), and no size is
+  refused any more.
+- **Fullscreen** is `SDL_WINDOW_FULLSCREEN_DESKTOP`. The browser grants it only in answer to a
+  click or a key, so the request waits for the next one, and `$pref::Video::fullScreen` is not
+  applied at page load. Leaving with Esc is followed.
+- **Event loop.** One `SDL_PollEvent` loop a frame in `EmscriptenWindow.cpp`, as on Linux: window
+  events there, keys, text, mouse and wheel to `UInputManager::processEvent`. Gone: the copied
+  `eventList` and its re-entrancy workaround, `SDL_USEREVENT`/`TORQUE_SETVIDEOMODE`,
+  `SDL_ACTIVEEVENT`/`SDL_GetAppState`, and the unused `NumEventsPending`,
+  `AlertDisable/EnableVideo`, `SendQuitEvent` and `DisplayErrorAlert`.
+- **Input.** `EmscriptenInputManager.cpp` is now the Linux input manager with `gPlatState` for
+  `x86UNIXState`: keys by scancode through platformSDL's table (SDL reads `KeyboardEvent.code`),
+  characters from `SDL_TEXTINPUT` (text input is on only while a text field has the keyboard,
+  which is also when SDL lets a keydown through so that the browser sends the keypress SDL reads
+  the character from), modifiers per side, the side buttons, and the wheel as `SDL_MOUSEWHEEL` —
+  it was commented out. SDL counts 100 px or 3 lines of a browser wheel event as a notch and adds
+  a trackpad's small movements up. `Input::getAscii`/`getKeyCode` answer for a US layout, since a
+  browser does not tell a page its layout.
+- **Focus.** SDL 2 reports the page gaining and losing the keyboard, which SDL 1.2 never did.
+  That woke two old sleeps — `Platform::process` and `TimeManager::process` waited out
+  `Pref::backgroundSleepTime` (200 ms) while backgrounded, and a sleep in a page is a busy wait —
+  so both are gone; the browser slows a hidden page by itself.
+- **Pointer.** `SDL_ShowCursor(SDL_DISABLE)` now really hides the pointer (CSS `cursor: none` on
+  the canvas). The input manager no longer hides it on activate, as the desktop ones do;
+  `Input::setCursorState` — the canvas's choice between drawing its own cursor and the native
+  one — does, so the pointer is hidden exactly while the canvas draws one. `Input::setCursorPos`
+  is a no-op (a page cannot move the pointer; SDL's `WarpMouse` is unsupported there), and a
+  locked mouse is pointer lock, granted at the next click.
+- **Clipboard** is SDL's. Its Emscripten driver has no system clipboard, so copy and paste work
+  within the engine but not with other programs; before, the clipboard was always empty.
+- **Alerts stay in `platform.js`.** SDL 2 has no `SDL_ShowMessageBox` in a browser ("No message
+  system available"), only `SDL_ShowSimpleMessageBox` as an `alert()`, so `sdlMsgBox.cpp` would
+  print every alert and answer every question no. `AlertOK` still goes to the console and the
+  others to `confirm()`.
+- **Removed as no-ops:** the gamma ramp (get/set return false), iconify, and the accumulation
+  buffer attributes. Vertical sync is left alone: on the web it is the main loop's timing
+  (`emscripten_set_main_loop_timing`), which cannot be set before `main.cpp` starts the loop, so
+  `suppSwapInterval` is false and the loop keeps its 60 Hz timer.
+- **Sizes** (emsdk 6.0.9; the `.data` is 137,207,314 bytes either way):
+
+  | Build | wasm | wasm gzipped | js |
+  |-------|------|--------------|----|
+  | Debug, SDL 1.2 | 28,327,627 | 9,264,967 | 717,600 |
+  | Debug, SDL 2 | 30,713,305 | 10,095,514 | 825,270 |
+  | Release, SDL 1.2 | 3,161,157 | 1,150,249 | 395,271 |
+  | Release, SDL 2 | 3,527,632 | 1,253,607 | 462,122 |
+
+  In Release, SDL 2 costs 366 KB of wasm (103 KB gzipped) and 67 KB of JavaScript — about
+  what the phase-0 prototype measured for the port alone.
+
+- **Verified headless** (Chromium 151 on SwiftShader, driven over the DevTools protocol with real
+  key, mouse and wheel events). The editor boots to the Project Manager in emcc's shell and in a
+  page whose CSS fills the window, logging nothing SDL 1.2 did not already log (`Con::init`
+  twice, two `AssetWindow.cs` script errors, emscripten's rAF and GL-emulation warnings); SDL
+  1.2's four joystick errors are gone. Typed into the editor console,
+  `echo("ascii-typed-OK " @ 6 * 7);` prints `ascii-typed-OK 42`, and `café naïve` arrives
+  intact (SDL 1.2 typed `caf nave`). The wheel over a `GuiScrollCtrl` scrolls it 0 → 90 with
+  three notches down, back to 60 with one up, and one notch further with four 30 px
+  trackpad-sized movements. Resizing the browser window from 1280×813 to 1000×613 and then
+  1440×873 brings the canvas's buffer and the GUI along. The Release build boots to the same
+  Project Manager.
 
 ## Cross-cutting notes
 

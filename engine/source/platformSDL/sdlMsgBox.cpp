@@ -21,7 +21,9 @@
 //-----------------------------------------------------------------------------
 
 // Torque3D's platformSDL/sdlMsgBox.cpp: the alerts and Platform::messageBox on
-// SDL_ShowMessageBox, shared by every back-end built on SDL 2.
+// SDL_ShowMessageBox, shared by the back-ends built on SDL 2 for a desktop. The
+// web build keeps its own (platformEmscripten/EmscriptenAlerts.cpp): in a
+// browser SDL 2 has no SDL_ShowMessageBox.
 
 #include "platform/platform.h"
 #include "platform/nativeDialogs/msgBox.h"

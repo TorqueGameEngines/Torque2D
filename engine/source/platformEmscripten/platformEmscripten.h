@@ -29,13 +29,10 @@
 
 #include "platformEmscripten/EmscriptenOGLVideo.h"
 
-#include <SDL/SDL.h>
+struct SDL_Window;
 
 #define PREF_DIR_ROOT "/.torque"
 #define PREF_DIR_GAME_NAME "T2D"
-
-// event codes for custom SDL events
-const S32 TORQUE_SETVIDEOMODE = 1;
 
 class EmscriptenPlatState
 {
@@ -48,7 +45,7 @@ public:
     bool              ctxNeedsUpdate;
 
     bool			portrait;
-    
+
     U32               currentTime;
     bool				 fullscreen;
 
@@ -60,6 +57,8 @@ public:
     RandomLCG         platRandom;
 
     bool              mouseLocked;
+
+    // Set while the page does not have the keyboard (EmscriptenWindow.cpp).
     bool              backgrounded;
     bool              minimized;
 
@@ -69,6 +68,11 @@ public:
     Point2I           windowSize;
     bool              windowCreated;
 
+    // The SDL 2 window, which is the page's canvas. It is made with the GL
+    // context by the first OpenGLDevice::setScreenMode and kept for the life
+    // of the page.
+    SDL_Window*       sdlWindow;
+
     U32               appReturn;
 
     int               argc;
@@ -77,10 +81,6 @@ public:
     bool              useRedirect;
 
     bool              dedicated;
-
-    // JMQTODO: make these be class members
-    const int MaxEvents = 255;
-    Vector<SDL_Event> eventList;
 
     StringTableEntry  mainDotCsDir;
 

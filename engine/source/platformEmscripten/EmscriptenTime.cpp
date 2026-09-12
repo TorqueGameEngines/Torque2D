@@ -24,7 +24,7 @@
 #include "platformEmscripten/platformEmscripten.h"
 #include "game/gameInterface.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 #include <unistd.h>
 //--------------------------------------
 void Platform::getLocalTime(LocalTime &lt)
@@ -65,13 +65,15 @@ void Platform::sleep(U32 ms)
 #pragma mark ---- TimeManager ----
 
 //--------------------------------------
+// The interval is the same in the background as in front. The browser slows a
+// page it is not showing by itself, and waiting out Pref::backgroundSleepTime
+// here would be a busy wait of up to 200 ms a frame, since a sleep in a page
+// spins. The SDL 1.2 back-end never heard that the page had lost the keyboard;
+// SDL 2 says so (EmscriptenWindow.cpp).
 void TimeManager::process()
 {
-   if (gPlatState.backgrounded)
-      gPlatState.sleepTicks = Platform::getBackgroundSleepTime();
-   else
-      gPlatState.sleepTicks = sgTimeManagerProcessInterval;
-         
+   gPlatState.sleepTicks = sgTimeManagerProcessInterval;
+
    U32 curTime = Platform::getRealMilliseconds(); // GTC returns Milliseconds, FYI.
    S32 elapsedTime = curTime - gPlatState.lastTimeTick;
 

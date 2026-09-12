@@ -23,15 +23,13 @@
 #ifndef _EMSCRIPTENOGLVIDEO_H_
 #define _EMSCRIPTENOGLVIDEO_H_
 
+#ifndef _PLATFORMVIDEO_H_
 #include "platform/platformVideo.h"
-
+#endif
 
 class OpenGLDevice : public DisplayDevice
 {
       static bool smCanSwitchBitDepth;
-
-      bool mRestoreGamma;
-      U16  mOriginalRamp[256*3];
 
       void addResolution(S32 width, S32 height, bool check=true);
 
@@ -51,6 +49,16 @@ class OpenGLDevice : public DisplayDevice
       bool getVerticalSync();
       bool setVerticalSync( bool on );
       void loadResolutions();
+
+      // Called by the event loop when the canvas has changed size, whoever
+      // changed it -- the page, the browser going in or out of fullscreen, or
+      // setScreenMode itself: bring the canvas, the current resolution and
+      // $pref::Video::fullScreen into line with the canvas as it now is.
+      static void followWindow();
+
+      // Whether the canvas is fullscreen, or has been asked to be and is
+      // waiting on the player (see setScreenMode).
+      static bool isWindowFullScreen();
 
       static DisplayDevice* create();
 };

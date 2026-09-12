@@ -114,7 +114,7 @@ set(TORQUE_PLATFORM_SOURCES_LINUX
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXTime.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXUtils.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXWindow.cc
-    # ---- platformSDL: shared by every back-end on SDL 2 (the web build next) ----
+    # ---- platformSDL: shared by every back-end on SDL 2 (Linux and the web) ----
     ${TORQUE_SRC}/platformSDL/sdlInput.cpp
     ${TORQUE_SRC}/platformSDL/sdlMsgBox.cpp
     ${TORQUE_SRC}/platformSDL/sdlTextInput.cpp
@@ -210,12 +210,15 @@ set(TORQUE_PLATFORM_SOURCES_ANDROID
 # WebAssembly back-end built by emcc (configure via `emcmake cmake`). The browser
 # owns the event loop, so main.cpp drives the engine through
 # emscripten_set_main_loop(_EmscriptenGameInnerLoop, ...) -> Game->mainLoop() once
-# per animation frame (same callback model as iOS/Android). GL is GLES via the
-# EmscriptenGL2ES fixed-function shim over WebGL. The root CMakeLists' EMSCRIPTEN
+# per animation frame (same callback model as iOS/Android). GL is fixed-function
+# over WebGL 1 through emscripten's LEGACY_GL_EMULATION (EmscriptenGL2ES's own
+# glBegin/glEnd are C++ overloads nothing calls). The root CMakeLists' EMSCRIPTEN
 # block defines EMSCRIPTEN=1 (the engine's types.gcc.h keys TORQUE_OS_EMSCRIPTEN
 # off it), swaps in platformNet_Emscripten.cpp, and sets the emcc link flags.
 # Networking back-end (platformNet_Emscripten.cpp) is swapped in from the engine
-# list in the root CMakeLists, not listed here. See cmake/BUILD-PLATFORM-NOTES.md.
+# list in the root CMakeLists, not listed here. The canvas, its GL context and
+# all input come from SDL 2 (Emscripten's port), with the keyboard and text
+# through platformSDL, as on Linux. See cmake/BUILD-PLATFORM-NOTES.md.
 set(TORQUE_PLATFORM_SOURCES_EMSCRIPTEN
     # ---- platformEmscripten ----
     ${TORQUE_SRC}/platformEmscripten/EmscriptenAlerts.cpp
@@ -223,7 +226,6 @@ set(TORQUE_PLATFORM_SOURCES_EMSCRIPTEN
     ${TORQUE_SRC}/platformEmscripten/EmscriptenConsole.cpp
     ${TORQUE_SRC}/platformEmscripten/EmscriptenCPUInfo.cpp
     ${TORQUE_SRC}/platformEmscripten/EmscriptenDialogs.cpp
-    ${TORQUE_SRC}/platformEmscripten/EmscriptenEvents.cpp
     ${TORQUE_SRC}/platformEmscripten/EmscriptenFileio.cpp
     ${TORQUE_SRC}/platformEmscripten/EmscriptenFont.cpp
     ${TORQUE_SRC}/platformEmscripten/EmscriptenGL.cpp
@@ -245,4 +247,8 @@ set(TORQUE_PLATFORM_SOURCES_EMSCRIPTEN
     ${TORQUE_SRC}/platformEmscripten/main.cpp
     # ---- platformEmscripten/menus ----
     ${TORQUE_SRC}/platformEmscripten/menus/popupMenu.cpp
+    # ---- platformSDL: shared with Linux. Not sdlMsgBox.cpp: SDL 2 has no
+    # message box in a browser, so the web keeps EmscriptenAlerts.cpp. ----
+    ${TORQUE_SRC}/platformSDL/sdlInput.cpp
+    ${TORQUE_SRC}/platformSDL/sdlTextInput.cpp
 )

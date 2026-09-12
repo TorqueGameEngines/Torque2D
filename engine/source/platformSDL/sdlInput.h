@@ -28,8 +28,8 @@
 #endif
 
 /// The keyboard as SDL 2 reports it, in Torque's terms. This is Torque3D's
-/// platformSDL/sdlInput.h, shared by every back-end built on SDL 2 -- Linux now,
-/// the web build next -- so it must stay free of anything X11.
+/// platformSDL/sdlInput.h, shared by every back-end built on SDL 2 -- Linux and
+/// the web build -- so it must stay free of anything X11 or browser-specific.
 ///
 /// A key is identified by its SDL_Scancode: the physical key, wherever the
 /// layout puts its letters. So KEY_Z is the key at the bottom left on every
@@ -38,6 +38,11 @@
 /// through it: Input::getAscii and Input::getKeyCode ask SDL which character the
 /// key produces now, so that bind(keyboard, "z", ...) in a script still lands on
 /// whichever key types a z. Text itself comes from SDL_TEXTINPUT (sdlTextInput.h).
+///
+/// In a browser SDL has no layout to ask -- a page is not told the keyboard's
+/// layout -- so there it answers for a US keyboard. Keys and typed text are
+/// right on any layout all the same: the browser names each key by where it
+/// is, and hands over each character typed.
 namespace KeyMapSDL
 {
    /// The KEY_* code for an SDL_Scancode, or KEY_NULL for a key Torque has no
