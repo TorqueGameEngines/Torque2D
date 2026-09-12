@@ -27,6 +27,7 @@
 #include "gui/guiCanvas.h"
 #include "gui/guiTextEditCtrl.h"
 #include "gui/guiDefaultControlRender.h"
+#include "input/actionMap.h"
 #include "memory/frameAllocator.h"
 #include "string/unicode.h"
 
@@ -426,8 +427,6 @@ U32 GuiTextEditSelection::previousCharacterStart(const string& text, const U32 p
 #pragma region GuiTextEditCtrl
 IMPLEMENT_CONOBJECT(GuiTextEditCtrl);
 
-U32 GuiTextEditCtrl::smNumAwake = 0;
-
 GuiTextEditCtrl::GuiTextEditCtrl()
 {
    mInsertOn = true;
@@ -542,24 +541,37 @@ bool GuiTextEditCtrl::onWake()
 	   }
    }
 
-   // If this is the first awake text edit control, enable keyboard translation
-   if (smNumAwake == 0)
-      Platform::enableKeyboardTranslation();
-   ++smNumAwake;
-
    mSuspendVerticalScrollJump = false;
 
    return true;
 }
 
+// Text input is on while a box has the keyboard, and at no other time: it is
+// turned on in setFirstResponder and off when the box lets go. It used to be
+// turned on whenever a box woke and off when the last one slept, so with any
+// box anywhere awake -- a toolbox left open, say -- it stayed on with nothing
+// focused, and on SDL every key typed text that nobody was listening for.
+// Torque3D never counted boxes.
 void GuiTextEditCtrl::onSleep()
 {
-   Parent::onSleep();
+   // A box put to sleep holding the keyboard -- its dialog popped, its editor
+   // closed -- lets go of it here, before GuiControl::onSleep clears the
+   // pointers to it. It does so quietly, as a sleeping control always has:
+   // onLoseFirstResponder runs script (onValidate, the AltCommand, onBlur),
+   // and script run from the middle of a sleep can pop the very dialog that is
+   // being popped. The KeyboardToy's name box does exactly that in its
+   // AltCommand.
+   if (isFirstResponder())
+      releaseKeyboard();
 
-   // If this is the last awake text edit control, disable keyboard translation
-   --smNumAwake;
-   if (smNumAwake == 0)
-      Platform::disableKeyboardTranslation();
+   Parent::onSleep();
+}
+
+void GuiTextEditCtrl::releaseKeyboard()
+{
+   Platform::disableKeyboardTranslation();
+   mSelector.setFirstResponder(false);
+   mPendingHighSurrogate = 0;
 }
 
 void GuiTextEditCtrl::execConsoleCallback()
@@ -986,7 +998,26 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
        return true;
    }
 
-   if (handleCharacterInput(event) || mSinkAllKeyEvents)
+   // Not one of the box's own keys. A key the GlobalActionMap is bound to is
+   // the map's, and types nothing -- Torque3D's rule: its map gets every key
+   // first, and the text of the keys it takes is held back (on SDL, by
+   // SDLTextInput::withholdGlobalKeyText). The box's own keys, handled above,
+   // stay the box's: the canvas has been given the keys before the
+   // GlobalActionMap since 2007 so that, say, the left arrow in a text box
+   // moves the caret and nothing else. That comes before mSinkAllKeyEvents,
+   // too, which sinks the rest of the keys but not a global binding.
+   if (isGlobalKey(event))
+   {
+       return false;
+   }
+
+   // A key that types is the box's, whether its text came with it (Windows,
+   // macOS) or is still to come (SDL). Passed on for want of a character, as
+   // every key was once SDL's keys stopped carrying one, it reached the game's
+   // action maps too: with a text box focused, typing q fired a binding on q.
+   // Keys that type nothing -- the function keys, and whatever else the box
+   // does not use -- go on as they always have, unless the box sinks them.
+   if (handleCharacterInput(event) || mSinkAllKeyEvents || isTypingKey(event.keyCode, event.modifier))
    {
        return true;
    }
@@ -1051,7 +1082,7 @@ void GuiTextEditCtrl::setFirstResponder()
 
 void GuiTextEditCtrl::onLoseFirstResponder()
 {
-   Platform::disableKeyboardTranslation();
+   releaseKeyboard();
 
    //execute the validate command
    bool valid = validate();
@@ -1066,8 +1097,6 @@ void GuiTextEditCtrl::onLoseFirstResponder()
    if (isMethod("onBlur"))
 	   Con::executef(this, 2, "onBlur", valid);
 
-    mSelector.setFirstResponder(false);
-    mPendingHighSurrogate = 0;
     mTextOffsetY = 0;
    mScrollVelocity = 0;
    if (!mTextWrap && mTextBlockList.size() > 0)
@@ -1598,6 +1627,35 @@ bool GuiTextEditCtrl::isCharacterEvent(const GuiEvent& event)
 bool GuiTextEditCtrl::isAltGrCharacter(const GuiEvent& event)
 {
     return (event.modifier & SI_LCTRL) && (event.modifier & SI_RALT) && isTypedCharacter(event.ascii);
+}
+
+bool GuiTextEditCtrl::isTypingKey(const U8 keyCode, const U32 modifier)
+{
+#if defined(TORQUE_OS_OSX) || defined(TORQUE_OS_IOS)
+    // Cmd, which Torque reports as Alt, makes a shortcut from either side;
+    // Option, which types, is a modifier of its own.
+    if (modifier & (SI_CTRL | SI_ALT))
+        return false;
+#else
+    // AltGr is right Alt, and Windows adds a left Ctrl to it. Anything else
+    // with Ctrl or Alt held is a shortcut.
+    const bool altGr = (modifier & SI_RALT) && !(modifier & (SI_LALT | SI_RCTRL));
+    if (!altGr && (modifier & (SI_CTRL | SI_ALT)))
+        return false;
+#endif
+
+    return keyCode == KEY_SPACE
+        || (keyCode >= KEY_0 && keyCode <= KEY_9)
+        || (keyCode >= KEY_A && keyCode <= KEY_Z)
+        || (keyCode >= KEY_TILDE && keyCode <= KEY_SLASH)      // the punctuation keys
+        || (keyCode >= KEY_NUMPAD0 && keyCode <= KEY_DIVIDE)   // number-pad digits and operators
+        || keyCode == KEY_OEM_102;
+}
+
+bool GuiTextEditCtrl::isGlobalKey(const GuiEvent& event)
+{
+    ActionMap* globalMap = ActionMap::getGlobalMap();
+    return globalMap != NULL && globalMap->isAction(KeyboardDeviceType, 0, event.modifier, event.keyCode);
 }
 
 U32 GuiTextEditCtrl::composeTypedCharacter(const UTF16 unit, UTF16& pendingHighSurrogate, UTF8* outBuffer)

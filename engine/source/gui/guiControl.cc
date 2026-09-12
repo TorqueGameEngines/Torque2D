@@ -1444,7 +1444,13 @@ void GuiControl::onSleep()
    //decrement the profile referrence
    if( mProfile != NULL )
       mProfile->decRefCount();
-   clearFirstResponder();
+
+   // Quietly: the pointers to this control go, but it is not told through
+   // onLoseFirstResponder. That runs script, and script run from the middle of
+   // a sleep can pop the dialog that is being popped. A control that has to
+   // let go of something when it sleeps holding the keyboard does so in its
+   // own onSleep, before this one (GuiTextEditCtrl turns text input off).
+   clearFirstResponder(this);
    mouseUnlock();
 
    // Only invoke script callbacks if we have a namespace in which to do so
@@ -1555,7 +1561,9 @@ void GuiControl::onRemove()
 //For GuiControls, this will always just before it is actually removed.
 void GuiControl::onGroupRemove()
 {
-	clearFirstResponder();
+	// Quietly, as in onSleep: a control being taken out is not told it has lost
+	// the keyboard, since telling it runs script.
+	clearFirstResponder(this);
 }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- //
@@ -2227,6 +2235,21 @@ bool GuiControl::isFirstResponder()
    return root && root->getFirstResponder() == this;
 }
 
+bool GuiControl::canTakeKeyboard()
+{
+   if (!mAwake)
+      return false;
+
+   // Hidden anywhere up the chain is hidden: a page of a tab book is not
+   // on the screen because the book is not, however its own flag reads.
+   for (GuiControl* walk = this; walk != NULL; walk = walk->getParent())
+   {
+      if (!walk->mVisible)
+         return false;
+   }
+   return true;
+}
+
 void GuiControl::setFirstResponder( GuiControl* firstResponder )
 {
    if ( firstResponder && firstResponder->mProfile && firstResponder->mProfile->mCanKeyFocus )
@@ -2263,6 +2286,16 @@ void GuiControl::setFirstResponder()
 
 void GuiControl::clearFirstResponder()
 {
+   // Through the canvas when this control has the keyboard, so that it hears
+   // it has lost it -- a text field turns text input off in
+   // onLoseFirstResponder. Only nulling the pointers, as this used to, left a
+   // deactivated or hidden text field believing it still had the keyboard, and
+   // on SDL left text input on with nothing to type into. Torque3D's
+   // clearFirstResponder goes through the canvas the same way.
+   GuiCanvas* root = getRoot();
+   if (root && root->getFirstResponder() == this)
+      root->setFirstResponder(NULL);
+
 	clearFirstResponder(this);
 }
 
@@ -2276,6 +2309,14 @@ void GuiControl::clearFirstResponder(GuiControl* target)
       else
          break;
    }
+
+   // The walk stops at the first parent holding something else, which is
+   // right for the parents, but the canvas sends every key to its own pointer
+   // however the chain below it reads. A control going away must never be left
+   // in it.
+   GuiControl* root = getRoot();
+   if (root && root->mFirstResponder == target)
+      root->mFirstResponder = NULL;
 }
 
 // -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- //
@@ -2401,6 +2442,19 @@ void GuiControl::onDialogPop()
 void GuiControl::setVisible(bool value)
 {
     mVisible = value;
+
+   // A hidden control takes no keys, and nor does anything inside it. The
+   // loop below reaches only this control's own children, so a field further
+   // down -- a text box on a page in a tab book that is hidden -- kept the
+   // keyboard it could no longer be seen to have.
+   if (!value)
+   {
+      GuiCanvas* root = getRoot();
+      GuiControl* responder = root ? root->getFirstResponder() : NULL;
+      if (responder && ControlIsChild(responder))
+         root->setFirstResponder(NULL);
+   }
+
    iterator i;
    setUpdate();
    for(i = begin(); i != end(); i++)

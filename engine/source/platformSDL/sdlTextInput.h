@@ -80,6 +80,13 @@ namespace SDLTextInput
 
    /// Post SDL_TEXTINPUT's text to the game, a make and a break per code unit.
    void postText( const char* utf8 );
+
+   /// Called with each key read from SDL, after it is posted. A key the
+   /// GlobalActionMap is bound to types nothing, even with a text field
+   /// listening -- Torque3D's rule -- so if text input is on, it is turned off
+   /// on the spot, which throws away the text SDL has already queued behind
+   /// the key, and asked back for the next pump.
+   void withholdGlobalKeyText( const InputEvent& event );
 }
 
 #endif // _SDLTEXTINPUT_H_

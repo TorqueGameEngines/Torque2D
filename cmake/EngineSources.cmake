@@ -350,6 +350,7 @@ set(TORQUE_ENGINE_SOURCES
     ${TORQUE_SRC}/testing/tests/directoryScanCaseTests.cc
     ${TORQUE_SRC}/testing/tests/guiControlReparentTests.cc
     ${TORQUE_SRC}/testing/tests/guiCursorHotSpotTests.cc
+    ${TORQUE_SRC}/testing/tests/guiFirstResponderTests.cc
     ${TORQUE_SRC}/testing/tests/guiFrameStripLayoutTests.cc
     ${TORQUE_SRC}/testing/tests/guiHitTestTests.cc
     ${TORQUE_SRC}/testing/tests/guiParticleColorGraphTests.cc

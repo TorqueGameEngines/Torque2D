@@ -750,6 +750,7 @@ void UInputManager::keyEvent(const SDL_Event& event)
    ievent.ascii = 0;
 
    Game->postEvent(ievent);
+   SDLTextInput::withholdGlobalKeyText(ievent);
 
 #ifdef LOG_INPUT
    Input::log( "EVENT (Input): %s key %s. MODS:%c%c%c\n",

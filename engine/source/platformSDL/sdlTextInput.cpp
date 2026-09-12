@@ -23,6 +23,7 @@
 #include "platform/platform.h"
 #include "platform/event.h"
 #include "game/gameInterface.h"
+#include "input/actionMap.h"
 #include "string/unicode.h"
 #include "platformSDL/sdlTextInput.h"
 
@@ -61,6 +62,34 @@ void SDLTextInput::processTextInputState()
       SDL_StartTextInput();
    else
       SDL_StopTextInput();
+}
+
+//------------------------------------------------------------------------------
+// A key the GlobalActionMap is bound to types nothing
+//
+// Torque3D's rule (windowManager/sdl/sdlWindow.cpp there): a text field that
+// has the keyboard leaves a globally bound key to the map, and the key's text
+// is thrown away. By the time the key is read here SDL has queued its text
+// behind it; SDL_StopTextInput discards that (it flushes the queued
+// SDL_TEXTINPUT events). Text input is asked back for the next pump, and if
+// the binding took the keyboard away meanwhile -- a key that closes the
+// field's dialog -- the field's own request to turn it off comes later and
+// wins. GuiTextEditCtrl::onKeyDown leaves the same keys to the map, bar the
+// field's own editing keys, which type nothing anyway.
+void SDLTextInput::withholdGlobalKeyText( const InputEvent& event )
+{
+   if ( event.action != SI_MAKE && event.action != SI_REPEAT )
+      return;
+
+   if ( SDL_IsTextInputActive() != SDL_TRUE )
+      return;
+
+   ActionMap* globalMap = ActionMap::getGlobalMap();
+   if ( globalMap == NULL || !globalMap->isAction( event.deviceType, event.deviceInst, event.modifier, event.objInst ) )
+      return;
+
+   SDL_StopTextInput();
+   updateSDLTextInputState( TEXT_INPUT );
 }
 
 //------------------------------------------------------------------------------

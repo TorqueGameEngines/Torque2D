@@ -41,6 +41,14 @@
 #include "platform/event.h"
 #endif
 
+#ifndef _CONSOLE_H_
+#include "console/console.h"
+#endif
+
+#ifndef _ACTIONMAP_H_
+#include "input/actionMap.h"
+#endif
+
 //-----------------------------------------------------------------------------
 // Typing a character into a text box.
 //
@@ -476,6 +484,172 @@ TEST( GuiTextInputTests, KeysWithoutACharacterStillWork )
 
     ASSERT_TRUE( box->onKeyDown( keyEvent( KEY_BACKSPACE, 0 ) ) );
     ASSERT_STREQ( box->getText(), "" );
+
+    SUCCEED();
+}
+
+//-----------------------------------------------------------------------------
+// Which keys belong to a box that has the keyboard
+//
+// On SDL a key-down carries no character -- the text follows in an event of
+// its own -- so the box, finding nothing to type, passed every key-down on,
+// and a key that typed q into the box went to the game's action maps as well.
+// A key that types is the box's now, whether or not its character came with it.
+//-----------------------------------------------------------------------------
+
+TEST( GuiTextInputTests, KeysThatTypeAreTypingKeys )
+{
+    const U8 typing[] = { KEY_A, KEY_Q, KEY_Z, KEY_0, KEY_9, KEY_SPACE, KEY_TILDE, KEY_MINUS, KEY_EQUALS,
+                          KEY_LBRACKET, KEY_RBRACKET, KEY_BACKSLASH, KEY_SEMICOLON, KEY_APOSTROPHE, KEY_COMMA,
+                          KEY_PERIOD, KEY_SLASH, KEY_OEM_102, KEY_NUMPAD0, KEY_NUMPAD9, KEY_MULTIPLY, KEY_ADD,
+                          KEY_SUBTRACT, KEY_DECIMAL, KEY_DIVIDE };
+    for ( U32 i = 0; i < ( sizeof( typing ) / sizeof( typing[0] ) ); i++ )
+    {
+        ASSERT_TRUE( GuiTextEditCtrl::isTypingKey( typing[i], 0 ) ) << "key 0x" << std::hex << (U32)typing[i];
+        ASSERT_TRUE( GuiTextEditCtrl::isTypingKey( typing[i], SI_LSHIFT ) ) << "Shift and key 0x" << std::hex << (U32)typing[i];
+    }
+
+    SUCCEED();
+}
+
+TEST( GuiTextInputTests, KeysThatTypeNothingAreNotTypingKeys )
+{
+    const U8 others[] = { KEY_NULL, KEY_ESCAPE, KEY_TAB, KEY_RETURN, KEY_NUMPADENTER, KEY_BACKSPACE, KEY_DELETE,
+                          KEY_INSERT, KEY_HOME, KEY_END, KEY_PAGE_UP, KEY_PAGE_DOWN, KEY_LEFT, KEY_RIGHT, KEY_UP,
+                          KEY_DOWN, KEY_F1, KEY_F12, KEY_PRINT, KEY_LSHIFT, KEY_LCONTROL, KEY_RALT, KEY_CAPSLOCK,
+                          KEY_NUMLOCK, KEY_WIN_LWINDOW };
+    for ( U32 i = 0; i < ( sizeof( others ) / sizeof( others[0] ) ); i++ )
+    {
+        ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( others[i], 0 ) ) << "key 0x" << std::hex << (U32)others[i];
+    }
+
+    SUCCEED();
+}
+
+TEST( GuiTextInputTests, ChordsAreShortcutsButAltGrTypes )
+{
+    ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_LCTRL ) );
+    ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_RCTRL ) );
+    ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_LALT ) );
+    ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_LCTRL | SI_LSHIFT ) );
+    ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( KEY_TILDE, SI_LCTRL ) ) << "The editor's console toggle is a shortcut.";
+
+#if !( defined( TORQUE_OS_OSX ) || defined( TORQUE_OS_IOS ) )
+    // AltGr: right Alt, with the left Ctrl Windows adds to it or without.
+    ASSERT_TRUE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_LCTRL | SI_RALT ) );
+    ASSERT_TRUE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_LCTRL | SI_RALT | SI_LSHIFT ) );
+    ASSERT_TRUE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_RALT ) );
+    ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_RCTRL | SI_RALT ) );
+    ASSERT_FALSE( GuiTextEditCtrl::isTypingKey( KEY_Q, SI_LALT | SI_RALT ) );
+#endif
+
+    SUCCEED();
+}
+
+TEST( GuiTextInputTests, ATypingKeyIsTheBoxsWithoutItsCharacter )
+{
+    // SDL's key-down, with no character on it: the box takes it and types
+    // nothing, since the text is still to come.
+    TypingBox box( "", 0 );
+
+    ASSERT_TRUE( box->onKeyDown( keyEvent( KEY_Q, 0 ) ) );
+    ASSERT_TRUE( box->onKeyDown( keyEvent( KEY_1, 0, SI_LSHIFT ) ) );
+    ASSERT_TRUE( box->onKeyDown( keyEvent( KEY_ADD, 0 ) ) );
+    ASSERT_STREQ( box->getText(), "" );
+
+    SUCCEED();
+}
+
+TEST( GuiTextInputTests, KeysThatTypeNothingStillGoOn )
+{
+    TypingBox box( "ab", 2 );
+
+    ASSERT_FALSE( box->onKeyDown( keyEvent( KEY_F5, 0 ) ) ) << "A function key is the game's.";
+    ASSERT_FALSE( box->onKeyDown( keyEvent( KEY_Q, 0, SI_LCTRL ) ) ) << "A shortcut the box has no use for goes on.";
+    ASSERT_STREQ( box->getText(), "ab" );
+
+    // Unless the box sinks every key.
+    box->setSinkAllKeyEvents( true );
+    ASSERT_TRUE( box->onKeyDown( keyEvent( KEY_F5, 0 ) ) );
+
+    SUCCEED();
+}
+
+//-----------------------------------------------------------------------------
+// A key the GlobalActionMap is bound to
+//
+// Torque3D's rule: the GlobalActionMap's bindings work while a box has the
+// keyboard, and a key the map takes types nothing. The box's own editing keys
+// stay the box's.
+//-----------------------------------------------------------------------------
+
+// A binding in the GlobalActionMap for the length of a test, however it ends.
+// The command is never run: nothing here reaches the action maps.
+class GlobalBinding
+{
+public:
+    GlobalBinding( const char* key ) : mKey( key )
+    {
+        char script[128];
+        dSprintf( script, sizeof( script ), "GlobalActionMap.bind(keyboard, \"%s\", \"guiTextInputTestsUnused\");", mKey );
+        Con::evaluate( script );
+    }
+    ~GlobalBinding()
+    {
+        char script[128];
+        dSprintf( script, sizeof( script ), "GlobalActionMap.unbind(keyboard, \"%s\");", mKey );
+        Con::evaluate( script );
+    }
+
+private:
+    const char* mKey;
+};
+
+TEST( GuiTextInputTests, TheGlobalMapIsFoundAndAsked )
+{
+    ActionMap* globalMap = ActionMap::getGlobalMap();
+    ASSERT_TRUE( globalMap != NULL );
+    ASSERT_STREQ( globalMap->getName(), "GlobalActionMap" );
+
+    GlobalBinding q( "q" );
+    ASSERT_TRUE( globalMap->isAction( KeyboardDeviceType, 0, 0, KEY_Q ) );
+    ASSERT_TRUE( globalMap->isAction( KeyboardDeviceType, 0, SI_LSHIFT, KEY_Q ) ) << "Found without the modifier too, as processButton finds it.";
+    ASSERT_FALSE( globalMap->isAction( KeyboardDeviceType, 0, 0, KEY_W ) );
+
+    SUCCEED();
+}
+
+TEST( GuiTextInputTests, AGloballyBoundKeyIsTheMapsAndTypesNothing )
+{
+    GlobalBinding q( "q" );
+    GlobalBinding f5( "f5" );
+    TypingBox box( "", 0 );
+
+    // Windows' key-down, carrying its character: left to the map, not typed.
+    ASSERT_FALSE( box->onKeyDown( keyEvent( KEY_Q, 'q' ) ) );
+    ASSERT_FALSE( box->onKeyDown( keyEvent( KEY_Q, 'Q', SI_LSHIFT ) ) );
+    ASSERT_STREQ( box->getText(), "" );
+
+    // A box that sinks every other key leaves these too.
+    box->setSinkAllKeyEvents( true );
+    ASSERT_FALSE( box->onKeyDown( keyEvent( KEY_Q, 'q' ) ) );
+    ASSERT_FALSE( box->onKeyDown( keyEvent( KEY_F5, 0 ) ) );
+    ASSERT_STREQ( box->getText(), "" );
+
+    SUCCEED();
+}
+
+TEST( GuiTextInputTests, TheBoxsOwnKeysStayTheBoxs )
+{
+    GlobalBinding left( "left" );
+    GlobalBinding backspace( "backspace" );
+    TypingBox box( "ab", 2 );
+
+    ASSERT_TRUE( box->onKeyDown( keyEvent( KEY_LEFT, 0 ) ) );
+    ASSERT_EQ( box->mSelector.getCursorPos(), 1 );
+
+    ASSERT_TRUE( box->onKeyDown( keyEvent( KEY_BACKSPACE, 0 ) ) );
+    ASSERT_STREQ( box->getText(), "b" );
 
     SUCCEED();
 }

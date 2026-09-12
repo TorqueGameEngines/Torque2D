@@ -109,8 +109,6 @@ private:
    typedef GuiControl Parent;
    typedef vector<GuiTextEditTextBlock> TextBlockList;
 
-   static U32 smNumAwake;
-
 protected:
 
 	S32 mMaxStrLen; 
@@ -187,6 +185,12 @@ protected:
    virtual bool handleDelete();
    void modifySelectBlock(const U32 target);
 
+   /// What letting go of the keyboard means to the box itself: text input
+   /// off, the caret gone, and half a character forgotten. Script hears about
+   /// it separately, in onLoseFirstResponder -- except when the box is going to
+   /// sleep, which lets go through this alone. See onSleep.
+   void releaseKeyboard();
+
    S32 textBufferWidth(StringBuffer buffer);
    StringBuffer truncate(StringBuffer buffer, StringBuffer terminationString, S32 width);
 
@@ -236,6 +240,18 @@ public:
    /// Ctrl plus right Alt. It is text, not a Ctrl shortcut: on a Polish
    /// keyboard AltGr+C is a letter, not Copy.
    static bool isAltGrCharacter(const GuiEvent& event);
+   /// A key that types text when pressed with these modifiers -- a letter, a
+   /// digit, space, punctuation, or a number-pad digit or operator, pressed
+   /// alone, with Shift, or with AltGr -- and so belongs to a box that has the
+   /// keyboard, whether or not its text rides on the key. On SDL it never does:
+   /// the text follows in an event of its own, and the key itself used to go
+   /// on to the game's action maps. With Ctrl, or with Alt (Cmd on a Mac), a
+   /// key is a shortcut instead.
+   static bool isTypingKey(const U8 keyCode, const U32 modifier);
+   /// Whether the GlobalActionMap is bound to the key of this event. A key it
+   /// is bound to is the map's while a box has the keyboard, unless it is one
+   /// of the box's own editing keys, and it types nothing. See onKeyDown.
+   static bool isGlobalKey(const GuiEvent& event);
    /// The UTF-8 one code unit adds to the text, written to outBuffer (which
    /// holds 3 bytes); returns how many bytes that is, 0 for none. A character
    /// outside the BMP arrives as two units, high surrogate first: the first is

@@ -179,14 +179,13 @@ bool GuiConsoleEditCtrl::handleDelete()
 
 void GuiConsoleEditCtrl::onLoseFirstResponder()
 {
-    Platform::disableKeyboardTranslation();
+    releaseKeyboard();
 
     if (isMethod("onLoseFirstResponder"))
         Con::executef(this, 2, "onLoseFirstResponder");
 	if (isMethod("onBlur"))
 		Con::executef(this, 2, "onBlur");
 
-    mSelector.setFirstResponder(false);
     mTextOffsetY = 0;
     mScrollVelocity = 0;
     if (!mTextWrap && mTextBlockList.size() > 0)
