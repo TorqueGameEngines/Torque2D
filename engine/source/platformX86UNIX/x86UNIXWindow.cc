@@ -48,6 +48,7 @@
 #include <stdlib.h>
 #include <unistd.h> // fork, execvp, chdir
 #include <time.h> // nanosleep
+#include <sys/wait.h> // waitpid
 
 #ifndef DEDICATED
 #include <SDL.h>
@@ -519,54 +520,49 @@ bool Platform::openWebBrowser( const char* webAddress )
    if (!webAddress || dStrlen(webAddress)==0)
       return false;
 
-   // look for a browser preference variable
-   // JMQTODO: be nice to implement some UI to customize this
+   // Out of fullscreen first, so the page doesn't open behind the game.
+   if (Video::isFullScreen())
+      Video::toggleFullScreen();
+
+   // A browser named in $Pref::Unix::WebBrowser is started directly, from a
+   // child that exits at once: the browser is left to init, so the engine
+   // never has a zombie to wait for. It used to rely on ignoring SIGCHLD for
+   // that, which also broke every wait for a child of SDL's own -- the X11
+   // message box runs in one (x86UNIXProcessControl.cc).
    const char* webBrowser = Con::getVariable("Pref::Unix::WebBrowser");
-   if (dStrlen(webBrowser) == 0)
-      webBrowser = NULL;
-
-   pid_t pid = fork();
-   if (pid == -1)
+   if (webBrowser[0] != '\0')
    {
-      Con::printf("WARNING: Platform::openWebBrowser failed to fork");
+      const pid_t pid = fork();
+      if (pid == 0)
+      {
+         if (fork() == 0)
+         {
+            char* argv[3] = { const_cast<char*>(webBrowser),
+                              const_cast<char*>(webAddress), NULL };
+            execvp(webBrowser, argv);
+            _exit(127);
+         }
+         _exit(0);
+      }
+      if (pid > 0)
+      {
+         waitpid(pid, NULL, 0);
+         return true;
+      }
+      Con::warnf("Platform::openWebBrowser: couldn't start %s", webBrowser);
       return false;
    }
-   else if (pid != 0)
+
+   // Otherwise whatever the desktop opens web pages with, through xdg-open --
+   // Torque3D's way. (The fallbacks this used to try, xdg-open, then firefox,
+   // konqueror and mozilla, were all started without the address: argv[0]
+   // was NULL, which ends the argument list before it begins.)
+   if (SDL_OpenURL(webAddress) != 0)
    {
-      // parent
-      if (Video::isFullScreen())
-         Video::toggleFullScreen();
-
-      return true;
-   }
-   else if (pid == 0)
-   {
-      // child
-      char* argv[3];
-      argv[0] = 0;
-      argv[1] = const_cast<char*>(webAddress);
-      argv[2] = 0;
-
-      int ok = -1;
-
-      // if execvp returns, it means it couldn't execute the program
-      if (webBrowser != NULL)
-         ok = execvp(webBrowser, argv);
-
-      ok = execvp("xdg-open", argv);
-      ok = execvp("firefox", argv);
-      ok = execvp("konqueror", argv);
-      ok = execvp("mozilla", argv);
-      // use dPrintf instead of Con here since we're now in another process,
-      dPrintf("WARNING: Platform::openWebBrowser: couldn't launch a web browser\n");
-      _exit(-1);
+      Con::warnf("Platform::openWebBrowser: couldn't open %s: %s", webAddress, SDL_GetError());
       return false;
    }
-   else
-   {
-      Con::printf("WARNING: Platform::openWebBrowser: forking problem");
-      return false;
-   }
+   return true;
 }
 
 void Platform::setMouseLock(bool locked)

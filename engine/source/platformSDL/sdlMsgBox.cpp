@@ -31,6 +31,15 @@
 
 #include <SDL.h>
 
+// A Unix desktop falls back to zenity when SDL can't show a box (showZenityBox).
+#if defined(__unix__) && !defined(__EMSCRIPTEN__) && !defined(__APPLE__)
+#define TORQUE_ZENITY_MSGBOX
+#include <stdio.h>
+#include <string.h>
+#include <sys/wait.h>
+#include <unistd.h>
+#endif
+
 namespace
 {
    const int ReturnKey = SDL_MESSAGEBOX_BUTTON_RETURNKEY_DEFAULT;
@@ -58,6 +67,123 @@ namespace
       else
          dPrintf( "Alert: %s %s\n", title, message );
    }
+
+#ifdef TORQUE_ZENITY_MSGBOX
+   //---------------------------------------------------------------------------
+   // When SDL can't show a box itself. Its X11 driver draws the box in the X
+   // server's core fonts, and asks for one size of them that a Wayland-first
+   // desktop -- Omarchy, for one -- doesn't install, so the box fails with "No
+   // message system available". SDL has a second way, zenity, which its
+   // Wayland driver uses; but it only turns to another driver's box before its
+   // video has started, never with a window open, so the engine asks zenity
+   // itself.
+   //
+   // Adapted from SDL 2.32's src/video/wayland/SDL_waylandmessagebox.c
+   // (Copyright (C) 1997-2025 Sam Lantinga; zlib licence). Altered: it runs
+   // from here, reads zenity's output before waiting for it, picks the icon
+   // from the icon bit rather than comparing all the flags (SDL's comparison
+   // misses an icon combined with any other flag), and answers a box closed
+   // with Escape or its close button with the box's Escape button.
+
+   // Run zenity with argv, keeping up to outSize - 1 bytes of what it prints in
+   // out; returns its exit status, or -1 if it couldn't be run.
+   int runZenity( const char** argv, char* out, size_t outSize )
+   {
+      int fds[2];
+      if ( pipe( fds ) != 0 )
+         return -1;
+
+      const pid_t pid = fork();
+      if ( pid == 0 )
+      {
+         close( fds[0] );
+         if ( dup2( fds[1], STDOUT_FILENO ) == -1 )
+            _exit( 128 );
+         execvp( "zenity", (char**)argv );
+         _exit( 129 );
+      }
+      close( fds[1] );
+      if ( pid < 0 )
+      {
+         close( fds[0] );
+         return -1;
+      }
+
+      size_t used = 0;
+      ssize_t got;
+      while ( used < outSize - 1 && ( got = read( fds[0], out + used, outSize - 1 - used ) ) > 0 )
+         used += got;
+      out[used] = '\0';
+      close( fds[0] );
+
+      int status = 0;
+      if ( waitpid( pid, &status, 0 ) != pid || !WIFEXITED( status ) )
+         return -1;
+      return WEXITSTATUS( status );
+   }
+
+   // Show the box with zenity; true if zenity showed it, with the id of the
+   // button chosen in buttonId.
+   bool showZenityBox( const SDL_MessageBoxData& box, int& buttonId )
+   {
+      if ( box.numbuttons < 1 || box.numbuttons > 3 )
+         return false;
+
+      const char* versionArgs[] = { "zenity", "--version", NULL };
+      char version[32];
+      if ( runZenity( versionArgs, version, sizeof( version ) ) != 0 )
+         return false;
+      int major = 0, minor = 0;
+      sscanf( version, "%d.%d", &major, &minor );
+
+      const char* argv[24] = { "zenity", "--question", "--switch", "--no-wrap", "--no-markup" };
+      int argc = 5;
+
+      // zenity 3.90 renamed --icon-name to --icon, with no overlap.
+      argv[argc++] = ( major > 3 || ( major == 3 && minor >= 90 ) ) ? "--icon" : "--icon-name";
+      if ( box.flags & SDL_MESSAGEBOX_ERROR )
+         argv[argc++] = "dialog-error";
+      else if ( box.flags & SDL_MESSAGEBOX_WARNING )
+         argv[argc++] = "dialog-warning";
+      else
+         argv[argc++] = "dialog-information";
+
+      argv[argc++] = "--title";
+      argv[argc++] = box.title;
+      argv[argc++] = "--text";
+      argv[argc++] = box.message;
+      for ( int i = 0; i < box.numbuttons; ++i )
+      {
+         argv[argc++] = "--extra-button";
+         argv[argc++] = box.buttons[i].text;
+      }
+      argv[argc] = NULL;
+
+      char chosen[128];
+      const int status = runZenity( argv, chosen, sizeof( chosen ) );
+      if ( status < 0 || status >= 128 )
+         return false;
+
+      // zenity prints the label of the button chosen, and a newline; nothing
+      // at all if the box was closed instead.
+      char* newline = strrchr( chosen, '\n' );
+      if ( newline )
+         *newline = '\0';
+
+      buttonId = box.buttons[box.numbuttons - 1].buttonid;
+      for ( int i = 0; i < box.numbuttons; ++i )
+      {
+         if ( box.buttons[i].flags & SDL_MESSAGEBOX_BUTTON_ESCAPEKEY_DEFAULT )
+            buttonId = box.buttons[i].buttonid;
+      }
+      for ( int i = 0; i < box.numbuttons; ++i )
+      {
+         if ( chosen[0] != '\0' && strcmp( chosen, box.buttons[i].text ) == 0 )
+            buttonId = box.buttons[i].buttonid;
+      }
+      return true;
+   }
+#endif
 
    //---------------------------------------------------------------------------
    // Show the box over the engine's window and wait for an answer; returns the
@@ -104,7 +230,12 @@ namespace
 
       int res = 0;
       if ( SDL_ShowMessageBox( &boxData, &res ) != 0 )
-         res = 0;
+      {
+#ifdef TORQUE_ZENITY_MSGBOX
+         if ( !showZenityBox( boxData, res ) )
+#endif
+            res = 0;
+      }
 
       SDL_ShowCursor( cursorShown );
       if ( wasGrabbed )
