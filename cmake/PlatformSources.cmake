@@ -86,7 +86,7 @@ set(TORQUE_PLATFORM_SOURCES_MACOS
     ${TORQUE_SRC}/platformOSX/platformOSX.mm
 )
 
-# === Linux / X11 (platformX86UNIX) ===========================================
+# === Linux (platformX86UNIX + platformSDL, on SDL 2's X11 driver) =============
 set(TORQUE_PLATFORM_SOURCES_LINUX
     # ---- platformX86UNIX ----
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXAsmBlit.cc
@@ -103,7 +103,6 @@ set(TORQUE_PLATFORM_SOURCES_LINUX
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXMath.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXMath_ASM.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXMemory.cc
-    ${TORQUE_SRC}/platformX86UNIX/x86UNIXMessageBox.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXMutex.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXOGLVideo.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXOpenAL.cc
@@ -115,6 +114,10 @@ set(TORQUE_PLATFORM_SOURCES_LINUX
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXTime.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXUtils.cc
     ${TORQUE_SRC}/platformX86UNIX/x86UNIXWindow.cc
+    # ---- platformSDL: shared by every back-end on SDL 2 (the web build next) ----
+    ${TORQUE_SRC}/platformSDL/sdlInput.cpp
+    ${TORQUE_SRC}/platformSDL/sdlMsgBox.cpp
+    ${TORQUE_SRC}/platformSDL/sdlTextInput.cpp
 )
 
 # === iOS (platformiOS) =======================================================

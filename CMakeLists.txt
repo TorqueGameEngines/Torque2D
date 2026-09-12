@@ -449,35 +449,29 @@ if(TORQUE_IOS)
 endif()
 
 if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
-    # Linux / X11 desktop build (platformX86UNIX). NOTES for the on-platform
-    # (WSL/Linux) session:
-    #   * SDL 1.2 is REQUIRED, not optional: the platform back-end calls 1.2-only
-    #     APIs (SDL_GetVideoSurface, SDL_WM_*, SDL_*GammaRamp, SDL_GL_SwapBuffers).
-    #     This is NOT SDL2. The SDL2-backed sdl12-compat shim (Ubuntu 24.04+, Arch)
-    #     is fine: the back-end no longer reaches into libSDL for the private
-    #     X11_KeyToUnicode symbol, it reads the keymap through Xlib.
+    # Linux desktop build: platformX86UNIX on SDL 2, with platformSDL -- the code
+    # it shares with the other back-ends on SDL 2. NOTES for the on-platform
+    # session:
+    #   * SDL 2 is vendored (engine/lib/sdl, the same 2.32.10 Torque3D builds) and
+    #     built by engine/lib/CMakeLists.txt as a static library, so there is no
+    #     SDL to install and the engine still ships as one executable. SDL's CMake
+    #     needs the X11 development headers to build its X11 driver, which is the
+    #     driver the back-end runs on (InitSDL in x86UNIXWindow.cc).
     #   * `rt` is a no-op on modern glibc but harmless.
     #   * OpenGL/FreeType are resolved via find_package (more robust than the old
     #     hard-coded /usr/include/freetype2 paths). Install dev packages, e.g. on
-    #     Debian/Ubuntu: libsdl1.2-dev libx11-dev libxft-dev libfontconfig1-dev
+    #     Debian/Ubuntu: libx11-dev libxext-dev libxrandr-dev libxcursor-dev
+    #     libxfixes-dev libxi-dev libxss-dev libxft-dev libfontconfig1-dev
     #     libfreetype6-dev libopenal-dev libgl1-mesa-dev (and nasm for the 32-bit
     #     build).
+    #   * X11 is linked directly as well as through SDL: the fonts (x86UNIXFont.cc)
+    #     use Xft on a display connection of their own, and the back-end reads the
+    #     window manager's _NET_WM_STATE through SDL's (x86UNIXOGLVideo.cc).
     #   * fontconfig is linked explicitly, not left to Xft: x86UNIXFont.cc calls
     #     Fc* directly for PlatformFont::enumeratePlatformFonts.
     find_package(Threads REQUIRED)
     find_package(OpenGL REQUIRED)
     find_package(Freetype REQUIRED)
-
-    # SDL 1.2 (legacy). Resolve it directly rather than via FindSDL: the sources
-    # use `#include <SDL/SDL.h>`, which needs the PARENT of the SDL header dir on
-    # the include path (find_path on SDL/SDL.h returns exactly that directory).
-    find_library(SDL12_LIBRARY NAMES SDL SDL-1.2)
-    find_path(SDL12_INCLUDE_DIR NAMES SDL/SDL.h)
-    if(NOT SDL12_LIBRARY OR NOT SDL12_INCLUDE_DIR)
-        message(FATAL_ERROR
-            "SDL 1.2 not found. Install it (Debian/Ubuntu: 'sudo apt install libsdl1.2-dev').")
-    endif()
-    target_include_directories(Torque2D PRIVATE ${SDL12_INCLUDE_DIR})
 
     target_link_libraries(Torque2D PRIVATE
         Threads::Threads
@@ -485,8 +479,13 @@ if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
         Freetype::Freetype
         m dl rt
         X11 Xft fontconfig
-        ${SDL12_LIBRARY}
+        SDL2::SDL2-static
         openal)
+
+    # TORQUE_SDL: the platform layer is built on SDL 2 and compiles
+    # engine/source/platformSDL -- Torque3D's name for the same switch. The unit
+    # tests of that shared code are compiled only where it is.
+    target_compile_definitions(Torque2D PRIVATE TORQUE_SDL)
 
     # CPU / bitness. detectX86CPUInfo() (platform/platformCPUInfo.asm — 32-bit
     # NASM, it does NOT assemble for elf64) is referenced only when TORQUE_64 is

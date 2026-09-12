@@ -29,7 +29,7 @@
 #include "math/mPoint.h"
 
 #include <dlfcn.h>
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 // declare stub functions
 #define GL_FUNCTION(fn_return, fn_name, fn_args, fn_value) fn_return stub_##fn_name fn_args{ fn_value }
@@ -339,8 +339,10 @@ bool GL_EXT_Init( )
    else
       gGLState.maxTextureUnits = 1;
 
-   // JMQ: vsync/swap interval skipped
-   gGLState.suppSwapInterval = false;
+   // Vertical sync goes through SDL (OpenGLDevice::setVerticalSync), which
+   // knows which of GLX's swap-control extensions the driver has. Setting the
+   // swap interval to what it already is asks whether any of them is there.
+   gGLState.suppSwapInterval = ( SDL_GL_SetSwapInterval( SDL_GL_GetSwapInterval() ) == 0 );
 
    Con::printf("OpenGL Init: Enabled Extensions");
    if (gGLState.suppARBMultitexture)    Con::printf("  ARB_multitexture (Max Texture Units: %d)", gGLState.maxTextureUnits);

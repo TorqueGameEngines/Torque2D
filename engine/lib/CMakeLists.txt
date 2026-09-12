@@ -21,6 +21,22 @@ function(torque_thirdparty_lib name)
     set_target_properties(${name} PROPERTIES FOLDER "ThirdParty")
 endfunction()
 
+# --- SDL 2 (Linux desktop only) ----------------------------------------------
+# Vendored from Torque3D and built by SDL's own CMake, the way Torque3D builds it
+# (see sdl/README-TORQUE2D.md) -- except static rather than shared, so the engine
+# still ships as one executable. The Web build takes SDL 2 from Emscripten's port
+# (-sUSE_SDL=2) instead, and Windows, macOS, iOS and Android don't use SDL.
+# EXCLUDE_FROM_ALL: nothing is built unless the engine links SDL2::SDL2-static.
+if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+    set(SDL_SHARED OFF CACHE BOOL "Build a shared version of the library" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "Build a static version of the library" FORCE)
+    set(SDL_TEST OFF CACHE BOOL "Build the SDL2_test library" FORCE)
+    set(SDL2_DISABLE_SDL2MAIN ON CACHE BOOL "The engine has its own main()" FORCE)
+    set(SDL2_DISABLE_INSTALL ON CACHE BOOL "Don't install SDL with the engine" FORCE)
+    set(SDL2_DISABLE_UNINSTALL ON CACHE BOOL "Don't add an uninstall target" FORCE)
+    add_subdirectory(sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl2 EXCLUDE_FROM_ALL)
+endif()
+
 # --- zlib (built from source on desktop; Android uses the NDK system libz) -----
 if(NOT ANDROID)
 add_library(zlib STATIC

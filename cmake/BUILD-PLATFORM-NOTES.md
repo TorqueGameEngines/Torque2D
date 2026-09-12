@@ -336,57 +336,45 @@ codesign — `rm -rf Torque2D_DEBUG.app` when switching platforms.
 ## Linux round (run in WSL or on Linux) — DONE (builds & links, 32 & 64-bit)
 
 1. Install deps (Debian/Ubuntu):
-   `sudo apt install build-essential cmake nasm libsdl1.2-dev libx11-dev libxft-dev libfontconfig1-dev libfreetype6-dev libopenal-dev libgl1-mesa-dev`
+   `sudo apt install build-essential cmake nasm libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev libxft-dev libfontconfig1-dev libfreetype6-dev libopenal-dev libgl1-mesa-dev`
    For 32-bit add the multilib toolchain + `:i386` libs:
-   `sudo dpkg --add-architecture i386 && sudo apt update && sudo apt install gcc-multilib g++-multilib libsdl1.2-dev:i386 libx11-dev:i386 libxft-dev:i386 libfontconfig1-dev:i386 libfreetype6-dev:i386 libopenal-dev:i386 libgl1-mesa-dev:i386`
+   `sudo dpkg --add-architecture i386 && sudo apt update && sudo apt install gcc-multilib g++-multilib libx11-dev:i386 libxext-dev:i386 libxrandr-dev:i386 libxcursor-dev:i386 libxfixes-dev:i386 libxi-dev:i386 libxss-dev:i386 libxft-dev:i386 libfontconfig1-dev:i386 libfreetype6-dev:i386 libopenal-dev:i386 libgl1-mesa-dev:i386`
+   **SDL 2 is not a package to install.** It is vendored in `engine/lib/sdl`
+   (SDL 2.32.10, the tree Torque3D builds; see its `README-TORQUE2D.md`) and
+   compiled by the configure step as a static library. The `libx*-dev` packages
+   are its X11 build dependencies: `libxext-dev` is required -- SDL's configure
+   stops with "Missing Xext.h" without it -- and each of the others turns on an
+   SDL feature (display modes through XRandR, cursors, XInput2 relative mouse,
+   screensaver inhibit) that is silently left out when its headers are missing.
    **fontconfig is a direct dependency, not just Xft's:** `x86UNIXFont.cc` calls
    `Fc*` itself for `PlatformFont::enumeratePlatformFonts` (the installed-font list
    the GUI tools offer), so the Linux link list carries `fontconfig` explicitly.
-   **Gotcha (per-arch `-dev`, and they do NOT coexist):** `libsdl1.2-dev:amd64`
-   and `libsdl1.2-dev:i386` conflict (shared files like `sdl-config`), so only one
-   can be installed at a time — installing one removes the other. A box prepped for
-   32-bit has only `libsdl1.2-dev:i386` (which still provides `sdl-config`, masking
-   the problem), so a default 64-bit configure fails `find_library(SDL12_LIBRARY)`
-   with "SDL 1.2 not found"; install `libsdl1.2-dev` (`:amd64`) to build 64-bit.
-   The reverse bites the 32-bit build: with the amd64 `-dev` installed, the i386
-   dev symlink `/usr/lib/i386-linux-gnu/libSDL.so` is gone (only the runtime
-   `libSDL-1.2.so.0` from `libsdl1.2debian:i386` remains), so `find_library` can't
-   find it. The headers are arch-independent (shared), so the fix is to point CMake
-   at the i386 runtime directly: `-DSDL12_LIBRARY=/usr/lib/i386-linux-gnu/libSDL-1.2.so.0`
-   (no sudo; leaves the 64-bit setup intact). Alternatively recreate the symlink
-   (`sudo ln -s libSDL-1.2.so.0 /usr/lib/i386-linux-gnu/libSDL.so`) or swap dev
-   packages per build.
 2. 64-bit one-shot: `./build-linux.sh [Debug|Release|Shipping]` (configures **and**
    compiles, bounding `--parallel` to `nproc`, leaving the exe at the repo root).
    Configure-only: `./generate-make.sh Debug` then `cmake --build build/make -j$(nproc)`.
    32-bit (verified building, linking, and running): configure with
    `-DCMAKE_C_FLAGS=-m32 -DCMAKE_CXX_FLAGS=-m32 -DCMAKE_EXE_LINKER_FLAGS=-m32`
-   (and `PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig`, plus the SDL override
-   above when only the amd64 `-dev` is present), then build. `-m32` makes CMake
+   (and `PKG_CONFIG_PATH=/usr/lib/i386-linux-gnu/pkgconfig`), then build. `-m32` makes CMake
    auto-detect `CMAKE_LIBRARY_ARCHITECTURE=i386-linux-gnu`, so OpenGL/FreeType/etc.
    resolve to `/usr/lib/i386-linux-gnu`; the root picks the bitness code path from
    `CMAKE_SIZEOF_VOID_P`. Note both builds emit `Torque2D_DEBUG` at the repo root,
    so they overwrite each other — use separate build dirs (`build/make`, `build/make32`)
    and rebuild whichever bitness you want at the root.
 3. Resolved issues (the original scaffold's wrong assumptions):
-   - **SDL 1.2 is REQUIRED, not optional.** The back-end calls 1.2-only APIs
-     (`SDL_GetVideoSurface`, `SDL_WM_*`, `SDL_*GammaRamp`, `SDL_GL_SwapBuffers`).
-     This is **NOT SDL2**. The SDL2-backed `sdl12-compat` shim (Ubuntu 24.04+,
-     Arch) *is* supported: the ascii key table used to be built by calling
-     `X11_KeyToUnicode`, a private symbol of SDL 1.2's X11 driver that was never
-     in a public header, and it is now read from the X keymap through Xlib.
-     `sdl12-compat` does export an `X11_KeyToUnicode`, but it is a US-layout
-     `toupper()` stub — it answers `1` for shift-`1` and `;` for shift-`;` — so
-     linking against it used to succeed and then mistype every shifted
-     punctuation character.
+   - **SDL 2, vendored.** The back-end was written against SDL 1.2 and ran on
+     either a genuine 1.2.15 or the SDL2-backed `sdl12-compat` shim that Ubuntu
+     24.04+ and Arch ship as SDL 1.2 -- two implementations that disagreed about
+     windows, events and fullscreen. It now uses the vendored SDL 2 on SDL's X11
+     driver (through Xwayland on a Wayland desktop); `SDL_VIDEODRIVER` overrides
+     the driver.
    - **`detectX86CPUInfo`** comes from `platform/platformCPUInfo.asm`, 32-bit-only
      NASM (does not assemble for elf64). It's referenced only `#ifndef TORQUE_64`,
      so 64-bit defines `TORQUE_64` (asm unneeded); 32-bit assembles it via NASM.
    - **Bitness macros:** 64-bit defines `TORQUE_64` (`__amd64__` is auto); 32-bit
      defines `i386` (bare `i386` isn't predefined under standard C++, and
      `types.gcc.h`'s CPU detection keys off it).
-   - **OpenGL/FreeType** are resolved via `find_package`; SDL via
-     `find_library`/`find_path` (the latter so `#include <SDL/SDL.h>` resolves).
+   - **OpenGL/FreeType** are resolved via `find_package`; SDL is the vendored
+     `SDL2::SDL2-static` target from `engine/lib`.
 4. **WSL runtime — VERIFIED under WSLg (64-bit Debug).** On a WSL2 box with WSLg
    up (`DISPLAY=:0`, `WAYLAND_DISPLAY=wayland-0`, `/mnt/wslg/.X11-unix/X0`),
    `./Torque2D_DEBUG` launches the Project Manager GUI: OpenGL initializes through

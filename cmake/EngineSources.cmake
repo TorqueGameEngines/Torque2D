@@ -365,6 +365,8 @@ set(TORQUE_ENGINE_SOURCES
     ${TORQUE_SRC}/testing/tests/platformMemoryTests.cc
     ${TORQUE_SRC}/testing/tests/platformStringTests.cc
     ${TORQUE_SRC}/testing/tests/resourceManagerDeleteTests.cc
+    ${TORQUE_SRC}/testing/tests/sdlKeyMapTests.cc
+    ${TORQUE_SRC}/testing/tests/sdlTextInputTests.cc
     ${TORQUE_SRC}/testing/tests/simObjectCloneTests.cc
     ${TORQUE_SRC}/testing/tests/stringTableCaseTests.cc
     # ---- platform ----
