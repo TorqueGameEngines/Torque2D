@@ -66,10 +66,17 @@ public:
 	bool renderIbeam(const Point2I& startPoint, const Point2I& extent, const string line, const U32 start, const U32 end, const bool isLastLine, GuiControlProfile* profile, GFont* font);
 	inline string getSelection(const string& fullText) { return hasSelection() ? fullText.substr(mBlockStart, mBlockEnd - mBlockStart) : string(); }
 	void eraseSelection(string& fullText);
-	void stepCursorForward();
-	void stepCursorBackward();
+	void stepCursorForward(const string& fullText);
+	void stepCursorBackward(const string& fullText);
 	void resetCursorBlink();
 	void selectWholeWord(const string& text);
+
+	/// The text is UTF-8 and every caret position is a byte offset into it, so
+	/// a caret move of "one character" is one to four bytes. These find the
+	/// start of the character after, or before, the one at pos, so that a caret
+	/// never lands inside a character -- anything typed there would split it.
+	static U32 nextCharacterStart(const string& text, const U32 pos);
+	static U32 previousCharacterStart(const string& text, const U32 pos);
 };
 
 class GuiTextEditTextBlock
@@ -152,7 +159,11 @@ protected:
    StringTableEntry     mPasswordMask;
 
    /// If set, any non-ESC key is handled here or not at all
-   bool    mSinkAllKeyEvents;   
+   bool    mSinkAllKeyEvents;
+
+   /// The first half of a character outside the BMP, held until its second
+   /// half arrives in the next event. See composeTypedCharacter.
+   UTF16   mPendingHighSurrogate;
 
    const RectI getGlobalInnerRect();
    S32 calculateIbeamPosition(const Point2I &offset);
@@ -165,6 +176,8 @@ protected:
    virtual bool handleKeyDownWithAlt(const GuiEvent& event);
    virtual bool handleKeyDownWithNoModifier(const GuiEvent& event);
    virtual bool handleCharacterInput(const GuiEvent& event);
+   virtual bool canDisplayCharacter(const UTF16 character);
+   virtual bool insertCharacter(const string& character);
    virtual bool handleEscapeKey();
    virtual bool handleEnterKey();
    virtual bool insertNewLine();
@@ -205,6 +218,31 @@ public:
    void setScriptValue(const char *value);
 
    bool onKeyDown(const GuiEvent &event);
+
+   /// Typed characters. A keyboard event's ascii is one UTF-16 code unit, and
+   /// it arrives in one of two ways, depending on the platform: on the key-down
+   /// of the key that typed it (Windows, macOS), or in an event of its own with
+   /// no key behind it -- keyCode KEY_NULL -- after a key-down that carries
+   /// nothing (SDL's text input, and IME input on Windows). Either way it goes
+   /// into the text as UTF-8, which is how the box stores it.
+   ///
+   /// Whether a code unit is text at all: not NUL, and not a control code,
+   /// which is what a key like Backspace or Ctrl+C reports as its character.
+   static bool isTypedCharacter(const UTF16 unit);
+   /// A character in an event of its own. It is typed text and nothing else --
+   /// never a shortcut, whatever modifier happens to be set on it.
+   static bool isCharacterEvent(const GuiEvent& event);
+   /// A character typed with AltGr on Windows, which reports AltGr as left
+   /// Ctrl plus right Alt. It is text, not a Ctrl shortcut: on a Polish
+   /// keyboard AltGr+C is a letter, not Copy.
+   static bool isAltGrCharacter(const GuiEvent& event);
+   /// The UTF-8 one code unit adds to the text, written to outBuffer (which
+   /// holds 3 bytes); returns how many bytes that is, 0 for none. A character
+   /// outside the BMP arrives as two units, high surrogate first: the first is
+   /// held in pendingHighSurrogate and adds nothing, and the second completes
+   /// it. A surrogate without its partner adds nothing.
+   static U32 composeTypedCharacter(const UTF16 unit, UTF16& pendingHighSurrogate, UTF8* outBuffer);
+
    void onTouchDown(const GuiEvent &event);
    void onTouchDragged(const GuiEvent &event);
    void onTouchUp(const GuiEvent& event);

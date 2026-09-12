@@ -1857,6 +1857,13 @@ bool GuiControl::sendScriptMouseEvent(const char* name, const GuiEvent& event)
 bool GuiControl::sendScriptKeyEvent(const char* name, const InputEvent& event)
 {
     bool consumed = false;
+
+    // A character typed with no key behind it (KEY_NULL -- see
+    // GuiTextEditCtrl::isCharacterEvent) has no key name to report, and
+    // asking for one logs an error for every character typed.
+    if (event.objInst == KEY_NULL)
+        return false;
+
     if (isMethod(name))
     {
         char buf[2][32];
