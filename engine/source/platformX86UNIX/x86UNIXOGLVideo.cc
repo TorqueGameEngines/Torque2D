@@ -32,17 +32,29 @@
 #include "platformX86UNIX/x86UNIXOGLVideo.h"
 #include "platformX86UNIX/x86UNIXState.h"
 
-#include <SDL/SDL.h>
-#include <SDL/SDL_syswm.h>
-#include <SDL/SDL_version.h>
+#include <SDL.h>
+#include <SDL_syswm.h>
 
 //------------------------------------------------------------------------------
 bool InitOpenGL()
 {
    DisplayDevice::init();
 
-   // Get the video settings from the prefs:
-   const char* resString = Con::getVariable( "$pref::Video::resolution" );
+   // Create the window at the size the game is about to ask for -- the choice
+   // canvas.cs makes: $pref::Video::windowedRes, or defaultResolution when
+   // that is empty.  This used to read $pref::Video::resolution, which nothing
+   // sets before the canvas exists, so the window first appeared at an 800x600
+   // placeholder and was resized a moment later.  The first map is the one a
+   // tiling window manager remembers: that placeholder was the size Hyprland
+   // floated the window at.
+   //
+   // An empty windowedRes is also how a game says it has no preference, which
+   // leaves a tiling window manager free to tile the window.  A windowedRes is
+   // a size the game wants exactly; see OpenGLDevice::setScreenMode.
+   const char* resString = Con::getVariable( "$pref::Video::windowedRes" );
+   OpenGLDevice::smCreateAtExactSize = ( resString[0] != '\0' );
+   if ( !OpenGLDevice::smCreateAtExactSize )
+      resString = Con::getVariable( "$pref::Video::defaultResolution" );
    char* tempBuf = new char[dStrlen( resString ) + 1];
    dStrcpy( tempBuf, resString );
    char* temp = dStrtok( tempBuf, " x\0" );
@@ -75,6 +87,19 @@ bool InitOpenGL()
 
 //------------------------------------------------------------------------------
 bool OpenGLDevice::smCanSwitchBitDepth = false;
+bool OpenGLDevice::smCreateAtExactSize = false;
+bool OpenGLDevice::smHoldingExactSize = false;
+U32  OpenGLDevice::smExactSizeHeldSince = 0;
+
+// The GL context. It is made with the window and lives as long as the window
+// does: SDL 2 resizes a window, and takes it in and out of fullscreen, around
+// the context it already has, so no mode change here costs a texture reload.
+// SDL 1.2's SDL_SetVideoMode rebuilt both, every time.
+static SDL_GLContext sGLContext = NULL;
+
+// How long a window created at an exact size is held at it; see
+// releaseExactSize.
+static const U32 ExactSizeHoldMs = 500;
 
 //------------------------------------------------------------------------------
 OpenGLDevice::OpenGLDevice()
@@ -143,32 +168,37 @@ void OpenGLDevice::loadResolutions()
    addResolution(1280, 1024);
    addResolution(1600, 1200);
 
-   // specifying full screen should give us the resolutions that the
-   // X server allows
-   SDL_Rect** modes = SDL_ListModes(NULL, SDL_FULLSCREEN);
-   if (modes &&
-      (modes != (SDL_Rect **)-1))
+   // ...and the modes the display offers. SDL lists a size once for each
+   // refresh rate it can be shown at; this is a list of sizes.
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   int displayIndex = window ? SDL_GetWindowDisplayIndex(window) : 0;
+   if (displayIndex < 0)
+      displayIndex = 0;
+
+   const int numModes = SDL_GetNumDisplayModes(displayIndex);
+   for (int i = 0; i < numModes; ++i)
    {
-      for (int i = 0; modes[i] != NULL; ++i)
+      SDL_DisplayMode mode;
+      if (SDL_GetDisplayMode(displayIndex, i, &mode) != 0)
+         continue;
+
+      // do we already have this mode?
+      bool found = false;
+      for (Vector<Resolution>::iterator iter = mResolutionList.begin();
+           iter != mResolutionList.end();
+           ++iter)
       {
-         // do we already have this mode?
-         bool found = false;
-         for (Vector<Resolution>::iterator iter = mResolutionList.begin();
-              iter != mResolutionList.end();
-              ++iter)
+         if (iter->w == mode.w && iter->h == mode.h)
          {
-            if (iter->w == modes[i]->w && iter->h == modes[i]->h)
-            {
-               found = true;
-               break;
-            }
+            found = true;
+            break;
          }
-         if (!found)
-            // don't check these resolutions because they should be OK
-            // (and checking might drop resolutions that are higher than the
-            // current desktop bpp)
-            addResolution(modes[i]->w, modes[i]->h, false);
       }
+      if (!found)
+         // don't check these resolutions because they should be OK
+         // (and checking might drop resolutions that are higher than the
+         // current desktop bpp)
+         addResolution(mode.w, mode.h, false);
    }
 }
 
@@ -245,6 +275,73 @@ static void PrintGLAttributes()
 }
 
 //------------------------------------------------------------------------------
+// Make the window and its GL context: once, for the first setScreenMode.
+static bool CreateGLWindow( U32 width, U32 height, bool fullScreen, bool exactSize )
+{
+   // The GL attributes choose the window's visual, so they are read when the
+   // window is made and have to be set before it. No context version or profile
+   // is asked for: the renderer is fixed-function, and SDL's default context
+   // is a compatibility one.
+   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+// JMQ: NVIDIA 2802+ doesn't like this setting for stencil size
+//   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
+   SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0);
+   SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE, 0);
+   SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE, 0);
+   SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE, 0);
+   SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE, 0);
+
+   // Fullscreen is the window manager's: a borderless window over the whole
+   // display at the desktop's own mode, never a mode switch.
+   Uint32 flags = SDL_WINDOW_OPENGL;
+   if ( fullScreen )
+      flags |= SDL_WINDOW_FULLSCREEN_DESKTOP;
+   if ( !exactSize )
+      flags |= SDL_WINDOW_RESIZABLE;
+
+   SDL_Window* window = SDL_CreateWindow( x86UNIXState->getWindowName(),
+      SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags );
+   if ( window == NULL )
+   {
+      Con::printf( "Unable to create the window: %s", SDL_GetError() );
+      return false;
+   }
+
+   sGLContext = SDL_GL_CreateContext( window );
+   if ( sGLContext == NULL )
+   {
+      Con::printf( "Unable to create an OpenGL context: %s", SDL_GetError() );
+      SDL_DestroyWindow( window );
+      return false;
+   }
+
+   x86UNIXState->setSDLWindow( window );
+   x86UNIXState->setWindowCreated( true );
+   return true;
+}
+
+//------------------------------------------------------------------------------
+// Take the window in or out of fullscreen.
+//
+// SDL's own record of whether the window is fullscreen goes stale whenever the
+// window manager changes it (SUPER+F in Hyprland): SDL reads _NET_WM_STATE, but
+// only for whether the window is shown or maximized. And SDL_SetWindowFullscreen
+// does nothing when asked for the state SDL believes the window is in already.
+// So when SDL's record disagrees with the window, it is first told the truth --
+// asked for the state the window is really in, which changes nothing on screen
+// -- and then asked for the change. Each call waits on the window manager for a
+// moment (about a tenth of a second on Hyprland), which is fine for a switch
+// the player asked for.
+static void SetWindowFullScreen( SDL_Window* window, bool fullScreen )
+{
+   const bool sdlThinksFullScreen = ( SDL_GetWindowFlags( window ) & SDL_WINDOW_FULLSCREEN ) != 0;
+   if ( sdlThinksFullScreen == fullScreen )
+      SDL_SetWindowFullscreen( window, fullScreen ? 0 : SDL_WINDOW_FULLSCREEN_DESKTOP );
+
+   SDL_SetWindowFullscreen( window, fullScreen ? SDL_WINDOW_FULLSCREEN_DESKTOP : 0 );
+}
+
+//------------------------------------------------------------------------------
 bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp,
    bool fullScreen, bool forceIt, bool repaint )
 {
@@ -281,132 +378,87 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp,
       bpp = desktopDepth;
    }
 
-   bool IsInList = false;
+   // No size is refused. A window can be any size, and fullscreen is always the
+   // desktop's own mode (SDL_WINDOW_FULLSCREEN_DESKTOP) whatever size is asked
+   // for -- which matters, because Video::toggleFullScreen asks for the size the
+   // window has now, and after a drag or a tile that is rarely one the display
+   // lists. Under SDL 1.2 fullscreen switched the display's mode, so it had to
+   // be one of them.
 
-   Resolution NewResolution( width, height, bpp );
-
-   // See if the desired resolution is in the list
-   if ( mResolutionList.size() )
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if ( window == NULL )
    {
-      for ( int i = 0; i < mResolutionList.size(); i++ )
-      {
-         if ( width == mResolutionList[i].w
-              && height == mResolutionList[i].h
-              && bpp == mResolutionList[i].bpp )
-         {
-            IsInList = true;
-            break;
-         }
-      }
+      // A window the game wants at an exact size is created fixed-size: SDL
+      // sets its minimum and maximum size hints to that size before the window
+      // is first mapped, which is what makes a tiling window manager (Hyprland,
+      // i3, sway) float it at that size instead of tiling it; a stacking window
+      // manager just sees a window open at the size it asked for. It is held
+      // fixed-size until releaseExactSize lets go of it, so the player can then
+      // resize it. Letting go straight away loses the race: the window manager
+      // decides a moment after the window maps, and by then the hints would be
+      // gone. Only ever at creation: a window already mapped and tiled cannot be
+      // floated.
+      const bool exactSize = !fullScreen && smCreateAtExactSize;
 
-      // The resolution list only constrains fullscreen modes. A windowed surface
-      // can be any size (e.g. an arbitrary window-manager drag resize), so don't
-      // reject windowed sizes that aren't in the list.
-      if ( !IsInList && fullScreen )
-      {
-         Con::printf( "Selected resolution not available: %d %d %d",
-            width, height, bpp);
+      Con::printf( "Setting screen mode to %dx%dx%d (%s)...", width, height,
+         bpp, ( fullScreen ? "fs" : ( exactSize ? "w, exact" : "w" ) ) );
+
+      if ( !CreateGLWindow( width, height, fullScreen, exactSize ) )
          return false;
+      window = x86UNIXState->getSDLWindow();
+
+      if ( exactSize )
+      {
+         smHoldingExactSize = true;
+         smExactSizeHeldSince = Platform::getRealMilliseconds();
+      }
+
+      PrintGLAttributes();
+
+      // clear screen here to prevent buffer garbage from being displayed when
+      // the window first shows
+      glClearColor(0.0, 0.0, 0.0, 0.0);
+      glClear(GL_COLOR_BUFFER_BIT);
+      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+   }
+   else
+   {
+      const bool wasFullScreen = isWindowFullScreen();
+
+      Con::printf( "Setting screen mode to %dx%dx%d (%s)...", width, height,
+         bpp, ( fullScreen ? "fs" : "w" ) );
+
+      if ( fullScreen != wasFullScreen )
+         SetWindowFullScreen( window, fullScreen );
+
+      // A windowed size is a request, which a tiling window manager may well
+      // refuse and leave the window at the size it gave it. Coming out of
+      // fullscreen asks for none: the window goes back to the size it had
+      // before -- and Video::toggleFullScreen passes the fullscreen size along,
+      // which is no one's choice of window size.
+      if ( !fullScreen && !wasFullScreen )
+      {
+         S32 currentWidth, currentHeight;
+         SDL_GetWindowSize( window, &currentWidth, &currentHeight );
+         if ( currentWidth != (S32)width || currentHeight != (S32)height )
+            SDL_SetWindowSize( window, width, height );
       }
    }
-   else
-   {
-      AssertFatal( false, "No resolution list found!!" );
-   }
 
-   // Here if we found a matching resolution in the list
+   // The canvas draws at the size the window is now, which is not always the
+   // size asked for: a fullscreen window is the display's size, and a tiled
+   // one is the tile's.
+   S32 windowWidth, windowHeight;
+   SDL_GetWindowSize( window, &windowWidth, &windowHeight );
 
-   bool needResurrect = false;
-   if (x86UNIXState->windowCreated())
-   {
-      Con::printf( "Killing the texture manager..." );
-      Game->textureKill();
-      needResurrect = true;
-   }
-
-   // Set the desired GL Attributes
-   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
-// JMQ: NVIDIA 2802+ doesn't like this setting for stencil size
-//   SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-   SDL_GL_SetAttribute(SDL_GL_ALPHA_SIZE, 0);
-   SDL_GL_SetAttribute(SDL_GL_ACCUM_RED_SIZE, 0);
-   SDL_GL_SetAttribute(SDL_GL_ACCUM_GREEN_SIZE, 0);
-   SDL_GL_SetAttribute(SDL_GL_ACCUM_BLUE_SIZE, 0);
-   SDL_GL_SetAttribute(SDL_GL_ACCUM_ALPHA_SIZE, 0);
-//    SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
-//    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
-//    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 6);
-//    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
-
-   U32 flags = SDL_OPENGL;
-   if (fullScreen)
-      flags |= SDL_FULLSCREEN;
-   else
-      // Let the window manager resize the window; without this SDL fixes the
-      // window size and never emits SDL_VIDEORESIZE, so the canvas could not
-      // follow a resize. The resize handler in x86UNIXWindow.cc picks up the
-      // new size from the event.
-      flags |= SDL_RESIZABLE;
-
-   Con::printf( "Setting screen mode to %dx%dx%d (%s)...", width, height,
-      bpp, ( fullScreen ? "fs" : "w" ) );
-
-   // set the new video mode
-   if (SDL_SetVideoMode(width, height, bpp, flags) == NULL)
-   {
-      Con::printf("Unable to set SDL Video Mode: %s", SDL_GetError());
-      return false;
-   }
-
-   PrintGLAttributes();
-
-   // clear screen here to prevent buffer garbage from being displayed when
-   // video mode is switched
-   glClearColor(0.0, 0.0, 0.0, 0.0);
-   glClear(GL_COLOR_BUFFER_BIT);
-   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-   if ( needResurrect )
-   {
-      // Reload the textures:
-      Con::printf( "Resurrecting the texture manager..." );
-      Game->textureResurrect();
-   }
-
-   if ( gGLState.suppSwapInterval )
-      setVerticalSync( !Con::getBoolVariable( "$pref::Video::disableVerticalSync" ) );
-
-   // reset the window in platform state
-   SDL_SysWMinfo sysinfo;
-   SDL_VERSION(&sysinfo.version);
-   if (SDL_GetWMInfo(&sysinfo) == 0)
-   {
-      Con::printf("Unable to set SDL Video Mode: %s", SDL_GetError());
-      return false;
-   }
-   x86UNIXState->setWindow(sysinfo.info.x11.window);
-
-   // set various other parameters
-   x86UNIXState->setWindowCreated(true);
-   smCurrentRes = NewResolution;
-   Platform::setWindowSize ( width, height );
+   smCurrentRes = Resolution( windowWidth, windowHeight, bpp );
+   Platform::setWindowSize( windowWidth, windowHeight );
    smIsFullScreen = fullScreen;
    Con::setBoolVariable( "$pref::Video::fullScreen", smIsFullScreen );
-   char tempBuf[15];
+   char tempBuf[32];
    dSprintf( tempBuf, sizeof( tempBuf ), "%d %d %d",
       smCurrentRes.w, smCurrentRes.h, smCurrentRes.bpp );
    Con::setVariable( "$pref::Video::resolution", tempBuf );
-
-   // post a TORQUE_SETVIDEOMODE user event
-   SDL_Event event;
-   event.type = SDL_USEREVENT;
-   event.user.code = TORQUE_SETVIDEOMODE;
-   event.user.data1 = NULL;
-   event.user.data2 = NULL;
-   SDL_PushEvent(&event);
-
-   // reset the caption
-   SDL_WM_SetCaption(x86UNIXState->getWindowName(), NULL);
 
    // repaint
    if ( repaint )
@@ -416,9 +468,110 @@ bool OpenGLDevice::setScreenMode( U32 width, U32 height, U32 bpp,
 }
 
 //------------------------------------------------------------------------------
+void OpenGLDevice::releaseExactSize()
+{
+   if ( !smHoldingExactSize ||
+        Platform::getRealMilliseconds() - smExactSizeHeldSince < ExactSizeHoldMs )
+      return;
+
+   smHoldingExactSize = false;
+
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if ( window == NULL )
+      return;
+
+   // The window manager has placed the window by now. Clearing the size hints
+   // leaves it where it is, and lets the player resize it.
+   SDL_SetWindowResizable( window, SDL_TRUE );
+   Con::printf( "Window released from its exact size after %d ms; it can be resized now.",
+      ExactSizeHoldMs );
+}
+
+//------------------------------------------------------------------------------
+void OpenGLDevice::followWindow()
+{
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if ( window == NULL )
+      return;
+
+   S32 width, height;
+   SDL_GetWindowSize( window, &width, &height );
+   const bool fullScreen = isWindowFullScreen();
+
+   if ( width == smCurrentRes.w && height == smCurrentRes.h && fullScreen == smIsFullScreen )
+      return;
+
+   Con::printf( "Following the window to %dx%d (%s)", width, height,
+      ( fullScreen ? "fs" : "w" ) );
+
+   // Platform::getWindowSize is what the canvas sizes itself to
+   // (GuiCanvas::maintainSizing) and the viewport is set from (dglSetClipRect).
+   smCurrentRes.w = width;
+   smCurrentRes.h = height;
+   Platform::setWindowSize( width, height );
+
+   smIsFullScreen = fullScreen;
+   Con::setBoolVariable( "$pref::Video::fullScreen", smIsFullScreen );
+
+   char tempBuf[32];
+   dSprintf( tempBuf, sizeof( tempBuf ), "%d %d %d",
+      smCurrentRes.w, smCurrentRes.h, smCurrentRes.bpp );
+   Con::setVariable( "$pref::Video::resolution", tempBuf );
+}
+
+//------------------------------------------------------------------------------
+// On X11 the answer is the window manager's, read off the window's
+// _NET_WM_STATE: SDL's flags only know about the switches SDL itself made (see
+// SetWindowFullScreen). It is read through SDL's own connection to the X server
+// -- no second one, and only here, where the driver is known to be X11.
+bool OpenGLDevice::isWindowFullScreen()
+{
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if ( window == NULL )
+      return false;
+
+#if defined(SDL_VIDEO_DRIVER_X11)
+   SDL_SysWMinfo info;
+   SDL_VERSION( &info.version );
+   if ( SDL_GetWindowWMInfo( window, &info ) && info.subsystem == SDL_SYSWM_X11 )
+   {
+      Display* display = info.info.x11.display;
+      const Atom netWMState = XInternAtom( display, "_NET_WM_STATE", True );
+      const Atom netWMStateFullScreen = XInternAtom( display, "_NET_WM_STATE_FULLSCREEN", True );
+
+      // Atoms that do not exist yet mean no window manager has set the state
+      // on any window, this one included.
+      if ( netWMState == None || netWMStateFullScreen == None )
+         return false;
+
+      bool fullScreen = false;
+      Atom type;
+      int format;
+      unsigned long count, remaining;
+      unsigned char* data = NULL;
+      if ( XGetWindowProperty( display, info.info.x11.window, netWMState, 0, 64,
+             False, XA_ATOM, &type, &format, &count, &remaining, &data ) == Success &&
+           data != NULL )
+      {
+         const Atom* atoms = reinterpret_cast<const Atom*>( data );
+         for ( unsigned long i = 0; i < count; ++i )
+            if ( atoms[i] == netWMStateFullScreen )
+               fullScreen = true;
+         XFree( data );
+      }
+      return fullScreen;
+   }
+#endif
+
+   return ( SDL_GetWindowFlags( window ) & SDL_WINDOW_FULLSCREEN ) != 0;
+}
+
+//------------------------------------------------------------------------------
 void OpenGLDevice::swapBuffers()
 {
-   SDL_GL_SwapBuffers();
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if ( window )
+      SDL_GL_SwapWindow( window );
 }
 
 //------------------------------------------------------------------------------
@@ -452,7 +605,9 @@ bool OpenGLDevice::getGammaCorrection(F32 &g)
    U16 greentable[256];
    U16 bluetable[256];
 
-   if (SDL_GetGammaRamp(redtable, greentable, bluetable) == -1)
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if (window == NULL ||
+       SDL_GetWindowGammaRamp(window, redtable, greentable, bluetable) == -1)
    {
       Con::warnf("getGammaCorrection error: %s", SDL_GetError());
       return false;
@@ -490,7 +645,8 @@ bool OpenGLDevice::setGammaCorrection(F32 g)
    dMemcpy(greentable,redtable,256*sizeof(U16));
    dMemcpy(bluetable,redtable,256*sizeof(U16));
 
-   S32 ok = SDL_SetGammaRamp(redtable, greentable, bluetable);
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   S32 ok = window ? SDL_SetWindowGammaRamp(window, redtable, greentable, bluetable) : -1;
    if (ok == -1)
       Con::warnf("Error setting gamma correction: %s", SDL_GetError());
 
@@ -500,27 +656,13 @@ bool OpenGLDevice::setGammaCorrection(F32 g)
 //------------------------------------------------------------------------------
 bool OpenGLDevice::getVerticalSync()
 {
-   Con::printf("WARNING: OpenGLDevice::getVerticalSync is unimplemented %s %d\n", __FILE__, __LINE__);
-   return false;
-#if 0
-    if ( !gGLState.suppSwapInterval )
-        return( false );
-
-    return (qwglGetSwapIntervalEXT());
-#endif
+   return SDL_GL_GetSwapInterval() != 0;
 }
 
 //------------------------------------------------------------------------------
 bool OpenGLDevice::setVerticalSync( bool on )
 {
-   Con::printf("WARNING: OpenGLDevice::setVerticalSync is unimplemented %s %d\n", __FILE__, __LINE__);
-   return false;
-#if 0
-   if ( !gGLState.suppSwapInterval )
-      return( false );
-
-   return( qwglSwapIntervalEXT( on ? 1 : 0 ) );
-#endif
+   return SDL_GL_SetSwapInterval( on ? 1 : 0 ) == 0;
 }
 
 //------------------------------------------------------------------------------

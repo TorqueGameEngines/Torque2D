@@ -63,7 +63,5 @@ void Input::setCursorShape(U32 cursorID)
     //no cursors on Android except Torque cursors
 }
 
-void Input::setCursorState(bool on)
-{
-}
+// Input::setCursorState is EmscriptenInput.cpp's.
 

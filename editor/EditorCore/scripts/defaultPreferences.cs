@@ -52,7 +52,10 @@ $pref::Video::displayDevice = "OpenGL";
 $pref::Video::preferOpenGL = 1;
 $pref::Video::fullScreen = 0;
 $pref::Video::defaultResolution = "1024 768";
-$pref::Video::windowedRes = "1024 768 32";
+/// Empty: no preferred window size, so a tiling window manager is free to tile
+/// the window. A size here is one wanted exactly; a tiling window manager then
+/// opens the window floating at that size.
+$pref::Video::windowedRes = "";
 $pref::OpenGL::gammaCorrection = 0.5;
 
 /// Fonts.

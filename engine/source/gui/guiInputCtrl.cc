@@ -83,9 +83,12 @@ bool GuiInputCtrl::onInputEvent( const InputEvent &event )
 {
    if ( event.action == SI_MAKE )
    {
+      // KEY_NULL is a character typed with no key behind it, which follows
+      // the key-down that typed it on some platforms. The key-down is the
+      // binding; the character is not a second one.
       if ( event.objType == SI_BUTTON
         || event.objType == SI_POV
-        || ( ( event.objType == SI_KEY ) && !isModifierKey( event.objInst ) ) )
+        || ( ( event.objType == SI_KEY ) && ( event.objInst != KEY_NULL ) && !isModifierKey( event.objInst ) ) )
       {
          char deviceString[32];
          if ( !ActionMap::getDeviceName( event.deviceType, event.deviceInst, deviceString ) )

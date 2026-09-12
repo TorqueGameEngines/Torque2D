@@ -6,9 +6,11 @@
 #  Then:   cmake --build build/make -j
 #
 #  Requires CMake and the usual dev packages, e.g. on Debian/Ubuntu:
-#    sudo apt install build-essential cmake nasm libsdl1.2-dev \
-#         libx11-dev libxft-dev libfreetype6-dev libopenal-dev libgl1-mesa-dev
-#  (nasm is only needed for the 32-bit build; SDL 1.2 — NOT SDL2 — is required.)
+#    sudo apt install build-essential cmake nasm libx11-dev libxext-dev \
+#         libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev \
+#         libxft-dev libfreetype6-dev libopenal-dev libgl1-mesa-dev
+#  (nasm is only needed for the 32-bit build. SDL 2 is vendored in engine/lib/sdl
+#  and built by the configure step; the libx*-dev packages are its build deps.)
 #
 #  For a 32-bit build see cmake/BUILD-PLATFORM-NOTES.md (multilib + :i386 libs and
 #  -m32 flags). STATUS: builds & links on Linux (verified 32 & 64-bit).

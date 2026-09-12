@@ -42,29 +42,17 @@
 
 #ifndef DEDICATED
 #include "platformEmscripten/EmscriptenInputManager.h"
+#include "platformSDL/sdlTextInput.h"
 #endif
 
-#include <errno.h>
-#include <signal.h>
 #include <stdlib.h>
-#include <unistd.h> // fork, execvp, chdir
-#include <time.h> // nanosleep
 
 #ifndef DEDICATED
-#include <SDL/SDL.h>
-#include <SDL/SDL_syswm.h>
-#include <SDL/SDL_version.h>
+#include <SDL.h>
 
 extern bool InitOpenGL();
 extern void Cleanup(bool minimal=false);
 #endif
-
-extern "C"
-{
-    extern U32 _EmscriptenGetDesktopHeight();
-    extern U32 _EmscriptenGetDesktopWidth();
-    extern U32 _EmscriptenGetDesktopBpp();
-}
 
 EmscriptenPlatState::EmscriptenPlatState()
 {
@@ -72,6 +60,7 @@ EmscriptenPlatState::EmscriptenPlatState()
     fadeWindows = true;
     backgrounded = false;
     minimized = false;
+    mouseLocked = false;
 
     quit = false;
 
@@ -91,6 +80,7 @@ EmscriptenPlatState::EmscriptenPlatState()
 
     useRedirect = true;
     windowCreated = false;
+    sdlWindow = NULL;
     dedicated = false;
 
     printf("platstate init\n");
@@ -110,198 +100,115 @@ static bool InitSDL()
    if (SDL_Init(SDL_INIT_VIDEO) != 0)
       return false;
 
-   atexit(SDL_Quit);
-
-   SDL_SysWMinfo sysinfo;
-   SDL_VERSION(&sysinfo.version);
-   //if (SDL_GetWMInfo(&sysinfo) == 0)
-   //   return false;
+   // SDL starts with text input on. It stays off until a text field asks for
+   // it (platformSDL/sdlTextInput.h). While it is off, SDL's keyboard handler
+   // keeps the browser from acting on the keys the game reads; while it is
+   // on, it lets a typing key's keydown through to the browser, which is what
+   // makes the browser send the keypress SDL reads the character from.
+   SDL_StopTextInput();
 
    return true;
 }
 
 //------------------------------------------------------------------------------
+// Input is active while the page has the keyboard. Losing it drops input only
+// if the mouse is locked to the canvas, so that an unlocked mouse still moves
+// the canvas's cursor while another window, or the browser's own address bar,
+// has the keyboard -- as on Linux.
 static void SetAppState()
 {
-   U8 state = SDL_GetAppState();
+   SDL_Window* window = gPlatState.sdlWindow;
+   if (window == NULL)
+      return;
 
-   // if we're not active but we have appactive and inputfocus, set window
-   // active and reactivate input
-   if ((gPlatState.backgrounded || !Input::isActive()) &&
-      state & SDL_APPACTIVE &&
-      state & SDL_APPINPUTFOCUS)
+   const bool active = (SDL_GetWindowFlags(window) & SDL_WINDOW_INPUT_FOCUS) != 0;
+
+   // if we're not active but we have focus, set window active and
+   // reactivate input
+   if (active && (gPlatState.backgrounded || !Input::isActive()))
    {
       gPlatState.backgrounded = false;
       Input::reactivate();
-      Con::printf("Input activated by SetAppState");
    }
-   // if we are active, but we don't have appactive or input focus,
-   // deactivate input (if window not locked) and clear windowActive
-   else if (!gPlatState.backgrounded && 
-      !(state & SDL_APPACTIVE && state & SDL_APPINPUTFOCUS))
+   // if we are active, but we don't have focus, deactivate input (if window
+   // locked) and clear windowActive
+   else if (!active && !gPlatState.backgrounded)
    {
       if (gPlatState.mouseLocked)
          Input::deactivate();
       gPlatState.backgrounded = true;
-      Con::printf("Input deactivated by SetAppState");
    }
 }
 
 //------------------------------------------------------------------------------
-static S32 NumEventsPending()
+static void ProcessWindowEvent(const SDL_WindowEvent& event)
 {
-   static const int MaxEvents = 255;
-   static SDL_Event events[MaxEvents];
+   switch (event.event)
+   {
+      case SDL_WINDOWEVENT_SIZE_CHANGED:
+         // The canvas changed size: the page resized it (only a page that
+         // sizes the canvas with CSS does), it went into or out of fullscreen,
+         // or setScreenMode resized it. SDL has already resized the drawing
+         // buffer, so following it is only a matter of telling the canvas.
+         OpenGLDevice::followWindow();
+         Game->refreshWindow();
+         break;
 
-   SDL_PumpEvents();
-#ifdef DUMMY_PLATFORM
-   return 0;
-#else
-   return SDL_PeepEvents(events, MaxEvents, SDL_PEEKEVENT, 0, SDL_LASTEVENT);
-#endif
+      case SDL_WINDOWEVENT_EXPOSED:
+         Game->refreshWindow();
+         break;
+
+      case SDL_WINDOWEVENT_FOCUS_GAINED:
+      case SDL_WINDOWEVENT_FOCUS_LOST:
+         // The page gained or lost the keyboard. SDL 2 says so (the SDL 1.2
+         // port never sent SDL_ACTIVEEVENT), and on losing it has already let
+         // go of every key held down, whose releases follow.
+         SetAppState();
+         break;
+   }
 }
 
 //------------------------------------------------------------------------------
+// The event loop. SDL's queue is emptied here, once a frame and in one place:
+// window events are handled here and input goes to the input manager, as on
+// Linux. The SDL 1.2 back-end copied each frame's events into a list for the
+// input manager to walk later, which re-entered itself whenever handling one
+// reset the input.
 static bool ProcessMessages()
 {
-#ifndef DUMMY_PLATFORM
-   SDL_PumpEvents();
+   // Whatever the last frame's input asked of text input -- a text field
+   // taking the keyboard or letting it go -- happens now, before this frame's
+   // keys are read (platformSDL/sdlTextInput.h).
+   SDLTextInput::processTextInputState();
 
-   // We're going to have to maintain our own list of events here, since the emscripten API
-   // is a bit broken for our purposes...
-   gPlatState.eventList.clear();
-   gPlatState.eventList.reserve(255);
+   UInputManager* inputManager = dynamic_cast<UInputManager*>(Input::getManager());
 
-   SDL_Event e;
-   while (SDL_PollEvent(&e))
+   SDL_Event event;
+   while (SDL_PollEvent(&event))
    {
-      gPlatState.eventList.push_back(e);
-   }
-
-   // Iterate a LOCAL copy of this frame's events. Handling some events re-enters
-   // ProcessMessages -- e.g. SDL_USEREVENT(SETVIDEOMODE) -> SetAppState() ->
-   // Input::reactivate() pumps/clears+refills the SHARED gPlatState.eventList. The
-   // old loop cached numEvents and indexed the shared list, so after a re-entrant
-   // clear it read past the now-smaller vector (Vector<SDL_Event>::operator[] OOB,
-   // twice per toybox load). A local copy is stable across re-entrancy.
-   Vector<SDL_Event> events = gPlatState.eventList;
-   S32 numEvents = events.size();
-
-   if (numEvents == 0)
-      return true;
-
-   for (int i = 0; i < numEvents; ++i)
-   {
-      SDL_Event& event = events[i];
-      //Con::printf("Event.type == %u", event.type);
       switch (event.type)
       {
          case SDL_QUIT:
             return false;
+
+         case SDL_WINDOWEVENT:
+            ProcessWindowEvent(event.window);
             break;
-         case SDL_VIDEORESIZE:
-         case SDL_VIDEOEXPOSE:
-            Game->refreshWindow();
-            break;
-         case SDL_USEREVENT:
-            Con::printf("User event handled");
-            if (event.user.code == TORQUE_SETVIDEOMODE)
-            {
-               SetAppState();
-               // SDL will send a motion event to restore the mouse position
-               // on the new window.  Ignore that if the window is locked.
-               if (gPlatState.mouseLocked)
-               {
-                  SDL_Event tempEvent;
-                  SDL_PeepEvents(&tempEvent, 1, SDL_GETEVENT, SDL_MOUSEMOTION,
-                     SDL_MOUSEMOTION);
-               }
-            }
-            break;
-         case SDL_ACTIVEEVENT:
-         Con::printf("Active event");
-            SetAppState();
+
+         case SDL_KEYDOWN:
+         case SDL_KEYUP:
+         case SDL_TEXTINPUT:
+         case SDL_MOUSEMOTION:
+         case SDL_MOUSEBUTTONDOWN:
+         case SDL_MOUSEBUTTONUP:
+         case SDL_MOUSEWHEEL:
+            if (inputManager)
+               inputManager->processEvent(event);
             break;
       }
    }
-#endif
+
    return true;
-}
-
-//------------------------------------------------------------------------------
-// send a destroy window event to the window.  assumes
-// window is created.
-void SendQuitEvent()
-{
-   SDL_Event quitevent;
-   quitevent.type = SDL_QUIT;
-   SDL_PushEvent(&quitevent);
-}
-#endif // DEDICATED
-
-//------------------------------------------------------------------------------
-static inline void Sleep(int secs, int nanoSecs)
-{
-   timespec sleeptime;
-   sleeptime.tv_sec = secs;
-   sleeptime.tv_nsec = nanoSecs;
-   nanosleep(&sleeptime, NULL);
-}
-
-#ifndef DEDICATED
-struct AlertWinState
-{
-      bool fullScreen;
-      bool cursorHidden;
-      bool inputGrabbed;
-};
-
-//------------------------------------------------------------------------------
-void DisplayErrorAlert(const char* errMsg, bool showSDLError)
-{
-   char fullErrMsg[2048];
-   dStrncpy(fullErrMsg, errMsg, sizeof(fullErrMsg));
-   
-   if (showSDLError)
-   {
-      const char* sdlerror = SDL_GetError();
-      if (sdlerror != NULL && dStrlen(sdlerror) > 0)
-      {
-         dStrcat(fullErrMsg, "  (Error: ");
-         dStrcat(fullErrMsg, sdlerror);
-         dStrcat(fullErrMsg, ")");
-      }
-   }
-   
-   Platform::AlertOK("Error", fullErrMsg);
-}
-
-
-//------------------------------------------------------------------------------
-static inline void AlertDisableVideo(AlertWinState& state)
-{
-
-   state.fullScreen = Video::isFullScreen();
-   state.cursorHidden = (SDL_ShowCursor(SDL_QUERY) == SDL_DISABLE);
-   state.inputGrabbed = (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON);
-
-   if (state.fullScreen)
-      SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
-   if (state.cursorHidden)
-      SDL_ShowCursor(SDL_ENABLE);
-   if (state.inputGrabbed)
-      SDL_WM_GrabInput(SDL_GRAB_OFF);
-}
-
-//------------------------------------------------------------------------------
-static inline void AlertEnableVideo(AlertWinState& state)
-{
-   if (state.fullScreen)
-      SDL_WM_ToggleFullScreen(SDL_GetVideoSurface());
-   if (state.cursorHidden)
-      SDL_ShowCursor(SDL_DISABLE);
-   if (state.inputGrabbed)
-      SDL_WM_GrabInput(SDL_GRAB_ON);
 }
 #endif // DEDICATED
 
@@ -311,16 +218,20 @@ void Platform::setMouseLock(bool locked)
 #ifndef DEDICATED
    gPlatState.mouseLocked = locked;
 
-   UInputManager* uInputManager = 
+   UInputManager* uInputManager =
       dynamic_cast<UInputManager*>( Input::getManager() );
 
-   if ( uInputManager && uInputManager->isEnabled() && 
+   if ( uInputManager && uInputManager->isEnabled() &&
       Input::isActive() )
       uInputManager->setWindowLocked(locked);
 #endif
 }
 
 //------------------------------------------------------------------------------
+// Nothing here sleeps, in the background or out of it. The browser calls the
+// main loop once a frame, and slows a page it is not showing by itself; a
+// sleep in a page is a busy wait (Emscripten's nanosleep spins), which would
+// only hold the page up.
 void Platform::process()
 {
    PROFILE_START(XUX_PlatformProcess);
@@ -344,16 +255,9 @@ void Platform::process()
       PROFILE_START(XUX_InputProcess);
       Input::process();
       PROFILE_END();
-
-      // if we're not the foreground window, sleep for 1 ms
-      if (gPlatState.backgrounded)
-         Sleep(0, getBackgroundSleepTime() * 1000000);
 #endif
    }
-   else
-   {
-     Sleep(0, getBackgroundSleepTime() * 1000000);
-   }
+
    PROFILE_END();
 }
 
@@ -370,12 +274,9 @@ void Platform::setWindowSize( U32 newWidth, U32 newHeight )
 }
 
 //------------------------------------------------------------------------------
+// A page has no window of its own to minimize or restore.
 void Platform::minimizeWindow()
 {
-#ifndef DEDICATED
-   if (gPlatState.windowCreated)
-      SDL_WM_IconifyWindow();
-#endif
 }
 
 //------------------------------------------------------------------------------
@@ -399,7 +300,7 @@ void Platform::init()
    Con::setVariable( "$platformUnixType", "emscripten" );
 
    EmscriptenConsole::create();
-   
+
 #ifndef DEDICATED
    Con::printf("Dedicated == %i", gPlatState.dedicated);
    // if we're not dedicated do more initialization
@@ -409,9 +310,16 @@ void Platform::init()
       // init SDL
       if (!InitSDL())
       {
-         Con::printf( "   Unable to initialize SDL." );
+         Con::printf( "   Unable to initialize SDL: %s", SDL_GetError() );
          Platform::AlertOK("Error", "Unable to initialize SDL.");
          exit(1);
+      }
+      else
+      {
+         SDL_version linked;
+         SDL_GetVersion(&linked);
+         Con::printf("SDL %d.%d.%d initialized (video driver: %s)",
+            linked.major, linked.minor, linked.patch, SDL_GetCurrentVideoDriver());
       }
 
       // initialize input
@@ -425,7 +333,7 @@ void Platform::init()
          Con::printf( "   OpenGL display device detected." );
       else
          Con::printf( "   OpenGL display device not detected." );
-      
+
       Con::printf(" ");
    }
 #endif
@@ -453,22 +361,16 @@ bool Platform::openWebBrowser( const char* webAddress )
 }
 
 //------------------------------------------------------------------------------
-ConsoleFunction( getDesktopResolution, const char*, 1, 1, 
+ConsoleFunction( getDesktopResolution, const char*, 1, 1,
    "getDesktopResolution()" )
 {
    if (!gPlatState.windowCreated)
       return "0 0 0";
 
-   char buffer[256];
-   char* returnString = Con::getReturnBuffer( dStrlen( buffer ) + 1 );
+   const Resolution desktop = Video::getDesktopResolution();
 
-   Resolution res = Video::getDesktopResolution();
-
-   dSprintf( buffer, sizeof( buffer ), "%d %d %d", 
-      res.w,
-      res.h, 
-      res.bpp );
-   dStrcpy( returnString, buffer );
+   char* returnString = Con::getReturnBuffer( 64 );
+   dSprintf( returnString, 64, "%d %d %d", desktop.w, desktop.h, desktop.bpp );
    return( returnString );
 }
 
@@ -483,25 +385,36 @@ ConsoleFunction( isKoreanBuild, bool, 1, 1, "isKoreanBuild()" )
 
 //------------------------------------------------------------------------------
 
+// The title SDL 2 gives a window here is the page's: document.title.
 void Platform::setWindowTitle( const char* title )
 {
 #ifndef DEDICATED
-   gPlatState.setWindowTitle(title);
-   SDL_WM_SetCaption(gPlatState.appWindowTitle, NULL);
+   gPlatState.setWindowTitle(title ? title : "");
+   if (gPlatState.sdlWindow)
+      SDL_SetWindowTitle(gPlatState.sdlWindow, gPlatState.appWindowTitle);
 #endif
 }
 
 //------------------------------------------------------------------------------
-
+// The screen the page is on, as the browser reports it (screen.width and
+// screen.height, in page pixels) -- SDL 2's Emscripten driver gives it as the
+// one display mode it has. The SDL 1.2 back-end made up a 1024x768 desktop in
+// platform.js.
 Resolution Video::getDesktopResolution()
 {
-   Resolution  Result;
+   Resolution result( 0, 0, 32 );
 
-   Result.h   = _EmscriptenGetDesktopHeight();
-   Result.w   = _EmscriptenGetDesktopWidth();
-   Result.bpp  = _EmscriptenGetDesktopBpp();
+#ifndef DEDICATED
+   SDL_DisplayMode mode;
+   if ( SDL_WasInit( SDL_INIT_VIDEO ) && SDL_GetDesktopDisplayMode( 0, &mode ) == 0 )
+   {
+      result.w   = mode.w;
+      result.h   = mode.h;
+      result.bpp = SDL_BITSPERPIXEL( mode.format );
+   }
+#endif
 
-  return Result;
+   return result;
 }
 
 //-----------------------------------------------------------------------------

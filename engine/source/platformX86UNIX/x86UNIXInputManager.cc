@@ -26,310 +26,25 @@
 #include "game/gameInterface.h"
 #include "platformX86UNIX/x86UNIXState.h"
 #include "platformX86UNIX/x86UNIXInputManager.h"
+#include "platformSDL/sdlInput.h"
+#include "platformSDL/sdlTextInput.h"
 #include "math/mMathFn.h"
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/keysym.h>
-
-#include <SDL/SDL.h>
-
-// ascii table
-AsciiData AsciiTable[NUM_KEYS];
-
-// keymap table
-static const U32 SDLtoTKeyMapSize = SDLK_LAST;
-static U8 SDLtoTKeyMap[SDLtoTKeyMapSize];
-static bool keyMapsInitialized = false;
-
-// helper functions
-static void MapKey(Uint16 SDLkey, U8 tkey);
-static void InitKeyMaps();
-static inline U8 TranslateSDLKeytoTKey(SDLKey keysym);
+#include <SDL.h>
 
 // unix platform state
 extern x86UNIXPlatformState * x86UNIXState;
 
-// constants
-
-static const U32 MouseMask = SDL_MOUSEEVENTMASK;
-static const U32 KeyboardMask = SDL_KEYUPMASK | SDL_KEYDOWNMASK;
-static const U32 JoystickMask = SDL_JOYEVENTMASK;
-
-static const U32 AllInputEvents = MouseMask | KeyboardMask | JoystickMask;
-
-// The display InitKeyMaps() builds the ascii table against.  Only valid for the
-// duration of that call; MapKey() reads it rather than taking it as an argument
-// so that the (long) list of MapKey() calls below stays readable.
-static Display* sgKeymapDisplay = NULL;
-
-//==============================================================================
-// Static helper functions
-//==============================================================================
-// Translate an SDL 1.2 keysym to the X keysym naming the same key.
-//
-// SDL numbered its keysyms after the X ones it was built on, so the printable
-// range needs no table: SDLK_SPACE..SDLK_z and the Latin-1 SDLK_WORLD_* range
-// already are the X keysym of the same character.  Everything else -- the
-// control keys (whose SDL value is the ASCII code, not the keysym), the keypad,
-// navigation, function and modifier keys -- has to be named explicitly.
-static KeySym SDLKeyToXKeySym(SDLKey key)
+//------------------------------------------------------------------------------
+// The modifier keys held right now, for an event that carries none of its own
+// -- a mouse button, a joystick axis.
+static U8 CurrentModifiers()
 {
-   switch (key)
-   {
-      // Control keys.  SDL numbered these after their ASCII code.
-      case SDLK_BACKSPACE:    return XK_BackSpace;
-      case SDLK_TAB:          return XK_Tab;
-      case SDLK_CLEAR:        return XK_Clear;
-      case SDLK_RETURN:       return XK_Return;
-      case SDLK_PAUSE:        return XK_Pause;
-      case SDLK_ESCAPE:       return XK_Escape;
-      case SDLK_DELETE:       return XK_Delete;
-
-      // Keypad.  These are deliberately the numlock-OFF spellings: a keyboard
-      // binds both spellings of each numpad key and XKeysymToKeycode can resolve
-      // them to *different* keycodes -- XK_KP_Decimal commonly lands on a
-      // separate layout-defined separator key rather than the physical numpad
-      // period.  The numlock-off spelling is the one SDL 1.2 resolved to.
-      case SDLK_KP0:          return XK_KP_Insert;
-      case SDLK_KP1:          return XK_KP_End;
-      case SDLK_KP2:          return XK_KP_Down;
-      case SDLK_KP3:          return XK_KP_Page_Down;
-      case SDLK_KP4:          return XK_KP_Left;
-      case SDLK_KP5:          return XK_KP_Begin;
-      case SDLK_KP6:          return XK_KP_Right;
-      case SDLK_KP7:          return XK_KP_Home;
-      case SDLK_KP8:          return XK_KP_Up;
-      case SDLK_KP9:          return XK_KP_Page_Up;
-      case SDLK_KP_PERIOD:    return XK_KP_Delete;
-      case SDLK_KP_DIVIDE:    return XK_KP_Divide;
-      case SDLK_KP_MULTIPLY:  return XK_KP_Multiply;
-      case SDLK_KP_MINUS:     return XK_KP_Subtract;
-      case SDLK_KP_PLUS:      return XK_KP_Add;
-      case SDLK_KP_ENTER:     return XK_KP_Enter;
-      case SDLK_KP_EQUALS:    return XK_KP_Equal;
-
-      // Navigation.
-      case SDLK_UP:           return XK_Up;
-      case SDLK_DOWN:         return XK_Down;
-      case SDLK_RIGHT:        return XK_Right;
-      case SDLK_LEFT:         return XK_Left;
-      case SDLK_INSERT:       return XK_Insert;
-      case SDLK_HOME:         return XK_Home;
-      case SDLK_END:          return XK_End;
-      case SDLK_PAGEUP:       return XK_Page_Up;
-      case SDLK_PAGEDOWN:     return XK_Page_Down;
-
-      // Function keys.
-      case SDLK_F1:           return XK_F1;
-      case SDLK_F2:           return XK_F2;
-      case SDLK_F3:           return XK_F3;
-      case SDLK_F4:           return XK_F4;
-      case SDLK_F5:           return XK_F5;
-      case SDLK_F6:           return XK_F6;
-      case SDLK_F7:           return XK_F7;
-      case SDLK_F8:           return XK_F8;
-      case SDLK_F9:           return XK_F9;
-      case SDLK_F10:          return XK_F10;
-      case SDLK_F11:          return XK_F11;
-      case SDLK_F12:          return XK_F12;
-      case SDLK_F13:          return XK_F13;
-      case SDLK_F14:          return XK_F14;
-      case SDLK_F15:          return XK_F15;
-
-      // Locks and modifiers.
-      case SDLK_NUMLOCK:      return XK_Num_Lock;
-      case SDLK_CAPSLOCK:     return XK_Caps_Lock;
-      case SDLK_SCROLLOCK:    return XK_Scroll_Lock;
-      case SDLK_RSHIFT:       return XK_Shift_R;
-      case SDLK_LSHIFT:       return XK_Shift_L;
-      case SDLK_RCTRL:        return XK_Control_R;
-      case SDLK_LCTRL:        return XK_Control_L;
-      case SDLK_RALT:         return XK_Alt_R;
-      case SDLK_LALT:         return XK_Alt_L;
-      case SDLK_RMETA:        return XK_Meta_R;
-      case SDLK_LMETA:        return XK_Meta_L;
-      case SDLK_LSUPER:       return XK_Super_L;
-      case SDLK_RSUPER:       return XK_Super_R;
-      case SDLK_MODE:         return XK_Mode_switch;
-      case SDLK_COMPOSE:      return XK_Multi_key;
-
-      // Misc.
-      case SDLK_HELP:         return XK_Help;
-      case SDLK_PRINT:        return XK_Print;
-      case SDLK_SYSREQ:       return XK_Sys_Req;
-      case SDLK_BREAK:        return XK_Break;
-      case SDLK_MENU:         return XK_Menu;
-
-      default:
-         if ((key >= 0x20 && key < 0x7F) || (key >= 0xA0 && key <= 0xFF))
-            return static_cast<KeySym>(key);
-         return NoSymbol;
-   }
-}
-
-// The character the given key produces with the given modifiers held, according
-// to the keymap the X server is currently using.  Asking X rather than assuming
-// a layout is the whole point: on a German keyboard shift-7 is '/' and AltGr-q
-// is '@', and a hardcoded US table would get both wrong.
-static U16 KeySymToAscii(KeySym sym, unsigned int state)
-{
-   XKeyEvent xkey;
-   char keybuf[32];
-
-   if (sgKeymapDisplay == NULL || sym == NoSymbol)
-      return 0;
-
-   dMemset(&xkey, 0, sizeof(xkey));
-   xkey.type = KeyPress;
-   xkey.display = sgKeymapDisplay;
-   xkey.keycode = XKeysymToKeycode(sgKeymapDisplay, sym);
-   xkey.state = state;
-
-   // The key isn't on this keymap at all.
-   if (xkey.keycode == 0)
-      return 0;
-
-   if (XLookupString(&xkey, keybuf, sizeof(keybuf), NULL, NULL) > 0)
-      return static_cast<U16>(static_cast<unsigned char>(keybuf[0]));
-
-   return 0;
+   return (U8)KeyMapSDL::getTorqueModFromSDL(SDL_GetModState());
 }
 
 //------------------------------------------------------------------------------
-static void MapKey(Uint16 SDLkey, U8 tkey)
-{
-   SDLtoTKeyMap[SDLkey] = tkey; 
-
-   KeySym sym = SDLKeyToXKeySym(static_cast<SDLKey>(SDLkey));
-
-   // lower case
-   AsciiTable[tkey].lower.ascii = KeySymToAscii(sym, 0);
-   // upper case
-   AsciiTable[tkey].upper.ascii = KeySymToAscii(sym, ShiftMask);
-   // goofy (i18n) case -- AltGr, which X keymaps reach through Mod5.
-   AsciiTable[tkey].goofy.ascii = KeySymToAscii(sym, Mod5Mask);
-}
-
-//------------------------------------------------------------------------------
-void InitKeyMaps()
-{
-   dMemset( &AsciiTable, 0, sizeof( AsciiTable ) );
-   dMemset(SDLtoTKeyMap, KEY_NULL, SDLtoTKeyMapSize);
-
-   // The ascii half of the table is read off the X keymap, so it is only as
-   // good as the layout in effect right now.  If there is no display to ask,
-   // every key still maps to its Torque keycode; only the ascii stays zero.
-   DisplayPtrManager xdisplay;
-   sgKeymapDisplay = xdisplay.getDisplayPointer();
-   if (sgKeymapDisplay == NULL)
-      Con::warnf("Input: no X display to read the keymap from; "
-                 "keys will report no ascii character.");
-
-   // set up the X to Torque key map
-   // stuff
-   MapKey(SDLK_BACKSPACE, KEY_BACKSPACE);
-   MapKey(SDLK_TAB, KEY_TAB);
-   MapKey(SDLK_RETURN, KEY_RETURN);
-   MapKey(SDLK_PAUSE, KEY_PAUSE);
-   MapKey(SDLK_CAPSLOCK, KEY_CAPSLOCK);
-   MapKey(SDLK_ESCAPE, KEY_ESCAPE);
-
-   // more stuff
-   MapKey(SDLK_SPACE, KEY_SPACE);
-   MapKey(SDLK_PAGEDOWN, KEY_PAGE_DOWN);
-   MapKey(SDLK_PAGEUP, KEY_PAGE_UP);
-   MapKey(SDLK_END, KEY_END);
-   MapKey(SDLK_HOME, KEY_HOME);
-   MapKey(SDLK_LEFT, KEY_LEFT);
-   MapKey(SDLK_UP, KEY_UP);
-   MapKey(SDLK_RIGHT, KEY_RIGHT);
-   MapKey(SDLK_DOWN, KEY_DOWN);
-   MapKey(SDLK_PRINT, KEY_PRINT);
-   MapKey(SDLK_INSERT, KEY_INSERT);
-   MapKey(SDLK_DELETE, KEY_DELETE);
-   
-   S32 keysym;
-   S32 tkeycode;
-   // main numeric keys
-   for (keysym = SDLK_0, tkeycode = KEY_0; keysym <= SDLK_9; ++keysym, ++tkeycode)
-      MapKey(static_cast<SDLKey>(keysym), tkeycode);
-   
-   // lowercase letters
-   for (keysym = SDLK_a, tkeycode = KEY_A; keysym <= SDLK_z; ++keysym, ++tkeycode)
-      MapKey(static_cast<SDLKey>(keysym), tkeycode);
-
-   // various punctuation
-   MapKey('|', KEY_TILDE);
-   MapKey(SDLK_BACKQUOTE, KEY_TILDE);
-   MapKey(SDLK_MINUS, KEY_MINUS);
-   MapKey(SDLK_EQUALS, KEY_EQUALS);
-   MapKey(SDLK_LEFTBRACKET, KEY_LBRACKET);
-   MapKey('{', KEY_LBRACKET);
-   MapKey(SDLK_RIGHTBRACKET, KEY_RBRACKET);
-   MapKey('}', KEY_RBRACKET);
-   MapKey(SDLK_BACKSLASH, KEY_BACKSLASH);
-   MapKey(SDLK_SEMICOLON, KEY_SEMICOLON);
-   MapKey(SDLK_QUOTE, KEY_APOSTROPHE);
-   MapKey(SDLK_COMMA, KEY_COMMA);
-   MapKey(SDLK_PERIOD, KEY_PERIOD);
-   MapKey(SDLK_SLASH, KEY_SLASH); 
-
-   // numpad numbers
-   for (keysym = SDLK_KP0, tkeycode = KEY_NUMPAD0; keysym <= SDLK_KP9; ++keysym, ++tkeycode)
-      MapKey(static_cast<SDLKey>(keysym), tkeycode);
-
-   // other numpad stuff
-   MapKey(SDLK_KP_MULTIPLY, KEY_MULTIPLY);
-   MapKey(SDLK_KP_PLUS, KEY_ADD);
-   MapKey(SDLK_KP_EQUALS, KEY_SEPARATOR);
-   MapKey(SDLK_KP_MINUS, KEY_SUBTRACT);
-   MapKey(SDLK_KP_PERIOD, KEY_DECIMAL);
-   MapKey(SDLK_KP_DIVIDE, KEY_DIVIDE);
-   MapKey(SDLK_KP_ENTER, KEY_NUMPADENTER);
-
-   // F keys
-   for (keysym = SDLK_F1, tkeycode = KEY_F1; keysym <= SDLK_F15; ++keysym, ++tkeycode)
-      MapKey(static_cast<SDLKey>(keysym), tkeycode);
-
-   // various modifiers
-   MapKey(SDLK_NUMLOCK, KEY_NUMLOCK);
-   MapKey(SDLK_SCROLLOCK, KEY_SCROLLLOCK);
-   MapKey(SDLK_LCTRL, KEY_LCONTROL);
-   MapKey(SDLK_RCTRL, KEY_RCONTROL);
-   MapKey(SDLK_LALT, KEY_LALT);
-   MapKey(SDLK_RALT, KEY_RALT);
-   MapKey(313, KEY_RALT);   
-   MapKey(SDLK_LSHIFT, KEY_LSHIFT);
-   MapKey(SDLK_RSHIFT, KEY_RSHIFT);
-   MapKey(SDLK_LSUPER, KEY_WIN_LWINDOW);
-   MapKey(SDLK_RSUPER, KEY_WIN_RWINDOW);
-   MapKey(SDLK_MENU, KEY_WIN_APPS);
-   MapKey(SDLK_MODE, KEY_OEM_102);
-
-   sgKeymapDisplay = NULL;
-   keyMapsInitialized = true;
-};
-
-//------------------------------------------------------------------------------
-U8 TranslateSDLKeytoTKey(SDLKey keysym)
-{
-   if (!keyMapsInitialized)
-   {
-      Con::printf("WARNING: SDLkeysymMap is not initialized");
-      return 0;
-   }
-   if (keysym < 0 || 
-       static_cast<U32>(keysym) >= SDLtoTKeyMapSize)
-   {
-      Con::printf("WARNING: invalid keysym: %d", keysym);
-      return 0;
-   }
-   return SDLtoTKeyMap[keysym];
-}
-
-//------------------------------------------------------------------------------
-// this shouldn't be used, use TranslateSDLKeytoTKey instead
+// this shouldn't be used, use KeyMapSDL::getTorqueScanCodeFromSDL instead
 U8 TranslateOSKeyCode(U8 vcode)
 {
    Con::printf("WARNING: TranslateOSKeyCode is not supported in unix");
@@ -346,6 +61,7 @@ UInputManager::UInputManager()
    mLocking = true; // locking enabled by default
    mKeyboardEnabled = mMouseEnabled = mJoystickEnabled = false;
    mKeyboardActive = mMouseActive = mJoystickActive = false;
+   mLastMouseX = mLastMouseY = -1;
 }
 
 //------------------------------------------------------------------------------
@@ -367,11 +83,8 @@ bool UInputManager::enable()
    Input::log( "Enabling Input...\n" );
 #endif
 
-   mModifierKeys = 0;
    dMemset( mMouseButtonState, 0, sizeof( mMouseButtonState ) );
-   dMemset( mKeyboardState, 0, 256 );
-
-   InitKeyMaps();
+   dMemset( mKeyboardState, 0, sizeof( mKeyboardState ) );
 
    mJoystickEnabled = false;
    initJoystick();
@@ -380,11 +93,9 @@ bool UInputManager::enable()
    mMouseEnabled = true;
    mKeyboardEnabled = true;
 
-   SDL_EnableKeyRepeat(
-      SDL_DEFAULT_REPEAT_DELAY, 
-      SDL_DEFAULT_REPEAT_INTERVAL);
-
-   return true;     
+   // Nothing to ask of the keyboard: SDL 2 repeats a held key by itself, at
+   // the desktop's rate, and marks the repeats (keyEvent).
+   return true;
 }
 
 //------------------------------------------------------------------------------
@@ -486,10 +197,7 @@ void UInputManager::resetKeyboardState()
          Game->postEvent(event);
       }
    }
-   dMemset(mKeyboardState, 0, 256);
-
-   // clear modifier keys
-   mModifierKeys = 0;
+   dMemset(mKeyboardState, 0, sizeof(mKeyboardState));
 }
 
 //------------------------------------------------------------------------------
@@ -497,7 +205,7 @@ void UInputManager::resetMouseState()
 {
    // unpress any buttons; in the future we may want
    // to actually sync with the mouse state
-   for (int i = 0; i < 3; ++i)
+   for (int i = 0; i < NumMouseButtons; ++i)
    {
       if (mMouseButtonState[i])
       {
@@ -516,7 +224,7 @@ void UInputManager::resetMouseState()
       }
    }
 
-   dMemset(mMouseButtonState, 0, 3);
+   dMemset(mMouseButtonState, 0, sizeof(mMouseButtonState));
 }
 
 //------------------------------------------------------------------------------
@@ -533,13 +241,8 @@ void UInputManager::resetInputState()
       (*iter)->reset();
    }
 
-   // JMQTODO: make event arrays be members
-   // dispose of any lingering SDL input events
-   static const int MaxEvents = 255;
-   static SDL_Event events[MaxEvents];
-   SDL_PumpEvents();
-   SDL_PeepEvents(events, MaxEvents, SDL_GETEVENT, 
-      AllInputEvents);
+   // dispose of any lingering SDL keyboard, text and mouse events
+   SDL_FlushEvents(SDL_KEYDOWN, SDL_MOUSEWHEEL);
 }
 
 //------------------------------------------------------------------------------
@@ -553,19 +256,29 @@ void UInputManager::setLocking(bool enabled)
 }
 
 //------------------------------------------------------------------------------
+// A locked mouse is SDL 2's relative mode -- the cursor hidden and held still,
+// motion reported as distances moved -- with the window grabbing the pointer,
+// which between them are what SDL 1.2's SDL_WM_GrabInput did.
 void UInputManager::lockInput()
 {
-   if (x86UNIXState->windowActive() && x86UNIXState->windowLocked() && 
-      mLocking &&
-      SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_OFF)
-      SDL_WM_GrabInput(SDL_GRAB_ON);
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if (window && x86UNIXState->windowActive() && x86UNIXState->windowLocked() &&
+      mLocking && !SDL_GetRelativeMouseMode())
+   {
+      SDL_SetWindowGrab(window, SDL_TRUE);
+      SDL_SetRelativeMouseMode(SDL_TRUE);
+   }
 }
 
 //------------------------------------------------------------------------------
 void UInputManager::unlockInput()
 {
-   if (SDL_WM_GrabInput(SDL_GRAB_QUERY) == SDL_GRAB_ON)
-      SDL_WM_GrabInput(SDL_GRAB_OFF);
+   if (SDL_GetRelativeMouseMode())
+      SDL_SetRelativeMouseMode(SDL_FALSE);
+
+   SDL_Window* window = x86UNIXState->getSDLWindow();
+   if (window && SDL_GetWindowGrab(window))
+      SDL_SetWindowGrab(window, SDL_FALSE);
 }
 
 //------------------------------------------------------------------------------
@@ -602,7 +315,7 @@ void UInputManager::mouseMotionEvent(const SDL_Event& event)
       ievent.deviceInst = 0;
       ievent.deviceType = MouseDeviceType;
       ievent.objInst = 0;
-      ievent.modifier = mModifierKeys;
+      ievent.modifier = CurrentModifiers();
       ievent.ascii = 0;
       ievent.action = SI_MOVE;
             
@@ -632,7 +345,7 @@ void UInputManager::mouseMotionEvent(const SDL_Event& event)
       MouseMoveEvent mmevent;
       mmevent.xPos = mLastMouseX = event.motion.x;
       mmevent.yPos = mLastMouseY = event.motion.y;
-      mmevent.modifier = mModifierKeys;
+      mmevent.modifier = CurrentModifiers();
       Game->postEvent(mmevent);
 #ifdef LOG_INPUT
 #ifdef LOG_MOUSEMOVE
@@ -642,13 +355,6 @@ void UInputManager::mouseMotionEvent(const SDL_Event& event)
 #endif
 #endif
    }
-}
-
-//------------------------------------------------------------------------------
-void UInputManager::joyButtonEvent(const SDL_Event& event)
-{
-   joyButtonEvent(event.jbutton.which, event.jbutton.button, 
-      event.type == SDL_JOYBUTTONDOWN);
 }
 
 //------------------------------------------------------------------------------
@@ -662,7 +368,7 @@ void UInputManager::joyButtonEvent(U8 deviceID, U8 buttonNum, bool pressed)
 
    ievent.deviceInst = deviceID;
    ievent.deviceType = JoystickDeviceType;
-   ievent.modifier = mModifierKeys;
+   ievent.modifier = CurrentModifiers();
    ievent.ascii = 0;
    ievent.objType = SI_BUTTON;
    ievent.objInst = objInst;
@@ -675,9 +381,9 @@ void UInputManager::joyButtonEvent(U8 deviceID, U8 buttonNum, bool pressed)
       deviceID,
       buttonNum,
       pressed ? "pressed" : "released",
-      ( mModifierKeys & SI_SHIFT ? 'S' : '.' ), 
-      ( mModifierKeys & SI_CTRL ? 'C' : '.' ), 
-      ( mModifierKeys & SI_ALT ? 'A' : '.' ));
+      ( CurrentModifiers() & SI_SHIFT ? 'S' : '.' ), 
+      ( CurrentModifiers() & SI_CTRL ? 'C' : '.' ), 
+      ( CurrentModifiers() & SI_ALT ? 'A' : '.' ));
 #endif
 }
 
@@ -692,7 +398,7 @@ void UInputManager::joyHatEvent(U8 deviceID, U8 hatNum,
 
    ievent.deviceInst = deviceID;
    ievent.deviceType = JoystickDeviceType;
-   ievent.modifier = mModifierKeys;
+   ievent.modifier = CurrentModifiers();
    ievent.ascii = 0;
    ievent.objType = SI_POV;
 
@@ -772,12 +478,6 @@ void UInputManager::joyHatEvent(U8 deviceID, U8 hatNum,
 }
 
 //------------------------------------------------------------------------------
-void UInputManager::joyAxisEvent(const SDL_Event& event)
-{
-   joyAxisEvent(event.jaxis.which, event.jaxis.axis, event.jaxis.value);
-}
-
-//------------------------------------------------------------------------------
 void UInputManager::joyAxisEvent(U8 deviceID, U8 axisNum, S16 axisValue)
 {
    JoystickInputDevice* stick;
@@ -810,7 +510,7 @@ void UInputManager::joyAxisEvent(U8 deviceID, U8 axisNum, S16 axisValue)
 
    ievent.deviceInst = deviceID;
    ievent.deviceType = JoystickDeviceType;
-   ievent.modifier = mModifierKeys;
+   ievent.modifier = CurrentModifiers();
    ievent.ascii = 0;
    ievent.objType = axisInfo.type;
    ievent.objInst = 0;
@@ -831,11 +531,10 @@ void UInputManager::mouseButtonEvent(const SDL_Event& event)
 {
    S32 action = (event.type == SDL_MOUSEBUTTONDOWN) ? SI_MAKE : SI_BREAK;
    S32 objInst = -1;
-   // JMQTODO: support wheel delta like windows version?
-   // JMQTODO: make this value configurable?
-   S32 wheelDelta = 10;
-   bool wheel = false;
 
+   // Under SDL 1.2 buttons 4 and 5 were the wheel. SDL 2 reports the wheel as
+   // SDL_MOUSEWHEEL (mouseWheelEvent), and gives those numbers to the two side
+   // buttons, X1 and X2.
    switch (event.button.button)
    {
       case SDL_BUTTON_LEFT:
@@ -847,64 +546,72 @@ void UInputManager::mouseButtonEvent(const SDL_Event& event)
       case SDL_BUTTON_MIDDLE:
          objInst = KEY_BUTTON2;
          break;
-      case Button4:
-         wheel = true;
+      case SDL_BUTTON_X1:
+         objInst = KEY_BUTTON3;
          break;
-      case Button5:
-         wheel = true;
-         wheelDelta = -wheelDelta;
+      case SDL_BUTTON_X2:
+         objInst = KEY_BUTTON4;
          break;
    }
 
-   if (objInst == -1 && !wheel)
+   if (objInst == -1)
       // unsupported button
       return;
+
+   S32 buttonID = (objInst - KEY_BUTTON0);
+   mMouseButtonState[buttonID] = ( action == SI_MAKE );
 
    InputEvent ievent;
 
    ievent.deviceInst = 0;
    ievent.deviceType = MouseDeviceType;
-   ievent.modifier = mModifierKeys;
+   ievent.modifier = CurrentModifiers();
    ievent.ascii = 0;
-
-   if (wheel)
-   {
-      // SDL generates a button press/release for each wheel move,
-      // so ignore breaks to translate those into a single event
-      if (action == SI_BREAK)
-         return;
-      ievent.objType = SI_ZAXIS;
-      ievent.objInst = 0;
-      ievent.action = SI_MOVE;
-      ievent.fValues[0] = wheelDelta;
+   ievent.objType = SI_BUTTON;
+   ievent.objInst = objInst;
+   ievent.action = action;
+   ievent.fValues[0] = (action == SI_MAKE) ? 1.0 : 0.0;
 #ifdef LOG_INPUT
-      Input::log( "EVENT (Input): mouse wheel moved %s: %.1f. MODS:%c%c%c\n",
-         wheelDelta > 0 ? "up" : "down",
-         ievent.fValues[0],
-         ( mModifierKeys & SI_SHIFT ? 'S' : '.' ), 
-         ( mModifierKeys & SI_CTRL ? 'C' : '.' ), 
-         ( mModifierKeys & SI_ALT ? 'A' : '.' ));
+   Input::log( "EVENT (Input): mouse button%d %s. MODS:%c%c%c\n",
+      buttonID,
+      action == SI_MAKE ? "pressed" : "released",
+      ( ievent.modifier & SI_SHIFT ? 'S' : '.' ), 
+      ( ievent.modifier & SI_CTRL ? 'C' : '.' ), 
+      ( ievent.modifier & SI_ALT ? 'A' : '.' ));
 #endif
-   }
-   else // regular button
-   {
-      S32 buttonID = (objInst - KEY_BUTTON0);
-      if (buttonID < 3)
-         mMouseButtonState[buttonID] = ( action == SI_MAKE ) ? true : false;
 
-      ievent.objType = SI_BUTTON;
-      ievent.objInst = objInst;
-      ievent.action = action;
-      ievent.fValues[0] = (action == SI_MAKE) ? 1.0 : 0.0;
+   Game->postEvent(ievent);
+}
+
+//------------------------------------------------------------------------------
+// A notch of the wheel is worth $pref::Input::MouseWheelSpeed, 120 unless the
+// game says otherwise: what a notch is worth on Windows (WHEEL_DELTA) and in
+// Torque3D. The SDL 1.2 back-end sent 10.
+void UInputManager::mouseWheelEvent(const SDL_Event& event)
+{
+   const S32 notches = event.wheel.y;
+   if (notches == 0)
+      return; // sideways only, and Torque has no axis for that
+
+   InputEvent ievent;
+
+   ievent.deviceInst = 0;
+   ievent.deviceType = MouseDeviceType;
+   ievent.modifier = CurrentModifiers();
+   ievent.ascii = 0;
+   ievent.objType = SI_ZAXIS;
+   ievent.objInst = 0;
+   ievent.action = SI_MOVE;
+   ievent.fValues[0] = (F32)(notches *
+      Con::getIntVariable("$pref::Input::MouseWheelSpeed", 120));
 #ifdef LOG_INPUT
-      Input::log( "EVENT (Input): mouse button%d %s. MODS:%c%c%c\n",
-         buttonID,
-         action == SI_MAKE ? "pressed" : "released",
-         ( mModifierKeys & SI_SHIFT ? 'S' : '.' ), 
-         ( mModifierKeys & SI_CTRL ? 'C' : '.' ), 
-         ( mModifierKeys & SI_ALT ? 'A' : '.' ));
+   Input::log( "EVENT (Input): mouse wheel moved %s: %.1f. MODS:%c%c%c\n",
+      notches > 0 ? "up" : "down",
+      ievent.fValues[0],
+      ( ievent.modifier & SI_SHIFT ? 'S' : '.' ), 
+      ( ievent.modifier & SI_CTRL ? 'C' : '.' ), 
+      ( ievent.modifier & SI_ALT ? 'A' : '.' ));
 #endif
-   }
 
    Game->postEvent(ievent);
 }
@@ -1001,162 +708,64 @@ const char* getKeyName( U16 key )
 //------------------------------------------------------------------------------
 void UInputManager::keyEvent(const SDL_Event& event)
 {
+   // The key, by where it is on the keyboard (platformSDL/sdlInput.h). A key
+   // Torque has no code for is dropped, since KEY_NULL is what a typed
+   // character arrives as, not a key.
+   const U32 keyCode = KeyMapSDL::getTorqueScanCodeFromSDL(event.key.keysym.scancode);
+   if (keyCode == KEY_NULL)
+      return;
+
    S32 action = (event.type == SDL_KEYDOWN) ? SI_MAKE : SI_BREAK;
+   // SDL marks the repeats of a held key; a key that was down already for any
+   // other reason counts as repeating too
+   if (action == SI_MAKE && (event.key.repeat || mKeyboardState[keyCode]))
+      action = SI_REPEAT;
+   mKeyboardState[keyCode] = (action != SI_BREAK);
+
    InputEvent ievent;
 
    ievent.deviceInst = 0;
    ievent.deviceType = KeyboardDeviceType;
    ievent.objType = SI_KEY;
-   ievent.objInst = TranslateSDLKeytoTKey(event.key.keysym.sym);
-   // if the action is a make but this key is already pressed, 
-   // count it as a repeat
-   if (action == SI_MAKE && mKeyboardState[ievent.objInst])
-      action = SI_REPEAT;
+   ievent.objInst = keyCode;
    ievent.action = action;
-   ievent.fValues[0] = (action == SI_MAKE || action == SI_REPEAT) ? 1.0 : 0.0;
+   ievent.fValues[0] = (action == SI_BREAK) ? 0.0 : 1.0;
 
-   processKeyEvent(ievent);
+   // The modifiers held with the key, as SDL has them (Torque3D reads them the
+   // same way) rather than counted up from the modifier keys' own events. A
+   // modifier key itself goes without any, as it always has in this back-end
+   // and the DirectInput one it was taken from, so that a binding on "lshift"
+   // alone matches its press.
+   switch (keyCode)
+   {
+      case KEY_LSHIFT:
+      case KEY_RSHIFT:
+      case KEY_LCONTROL:
+      case KEY_RCONTROL:
+      case KEY_LALT:
+      case KEY_RALT:
+         ievent.modifier = 0;
+         break;
+      default:
+         ievent.modifier = KeyMapSDL::getTorqueModFromSDL(event.key.keysym.mod);
+         break;
+   }
+
+   // What the key types, if anything, follows as character events of its own
+   // (platformSDL/sdlTextInput.h).
+   ievent.ascii = 0;
+
    Game->postEvent(ievent);
-
-#if 0
-   if (ievent.action == SI_MAKE)
-      dPrintf("key event: : %s key pressed. MODS:%c%c%c\n",
-         getKeyName(ievent.objInst),
-         ( mModifierKeys & SI_SHIFT ? 'S' : '.' ), 
-         ( mModifierKeys & SI_CTRL ? 'C' : '.' ), 
-         ( mModifierKeys & SI_ALT ? 'A' : '.' ));
-   else if (ievent.action == SI_REPEAT)
-      dPrintf("key event: : %s key repeated. MODS:%c%c%c\n",
-         getKeyName(ievent.objInst),
-         ( mModifierKeys & SI_SHIFT ? 'S' : '.' ), 
-         ( mModifierKeys & SI_CTRL ? 'C' : '.' ), 
-         ( mModifierKeys & SI_ALT ? 'A' : '.' ));
-   else if (ievent.action == SI_BREAK)
-      dPrintf("key event: : %s key released. MODS:%c%c%c\n",
-         getKeyName(ievent.objInst),
-         ( mModifierKeys & SI_SHIFT ? 'S' : '.' ), 
-         ( mModifierKeys & SI_CTRL ? 'C' : '.' ), 
-         ( mModifierKeys & SI_ALT ? 'A' : '.' ));
-   else
-      dPrintf("unknown key event!\n");
-#endif
+   SDLTextInput::withholdGlobalKeyText(ievent);
 
 #ifdef LOG_INPUT
    Input::log( "EVENT (Input): %s key %s. MODS:%c%c%c\n",
       getKeyName(ievent.objInst),
-      action == SI_MAKE ? "pressed" : "released",
-      ( mModifierKeys & SI_SHIFT ? 'S' : '.' ), 
-      ( mModifierKeys & SI_CTRL ? 'C' : '.' ), 
-      ( mModifierKeys & SI_ALT ? 'A' : '.' ));
+      action == SI_MAKE ? "pressed" : (action == SI_REPEAT ? "repeated" : "released"),
+      ( ievent.modifier & SI_SHIFT ? 'S' : '.' ), 
+      ( ievent.modifier & SI_CTRL ? 'C' : '.' ), 
+      ( ievent.modifier & SI_ALT ? 'A' : '.' ));
 #endif
-}
-
-//------------------------------------------------------------------------------
-// This function was ripped from DInputDevice almost entirely intact.  
-bool UInputManager::processKeyEvent( InputEvent &event )
-{
-   if ( event.deviceType != KeyboardDeviceType || event.objType != SI_KEY )
-      return false;
-
-   bool modKey = false;
-   U8 keyCode = event.objInst;
-
-   if ( event.action == SI_MAKE || event.action == SI_REPEAT)
-   {
-      // Maintain the key structure:
-      mKeyboardState[keyCode] = true;
-
-      switch ( event.objInst )
-      {
-         case KEY_LSHIFT:
-            mModifierKeys |= SI_LSHIFT;
-            modKey = true;
-            break;
-
-         case KEY_RSHIFT:
-            mModifierKeys |= SI_RSHIFT;
-            modKey = true;
-            break;
-
-         case KEY_LCONTROL:
-            mModifierKeys |= SI_LCTRL;
-            modKey = true;
-            break;
-
-         case KEY_RCONTROL:
-            mModifierKeys |= SI_RCTRL;
-            modKey = true;
-            break;
-
-         case KEY_LALT:
-            mModifierKeys |= SI_LALT;
-            modKey = true;
-            break;
-
-         case KEY_RALT:
-            mModifierKeys |= SI_RALT;
-            modKey = true;
-            break;
-      }
-   }
-   else
-   {
-      // Maintain the keys structure:
-      mKeyboardState[keyCode] = false;
-
-      switch ( event.objInst )
-      {
-         case KEY_LSHIFT:
-            mModifierKeys &= ~SI_LSHIFT;
-            modKey = true;
-            break;
-
-         case KEY_RSHIFT:
-            mModifierKeys &= ~SI_RSHIFT;
-            modKey = true;
-            break;
-
-         case KEY_LCONTROL:
-            mModifierKeys &= ~SI_LCTRL;
-            modKey = true;
-            break;
-
-         case KEY_RCONTROL:
-            mModifierKeys &= ~SI_RCTRL;
-            modKey = true;
-            break;
-
-         case KEY_LALT:
-            mModifierKeys &= ~SI_LALT;
-            modKey = true;
-            break;
-
-         case KEY_RALT:
-            mModifierKeys &= ~SI_RALT;
-            modKey = true;
-            break;
-      }
-   }
-
-   if ( modKey )
-      event.modifier = 0;
-   else
-      event.modifier = mModifierKeys;
-
-   // TODO: alter this getAscii call
-   KEY_STATE state = STATE_LOWER;
-   if (event.modifier & (SI_CTRL|SI_ALT) )
-   {
-      state = STATE_GOOFY;
-   }
-   if ( event.modifier & SI_SHIFT )
-   {
-      state = STATE_UPPER;
-   }
-
-   event.ascii = Input::getAscii( event.objInst, state );
-
-   return modKey;
 }
 
 //------------------------------------------------------------------------------
@@ -1167,12 +776,44 @@ void UInputManager::setWindowLocked(bool locked)
    else
    {
       unlockInput();
-      // SDL keeps track of abs mouse position in fullscreen mode, which means
-      // that if you switch to unlocked mode while fullscreen, the mouse will
-      // suddenly warp to someplace unexpected on screen.  To fix this, we 
-      // warp the mouse to the last known Torque abs mouse position.
-      if (mLastMouseX != -1 && mLastMouseY != -1)
-         SDL_WarpMouse(mLastMouseX, mLastMouseY);
+      // Put the cursor back where Torque last saw it, rather than wherever
+      // relative mode left it.
+      SDL_Window* window = x86UNIXState->getSDLWindow();
+      if (window && mLastMouseX != -1 && mLastMouseY != -1)
+         SDL_WarpMouseInWindow(window, mLastMouseX, mLastMouseY);
+   }
+}
+
+//------------------------------------------------------------------------------
+void UInputManager::processEvent(const SDL_Event& event)
+{
+   if (!mEnabled || !isActive())
+      return;
+
+   switch (event.type) 
+   {
+      case SDL_MOUSEMOTION:
+         if (mMouseActive)
+            mouseMotionEvent(event);
+         break;
+      case SDL_MOUSEBUTTONUP:
+      case SDL_MOUSEBUTTONDOWN:
+         if (mMouseActive)
+            mouseButtonEvent(event);
+         break;
+      case SDL_MOUSEWHEEL:
+         if (mMouseActive)
+            mouseWheelEvent(event);
+         break;
+      case SDL_KEYDOWN:
+      case SDL_KEYUP:
+         if (mKeyboardActive)
+            keyEvent(event);
+         break;
+      case SDL_TEXTINPUT:
+         if (mKeyboardActive)
+            SDLTextInput::postText(event.text.text);
+         break;
    }
 }
 
@@ -1181,42 +822,6 @@ void UInputManager::process()
 {
    if (!mEnabled || !isActive())
       return;
-
-   // JMQTODO: make these be class members
-   static const int MaxEvents = 255;
-   static SDL_Event events[MaxEvents];
-
-   U32 mask = 0;
-
-   // process keyboard and mouse events
-   if (mMouseActive)
-      mask |= MouseMask;
-   if (mKeyboardActive)
-      mask |= KeyboardMask;
-
-   if (mask != 0)
-   {
-      SDL_PumpEvents();
-      S32 numEvents = SDL_PeepEvents(events, MaxEvents, SDL_GETEVENT, mask);
-
-      for (int i = 0; i < numEvents; ++i)
-      {
-         switch (events[i].type) 
-         {
-            case SDL_MOUSEMOTION:
-               mouseMotionEvent(events[i]);
-               break;
-            case SDL_MOUSEBUTTONUP:
-            case SDL_MOUSEBUTTONDOWN:
-               mouseButtonEvent(events[i]);
-               break;
-            case SDL_KEYDOWN:
-            case SDL_KEYUP:
-               keyEvent(events[i]);
-               break;
-         }
-      }
-   }
 
    // poll joysticks
    if (!mJoystickActive)
@@ -1544,7 +1149,7 @@ bool JoystickInputDevice::deactivate()
 //------------------------------------------------------------------------------
 const char* JoystickInputDevice::getName()
 {
-   return SDL_JoystickName(mDeviceID);
+   return SDL_JoystickNameForIndex(mDeviceID);
 }
 
 //------------------------------------------------------------------------------
@@ -1731,7 +1336,7 @@ void JoystickInputDevice::loadAxisInfo()
       const char* axisStr = Con::getVariable(tempBuf);
       if (axisStr == NULL || dStrlen(axisStr) == 0)
       {
-         if (i < sizeof(AxisDefaults))
+         if (i < (int)(sizeof(AxisDefaults) / sizeof(AxisDefaults[0])))
             axisInfo.type = AxisDefaults[i];
       }
       else

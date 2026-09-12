@@ -803,6 +803,11 @@ public:
     /// Returns true if this control is a first responder
     bool isFirstResponder();
 
+    /// Whether keys may go to this control as the first responder: it is
+    /// awake, and neither it nor anything it sits in is hidden. The canvas
+    /// asks before it sends one.
+    bool canTakeKeyboard();
+
     /// Sets this object to be a first responder
     virtual void setFirstResponder();
 
