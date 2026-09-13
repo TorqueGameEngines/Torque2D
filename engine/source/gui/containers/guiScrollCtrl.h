@@ -211,6 +211,8 @@ public:
    virtual bool onWake();
    virtual void onSleep();
    virtual void inspectPostApply();
+   /// Redoes the layout when a field it is worked out from is written.
+   virtual void onStaticModified(const char* slotName, const char* newValue = NULL);
    virtual void setControlThumbProfile(GuiControlProfile* prof);
    virtual void setControlTrackProfile(GuiControlProfile* prof);
    virtual void setControlArrowProfile(GuiControlProfile* prof);
