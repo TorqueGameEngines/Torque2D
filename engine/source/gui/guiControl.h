@@ -253,6 +253,13 @@ protected:
     ColorI              mFontColor;
     bool                mOverrideFontColor;
 
+    /// What fitToText last sized the control from. See fitToText.
+    StringTableEntry    mFittedText;
+    S32                 mFittedWidth;
+    GFont*              mFittedFont;
+    GuiControlProfile*  mFittedProfile;
+    bool                mFittedWrap;
+
 	static bool writeFontSizeAdjustFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mFontSizeAdjust != 1; }
 	static bool writeFontColorFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mOverrideFontColor && ctrl->mFontColor != ColorI(0,0,0,255); }
 	static bool writeOverrideFontColorFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mOverrideFontColor; }
@@ -890,6 +897,12 @@ public:
     ///
     /// @note This should move into the graphics library at some point
     void renderText(const Point2I &offset, const Point2I &extent, const char *text, GuiControlProfile *profile, TextRotationOptions rot = tRotateNone);
+
+    /// Sizes the control to its text as textExtend asks, without drawing it.
+    void fitToText();
+
+    /// The extent textExtend asks for, given the height of the text's lines.
+    Point2I getTextExtendedExtent(S32 blockHeight, const char* text, GuiControlProfile* profile);
     virtual void renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot = tRotateNone);
     /// Splits text into paragraphs on its line breaks. The measuring half of
     /// getLineList needs a font; this half does not, which is what lets it be

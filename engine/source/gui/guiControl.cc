@@ -137,6 +137,11 @@ GuiControl::GuiControl()
    mAllowEventPassThru  = false;
    mTextWrap			= false;
    mTextExtend          = false;
+   mFittedText          = NULL;
+   mFittedWidth         = -1;
+   mFittedFont          = NULL;
+   mFittedProfile       = NULL;
+   mFittedWrap          = false;
    mUseInput            = true;
 }
 
@@ -560,6 +565,12 @@ void GuiControl::resize(const Point2I &newPosition, const Point2I &newExtent)
 		  Con::executef(this, 2, "onMoved");
 	  }
    }
+
+   // A wrapped control's height follows from its width, so a new width is new
+   // text to fit. Last, because fitting resizes, and a centered control's
+   // position depends on its height.
+   if (extentChanged && actualNewExtent.x != oldExtent.x)
+      fitToText();
 }
 void GuiControl::setPosition( const Point2I &newPosition )
 {
@@ -1350,6 +1361,7 @@ void GuiControl::preRender()
           ctrl->preRender();
       }
    }
+   fitToText();
    onPreRender();
 }
 
@@ -1424,6 +1436,10 @@ bool GuiControl::onWake()
    //increment the profile
    mProfile->incRefCount();
 
+   // Now rather than when it is first drawn, which for a control out of view
+   // may be never. See fitToText.
+   fitToText();
+
    // Only invoke script callbacks if we have a namespace in which to do so
    // This will suppress warnings
    if( isMethod("onWake") )
@@ -1444,6 +1460,10 @@ void GuiControl::onSleep()
    //decrement the profile referrence
    if( mProfile != NULL )
       mProfile->decRefCount();
+
+   // The profile's last reference takes its fonts with it, and one loaded on
+   // the next wake can come back at the same address.
+   mFittedWidth = -1;
    clearFirstResponder();
    mouseUnlock();
 
@@ -2461,16 +2481,7 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
 
         if (mTextExtend)
         {
-            Point2I extent = getExtent();
-            if (mTextWrap)
-            {
-                extent.y = getOuterHeight(blockHeight, NormalState, profile);
-            }
-            else
-            {
-                extent.x = getOuterWidth(profile->getFont(mFontSizeAdjust)->getStrWidth(text), NormalState, profile);
-            }
-            setExtent(extent);
+            setExtent(getTextExtendedExtent(blockHeight, text, profile));
         }
 
         if (blockHeight < totalHeight)
@@ -2489,6 +2500,82 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
         renderLineList(offset, extent, startOffsetY, lineList, profile, rot);
         dglSetClipRect(old);
     }
+}
+
+Point2I GuiControl::getTextExtendedExtent(S32 blockHeight, const char* text, GuiControlProfile* profile)
+{
+    Point2I extent = getExtent();
+    if (mTextWrap)
+    {
+        extent.y = getOuterHeight(blockHeight, NormalState, profile);
+    }
+    else
+    {
+        extent.x = getOuterWidth(profile->getFont(mFontSizeAdjust)->getStrWidth(text), NormalState, profile);
+    }
+    return extent;
+}
+
+// textExtend used to be applied only by renderText, and renderChild does not
+// render a child that falls outside its parent's clip rect. So a wrapped label
+// scrolled out of view kept the height it was authored with until it came back:
+// a column of them in a scroller was too short until every row had been seen
+// once, its thumb shrank as it was scrolled, and scrollToBottom stopped short of
+// rows that grew after it had measured.
+//
+// This sizes the control from the rect GuiControl::onRender hands renderText.
+// It is called where what it depends on changes -- the text, the width, waking
+// -- so that script sees the new size straight away, and from preRender once a
+// frame, which reaches every visible control whether or not it is on screen,
+// for anything else: a new profile, fontSizeAdjust, textWrap.
+//
+// renderText still sizes a control as it draws it, and for one that draws its
+// text somewhere else -- a check box beside its box, a window in its title bar
+// -- its answer is the one that sticks. That is why this does nothing unless
+// what it measured from has changed, rather than measuring every frame: two
+// measurements of different rects would take turns at the control's height.
+//
+// Only an awake control is measured. Asking a profile for a font registers a
+// texture, which the C++ unit tests, having no GL context, cannot do.
+void GuiControl::fitToText()
+{
+    if (!mTextExtend)
+    {
+        // So that turning it back on measures even if nothing else changed.
+        mFittedWidth = -1;
+        return;
+    }
+
+    if (!mAwake || mProfile == NULL)
+        return;
+
+    GFont* font = mProfile->getFont(mFontSizeAdjust);
+    if (font == NULL)
+        return;
+
+    Point2I offset = Point2I::Zero;
+    Point2I extent = mBounds.extent;
+    RectI ctrlRect = applyMargins(offset, extent, NormalState, mProfile);
+    RectI fillRect = applyBorders(ctrlRect.point, ctrlRect.extent, NormalState, mProfile);
+    RectI contentRect = applyPadding(fillRect.point, fillRect.extent, NormalState, mProfile);
+
+    // onRender draws no text into a rect like this, so renderText never sizes
+    // from one either.
+    if (!contentRect.isValidRect())
+        return;
+
+    if (mText == mFittedText && contentRect.extent.x == mFittedWidth && font == mFittedFont &&
+        mProfile == mFittedProfile && mTextWrap == mFittedWrap)
+        return;
+
+    mFittedText = mText;
+    mFittedWidth = contentRect.extent.x;
+    mFittedFont = font;
+    mFittedProfile = mProfile;
+    mFittedWrap = mTextWrap;
+
+    const S32 blockHeight = font->getHeight() * (S32)getLineList(mText, mProfile, contentRect.extent.x).size();
+    setExtent(getTextExtendedExtent(blockHeight, mText, mProfile));
 }
 
 void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot)
@@ -2738,6 +2825,7 @@ const char* GuiControl::execAltConsoleCallback()
 void GuiControl::setText(const char *text)
 {
 	mText = StringTable->insert(text, true);
+	fitToText();
 }
 
 void GuiControl::setTextID(const char *id)
