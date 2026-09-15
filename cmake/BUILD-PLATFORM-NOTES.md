@@ -342,10 +342,11 @@ codesign — `rm -rf Torque2D_DEBUG.app` when switching platforms.
    **SDL 2 is not a package to install.** It is vendored in `engine/lib/sdl`
    (SDL 2.32.10, the tree Torque3D builds; see its `README-TORQUE2D.md`) and
    compiled by the configure step as a static library. The `libx*-dev` packages
-   are its X11 build dependencies: `libxext-dev` is required -- SDL's configure
-   stops with "Missing Xext.h" without it -- and each of the others turns on an
-   SDL feature (display modes through XRandR, cursors, XInput2 relative mouse,
-   screensaver inhibit) that is silently left out when its headers are missing.
+   are its X11 build dependencies, and all of them are required: configure stops
+   and names any that are missing (`engine/lib/CMakeLists.txt`). SDL itself
+   insists only on `libxext-dev`; each of the others turns on an SDL feature
+   (display modes through XRandR, cursors, XInput2 relative mouse, screensaver
+   inhibit) that SDL would otherwise leave out without a word.
    **fontconfig is a direct dependency, not just Xft's:** `x86UNIXFont.cc` calls
    `Fc*` itself for `PlatformFont::enumeratePlatformFonts` (the installed-font list
    the GUI tools offer), so the Linux link list carries `fontconfig` explicitly.

@@ -10,7 +10,8 @@
 #         libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev \
 #         libxft-dev libfreetype6-dev libopenal-dev libgl1-mesa-dev
 #  (nasm is only needed for the 32-bit build. SDL 2 is vendored in engine/lib/sdl
-#  and built by the configure step; the libx*-dev packages are its build deps.)
+#  and built by the configure step; the libx*-dev packages are its build deps,
+#  and configure stops and names any that are missing.)
 #
 #  For a 32-bit build see cmake/BUILD-PLATFORM-NOTES.md (multilib + :i386 libs and
 #  -m32 flags). STATUS: builds & links on Linux (verified 32 & 64-bit).

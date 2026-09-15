@@ -54,9 +54,9 @@ jobs:
     name: Linux x86_64
     # Not pinned. SDL 2 is vendored in engine/lib/sdl and compiled by the
     # configure step, so there is no SDL package to install -- only SDL's X11
-    # build dependencies: libxext-dev is required, and libxrandr-dev through
-    # libxss-dev each turn on an SDL feature that is silently left out when its
-    # headers are missing.
+    # build dependencies, every one of which configure requires
+    # (engine/lib/CMakeLists.txt): SDL itself insists only on libxext-dev, and
+    # would quietly leave out the feature each of the others turns on.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
