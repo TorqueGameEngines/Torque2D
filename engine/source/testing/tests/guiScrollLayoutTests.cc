@@ -241,4 +241,111 @@ TEST( GuiScrollLayoutTests, AnAlwaysOffAxisIsNeverCalledIntoBeing )
     SUCCEED();
 }
 
+//-----------------------------------------------------------------------------
+// A scroller built the way a script builds one.
+//
+// Which bars are showing is worked out by computeSizes and kept, and the room a
+// child is offered is read from what was kept. The constructor starts both bar
+// modes at alwaysOn, and a new{} block that writes Extent before hScrollBar and
+// vScrollBar has computeSizes run -- through the Extent setter -- while they are
+// still alwaysOn. Writing the modes afterwards used to recompute nothing, so the
+// scroller went on believing it had two bars it did not have.
+//
+// A child added then measured itself against a rect two bars too small. For a
+// scaled child that is not forgotten: it records its proportion of the parent
+// once, against that rect, and when the bars were found not to exist after all
+// it grew by the same proportion -- past the room, which really did call the
+// bars into being, for good. Pirate Code 2's menu background came out 1290x730
+// in a 1280x720 scroller with 10px bars, with both bars on at every window size.
+//
+// These build real controls, but nothing is woken and nothing measures text, so
+// they need no canvas.
+//-----------------------------------------------------------------------------
+
+static StringTableEntry scrollField( const char* name )
+{
+    return StringTable->insert( name );
+}
+
+// Every field written before the object is registered and in this order, which
+// is what a new{} block does. The order is the point: Extent before the modes.
+static GuiScrollCtrl* makeScriptedScroller( const char* barMode )
+{
+    GuiScrollCtrl* scroll = new GuiScrollCtrl();
+    scroll->setDataField( scrollField( "profile" ), NULL, "GuiDefaultProfile" );
+    scroll->setDataField( scrollField( "HorizSizing" ), NULL, "relative" );
+    scroll->setDataField( scrollField( "VertSizing" ), NULL, "relative" );
+    scroll->setDataField( scrollField( "Position" ), NULL, "0 0" );
+    scroll->setDataField( scrollField( "Extent" ), NULL, "1280 720" );
+    scroll->setDataField( scrollField( "ScrollBarThickness" ), NULL, "10" );
+    scroll->setDataField( scrollField( "hScrollBar" ), NULL, barMode );
+    scroll->setDataField( scrollField( "vScrollBar" ), NULL, barMode );
+    scroll->registerObject();
+    return scroll;
+}
+
+// Exactly the size of the scroller, and scaled, so any error in the room it is
+// offered comes back multiplied into its size.
+static GuiControl* makeScaledChild()
+{
+    GuiControl* child = new GuiControl();
+    child->setDataField( scrollField( "profile" ), NULL, "GuiDefaultProfile" );
+    child->setDataField( scrollField( "HorizSizing" ), NULL, "relative" );
+    child->setDataField( scrollField( "VertSizing" ), NULL, "relative" );
+    child->setDataField( scrollField( "Position" ), NULL, "0 0" );
+    child->setDataField( scrollField( "Extent" ), NULL, "1280 720" );
+    child->setDataField( scrollField( "MinExtent" ), NULL, "1024 640" );
+    child->registerObject();
+    return child;
+}
+
+TEST( GuiScrollLayoutTests, AScaledChildThatFitsKeepsItsSize )
+{
+    GuiScrollCtrl* scroll = makeScriptedScroller( "dynamic" );
+    GuiControl* child = makeScaledChild();
+    scroll->addObject( child );
+
+    EXPECT_EQ( child->getExtent().x, 1280 ) << "1290 is 1280/1270 of 1280: a proportion taken with a 10px bar that was never there.";
+    EXPECT_EQ( child->getExtent().y, 720 );
+    EXPECT_FALSE( scroll->hasHScrollBar() ) << "The child fits exactly, so a dynamic bar has nothing to do.";
+    EXPECT_FALSE( scroll->hasVScrollBar() );
+
+    scroll->deleteObject();
+}
+
+// Not a bar that turned out to be needed: an alwaysOff scroller can never have
+// one, and still gave the child the wrong room.
+TEST( GuiScrollLayoutTests, AnAlwaysOffScrollerTakesNoRoomFromAChild )
+{
+    GuiScrollCtrl* scroll = makeScriptedScroller( "alwaysOff" );
+    GuiControl* child = makeScaledChild();
+    scroll->addObject( child );
+
+    EXPECT_EQ( child->getExtent().x, 1280 );
+    EXPECT_EQ( child->getExtent().y, 720 );
+    EXPECT_FALSE( scroll->hasHScrollBar() );
+    EXPECT_FALSE( scroll->hasVScrollBar() );
+
+    scroll->deleteObject();
+}
+
+// The same staleness from the other side: a scroller whose mode is changed
+// after it has children. The bar has to come and go when the field is written,
+// not at whatever resize happens to come next.
+TEST( GuiScrollLayoutTests, ABarModeTakesEffectWhenItIsWritten )
+{
+    GuiScrollCtrl* scroll = makeScriptedScroller( "dynamic" );
+    GuiControl* child = makeScaledChild();
+    scroll->addObject( child );
+    ASSERT_FALSE( scroll->hasVScrollBar() );
+
+    scroll->setDataField( scrollField( "vScrollBar" ), NULL, "alwaysOn" );
+    EXPECT_TRUE( scroll->hasVScrollBar() );
+
+    scroll->setDataField( scrollField( "vScrollBar" ), NULL, "dynamic" );
+    EXPECT_FALSE( scroll->hasVScrollBar() );
+
+    scroll->deleteObject();
+}
+
 #endif // TORQUE_SHIPPING

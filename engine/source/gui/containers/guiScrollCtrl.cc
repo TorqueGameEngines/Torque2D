@@ -62,6 +62,13 @@ GuiScrollCtrl::GuiScrollCtrl()
    mForceVScrollBar = ScrollBarAlwaysOn;
    mForceHScrollBar = ScrollBarAlwaysOn;
 
+   // What computeSizes decides for the modes above. resize reads these before
+   // it has called computeSizes even once.
+   mHasHScrollBar = true;
+   mHasVScrollBar = true;
+   mHBarEnabled = false;
+   mVBarEnabled = false;
+
    mThumbProfile = NULL;
    mTrackProfile = NULL;
    mArrowProfile = NULL;
@@ -226,6 +233,25 @@ void GuiScrollCtrl::inspectPostApply()
 {
 	Parent::inspectPostApply();
 	computeSizes();
+}
+
+void GuiScrollCtrl::onStaticModified(const char* slotName, const char* newValue)
+{
+	Parent::onStaticModified(slotName, newValue);
+
+	// Which bars are showing is decided by computeSizes and kept, and the room a
+	// child is offered is read from what was kept. These are the fields that
+	// decision is made from, and writing one used to redo nothing. A new{} block
+	// that set Extent before the bar modes had computeSizes run -- through the
+	// Extent setter -- while both were still the constructor's alwaysOn, and a
+	// child added afterwards measured itself against two bars that did not
+	// exist. A scaled child records that proportion once, so it then grew by it
+	// for good: 1290x730 in a 1280x720 scroller with 10px bars.
+	if (dStricmp(slotName, "hScrollBar") == 0 || dStricmp(slotName, "vScrollBar") == 0 ||
+		dStricmp(slotName, "scrollBarThickness") == 0)
+	{
+		computeSizes();
+	}
 }
 
 void GuiScrollCtrl::setControlThumbProfile(GuiControlProfile* prof)
