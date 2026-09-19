@@ -1430,6 +1430,12 @@ static void InitOpenGL()
 
    const char* resString = Con::getVariable( ( fullScreen  ? "$pref::Video::resolution" : "$pref::Video::windowedRes" ) );
 
+   // An empty windowedRes means the game has no preferred window size, and
+   // canvas.cs falls back to defaultResolution; create the window there too,
+   // rather than at the minimum size and resize it a moment later.
+   if ( !fullScreen && resString[0] == '\0' )
+      resString = Con::getVariable( "$pref::Video::defaultResolution" );
+
    // Get the video settings from the prefs:
    char* tempBuf = new char[dStrlen( resString ) + 1];
    dStrcpy( tempBuf, resString );

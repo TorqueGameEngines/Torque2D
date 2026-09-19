@@ -31,13 +31,18 @@
 #include "console/console.h"
 #include "platformEmscripten/EmscriptenInputManager.h"
 
-#include <SDL/SDL.h>
+#include <SDL.h>
 
 #ifdef LOG_INPUT
 #include <time.h>
 #include <stdarg.h>
 #include <fcntl.h>
 #endif
+
+// Input::getKeyCode, Input::getAscii and the clipboard are
+// platformSDL/sdlInput.cpp's, shared with the Linux back-end. They replace a
+// table of what each key types on a US keyboard, and a clipboard that was
+// always empty.
 
 // Static class variables:
 InputManager*  Input::smManager = NULL;
@@ -47,11 +52,9 @@ InputManager*  Input::smManager = NULL;
 bool           Input::smActive = false;
 CursorManager* Input::smCursorManager = 0;
 
-//extern AsciiData AsciiTable[NUM_KEYS];
-
 #ifdef LOG_INPUT
 S32 gInputLog = -1;
-#endif 
+#endif
 
 //------------------------------------------------------------------------------
 void Input::init()
@@ -102,65 +105,6 @@ ConsoleFunction( getJoystickAxes, const char*, 2, 2, "getJoystickAxes( instance 
 }
 
 //------------------------------------------------------------------------------
-U16 Input::getKeyCode( U16 asciiCode )
-{
-   U16 keyCode = 0;
-   U16 i;
-   
-   // This is done three times so the lowerkey will always
-   // be found first. Some foreign keyboards have duplicate
-   // chars on some keys.
-   for ( i = KEY_FIRST; i < NUM_KEYS && !keyCode; i++ )
-   {
-      if ( AsciiTable[i].lower.ascii == asciiCode )
-      {
-         keyCode = i;
-         break;
-      };
-   }
-
-   for ( i = KEY_FIRST; i < NUM_KEYS && !keyCode; i++ )
-   {
-      if ( AsciiTable[i].upper.ascii == asciiCode )
-      {
-         keyCode = i;
-         break;
-      };
-   }
-
-   for ( i = KEY_FIRST; i < NUM_KEYS && !keyCode; i++ )
-   {
-      if ( AsciiTable[i].goofy.ascii == asciiCode )
-      {
-         keyCode = i;
-         break;
-      };
-   }
-
-   return( keyCode );
-}
-
-//-----------------------------------------------------------------------------
-U16 Input::getAscii( U16 keyCode, KEY_STATE keyState )
-{
-   if ( keyCode >= NUM_KEYS )
-      return 0;
-
-   switch ( keyState )
-   {
-      case STATE_LOWER:
-         return AsciiTable[keyCode].lower.ascii;
-      case STATE_UPPER:
-         return AsciiTable[keyCode].upper.ascii;
-      case STATE_GOOFY:
-         return AsciiTable[keyCode].goofy.ascii;
-      default:
-         return(0);
-            
-   }
-}
-
-//------------------------------------------------------------------------------
 void Input::destroy()
 {
    if ( smManager && smManager->isEnabled() )
@@ -173,10 +117,10 @@ void Input::destroy()
 
 //------------------------------------------------------------------------------
 bool Input::enable()
-{   
+{
    if ( smManager && !smManager->isEnabled() )
       return( smManager->enable() );
-   
+
    return( false );
 }
 
@@ -265,18 +209,6 @@ ConsoleFunction( inputLog, void, 2, 2, "inputLog( string )" )
 }
 #endif // LOG_INPUT
 
-//------------------------------------------------------------------------------
-const char* Platform::getClipboard()
-{
-   return "";
-}
-
-//------------------------------------------------------------------------------
-bool Platform::setClipboard(const char *text)
-{
-   return false;
-}
-
 #pragma mark ---- Cursor Functions ----
 //------------------------------------------------------------------------------
 void Input::pushCursor(S32 cursorID)
@@ -302,6 +234,16 @@ void Input::refreshCursor()
       cm->refreshCursor();
 }
 
+//------------------------------------------------------------------------------
+// Show or hide the pointer over the canvas. SDL 2 does it with the canvas's
+// CSS cursor, so the pointer is the browser's everywhere else on the page;
+// the canvas turns it off while it draws a cursor of its own. Until SDL 2 this
+// did nothing, and the browser's pointer showed on top of the canvas's.
+void Input::setCursorState(bool on)
+{
+   SDL_ShowCursor(on ? SDL_ENABLE : SDL_DISABLE);
+}
+
 #pragma mark ---- DoubleClick Functions ----
 //------------------------------------------------------------------------------
 U32 Input::getDoubleClickTime()
@@ -325,8 +267,9 @@ S32 Input::getDoubleClickHeight()
 #pragma mark -
 
 //------------------------------------------------------------------------------
+// A page cannot move the player's pointer, and SDL 2's Emscripten driver says
+// as much (its WarpMouse is unsupported), so there is nothing to do.
 void Input::setCursorPos(S32 x, S32 y)
 {
-   SDL_WarpMouse((S16)x, (S16)y);
 }
 

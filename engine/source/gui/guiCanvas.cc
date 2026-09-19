@@ -198,9 +198,13 @@ bool GuiCanvas::tabNext(void)
 
         if ( newResponder && newResponder != oldResponder )
         {
+            // setFirstResponder tells the old responder it has lost the
+            // keyboard. Telling it again here, after the new one had already
+            // taken it, ran the old field's AltCommand twice and -- the old
+            // field's disable coming last -- turned text input back off: on
+            // SDL, Tab into a text box left it unable to type. Torque3D
+            // took these calls out.
             newResponder->setFirstResponder();
-        if ( oldResponder )
-            oldResponder->onLoseFirstResponder();
          return true;
         }
    }
@@ -221,11 +225,8 @@ bool GuiCanvas::tabPrev(void)
 
         if ( newResponder && newResponder != oldResponder )
         {
+            // See tabNext: setFirstResponder has told the old responder.
             newResponder->setFirstResponder();
-    
-          if ( oldResponder )
-             oldResponder->onLoseFirstResponder();
-
          return true;
         }
    }
@@ -331,6 +332,13 @@ void GuiCanvas::processMouseMoveEvent(const MouseMoveEvent *event)
 
 bool GuiCanvas::processInputEvent(const InputEvent *event)
 {
+    // A key goes only to a first responder that can take it -- awake, and on
+    // the screen. One that went to sleep or out of sight without letting go
+    // is let go of here, and the key goes on as though nothing had the
+    // keyboard, rather than into a text field nobody can see.
+    if ( event->deviceType == KeyboardDeviceType && mFirstResponder && !mFirstResponder->canTakeKeyboard() )
+        setFirstResponder( NULL );
+
     // First call the general input handler (on the extremely off-chance that it will be handled):
     if ( mFirstResponder )
    {
@@ -1539,8 +1547,12 @@ void GuiCanvas::onFocus(bool foundFirstResponder)
 {
 	if (!foundFirstResponder && mFirstResponder)
 	{
-		mFirstResponder->onLoseFirstResponder();
+		// Let go first and then say so, as setFirstResponder does. The callback
+		// can hide or deactivate the control, and a control that still had the
+		// keyboard then would be told a second time.
+		GuiControl* oldResponder = mFirstResponder;
 		mFirstResponder = NULL;
+		oldResponder->onLoseFirstResponder();
 	}
 }
 
@@ -1548,6 +1560,13 @@ void GuiCanvas::setFirstResponder( GuiControl* newResponder )
 {
     GuiControl* oldResponder = mFirstResponder;
     Parent::setFirstResponder( newResponder );
+
+    // GuiControl::setFirstResponder takes no NULL -- below the canvas a
+    // pointer is cleared by clearFirstResponder -- so the canvas lets go here.
+    // It never did: setFirstResponder(NULL), which popDialog calls when the
+    // last dialog goes, left the old responder in place and still sent it keys.
+    if ( newResponder == NULL )
+        mFirstResponder = NULL;
 
     if ( oldResponder && ( oldResponder != mFirstResponder ) )
         oldResponder->onLoseFirstResponder();

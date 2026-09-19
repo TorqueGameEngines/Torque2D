@@ -21,6 +21,59 @@ function(torque_thirdparty_lib name)
     set_target_properties(${name} PROPERTIES FOLDER "ThirdParty")
 endfunction()
 
+# --- SDL 2 (Linux desktop only) ----------------------------------------------
+# Vendored from Torque3D and built by SDL's own CMake, the way Torque3D builds it
+# (see sdl/README-TORQUE2D.md) -- except static rather than shared, so the engine
+# still ships as one executable. The Web build takes SDL 2 from Emscripten's port
+# (-sUSE_SDL=2) instead, and Windows, macOS, iOS and Android don't use SDL.
+# EXCLUDE_FROM_ALL: nothing is built unless the engine links SDL2::SDL2-static.
+if(UNIX AND NOT APPLE AND NOT ANDROID AND NOT EMSCRIPTEN)
+    # SDL's X11 driver is the one the back-end runs on, and SDL's configure
+    # quietly leaves out each X11 extension whose headers it can't find: the
+    # engine still builds, but without display modes through XRandR, cursors,
+    # the XInput2 mouse or screensaver inhibit, and nothing says why. So every
+    # header is required here, before SDL looks. The result variables are the
+    # ones SDL's own find_file calls use (sdl/cmake/sdlchecks.cmake), so SDL
+    # reuses what is found here; one left NOTFOUND is searched for again on the
+    # next configure, so installing the package and configuring again is enough.
+    set(TORQUE_SDL_X11_VARS
+        TORQUE_HAVE_XLIB_H HAVE_XEXT_H HAVE_XRANDR_H HAVE_XCURSOR_H
+        HAVE_XFIXES_H_ HAVE_XINPUT2_H HAVE_XSS_H)
+    set(TORQUE_SDL_X11_HEADERS
+        X11/Xlib.h X11/extensions/Xext.h X11/extensions/Xrandr.h X11/Xcursor/Xcursor.h
+        X11/extensions/Xfixes.h X11/extensions/XInput2.h X11/extensions/scrnsaver.h)
+    set(TORQUE_SDL_X11_PACKAGES
+        libx11-dev libxext-dev libxrandr-dev libxcursor-dev
+        libxfixes-dev libxi-dev libxss-dev)
+    set(missing "")
+    foreach(var header package IN ZIP_LISTS
+            TORQUE_SDL_X11_VARS TORQUE_SDL_X11_HEADERS TORQUE_SDL_X11_PACKAGES)
+        find_file(${var} NAMES "${header}")
+        if(NOT ${var})
+            list(APPEND missing "${package} (${header})")
+        endif()
+    endforeach()
+    if(missing)
+        list(JOIN missing "\n  " missing)
+        message(FATAL_ERROR
+            "SDL 2's X11 development headers are missing:\n  ${missing}\n"
+            "Without them SDL builds without display modes, cursors, the XInput2 "
+            "mouse or screensaver inhibit. Install them, then configure again:\n"
+            "  Debian/Ubuntu: sudo apt install libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev\n"
+            "  Arch:          sudo pacman -S libx11 libxext libxrandr libxcursor libxfixes libxi libxss\n"
+            "  Fedora:        sudo dnf install libX11-devel libXext-devel libXrandr-devel libXcursor-devel libXfixes-devel libXi-devel libXScrnSaver-devel\n"
+            "A 32-bit build needs the :i386 versions (cmake/BUILD-PLATFORM-NOTES.md).")
+    endif()
+
+    set(SDL_SHARED OFF CACHE BOOL "Build a shared version of the library" FORCE)
+    set(SDL_STATIC ON CACHE BOOL "Build a static version of the library" FORCE)
+    set(SDL_TEST OFF CACHE BOOL "Build the SDL2_test library" FORCE)
+    set(SDL2_DISABLE_SDL2MAIN ON CACHE BOOL "The engine has its own main()" FORCE)
+    set(SDL2_DISABLE_INSTALL ON CACHE BOOL "Don't install SDL with the engine" FORCE)
+    set(SDL2_DISABLE_UNINSTALL ON CACHE BOOL "Don't add an uninstall target" FORCE)
+    add_subdirectory(sdl ${CMAKE_CURRENT_BINARY_DIR}/sdl2 EXCLUDE_FROM_ALL)
+endif()
+
 # --- zlib (built from source on desktop; Android uses the NDK system libz) -----
 if(NOT ANDROID)
 add_library(zlib STATIC

@@ -35,9 +35,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// event codes for custom SDL events
-const S32 TORQUE_SETVIDEOMODE = 1;
-
 extern bool GL_EXT_Init( void );
 
 extern void PlatformBlitInit( void );

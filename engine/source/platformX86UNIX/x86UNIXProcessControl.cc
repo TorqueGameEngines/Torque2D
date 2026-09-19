@@ -37,7 +37,7 @@
 #include <signal.h>
 
 #ifndef DEDICATED
-#include <SDL/SDL.h>
+#include <SDL.h>
 #endif
 
 extern void SendQuitEvent();
@@ -143,13 +143,12 @@ void ProcessControlInit()
    signal(SIGTTIN, SIG_IGN);
    signal(SIGTTOU, SIG_IGN);
 
-   // we're not interested in the exit status of child processes, so this 
-   // prevents zombies from accumulating.
-#if defined(__FreeBSD__) || defined(__OpenBSD__)
-   signal(SIGCHLD, SIG_IGN);
-#else
-   signal(SIGCLD, SIG_IGN);
-#endif
+   // Child processes are left at the default. Everything that starts one waits
+   // for it: UnixCommandExecutor (x86UNIXUtils.cc), the launcher behind
+   // Platform::openWebBrowser, and SDL for its own. This used to ignore SIGCHLD
+   // so that no zombie was left behind, but that has the kernel reap every
+   // child the moment it exits, so those waits fail -- SDL's X11 message box
+   // runs in a child, and a failed wait there aborts a debug build.
 
    // install signal handler for SIGSEGV, so that we can attempt
    // clean shutdown

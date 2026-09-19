@@ -171,8 +171,10 @@ void getGLCapabilities( )
       gGLState.maxTextureUnits = 1;
 
    // Swap interval ========================================
-   // Mac inherently supports a swap interval via AGL-set-integer.
-   gGLState.suppSwapInterval = true;
+   // None to set on the web: vertical sync is the main loop's timing there,
+   // which cannot be set until the loop starts (see
+   // OpenGLDevice::setVerticalSync, EmscriptenOGLVideo.cpp).
+   gGLState.suppSwapInterval = false;
 
    // FSAA support, TODO: check for ARB multisample support
    // multisample support should be checked via CGL

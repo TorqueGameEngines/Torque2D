@@ -39,6 +39,14 @@ class OpenGLDevice : public DisplayDevice
       void addResolution(S32 width, S32 height, bool check=true);
 
    public:
+      // Set by InitOpenGL: the window is to be created at exactly the size
+      // asked for, so a tiling window manager floats it instead of tiling it.
+      static bool smCreateAtExactSize;
+      // While set, the window is being held at that size (see setScreenMode);
+      // releaseExactSize lets go of it once the window manager has decided.
+      static bool smHoldingExactSize;
+      static U32  smExactSizeHeldSince;
+
       OpenGLDevice();
       virtual ~OpenGLDevice();
 
@@ -54,6 +62,19 @@ class OpenGLDevice : public DisplayDevice
       bool getVerticalSync();
       bool setVerticalSync( bool on );
       void loadResolutions();
+
+      // Called once a frame by the event loop (x86UNIXWindow.cc): make the
+      // window resizable once it has been held at its exact size long enough.
+      static void releaseExactSize();
+
+      // Called by the event loop when the window's size has changed, whoever
+      // changed it: bring the canvas, the current resolution and
+      // $pref::Video::fullScreen into line with the window as it now is.
+      static void followWindow();
+
+      // Whether the window is fullscreen right now -- including when the
+      // window manager made it so, which SDL does not notice.
+      static bool isWindowFullScreen();
 
       static DisplayDevice* create();
 };

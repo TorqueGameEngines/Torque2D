@@ -1913,6 +1913,25 @@ bool ActionMap::handleEventGlobal(const InputEvent* pEvent)
 }
 
 //------------------------------------------------------------------------------
+ActionMap* ActionMap::getGlobalMap()
+{
+   SimSet* pActionMapSet = Sim::getActiveActionMapSet();
+   if (pActionMapSet == NULL || pActionMapSet->size() == 0)
+      return NULL;
+
+   return static_cast<ActionMap*>(pActionMapSet->first());
+}
+
+//------------------------------------------------------------------------------
+bool ActionMap::isAction(const U32 deviceType, const U32 deviceInst, const U32 modifiers, const U32 action)
+{
+   if (findNode(deviceType, deviceInst, modifiers, action) != NULL)
+      return true;
+
+   return modifiers != 0 && findNode(deviceType, deviceInst, 0, action) != NULL;
+}
+
+//------------------------------------------------------------------------------
 //-------------------------------------- Key code to string mapping
 //                                        TODO: Add most obvious aliases...
 //

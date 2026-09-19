@@ -67,18 +67,10 @@ js_ConsoleLine: function(message) {
 
 step_warn: function() {
 	console.log('step warn');
-},
-
-_EmscriptenGetDesktopHeight: function() {
-	return 768;
-},
-
-_EmscriptenGetDesktopWidth: function() {
-	return 1024;
-},
-
-_EmscriptenGetDesktopBpp: function() {
-	return 32;
 }
+
+// (The desktop's size is SDL 2's now -- the screen the page is on, from
+// Video::getDesktopResolution in EmscriptenWindow.cpp. These functions used to
+// make up a 1024x768 one.)
 
 });

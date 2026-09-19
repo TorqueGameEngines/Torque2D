@@ -173,9 +173,19 @@ class ActionMap : public SimObject
    bool processMove(const InputEvent*);
    bool processMotion(const InputEvent*);
    bool processXInput(const InputEvent*);
-   static bool checkBreakTable(const InputEvent*);   
+   static bool checkBreakTable(const InputEvent*);
    static bool handleEvent(const InputEvent*);
    static bool handleEventGlobal(const InputEvent*);
+
+   /// The GlobalActionMap: the first map in the active set, the one
+   /// handleEventGlobal asks. NULL until there is one.
+   static ActionMap* getGlobalMap();
+
+   /// Whether this map has a binding for an event, looked up as processButton
+   /// looks it up: with the modifiers, and then, failing that, without them,
+   /// so a binding on "q" is found for Shift+Q. (Torque3D's isAction, which
+   /// this is named for, makes only the first lookup.)
+   bool isAction(const U32 deviceType, const U32 deviceInst, const U32 modifiers, const U32 action);
 
    static bool getDeviceTypeAndInstance(const char *device, U32 &deviceType, U32 &deviceInstance);
 

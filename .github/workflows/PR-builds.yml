@@ -52,9 +52,11 @@ jobs:
   # ===========================================================================
   linux-x64:
     name: Linux x86_64
-    # Not pinned: libsdl1.2-dev on 24.04 is the SDL2-backed sdl12-compat shim,
-    # which the back-end is happy with now that the ascii key table is read from
-    # the X keymap rather than from SDL's private X11_KeyToUnicode.
+    # Not pinned. SDL 2 is vendored in engine/lib/sdl and compiled by the
+    # configure step, so there is no SDL package to install -- only SDL's X11
+    # build dependencies, every one of which configure requires
+    # (engine/lib/CMakeLists.txt): SDL itself insists only on libxext-dev, and
+    # would quietly leave out the feature each of the others turns on.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -63,7 +65,8 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential \
-            libsdl1.2-dev libx11-dev libxft-dev libfreetype6-dev libopenal-dev libgl1-mesa-dev
+            libx11-dev libxext-dev libxrandr-dev libxcursor-dev libxfixes-dev libxi-dev libxss-dev \
+            libxft-dev libfreetype6-dev libopenal-dev libgl1-mesa-dev
       - name: Build Debug
         run: |
           cmake -S . -B build/linux-debug -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Debug
@@ -103,8 +106,9 @@ jobs:
           sudo dpkg --add-architecture i386
           sudo apt-get update
           sudo apt-get install -y gcc-multilib g++-multilib nasm \
-            libsdl1.2-dev:i386 libx11-dev:i386 libxft-dev:i386 libfreetype6-dev:i386 \
-            libopenal-dev:i386 libgl1-mesa-dev:i386
+            libx11-dev:i386 libxext-dev:i386 libxrandr-dev:i386 libxcursor-dev:i386 \
+            libxfixes-dev:i386 libxi-dev:i386 libxss-dev:i386 \
+            libxft-dev:i386 libfreetype6-dev:i386 libopenal-dev:i386 libgl1-mesa-dev:i386
       - name: Build Release (-m32)
         env:
           # Point pkg-config / find_package at the 32-bit libraries.
@@ -181,7 +185,12 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
+      # v4, not v3: v3 installs the SDK's "tools" package, which Google has
+      # removed, so the action now fails before the build starts ("Failed to
+      # find package 'tools'"). v4 installs platform-tools alone (its v4.0.2,
+      # "Fix for removed tools package"), and moves to node24 and a current
+      # cmdline-tools. sdkmanager is still on the path for the step below.
+      - uses: android-actions/setup-android@v4
       - name: Install NDK + CMake (match app/build.gradle ndkVersion)
         run: sdkmanager "ndk;25.2.9519653" "cmake;3.22.1"
       - name: Build APK (assembleDebug)

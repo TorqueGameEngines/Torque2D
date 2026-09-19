@@ -350,12 +350,14 @@ set(TORQUE_ENGINE_SOURCES
     ${TORQUE_SRC}/testing/tests/directoryScanCaseTests.cc
     ${TORQUE_SRC}/testing/tests/guiControlReparentTests.cc
     ${TORQUE_SRC}/testing/tests/guiCursorHotSpotTests.cc
+    ${TORQUE_SRC}/testing/tests/guiFirstResponderTests.cc
     ${TORQUE_SRC}/testing/tests/guiFrameStripLayoutTests.cc
     ${TORQUE_SRC}/testing/tests/guiHitTestTests.cc
     ${TORQUE_SRC}/testing/tests/guiParticleColorGraphTests.cc
     ${TORQUE_SRC}/testing/tests/guiProfileThemeTests.cc
     ${TORQUE_SRC}/testing/tests/guiScrollLayoutTests.cc
     ${TORQUE_SRC}/testing/tests/guiTextEditTests.cc
+    ${TORQUE_SRC}/testing/tests/guiTextInputTests.cc
     ${TORQUE_SRC}/testing/tests/guiTextWrapTests.cc
     ${TORQUE_SRC}/testing/tests/guiTreeRowLayoutTests.cc
     ${TORQUE_SRC}/testing/tests/imageAssetCellNameTests.cc
@@ -365,6 +367,8 @@ set(TORQUE_ENGINE_SOURCES
     ${TORQUE_SRC}/testing/tests/platformMemoryTests.cc
     ${TORQUE_SRC}/testing/tests/platformStringTests.cc
     ${TORQUE_SRC}/testing/tests/resourceManagerDeleteTests.cc
+    ${TORQUE_SRC}/testing/tests/sdlKeyMapTests.cc
+    ${TORQUE_SRC}/testing/tests/sdlTextInputTests.cc
     ${TORQUE_SRC}/testing/tests/simObjectCloneTests.cc
     ${TORQUE_SRC}/testing/tests/stringTableCaseTests.cc
     # ---- platform ----

@@ -43,6 +43,11 @@ static void osxGetInitialResolution(U32 &width, U32 &height, U32 &bpp, bool &ful
         resString = Con::getVariable("$pref::Video::resolution");
     else
         resString = Con::getVariable("$pref::Video::windowedRes");
+
+    // An empty windowedRes means the game has no preferred window size, and
+    // canvas.cs falls back to defaultResolution; so does this.
+    if (!fullScreen && resString[0] == '\0')
+        resString = Con::getVariable("$pref::Video::defaultResolution");
     
     // dStrtok is destructive, work on a copy...
     tempBuf = new char[dStrlen(resString) + 1];

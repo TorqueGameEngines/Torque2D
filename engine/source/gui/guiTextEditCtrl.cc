@@ -27,6 +27,7 @@
 #include "gui/guiCanvas.h"
 #include "gui/guiTextEditCtrl.h"
 #include "gui/guiDefaultControlRender.h"
+#include "input/actionMap.h"
 #include "memory/frameAllocator.h"
 #include "string/unicode.h"
 
@@ -125,24 +126,32 @@ U32 GuiTextEditTextBlock::calculateIbeamPositionInLine(const S32 targetX, GFont*
     S32 curX = getGlobalTextStart().x;
     U32 result = mText.length();
 
-    for (U32 count = 0; count < mText.length(); count++)
+    // A character at a time, not a byte at a time: a byte of a multi-byte
+    // character is not a character the font can measure, and an answer that
+    // lands between two of them puts the caret inside a character.
+    U32 count = 0;
+    while (count < mText.length())
     {
-        char c = mText[count];
-        if (!font->isValidChar(c))
-            continue;
+        U32 walked = 1;
+        const UTF16 c = oneUTF32toUTF16(oneUTF8toUTF32(mText.c_str() + count, &walked));
+        const U32 next = getMin(count + getMax(walked, (U32)1), (U32)mText.length());
 
-        S32 backDiff = mAbs(curX - targetX);
-        curX += font->getCharXIncrement(c);
-
-        if (curX > targetX)
+        if (font->isValidChar(c))
         {
-            S32 forwardDiff = mAbs(curX - targetX);
-            if (backDiff < forwardDiff)
-                result = count;
-            else
-                result = count + 1;
-            break;
+            S32 backDiff = mAbs(curX - targetX);
+            curX += font->getCharXIncrement(c);
+
+            if (curX > targetX)
+            {
+                S32 forwardDiff = mAbs(curX - targetX);
+                if (backDiff < forwardDiff)
+                    result = count;
+                else
+                    result = next;
+                break;
+            }
         }
+        count = next;
     }
 
     return result;
@@ -365,7 +374,7 @@ GuiTextEditSelection::GuiTextEditSelection(const GuiTextEditSelection& selector)
     mCursorOn = true;
 }
 
-void GuiTextEditSelection::stepCursorForward()
+void GuiTextEditSelection::stepCursorForward(const string& fullText)
 {
     if (hasSelection())
     {
@@ -373,11 +382,11 @@ void GuiTextEditSelection::stepCursorForward()
     }
     else
     {
-        setCursorPosition(mCursorPos + 1);
+        setCursorPosition(nextCharacterStart(fullText, mCursorPos));
     }
 }
 
-void GuiTextEditSelection::stepCursorBackward()
+void GuiTextEditSelection::stepCursorBackward(const string& fullText)
 {
     if (hasSelection())
     {
@@ -385,16 +394,38 @@ void GuiTextEditSelection::stepCursorBackward()
     }
     else
     {
-        setCursorPosition(mCursorPos - 1);
+        setCursorPosition(previousCharacterStart(fullText, mCursorPos));
     }
+}
+
+U32 GuiTextEditSelection::nextCharacterStart(const string& text, const U32 pos)
+{
+    if (pos >= text.length())
+        return text.length();
+
+    return getNthCodepoint(text.c_str() + pos, 1) - text.c_str();
+}
+
+// Back over the UTF-8 continuation bytes (10xxxxxx) to the byte that begins
+// the character. Nothing in unicode.h walks backwards.
+U32 GuiTextEditSelection::previousCharacterStart(const string& text, const U32 pos)
+{
+    U32 start = getMin(pos, (U32)text.length());
+    if (start == 0)
+        return 0;
+
+    start--;
+    while (start > 0 && (((U8)text[start]) & 0xC0) == 0x80)
+    {
+        start--;
+    }
+    return start;
 }
 
 #pragma endregion
 
 #pragma region GuiTextEditCtrl
 IMPLEMENT_CONOBJECT(GuiTextEditCtrl);
-
-U32 GuiTextEditCtrl::smNumAwake = 0;
 
 GuiTextEditCtrl::GuiTextEditCtrl()
 {
@@ -403,6 +434,7 @@ GuiTextEditCtrl::GuiTextEditCtrl()
    mPasswordText = false;
    mReturnCausesTab = false;
    mSinkAllKeyEvents = false;
+   mPendingHighSurrogate = 0;
    mActive = true;
 
    mSelector = GuiTextEditSelection();
@@ -509,24 +541,37 @@ bool GuiTextEditCtrl::onWake()
 	   }
    }
 
-   // If this is the first awake text edit control, enable keyboard translation
-   if (smNumAwake == 0)
-      Platform::enableKeyboardTranslation();
-   ++smNumAwake;
-
    mSuspendVerticalScrollJump = false;
 
    return true;
 }
 
+// Text input is on while a box has the keyboard, and at no other time: it is
+// turned on in setFirstResponder and off when the box lets go. It used to be
+// turned on whenever a box woke and off when the last one slept, so with any
+// box anywhere awake -- a toolbox left open, say -- it stayed on with nothing
+// focused, and on SDL every key typed text that nobody was listening for.
+// Torque3D never counted boxes.
 void GuiTextEditCtrl::onSleep()
 {
-   Parent::onSleep();
+   // A box put to sleep holding the keyboard -- its dialog popped, its editor
+   // closed -- lets go of it here, before GuiControl::onSleep clears the
+   // pointers to it. It does so quietly, as a sleeping control always has:
+   // onLoseFirstResponder runs script (onValidate, the AltCommand, onBlur),
+   // and script run from the middle of a sleep can pop the very dialog that is
+   // being popped. The KeyboardToy's name box does exactly that in its
+   // AltCommand.
+   if (isFirstResponder())
+      releaseKeyboard();
 
-   // If this is the last awake text edit control, disable keyboard translation
-   --smNumAwake;
-   if (smNumAwake == 0)
-      Platform::disableKeyboardTranslation();
+   Parent::onSleep();
+}
+
+void GuiTextEditCtrl::releaseKeyboard()
+{
+   Platform::disableKeyboardTranslation();
+   mSelector.setFirstResponder(false);
+   mPendingHighSurrogate = 0;
 }
 
 void GuiTextEditCtrl::execConsoleCallback()
@@ -918,12 +963,23 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
    mSelector.setTextLength(stringLen);
    setUpdate();
 
+   // Text that came without a key: there is no key here to be a shortcut,
+   // an arrow or a Backspace, so it goes straight to being typed.
+   if (isCharacterEvent(event))
+   {
+       if (handleCharacterInput(event) || mSinkAllKeyEvents)
+       {
+           return true;
+       }
+       return Parent::onKeyDown(event);
+   }
+
    bool result = false;
    if (event.modifier & SI_SHIFT)
     {
        result = handleKeyDownWithShift(event);
     }
-   else if (event.modifier & SI_CTRL)
+   else if ((event.modifier & SI_CTRL) && !isAltGrCharacter(event))
    {
        //When holding the ctrl key, events must be handled here or passed up.
        return handleKeyDownWithCtrl(event);
@@ -942,7 +998,26 @@ bool GuiTextEditCtrl::onKeyDown(const GuiEvent &event)
        return true;
    }
 
-   if (handleCharacterInput(event) || mSinkAllKeyEvents)
+   // Not one of the box's own keys. A key the GlobalActionMap is bound to is
+   // the map's, and types nothing -- Torque3D's rule: its map gets every key
+   // first, and the text of the keys it takes is held back (on SDL, by
+   // SDLTextInput::withholdGlobalKeyText). The box's own keys, handled above,
+   // stay the box's: the canvas has been given the keys before the
+   // GlobalActionMap since 2007 so that, say, the left arrow in a text box
+   // moves the caret and nothing else. That comes before mSinkAllKeyEvents,
+   // too, which sinks the rest of the keys but not a global binding.
+   if (isGlobalKey(event))
+   {
+       return false;
+   }
+
+   // A key that types is the box's, whether its text came with it (Windows,
+   // macOS) or is still to come (SDL). Passed on for want of a character, as
+   // every key was once SDL's keys stopped carrying one, it reached the game's
+   // action maps too: with a text box focused, typing q fired a binding on q.
+   // Keys that type nothing -- the function keys, and whatever else the box
+   // does not use -- go on as they always have, unless the box sinks them.
+   if (handleCharacterInput(event) || mSinkAllKeyEvents || isTypingKey(event.keyCode, event.modifier))
    {
        return true;
    }
@@ -1007,7 +1082,7 @@ void GuiTextEditCtrl::setFirstResponder()
 
 void GuiTextEditCtrl::onLoseFirstResponder()
 {
-   Platform::disableKeyboardTranslation();
+   releaseKeyboard();
 
    //execute the validate command
    bool valid = validate();
@@ -1022,7 +1097,6 @@ void GuiTextEditCtrl::onLoseFirstResponder()
    if (isMethod("onBlur"))
 	   Con::executef(this, 2, "onBlur", valid);
 
-    mSelector.setFirstResponder(false);
     mTextOffsetY = 0;
    mScrollVelocity = 0;
    if (!mTextWrap && mTextBlockList.size() > 0)
@@ -1536,49 +1610,161 @@ bool GuiTextEditCtrl::handleKeyDownWithNoModifier(const GuiEvent& event)
     return false;
 }
 
+bool GuiTextEditCtrl::isTypedCharacter(const UTF16 unit)
+{
+    // C0 controls, DEL and the C1 controls. A key that does something rather
+    // than types something still reports a character on some platforms --
+    // Windows gives Ctrl+C as 0x03 and Backspace as 0x08 -- and none of them
+    // belong in the text. A line break goes in through insertNewLine.
+    return unit >= 0x20 && !(unit >= 0x7F && unit <= 0x9F);
+}
+
+bool GuiTextEditCtrl::isCharacterEvent(const GuiEvent& event)
+{
+    return event.keyCode == KEY_NULL && event.ascii != 0;
+}
+
+bool GuiTextEditCtrl::isAltGrCharacter(const GuiEvent& event)
+{
+    return (event.modifier & SI_LCTRL) && (event.modifier & SI_RALT) && isTypedCharacter(event.ascii);
+}
+
+bool GuiTextEditCtrl::isTypingKey(const U8 keyCode, const U32 modifier)
+{
+#if defined(TORQUE_OS_OSX) || defined(TORQUE_OS_IOS)
+    // Cmd, which Torque reports as Alt, makes a shortcut from either side;
+    // Option, which types, is a modifier of its own.
+    if (modifier & (SI_CTRL | SI_ALT))
+        return false;
+#else
+    // AltGr is right Alt, and Windows adds a left Ctrl to it. Anything else
+    // with Ctrl or Alt held is a shortcut.
+    const bool altGr = (modifier & SI_RALT) && !(modifier & (SI_LALT | SI_RCTRL));
+    if (!altGr && (modifier & (SI_CTRL | SI_ALT)))
+        return false;
+#endif
+
+    return keyCode == KEY_SPACE
+        || (keyCode >= KEY_0 && keyCode <= KEY_9)
+        || (keyCode >= KEY_A && keyCode <= KEY_Z)
+        || (keyCode >= KEY_TILDE && keyCode <= KEY_SLASH)      // the punctuation keys
+        || (keyCode >= KEY_NUMPAD0 && keyCode <= KEY_DIVIDE)   // number-pad digits and operators
+        || keyCode == KEY_OEM_102;
+}
+
+bool GuiTextEditCtrl::isGlobalKey(const GuiEvent& event)
+{
+    ActionMap* globalMap = ActionMap::getGlobalMap();
+    return globalMap != NULL && globalMap->isAction(KeyboardDeviceType, 0, event.modifier, event.keyCode);
+}
+
+U32 GuiTextEditCtrl::composeTypedCharacter(const UTF16 unit, UTF16& pendingHighSurrogate, UTF8* outBuffer)
+{
+    const bool isHighSurrogate = (unit >= 0xD800 && unit <= 0xDBFF);
+    const bool isLowSurrogate = (unit >= 0xDC00 && unit <= 0xDFFF);
+
+    if (isHighSurrogate)
+    {
+        // The first half. Anything already held lost its partner, and goes.
+        pendingHighSurrogate = unit;
+        return 0;
+    }
+
+    UTF32 codepoint = unit;
+    if (isLowSurrogate)
+    {
+        if (pendingHighSurrogate == 0)
+            return 0;
+
+        // Put together here rather than by oneUTF16toUTF32, whose pairing
+        // leaves off the 0x10000 every pair stands above: it reads U+1F600 as
+        // U+F600, a private-use character inside the BMP, and so never gets
+        // as far as replacing it.
+        codepoint = 0x10000 + ((((UTF32)pendingHighSurrogate) - 0xD800) << 10) + (((UTF32)unit) - 0xDC00);
+    }
+    pendingHighSurrogate = 0;
+
+    // The engine's own encoder, so a typed character comes out exactly as the
+    // same character read from a file or the clipboard would. It keeps to the
+    // BMP: a character beyond it -- an emoji -- is U+FFFD, the replacement
+    // character, as it is everywhere else in the engine's text handling.
+    return oneUTF32toUTF8(codepoint, outBuffer);
+}
+
+// The one part of typing that needs the font, apart so the unit tests -- which
+// have no canvas and so cannot load one -- can stand in for it.
+bool GuiTextEditCtrl::canDisplayCharacter(const UTF16 character)
+{
+    GFont* font = mProfile->getFont(mFontSizeAdjust);
+    return font != NULL && font->isValidChar(character);
+}
+
 bool GuiTextEditCtrl::handleCharacterInput(const GuiEvent& event)
 {
-    if (!mProfile->getFont(mFontSizeAdjust))
+    // A key-down that types nothing -- an arrow, a Ctrl shortcut, and on
+    // platforms that send typed text separately, every key -- ends here.
+    if (!isTypedCharacter(event.ascii))
         return false;
 
-    if (mProfile->getFont(mFontSizeAdjust)->isValidChar(event.ascii))
+    UTF8 typed[4] = { 0, 0, 0, 0 };
+    const U32 typedLength = composeTypedCharacter(event.ascii, mPendingHighSurrogate, typed);
+    if (typedLength == 0)
     {
-        // Get the character ready to add to a UTF8 string.
-        string characterToInsert = string(1, event.ascii);
+        // Half a character, held for the other half: typed, but not yet text.
+        return mPendingHighSurrogate != 0;
+    }
 
-        //Stop characters that aren't allowed based on InputMode
-        if (!inputModeValidate(event.ascii, mSelector.getCursorPos()))
-        {
-            keyDenied();
-            return true;
-        }
+    // The character as the text will hold it, which is what the font and the
+    // input mode are asked about. oneUTF8toUTF32 must be given somewhere to
+    // write its count: its ASCII fast path writes it without checking.
+    U32 walked = 0;
+    const UTF16 character = oneUTF32toUTF16(oneUTF8toUTF32(typed, &walked));
 
-        saveUndoState();
+    if (!canDisplayCharacter(character))
+        return false;
 
-        if (mSelector.hasSelection())
-        {
-            mSelector.eraseSelection(mTextBuffer);
-        }
-
-        if (mTextBuffer.length() < mMaxStrLen || !mInsertOn)
-        {
-            if (!mInsertOn)
-            {
-                mTextBuffer.erase(mSelector.getCursorPos(), 1);
-            }
-            mTextBuffer.insert(mSelector.getCursorPos(), characterToInsert);
-            mSelector.setTextLength(mTextBuffer.length());
-            mSelector.stepCursorForward();
-            setText(mTextBuffer);
-        }
-        else
-            keyDenied();
-
-        execConsoleCallback();
-
+    //Stop characters that aren't allowed based on InputMode
+    if (!inputModeValidate(character, mSelector.getCursorPos()))
+    {
+        keyDenied();
         return true;
     }
-    return false;
+
+    return insertCharacter(string((const char*)typed, typedLength));
+}
+
+// A typed character goes in at the caret, over the selection if there is one,
+// and over the character after the caret when insert is off. It is one to
+// three bytes of UTF-8 and the caret steps past all of it: stepping one byte,
+// as this did when every character was taken to be one, leaves the caret
+// inside the character, where the next one typed would split it.
+bool GuiTextEditCtrl::insertCharacter(const string& character)
+{
+    saveUndoState();
+
+    if (mSelector.hasSelection())
+    {
+        mSelector.eraseSelection(mTextBuffer);
+    }
+
+    const U32 cursorPos = mSelector.getCursorPos();
+    const U32 overwritten = mInsertOn ? 0 : (GuiTextEditSelection::nextCharacterStart(mTextBuffer, cursorPos) - cursorPos);
+
+    // maxLength bounds the buffer, which is bytes; enforceMaxLength and the
+    // console variable both count it that way.
+    if ((mTextBuffer.length() - overwritten + character.length()) <= (U32)mMaxStrLen)
+    {
+        mTextBuffer.replace(cursorPos, overwritten, character);
+        mSelector.setTextLength(mTextBuffer.length());
+        mSelector.setCursorPosition(cursorPos + character.length());
+        setText(mTextBuffer);
+    }
+    else
+        keyDenied();
+
+    execConsoleCallback();
+
+    return true;
 }
 
 bool GuiTextEditCtrl::handleBackSpace()
@@ -1594,8 +1780,10 @@ bool GuiTextEditCtrl::handleBackSpace()
     }
     else
     {
-        mSelector.stepCursorBackward();
-        mTextBuffer.erase(mSelector.getCursorPos(), 1);
+        // The whole character before the caret, not its last byte.
+        const U32 end = mSelector.getCursorPos();
+        mSelector.stepCursorBackward(mTextBuffer);
+        mTextBuffer.erase(mSelector.getCursorPos(), end - mSelector.getCursorPos());
     }
     mSelector.setTextLength(mTextBuffer.length());
     setText(mTextBuffer);
@@ -1617,7 +1805,8 @@ bool GuiTextEditCtrl::handleDelete()
     }
     else
     {
-        mTextBuffer.erase(mSelector.getCursorPos(), 1);
+        const U32 start = mSelector.getCursorPos();
+        mTextBuffer.erase(start, GuiTextEditSelection::nextCharacterStart(mTextBuffer, start) - start);
     }
     mSelector.setTextLength(mTextBuffer.length());
     setText(mTextBuffer);
@@ -1711,7 +1900,7 @@ bool GuiTextEditCtrl::insertNewLine()
     // break for insert-off mode to replace.
     mTextBuffer.insert(mSelector.getCursorPos(), "\n");
     mSelector.setTextLength(mTextBuffer.length());
-    mSelector.stepCursorForward();
+    mSelector.stepCursorForward(mTextBuffer);
 
     // The caret has just moved to the start of the new line, which is the far
     // side of a seam it may have been sitting on: a click at the end of a line
@@ -1730,12 +1919,12 @@ bool GuiTextEditCtrl::handleArrowKey(GuiDirection direction)
     if (direction == GuiDirection::Left)
     {
         mSelector.setCursorAtEOL(false);
-        mSelector.stepCursorBackward();
+        mSelector.stepCursorBackward(mTextBuffer);
     }
     else if (direction == GuiDirection::Right)
     {
         mSelector.setCursorAtEOL(false);
-        mSelector.stepCursorForward();
+        mSelector.stepCursorForward(mTextBuffer);
     }
     else if (direction == GuiDirection::Up)
     {
@@ -1765,12 +1954,12 @@ bool GuiTextEditCtrl::handleShiftArrowKey(GuiDirection direction)
     if (direction == GuiDirection::Left)
     {
         mSelector.setCursorAtEOL(false);
-        modifySelectBlock(mSelector.getCursorPos() - 1);
+        modifySelectBlock(GuiTextEditSelection::previousCharacterStart(mTextBuffer, mSelector.getCursorPos()));
     }
     else if (direction == GuiDirection::Right)
     {
         mSelector.setCursorAtEOL(false);
-        modifySelectBlock(mSelector.getCursorPos() + 1);
+        modifySelectBlock(GuiTextEditSelection::nextCharacterStart(mTextBuffer, mSelector.getCursorPos()));
     }
     else if (direction == GuiDirection::Up)
     {
