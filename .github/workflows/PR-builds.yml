@@ -185,7 +185,12 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
+      # v4, not v3: v3 installs the SDK's "tools" package, which Google has
+      # removed, so the action now fails before the build starts ("Failed to
+      # find package 'tools'"). v4 installs platform-tools alone (its v4.0.2,
+      # "Fix for removed tools package"), and moves to node24 and a current
+      # cmdline-tools. sdkmanager is still on the path for the step below.
+      - uses: android-actions/setup-android@v4
       - name: Install NDK + CMake (match app/build.gradle ndkVersion)
         run: sdkmanager "ndk;25.2.9519653" "cmake;3.22.1"
       - name: Build APK (assembleDebug)
