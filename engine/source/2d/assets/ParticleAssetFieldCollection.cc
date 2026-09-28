@@ -442,7 +442,7 @@ void ParticleAssetFieldCollection::onTamlCustomWrite( TamlCustomNodes& customNod
 
 //-----------------------------------------------------------------------------
 
-void ParticleAssetFieldCollection::onTamlCustomRead( const TamlCustomNodes& customNodes )
+void ParticleAssetFieldCollection::onTamlCustomRead( const TamlCustomNodes& customNodes, const char* pOwnerName )
 {
     // Debug Profiling.
     PROFILE_SCOPE(ParticleAssetFieldCollection_OnTamlCustomRead);
@@ -478,7 +478,7 @@ void ParticleAssetFieldCollection::onTamlCustomRead( const TamlCustomNodes& cust
         }
 
         // Read the alias.
-        pParticleAssetField->onTamlCustomRead( pChildNode );
+        pParticleAssetField->onTamlCustomRead( pChildNode, pOwnerName );
     }
 }
 

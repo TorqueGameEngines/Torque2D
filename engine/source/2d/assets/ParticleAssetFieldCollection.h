@@ -82,7 +82,7 @@ public:
     F32 getValueScale( void ) const;    
 
     void onTamlCustomWrite( TamlCustomNodes& customNodes );
-    void onTamlCustomRead( const TamlCustomNodes& customNodes );
+    void onTamlCustomRead( const TamlCustomNodes& customNodes, const char* pOwnerName );
 
     void WriteCustomTamlSchema( const AbstractClassRep* pClassRep, TiXmlElement* pParentElement ) const;
 };

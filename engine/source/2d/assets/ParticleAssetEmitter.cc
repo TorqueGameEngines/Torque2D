@@ -662,8 +662,11 @@ void ParticleAssetEmitter::onTamlCustomRead( const TamlCustomNodes& customNodes 
     // Debug Profiling.
     PROFILE_SCOPE(ParticleAssetEmitter_OnTamlCustomRead);
 
-    // Read the fields.
-    mParticleFields.onTamlCustomRead( customNodes );
+    // Read the fields. The owning asset has not adopted the emitter yet, so the
+    // emitter's own name is all there is to report.
+    char ownerName[256];
+    dSprintf( ownerName, sizeof(ownerName), "Particle emitter '%s'", getEmitterName() );
+    mParticleFields.onTamlCustomRead( customNodes, ownerName );
 }
 
 

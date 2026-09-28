@@ -484,7 +484,9 @@ void ParticleAsset::onTamlCustomRead( const TamlCustomNodes& customNodes )
     PROFILE_SCOPE(ParticleAsset_OnTamlCustomRead);
 
     // Read the fields.
-    mParticleFields.onTamlCustomRead( customNodes );
+    char ownerName[256];
+    dSprintf( ownerName, sizeof(ownerName), "Particle asset '%s'", getAssetName() );
+    mParticleFields.onTamlCustomRead( customNodes, ownerName );
 }
 
 //-----------------------------------------------------------------------------

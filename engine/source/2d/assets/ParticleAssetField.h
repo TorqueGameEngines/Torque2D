@@ -111,7 +111,8 @@ public:
     static F32 calculateFieldBVLE( const ParticleAssetField& base, const ParticleAssetField& variation, const ParticleAssetField& overlife, const ParticleAssetField& effect, const F32 effectTime, const F32 particleAge, const bool modulate = false, const F32 modulo = 0.0f );
 
     void onTamlCustomWrite( TamlCustomNode* pCustomNode  );
-    void onTamlCustomRead( const TamlCustomNode* pCustomNode );
+    // pOwnerName describes the asset or emitter being read, for warnings.
+    void onTamlCustomRead( const TamlCustomNode* pCustomNode, const char* pOwnerName );
 
     void WriteCustomTamlSchema( const AbstractClassRep* pClassRep, TiXmlElement* pParentElement );
 };

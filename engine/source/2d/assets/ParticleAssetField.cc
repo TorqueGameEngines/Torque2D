@@ -443,8 +443,9 @@ F32 ParticleAssetField::getFieldValue( F32 time ) const
         if ( mDataKeys[index1].mTime >= time )
             break;
 
-    // If we're exactly on a Data-Key then return that key.
-    if ( mIsEqual( mDataKeys[index1].mTime, time) )
+    // If we're exactly on a Data-Key, or before the first one, then return that key.
+    // (A time before the first key has no key to its left to interpolate from.)
+    if ( index1 == 0 || mIsEqual( mDataKeys[index1].mTime, time) )
         return mDataKeys[index1].mValue * mValueScale;
 
     // Set Adjacent Indexes.
@@ -573,7 +574,7 @@ void ParticleAssetField::onTamlCustomWrite( TamlCustomNode* pCustomNode )
 
 //-----------------------------------------------------------------------------
 
-void ParticleAssetField::onTamlCustomRead( const TamlCustomNode* pCustomNode )
+void ParticleAssetField::onTamlCustomRead( const TamlCustomNode* pCustomNode, const char* pOwnerName )
 {
     // Debug Profiling.
     PROFILE_SCOPE(ParticleAssetField_OnTamlCustomRead);
@@ -697,6 +698,36 @@ void ParticleAssetField::onTamlCustomRead( const TamlCustomNode* pCustomNode )
         key.mTime = getMinTime();
         key.mValue = getDefaultValue();
         keys.push_back( key );
+    }
+
+    // getFieldValue walks the keys in time order and has nothing to the left of
+    // the first one, so they must be in order and must start at time 0. The
+    // editor never writes them any other way, but a file can: put them in order,
+    // and hold the first value from time 0 rather than crash when sampled early.
+    bool keysSorted = true;
+    for ( S32 index = 1; index < keys.size(); ++index )
+    {
+        const DataKey key = keys[index];
+        S32 slot = index;
+        while ( slot > 0 && keys[slot-1].mTime > key.mTime )
+        {
+            keys[slot] = keys[slot-1];
+            --slot;
+        }
+        if ( slot != index )
+        {
+            keys[slot] = key;
+            keysSorted = false;
+        }
+    }
+
+    if ( !keysSorted )
+        Con::warnf( "ParticleAssetField::onTamlCustomRead() - %s field '%s' has its keys out of time order; they have been sorted.", pOwnerName, getFieldName() );
+
+    if ( mGreaterThanZero( keys[0].mTime ) )
+    {
+        Con::warnf( "ParticleAssetField::onTamlCustomRead() - %s field '%s' has no key at time 0; its first key (time %g, value %g) now holds from time 0.", pOwnerName, getFieldName(), keys[0].mTime, keys[0].mValue );
+        keys.push_front( DataKey( 0.0f, keys[0].mValue ) );
     }
 
     // Did we read in any value bounds?
