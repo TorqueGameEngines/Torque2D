@@ -427,6 +427,58 @@ TEST( GuiTextEditTests, ClearingTheTextBringsTheCaretBack )
 }
 
 //-----------------------------------------------------------------------------
+// Losing focus, as script hears it
+//
+// A box that loses focus tells script whether its text passed onValidate, in
+// onLoseFirstResponder and in onBlur. Con::executef takes its arguments as
+// strings, and that verdict used to go in as a bare bool, which the console
+// read as a pointer: any box whose class defined either callback crashed the
+// engine the moment it lost focus, before the callback's first line ran.
+//-----------------------------------------------------------------------------
+
+// A box built by script, so it has a class for its callbacks to live in.
+static GuiTextEditCtrl* newScriptedBox( const char* className )
+{
+    const char* id = Con::evaluatef( "return new GuiTextEditCtrl() { class = \"%s\"; };", className );
+    return dynamic_cast<GuiTextEditCtrl*>( Sim::findObject( id ) );
+}
+
+TEST( GuiTextEditTests, LosingFocusTellsOnLoseFirstResponderTheTextIsValid )
+{
+    Con::evaluate( "function UnitTestLoseFocusBox::onLoseFirstResponder( %this, %valid ) { $UnitTestLoseFocus = %valid; }" );
+    Con::setVariable( "$UnitTestLoseFocus", "unset" );
+
+    GuiTextEditCtrl* box = newScriptedBox( "UnitTestLoseFocusBox" );
+    ASSERT_TRUE( box != NULL );
+
+    box->onLoseFirstResponder();
+
+    ASSERT_STREQ( Con::getVariable( "$UnitTestLoseFocus" ), "1" ) << "No onValidate, so the text stands.";
+
+    box->deleteObject();
+
+    SUCCEED();
+}
+
+TEST( GuiTextEditTests, LosingFocusTellsOnBlurTheTextWasRefused )
+{
+    Con::evaluate( "function UnitTestBlurBox::onValidate( %this ) { return false; }" );
+    Con::evaluate( "function UnitTestBlurBox::onBlur( %this, %valid ) { $UnitTestBlur = %valid; }" );
+    Con::setVariable( "$UnitTestBlur", "unset" );
+
+    GuiTextEditCtrl* box = newScriptedBox( "UnitTestBlurBox" );
+    ASSERT_TRUE( box != NULL );
+
+    box->onLoseFirstResponder();
+
+    ASSERT_STREQ( Con::getVariable( "$UnitTestBlur" ), "0" ) << "onValidate said no, and onBlur should hear it.";
+
+    box->deleteObject();
+
+    SUCCEED();
+}
+
+//-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 // The line list the caret arithmetic rests on
 //

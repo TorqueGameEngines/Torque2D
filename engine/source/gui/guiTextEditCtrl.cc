@@ -1092,10 +1092,12 @@ void GuiTextEditCtrl::onLoseFirstResponder()
 	   execAltConsoleCallback();
    }
 
+   // executef reads every argument as a string, so the verdict goes in as one.
+   const char* validArg = valid ? "1" : "0";
    if( isMethod( "onLoseFirstResponder" ) )
-      Con::executef( this, 2, "onLoseFirstResponder", valid);
+      Con::executef( this, 2, "onLoseFirstResponder", validArg);
    if (isMethod("onBlur"))
-	   Con::executef(this, 2, "onBlur", valid);
+	   Con::executef(this, 2, "onBlur", validArg);
 
     mTextOffsetY = 0;
    mScrollVelocity = 0;

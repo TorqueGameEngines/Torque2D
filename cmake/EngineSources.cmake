@@ -347,6 +347,7 @@ set(TORQUE_ENGINE_SOURCES
     ${TORQUE_SRC}/testing/tests/assetStateCopyTests.cc
     ${TORQUE_SRC}/testing/tests/bitmapFontParseTests.cc
     ${TORQUE_SRC}/testing/tests/declaredPathCaseTests.cc
+    ${TORQUE_SRC}/testing/tests/editorToyToolTests.cc
     ${TORQUE_SRC}/testing/tests/directoryScanCaseTests.cc
     ${TORQUE_SRC}/testing/tests/guiControlReparentTests.cc
     ${TORQUE_SRC}/testing/tests/guiCursorHotSpotTests.cc

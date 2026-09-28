@@ -186,6 +186,7 @@ bool EditorToyTool::onInputEvent(const GuiEvent &e)
    if (!mUseKeyInput)
       return false;
 
-   Con::executef(this,3, "onKeyPress", e.ascii, e.modifier);
+   // executef reads every argument as a string.
+   Con::executef(this,3, "onKeyPress", Con::getIntArg(e.ascii), Con::getIntArg(e.modifier));
    return true;
 }
