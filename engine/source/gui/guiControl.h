@@ -914,6 +914,14 @@ public:
     /// tested on its own.
     static vector<string> splitParagraphs(const char* text);
 
+    /// Where a tooltip holding a block of text goes: the box, margins included,
+    /// placed below the cursor and kept on a screen of screenSize, and where the
+    /// text starts in it. The profile's margin, border and padding are the room
+    /// on each side, never less than the 5px gutter tooltips have always had.
+    /// Static, and handed the text's size rather than the text, so that it can be
+    /// tested with no font.
+    static RectI layoutTooltip(const Point2I& textExtent, const Point2I& cursorPos, const Point2I& screenSize, GuiControlProfile* profile, Point2I& textOrigin);
+
     /// How wide a string is, asked of whatever knows: a GFont at render time, a
     /// stand-in in a unit test. wrapParagraph takes one of these rather than a
     /// GFont so that it can be tested with no GL context -- asking a profile for

@@ -1092,6 +1092,37 @@ static S32 wrapTooltipParagraph(const char* paragraph, GFont* font, const S32 ma
     return lineCount;
 }
 
+// The room a tooltip leaves between one edge of its box and its text. A tooltip
+// was once only ever its text and this gutter, so a profile asking for less --
+// most ask for nothing, or a 1px rim -- still gets it, and looks as it did.
+static S32 tooltipInset(GuiBorderProfile* side)
+{
+    const S32 tooltipGutterSize = 5;
+
+    const S32 inset = (side) ? side->getMargin(NormalState) + side->getBorder(NormalState) + side->getPadding(NormalState) : 0;
+    return getMax(inset, tooltipGutterSize);
+}
+
+RectI GuiControl::layoutTooltip(const Point2I& textExtent, const Point2I& cursorPos, const Point2I& screenSize, GuiControlProfile* profile, Point2I& textOrigin)
+{
+    const S32 left = tooltipInset(profile->getLeftBorder());
+    const S32 right = tooltipInset(profile->getRightBorder());
+    const S32 top = tooltipInset(profile->getTopBorder());
+    const S32 bottom = tooltipInset(profile->getBottomBorder());
+
+    const Point2I extent(textExtent.x + left + right, textExtent.y + top + bottom);
+
+    // Below the cursor, and moved back on screen by the size of the whole box.
+    Point2I position(cursorPos.x, cursorPos.y + 22);
+    if (screenSize.x < (position.x + extent.x))
+        position.x = screenSize.x - extent.x;
+    if (screenSize.y < (position.y + extent.y))
+        position.y = screenSize.y - extent.y;
+
+    textOrigin.set(position.x + left, position.y + top);
+    return RectI(position, extent);
+}
+
 bool GuiControl::renderTooltip(Point2I &cursorPos, const char* tipText )
 {
 #if !defined(TORQUE_OS_IOS) && !defined(TORQUE_OS_ANDROID) && !defined(TORQUE_OS_EMSCRIPTEN)
@@ -1185,39 +1216,27 @@ bool GuiControl::renderTooltip(Point2I &cursorPos, const char* tipText )
         paragraphStart = breakAt + 1;
     }
 
-    // Controls the size of the inside (gutter) tooltip region.
-    const S32 tooltipGutterSize = 5;
-
-    // Adjust text bounds.
-    textBounds.x += tooltipGutterSize * 2;
-    textBounds.y = (((S32)font->getHeight() + 4) * tooltipLineCount - 4) + (tooltipGutterSize * 2);
-
-    // Adjust to tooltip is always on-screen.
-    Point2I screensize = Platform::getWindowSize();
-    Point2I offset = cursorPos; 
-    offset.y += 22;
-    if (screensize.x < (offset.x + textBounds.x))
-        offset.x = screensize.x - textBounds.x;
-    if(screensize.y < (offset.y + textBounds.y) )
-        offset.y = screensize.y - textBounds.y;
+    // The text block, and the box the tooltip profile puts around it.
+    textBounds.y = ((S32)font->getHeight() + 4) * tooltipLineCount - 4;
+    Point2I textOrigin;
+    RectI rect = layoutTooltip(textBounds, cursorPos, Platform::getWindowSize(), mTooltipProfile, textOrigin);
 
     // Fetch the old clip.
     RectI oldClip = dglGetClipRect();
 
-    // Set rectangle for the box, and set the clip rectangle.
-    RectI rect(offset, textBounds);
+    // Clip to the box.
     dglSetClipRect(rect);
 
-    // Draw body and border of the tool tip
-	renderUniversalRect(rect, mTooltipProfile, NormalState);
+    // Draw body and border of the tool tip, inside its margins as any control's are.
+    RectI frameRect = applyMargins(rect.point, rect.extent, NormalState, mTooltipProfile);
+	renderUniversalRect(frameRect, mTooltipProfile, NormalState);
 
-    // Draw the text centered in the tool tip box
+    // Draw the text inside the border and padding.
     dglSetBitmapModulation( mTooltipProfile->mFontColor );
-    Point2I start( tooltipGutterSize, tooltipGutterSize );
     for ( S32 lineIndex = 0; lineIndex < tooltipLineCount; lineIndex++ )
     {
-        dglDrawText( font, start + offset, tooltipLines[lineIndex].getPtr8(), mProfile->mFontColors );
-        offset.y += tooltipLineStride;
+        dglDrawText( font, textOrigin, tooltipLines[lineIndex].getPtr8(), mTooltipProfile->mFontColors );
+        textOrigin.y += tooltipLineStride;
     }
 
     dglSetClipRect( oldClip );

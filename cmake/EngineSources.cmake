@@ -360,6 +360,7 @@ set(TORQUE_ENGINE_SOURCES
     ${TORQUE_SRC}/testing/tests/guiTextEditTests.cc
     ${TORQUE_SRC}/testing/tests/guiTextInputTests.cc
     ${TORQUE_SRC}/testing/tests/guiTextWrapTests.cc
+    ${TORQUE_SRC}/testing/tests/guiTooltipLayoutTests.cc
     ${TORQUE_SRC}/testing/tests/guiTreeRowLayoutTests.cc
     ${TORQUE_SRC}/testing/tests/imageAssetCellNameTests.cc
     ${TORQUE_SRC}/testing/tests/namespaceLinkTests.cc
