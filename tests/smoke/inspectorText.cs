@@ -191,6 +191,18 @@ function tStep4()
 	tCheck("both alignments are reachable",
 		%block.alignRow.isVisible() && %block.vAlignRow.isVisible());
 
+	// The quarter turn, which a plain GuiControl's onRender honors. Its unturned
+	// value leads the row, as "default" leads the alignments.
+	%turn = %block.rotationRow;
+	tCheck("rotation is reachable", %turn.isVisible());
+	tCheck("rotation leads with none", %turn.choiceValue[0] $= "none" && %turn.getValue() $= "none");
+	%turn.choiceButton[1].performClick();
+	tCheck("choosing ccw reached the control", $tHeading.textRotation $= "ccw");
+	%turn.choiceButton[2].performClick();
+	tCheck("choosing cw reached the control", $tHeading.textRotation $= "cw");
+	%turn.choiceButton[0].performClick();
+	tCheck("and none turns it back", $tHeading.textRotation $= "none");
+
 	// textID went back to Localization, which is the only place that builds it
 	// now. It used to be built twice and hidden by the text filter with the rest.
 	tCheck("text id is reachable", tRowShown(%pane, "textID"));

@@ -351,14 +351,14 @@ function GuiEditorControlSpec::spriteSourceModeOf(%this, %ctrl)
 // Drawn by GuiControl::renderText, so they live or die with textRole.
 function GuiEditorControlSpec::textFields(%this)
 {
-	return "text textID textWrap textExtend align vAlign fontSizeAdjust overrideFontColor fontColor";
+	return "text textID textWrap textExtend align vAlign textRotation fontSizeAdjust overrideFontColor fontColor";
 }
 
 // The subset a proxy role keeps: renderText still runs, just with a string the
 // control did not get from its text field.
 function GuiEditorControlSpec::textLayoutFields(%this)
 {
-	return "textWrap textExtend align vAlign fontSizeAdjust overrideFontColor fontColor";
+	return "textWrap textExtend align vAlign textRotation fontSizeAdjust overrideFontColor fontColor";
 }
 
 function GuiEditorControlSpec::geometryFields(%this)
@@ -661,6 +661,15 @@ function GuiEditorControlSpec::isFieldVisible(%this, %class, %field)
 		{
 			return true;
 		}
+
+		// Only GuiControl::onRender passes textRotation to renderText, so it is
+		// live on GuiControl itself and on the classes that draw through that
+		// onRender rather than their own. A button draws its own caption and
+		// would ignore it.
+		if(%field $= "textRotation")
+		{
+			return %class $= "GuiControl" || %role $= "inherited";
+		}
 		return %role $= "render" || %role $= "placeholder" ||
 			%role $= "inherited" || %role $= "proxy";
 	}
@@ -722,12 +731,12 @@ function GuiEditorControlSpec::textBlockHome(%this, %class)
 }
 
 // The text block owns every field in textFields() except textID, which belongs
-// to Localization and is the only one of the nine that is not about how the
+// to Localization and is the only one of the ten that is not about how the
 // text is drawn.
 //
 // These three of them are ordinary field rows, so they go in the pane's shared
-// registry and are filtered and loaded with everything else. The other four are
-// two toggle icons and two segmented rows, which the block owns outright.
+// registry and are filtered and loaded with everything else. The other five are
+// two toggle icons and three segmented rows, which the block owns outright.
 //
 // overrideFontColor is in neither group: it has no row at all. The font color
 // swatch is both fields, because picking a color IS turning the override on.

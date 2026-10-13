@@ -249,6 +249,7 @@ protected:
 
     AlignmentType       mAlignment;
     VertAlignmentType   mVAlignment;
+    TextRotationOptions mTextRotation;    ///< Which way onRender turns the control's text.
     F32                 mFontSizeAdjust;
     ColorI              mFontColor;
     bool                mOverrideFontColor;
@@ -259,10 +260,12 @@ protected:
     GFont*              mFittedFont;
     GuiControlProfile*  mFittedProfile;
     bool                mFittedWrap;
+    TextRotationOptions mFittedRotation;
 
 	static bool writeFontSizeAdjustFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mFontSizeAdjust != 1; }
 	static bool writeFontColorFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mOverrideFontColor && ctrl->mFontColor != ColorI(0,0,0,255); }
 	static bool writeOverrideFontColorFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mOverrideFontColor; }
+	static bool writeTextRotationFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mTextRotation != tRotateNone; }
 
     /// @}
 
@@ -907,7 +910,9 @@ public:
     void fitToText();
 
     /// The extent textExtend asks for, given the height of the text's lines.
-    Point2I getTextExtendedExtent(S32 blockHeight, const char* text, GuiControlProfile* profile);
+    /// Turned text grows the other axis: its length runs up the control and its
+    /// lines stack across it.
+    Point2I getTextExtendedExtent(S32 blockHeight, const char* text, GuiControlProfile* profile, TextRotationOptions rot = tRotateNone);
     virtual void renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot = tRotateNone);
     /// Splits text into paragraphs on its line breaks. The measuring half of
     /// getLineList needs a font; this half does not, which is what lets it be
@@ -980,13 +985,19 @@ public:
 	/// high. Tested beside wrapParagraph for exactly that reason.
 	static S32 getTextVerticalOffset(S32 textHeight, S32 totalHeight, VertAlignmentType align);
 
+	/// The corner a line of text is drawn from, and the angle it is drawn at, in
+	/// a room of extent turned by rot. align places the line along its own length;
+	/// lineOffset is how far across the room it sits -- vAlign plus the lines
+	/// before it. Static so that it can be tested with no font.
+	static Point2I getLineStart(TextRotationOptions rot, const Point2I& extent, S32 textWidth, AlignmentType align, S32 lineOffset, F32& rotationInDegrees);
+
 protected:
 	bool mPreviouslyAwake;
 	virtual void interpolateTick(F32 delta) {};
 	virtual void processTick() {};
 	virtual void advanceTime(F32 timeDelta) {};
 
-	S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, AlignmentType align);
+	static S32 getTextHorizontalOffset(S32 textWidth, S32 totalWidth, AlignmentType align);
     AlignmentType getAlignmentType();
     VertAlignmentType getVertAlignmentType();
     AlignmentType getAlignmentType(GuiControlProfile* profile);

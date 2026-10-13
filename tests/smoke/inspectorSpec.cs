@@ -88,6 +88,14 @@ function sStep2()
 	sCheck("text edit hides vAlign", !%s.isFieldVisible("GuiTextEditCtrl", "vAlign"));
 	sCheck("text edit hides textExtend", !%s.isFieldVisible("GuiTextEditCtrl", "textExtend"));
 
+	// Only GuiControl::onRender turns its text, so textRotation lives on
+	// GuiControl and on the classes that draw through that onRender -- not on a
+	// button, which draws its own caption.
+	sCheck("GuiControl keeps textRotation", %s.isFieldVisible("GuiControl", "textRotation"));
+	sCheck("a grid, drawing through GuiControl's onRender, keeps it", %s.isFieldVisible("GuiGridCtrl", "textRotation"));
+	sCheck("a button hides textRotation", !%s.isFieldVisible("GuiButtonCtrl", "textRotation"));
+	sCheck("a text edit hides textRotation", !%s.isFieldVisible("GuiTextEditCtrl", "textRotation"));
+
 	// A list renders item text with its own profile: layout lives, the control's
 	// own string does not.
 	sCheck("list box hides text", !%s.isFieldVisible("GuiListBoxCtrl", "text"));

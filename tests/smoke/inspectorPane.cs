@@ -113,6 +113,8 @@ function pStep2()
 	pCheck("the default button draws no icon", !%align.choiceButton[0].icon.isVisible());
 	pCheck("the other three do", %align.choiceButton[1].icon.isVisible());
 	pCheck("v-align row has four choices", %pane.header.vAlignRow.choiceCount == 4);
+	pCheck("a button draws its own caption, so it has no rotation row",
+		!%pane.header.textBlock.rotationRow.isVisible());
 
 	$pButton.align = "default";
 	%pane.refresh();

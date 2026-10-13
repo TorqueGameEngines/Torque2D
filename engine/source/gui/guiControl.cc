@@ -80,6 +80,16 @@ static EnumTable::Enums vAlignCtrlEnums[] =
 };
 static EnumTable gVAlignCtrlTable(4, &vAlignCtrlEnums[0]);
 
+/// Named for the turn rather than for an edge, because "left" could as well
+/// mean the side the text sits on as the way it was turned.
+static EnumTable::Enums textRotationEnums[] =
+{
+   { GuiControl::tRotateNone,     "none" },
+   { GuiControl::tRotateLeft,     "ccw"  },   ///< Counter-clockwise: reads bottom to top.
+   { GuiControl::tRotateRight,    "cw"   }    ///< Clockwise: reads top to bottom.
+};
+static EnumTable gTextRotationTable(3, &textRotationEnums[0]);
+
 //used to locate the next/prev responder when tab is pressed
 S32 GuiControl::smCursorChanged           = -1;
 GuiControl *GuiControl::smPrevResponder = NULL;
@@ -114,6 +124,7 @@ GuiControl::GuiControl()
 
    mAlignment           = AlignmentType::DefaultAlign;
    mVAlignment          = VertAlignmentType::DefaultVAlign;
+   mTextRotation        = tRotateNone;
    mFontSizeAdjust      = 1;
    mFontColor.set(0, 0, 0, 255);
    mOverrideFontColor   = false;
@@ -142,6 +153,7 @@ GuiControl::GuiControl()
    mFittedFont          = NULL;
    mFittedProfile       = NULL;
    mFittedWrap          = false;
+   mFittedRotation      = tRotateNone;
    mUseInput            = true;
 }
 
@@ -316,6 +328,7 @@ void GuiControl::initPersistFields()
    addField("textExtend", TypeBool, Offset(mTextExtend, GuiControl), &writeTextExtendFn, "If true, extent will change based on the size of the control's text when possible.");
    addField("align", TypeEnum, Offset(mAlignment, GuiControl), 1, &gAlignCtrlTable);
    addField("vAlign", TypeEnum, Offset(mVAlignment, GuiControl), 1, &gVAlignCtrlTable);
+   addField("textRotation", TypeEnum, Offset(mTextRotation, GuiControl), &writeTextRotationFn, 1, &gTextRotationTable, "Turns the control's text a quarter turn: none, ccw (counter-clockwise, reading bottom to top) or cw (clockwise, reading top to bottom). align then runs along the text and vAlign across it. Honored by controls that draw their text through GuiControl's own onRender.");
    addField("fontSizeAdjust", TypeF32, Offset(mFontSizeAdjust, GuiControl), &writeFontSizeAdjustFn, "A decimal value that is multiplied with the profile's fontSize to determine the control's actual font size.");
    addField("overrideFontColor", TypeBool, Offset(mOverrideFontColor, GuiControl), &writeOverrideFontColorFn, "If true, the control's fontColor will override the profile's font color.");
    addField("fontColor", TypeColorI, Offset(mFontColor, GuiControl), &writeFontColorFn, "A color to override the font color of the control's profile. OverrideFontColor must be set to true for this to work.");
@@ -875,7 +888,7 @@ void GuiControl::onRender(Point2I offset, const RectI &updateRect)
 
 	if(contentRect.isValidRect())
 	{
-		renderText(contentRect.point, contentRect.extent, mText, mProfile);
+		renderText(contentRect.point, contentRect.extent, mText, mProfile, mTextRotation);
 
 		//Render the childen
 		renderChildControls(offset, contentRect, updateRect);
@@ -2561,7 +2574,7 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
 
         if (mTextExtend)
         {
-            setExtent(getTextExtendedExtent(blockHeight, text, profile));
+            setExtent(getTextExtendedExtent(blockHeight, text, profile, rot));
         }
 
         if (blockHeight < totalHeight)
@@ -2582,16 +2595,24 @@ void GuiControl::renderText(const Point2I& offset, const Point2I& extent, const 
     }
 }
 
-Point2I GuiControl::getTextExtendedExtent(S32 blockHeight, const char* text, GuiControlProfile* profile)
+Point2I GuiControl::getTextExtendedExtent(S32 blockHeight, const char* text, GuiControlProfile* profile, TextRotationOptions rot)
 {
     Point2I extent = getExtent();
+    const bool turned = (rot != tRotateNone);
     if (mTextWrap)
     {
-        extent.y = getOuterHeight(blockHeight, NormalState, profile);
+        if (turned)
+            extent.x = getOuterWidth(blockHeight, NormalState, profile);
+        else
+            extent.y = getOuterHeight(blockHeight, NormalState, profile);
     }
     else
     {
-        extent.x = getOuterWidth(profile->getFont(mFontSizeAdjust)->getStrWidth(text), NormalState, profile);
+        const S32 textLength = profile->getFont(mFontSizeAdjust)->getStrWidth(text);
+        if (turned)
+            extent.y = getOuterHeight(textLength, NormalState, profile);
+        else
+            extent.x = getOuterWidth(textLength, NormalState, profile);
     }
     return extent;
 }
@@ -2644,60 +2665,39 @@ void GuiControl::fitToText()
     if (!contentRect.isValidRect())
         return;
 
-    if (mText == mFittedText && contentRect.extent.x == mFittedWidth && font == mFittedFont &&
-        mProfile == mFittedProfile && mTextWrap == mFittedWrap)
+    // The length a line runs along, which turned text measures up the control.
+    const S32 lineLength = (mTextRotation == tRotateNone) ? contentRect.extent.x : contentRect.extent.y;
+
+    if (mText == mFittedText && lineLength == mFittedWidth && font == mFittedFont &&
+        mProfile == mFittedProfile && mTextWrap == mFittedWrap && mTextRotation == mFittedRotation)
         return;
 
     mFittedText = mText;
-    mFittedWidth = contentRect.extent.x;
+    mFittedWidth = lineLength;
     mFittedFont = font;
     mFittedProfile = mProfile;
     mFittedWrap = mTextWrap;
+    mFittedRotation = mTextRotation;
 
-    const S32 blockHeight = font->getHeight() * (S32)getLineList(mText, mProfile, contentRect.extent.x).size();
-    setExtent(getTextExtendedExtent(blockHeight, mText, mProfile));
+    const S32 blockHeight = font->getHeight() * (S32)getLineList(mText, mProfile, lineLength).size();
+    setExtent(getTextExtendedExtent(blockHeight, mText, mProfile, mTextRotation));
 }
 
 void GuiControl::renderLineList(const Point2I& offset, const Point2I& extent, const S32 startOffsetY, const vector<string> lineList, GuiControlProfile* profile, const TextRotationOptions rot)
 {
     const S32 textHeight = profile->getFont(mFontSizeAdjust)->getHeight();
-    S32 totalWidth = (rot == tRotateNone) ? extent.x : extent.y;
 
-	//Now print each line
+	//Now print each line, each aligned on its own
     U32 ibeamPos = 0;
     U32 lineNumber = 0;
-    S32 offsetX = 0;
     S32 offsetY = startOffsetY;
 	for(string line : lineList)
 	{
-		// align the horizontal
         string trimmedLine = Utility::trim_copy(line);
 		U32 textWidth = profile->getFont(mFontSizeAdjust)->getStrWidth(trimmedLine.c_str());
-		if(textWidth < totalWidth)
-		{
-            offsetX = getTextHorizontalOffset(textWidth, totalWidth, getAlignmentType(profile));
-		}
 
-		Point2I start = Point2I(0, 0);
 		F32 rotation = 0.0f;
-		if (rot == tRotateNone)
-		{
-            start.x += offsetX;
-            start.y += offsetY;
-			rotation = 0.0f;
-		}
-		else if (rot == tRotateLeft)
-		{
-			start.x = offsetY;
-			start.y = extent.y + offsetX;
-			rotation = 90.0f;
-		}
-		else if (rot == tRotateRight)
-		{
-			start.x = extent.x - offsetY;
-			start.y = offsetX;
-			rotation = -90.0f;
-		}
+		Point2I start = getLineStart(rot, extent, textWidth, getAlignmentType(profile), offsetY, rotation);
 
         renderTextLine(start + offset + profile->mTextOffset, trimmedLine, profile, rotation, ibeamPos, lineNumber);
 			
@@ -2839,6 +2839,28 @@ vector<string> GuiControl::getLineList(const char* text, GuiControlProfile* prof
 void GuiControl::renderTextLine(const Point2I& startPoint, const string line, GuiControlProfile* profile, F32 rotationInDegrees, U32, U32)
 {
     dglDrawText(profile->getFont(mFontSizeAdjust), startPoint, line.c_str(), profile->mFontColors, 9, rotationInDegrees);
+}
+
+Point2I GuiControl::getLineStart(TextRotationOptions rot, const Point2I& extent, S32 textWidth, AlignmentType align, S32 lineOffset, F32& rotationInDegrees)
+{
+    const S32 totalWidth = (rot == tRotateNone) ? extent.x : extent.y;
+    const S32 alignOffset = (textWidth < totalWidth) ? getTextHorizontalOffset(textWidth, totalWidth, align) : 0;
+
+    // Counter-clockwise text reads up from its start, so it is aligned by moving
+    // the start UP from the bottom edge. (It was once moved down, off the box,
+    // which went unnoticed because the tab book only turns left-aligned tabs.)
+    if (rot == tRotateLeft)
+    {
+        rotationInDegrees = 90.0f;
+        return Point2I(lineOffset, extent.y - alignOffset);
+    }
+    if (rot == tRotateRight)
+    {
+        rotationInDegrees = -90.0f;
+        return Point2I(extent.x - lineOffset, alignOffset);
+    }
+    rotationInDegrees = 0.0f;
+    return Point2I(alignOffset, lineOffset);
 }
 
 S32 GuiControl::getTextHorizontalOffset(S32 textWidth, S32 totalWidth, AlignmentType align)

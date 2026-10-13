@@ -433,7 +433,7 @@ function GuiEditorInspectorPane::sharedKindFor(%this, %field)
 		// for it and a whole-number row would round every one of them away.
 		case "fontSizeAdjust": return "decimal";
 		case "fontColor": return "color";
-		case "align" or "vAlign": return "enum";
+		case "align" or "vAlign" or "textRotation": return "enum";
 		case "easeFillColorHL" or "easeFillColorSL": return "enum";
 		case "easeTimeFillColorHL" or "easeTimeFillColorSL": return "number";
 	}
@@ -448,6 +448,7 @@ function GuiEditorInspectorPane::sharedEnumItemsFor(%this, %field)
 		// the value a control starts on, meaning "inherit the profile's".
 		case "align": return "default" TAB "left" TAB "center" TAB "right";
 		case "vAlign": return "default" TAB "top" TAB "middle" TAB "bottom";
+		case "textRotation": return "none" TAB "ccw" TAB "cw";
 		case "easeFillColorHL" or "easeFillColorSL": return %this.easingItems();
 	}
 	return "";
