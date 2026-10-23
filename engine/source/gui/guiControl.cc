@@ -310,7 +310,7 @@ void GuiControl::initPersistFields()
    endGroup("GuiControl");	
 
    addGroup("ToolTip");
-   addField("tooltipprofile",    TypeGuiProfile,	Offset(mTooltipProfile, GuiControl));
+   addProtectedField("tooltipprofile", TypeGuiProfile, Offset(mTooltipProfile, GuiControl), &setTooltipProfileFn, &defaultProtectedGetFn, "The profile a tip is drawn with. Empty for the theme's own.");
    addField("tooltip",           TypeString,		Offset(mTooltip, GuiControl));
    addField("tooltipWidth",      TypeS32,			Offset(mTooltipWidth, GuiControl), &writeToolTipWidthFn);
    addField("hovertime",         TypeS32,			Offset(mTipHoverTime, GuiControl), &writeToolTipHoverTimeFn);
@@ -1515,6 +1515,32 @@ void GuiControl::onSleep()
 
    // Set Flag
    mAwake = false;
+}
+
+// A control with no tooltip profile of its own reads back as "", so "" has to
+// mean none when it is written again. TypeGuiProfile turns any name it can't
+// find into GuiDefaultProfile, which is right for a control's main profile, but
+// here it would pin every deep clone and TAML copy of an untouched control to
+// GuiDefaultProfile, and renderTooltip would never look for the theme's again.
+// A name that finds nothing is left to TypeGuiProfile, which warns and falls
+// back as it always has.
+//
+// Only the pointer changes here. GuiControl::setDataField already releases the
+// old profile and takes the new one either side of any TypeGuiProfile write to
+// an awake control, so going through setControlTooltipProfile, which counts as
+// well, released the old profile twice. A profile set this way is a deliberate
+// one, so renderTooltip's claim on its own pick goes with it.
+bool GuiControl::setTooltipProfileFn(void* obj, const char* data)
+{
+   GuiControl* ctrl = static_cast<GuiControl*>(obj);
+
+   GuiControlProfile* profile = NULL;
+   if (data != NULL && data[0] != '\0' && !Sim::findObject(data, profile))
+      return true;
+
+   ctrl->mTooltipProfile = profile;
+   ctrl->mLazyTooltipProfile = NULL;
+   return false;
 }
 
 void GuiControl::setControlTooltipProfile(GuiControlProfile *prof)

@@ -145,6 +145,7 @@ public:
 
 	static bool writeToolTipWidthFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mTooltipWidth != DEFAULT_TOOLTIP_WIDTH; }
 	static bool writeToolTipHoverTimeFn(void* obj, const char* data) { GuiControl* ctrl = static_cast<GuiControl*>(obj); return ctrl->mTipHoverTime != DEFAULT_TOOLTIP_HOVERTIME; }
+	static bool setTooltipProfileFn(void* obj, const char* data);
 
     bool    mVisible;
     bool    mActive;
