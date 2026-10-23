@@ -1363,14 +1363,25 @@ void GuiControl::sleep()
    if(!mAwake)
       return;
 
-   iterator i;
-   for(i = begin(); i != end(); i++)
+   // A child's onSleep can run script that moves controls into or out of this
+   // one: a popup, say, that puts itself back where it belongs when the
+   // control it was showing for goes to sleep, and belongs inside this very
+   // control. Walking with an iterator read freed memory when that grew the
+   // child list. So walk by index, re-reading the count, and go round again
+   // until every child still here is asleep; one added mid-walk was woken by
+   // addObject (this control is still awake) and is put to sleep with the rest.
+   for(bool slept = true; slept; )
    {
-      GuiControl *ctrl = static_cast<GuiControl *>(*i);
-
-      AssertFatal(ctrl->isAwake(), "GuiControl::sleep: child control is already asleep");
-      if(ctrl->isAwake())
-         ctrl->sleep();
+      slept = false;
+      for(S32 index = 0; index < size(); index++)
+      {
+         GuiControl *ctrl = static_cast<GuiControl *>(at(index));
+         if(ctrl->isAwake())
+         {
+            ctrl->sleep();
+            slept = true;
+         }
+      }
    }
 
    AssertFatal(mAwake, "GuiControl::sleep: should not be asleep here");
