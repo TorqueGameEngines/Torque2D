@@ -310,7 +310,7 @@ void GuiControl::initPersistFields()
    endGroup("GuiControl");	
 
    addGroup("ToolTip");
-   addProtectedField("tooltipprofile", TypeGuiProfile, Offset(mTooltipProfile, GuiControl), &setTooltipProfileFn, &defaultProtectedGetFn, "The profile a tip is drawn with. Empty for the theme's own.");
+   addProtectedField("tooltipprofile", TypeGuiProfile, Offset(mTooltipProfile, GuiControl), &setTooltipProfileFn, &getTooltipProfileFn, "The profile a tip is drawn with. Empty for the theme's own.");
    addField("tooltip",           TypeString,		Offset(mTooltip, GuiControl));
    addField("tooltipWidth",      TypeS32,			Offset(mTooltipWidth, GuiControl), &writeToolTipWidthFn);
    addField("hovertime",         TypeS32,			Offset(mTipHoverTime, GuiControl), &writeToolTipHoverTimeFn);
@@ -1552,6 +1552,21 @@ bool GuiControl::setTooltipProfileFn(void* obj, const char* data)
    ctrl->mTooltipProfile = profile;
    ctrl->mLazyTooltipProfile = NULL;
    return false;
+}
+
+// The field reports the control's own tooltip profile, which is not always the
+// one its tips are drawn with: renderTooltip gives a control that has none the
+// Tooltip member of its theme, and goes on re-picking it as the control is
+// re-themed. Reported as the control's own, that pick was carried into every
+// copy and every save of a control that had shown a tip -- as a deliberate
+// profile, pinned to the theme it happened to be wearing. getActiveTooltipProfile
+// answers which profile a tip will actually use.
+const char* GuiControl::getTooltipProfileFn(void* obj, const char* data)
+{
+   GuiControl* ctrl = static_cast<GuiControl*>(obj);
+   if (ctrl->mTooltipProfile != NULL && ctrl->mTooltipProfile == ctrl->mLazyTooltipProfile)
+      return "";
+   return data;
 }
 
 void GuiControl::setControlTooltipProfile(GuiControlProfile *prof)

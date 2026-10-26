@@ -222,6 +222,17 @@ ConsoleMethodWithDocs( GuiControl, setProfile, ConsoleVoid, 3, 3, (GuiControlPro
       object->setControlProfile(profile);
 }
 
+/*! The profile this control's tooltips are drawn with. That is its tooltipProfile when one has been set; when none has, it is the Tooltip profile of the theme the control is wearing, which the control picks the first time it draws a tip and picks again whenever it is re-themed. The tooltipProfile field reports only a profile set on purpose, so it stays empty for a pick.
+    @return The profile's name, or its id if it has none, or an empty string if the control has not drawn a tooltip yet.
+*/
+ConsoleMethodWithDocs( GuiControl, getActiveTooltipProfile, ConsoleString, 2, 2, ())
+{
+   GuiControlProfile* profile = object->mTooltipProfile;
+   if (profile == NULL)
+      return "";
+   return profile->getName() ? profile->getName() : profile->getIdString();
+}
+
 /*! Resizes the control to the given dimensions
 */
 ConsoleMethodWithDocs( GuiControl, resize, ConsoleVoid, 6, 6, (int x, int y, int w, int h))
