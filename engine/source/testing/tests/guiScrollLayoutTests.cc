@@ -255,8 +255,8 @@ TEST( GuiScrollLayoutTests, AnAlwaysOffAxisIsNeverCalledIntoBeing )
 // scaled child that is not forgotten: it records its proportion of the parent
 // once, against that rect, and when the bars were found not to exist after all
 // it grew by the same proportion -- past the room, which really did call the
-// bars into being, for good. Pirate Code 2's menu background came out 1290x730
-// in a 1280x720 scroller with 10px bars, with both bars on at every window size.
+// bars into being, for good. A full-screen background came out 1290x730 in a
+// 1280x720 scroller with 10px bars, with both bars on at every window size.
 //
 // These build real controls, but nothing is woken and nothing measures text, so
 // they need no canvas.
