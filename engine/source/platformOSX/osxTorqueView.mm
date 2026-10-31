@@ -47,6 +47,13 @@
         // Make absolutely sure _openGLContext is nil
         _openGLContext = nil;
 
+        // The canvas, glViewport and the mouse all work in points, so the GL
+        // surface has to as well. Left to its default this is YES, the surface
+        // is sized in pixels, and on a Retina display the game draws into only
+        // the bottom-left quarter of it. macOS scales a points surface up to
+        // fill the screen. This must be set before a context attaches to the view.
+        [self setWantsBestResolutionOpenGLSurface:NO];
+
         NSTrackingAreaOptions trackingOptions = NSTrackingCursorUpdate |
                 NSTrackingMouseMoved |
                 NSTrackingMouseEnteredAndExited |

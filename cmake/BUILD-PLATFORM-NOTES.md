@@ -174,6 +174,25 @@ benign, not bugs):
   `arrayObject`, `b2ParticleAssembly`, the (arm64-inert) x86 SIMD math TUs, and the
   GoogleTest suite.
 
+**Retina: the GL surface is in points.** One difference the list above missed, and it
+was a bug. The retired `Torque2D-Info.plist` set `NSHighResolutionCapable` to false, and
+CMake's stock plist has no such key, so CMake builds linked against a modern SDK got a
+surface in pixels while the canvas, `glViewport` and the mouse stayed in points. On a 2x
+display the game drew into the bottom-left quarter of the surface, windowed and
+fullscreen. `-[OSXTorqueView initialize]` now sets
+`wantsBestResolutionOpenGLSurface` to NO, so the fix lives in the source rather than in
+packaging, and macOS scales the surface up to the display. This matches the iOS decision
+to render in points (see the iOS round); the trade-off is the same, slightly soft on
+Retina. Crisp Retina would need the viewport in pixels with the projection in points.
+
+To test this on a Mac without a Retina screen: a 1080p monitor offers real 2x modes such
+as 1024x576 points on 2048x1152 pixels. They are hidden from System Settings, but
+`CGDisplayCopyAllDisplayModes` lists them with
+`kCGDisplayShowDuplicateLowResolutionModes`, and `CGConfigureDisplayWithDisplayMode` can
+select one with `kCGConfigureForAppOnly`, which macOS undoes when the process exits. Put
+every display in such a mode: macOS moves a window too large for a 2x screen on to a 1x
+monitor if it has one, where the bug does not show.
+
 ## iOS round (run on a Mac) — DONE (runtime-verified; arm64 simulator AND real device)
 
 iOS is a **separate** platform from macOS (distinct `platformiOS/` sources and a
